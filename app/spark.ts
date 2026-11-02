@@ -116,10 +116,9 @@ async function readStream(body: ReadableStream<Uint8Array>, think: (text: string
       if (event.kind === "thinking" && event.text) {
         // Summaries come a few words at a time, and a line reads better whole.
         line += event.text;
-        const end = line.search(/[.!?\n]\s/);
-        if (end >= 0) {
-          think(line.slice(0, end + 1).trim());
-          line = line.slice(end + 2);
+        for (let end = line.search(/[.!?\n](?=[\sA-Z])/); end >= 0; end = line.search(/[.!?\n](?=[\sA-Z])/)) {
+          if (line.slice(0, end + 1).trim()) think(line.slice(0, end + 1).trim());
+          line = line.slice(end + 1);
         }
       } else if (event.kind === "result" && event.result) {
         if (line.trim()) think(line.trim());

@@ -113,7 +113,7 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
   const [fitting, setFitting] = useState<"none" | "asking" | "unavailable">("none");
   const [recompose, setRecompose] = useState<RecomposeState>({ status: "none" });
   /** The new piece being written, once one is chosen. */
-  const [recomposed, setRecomposed] = useState<{ plan: RecomposePlan; heights: number[]; tuneBars: number; bars: number } | null>(null);
+  const [recomposed, setRecomposed] = useState<{ plan: RecomposePlan; heights: number[]; opening: number[]; tuneBars: number; bars: number } | null>(null);
   const [fixing, setFixing] = useState<"none" | "asking" | "unavailable">("none");
   const turn = useRef(0);
 
@@ -404,17 +404,18 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     const page: Page = { xmlText, score: parseScore(xmlText) };
     const now = ++turn.current;
     const heights = motifHeights(asked, plan.motif.from, plan.motif.to);
+    const opening = motifHeights(asked, asked.written[0]!.bar, asked.written[Math.min(1, asked.written.length - 1)]!.bar).slice(0, 3);
     setKept(page);
     setPlaced({ status: "none" });
     setOff([]);
     setOffBars([]);
-    setRecomposed({ plan, heights, tuneBars: 0, bars: length });
+    setRecomposed({ plan, heights, opening, tuneBars: 0, bars: length });
     const input = arrangeInput(page.score, page.score.parts[0]!, 0, length - 1, asked.ask, 0, null, { instruments, where: "inside", answers: asked.answers, freedom: asked.freedom });
     setOptions({ status: "ready", plans: [plan], input, notes: {}, saved: false });
     const composed = await askSpark("write_theme", { ...asked, chosen: plan } satisfies ThemeInput);
     if (turn.current !== now) return;
     const lines = composed.status === "ok" ? (composed.answer as ThemeAnswer).lines : [];
-    setRecomposed({ plan, heights, tuneBars: new Set(lines.filter((l) => l.role === "tune").map((l) => l.bar)).size, bars: length });
+    setRecomposed({ plan, heights, opening, tuneBars: new Set(lines.filter((l) => l.role === "tune").map((l) => l.bar)).size, bars: length });
     const tune = sourceText(asked).slice(0, 16000);
     await writeNotes(page, input, plan, 0, false, { tune, motif: `${plan.motif.what} From bars ${plan.motif.from} to ${plan.motif.to}.` }, lines);
   };
@@ -697,6 +698,7 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     askRecompose,
     writeRecomposed,
     motifFound: recomposed && options.status === "ready" && options.notes[0]?.status === "ready" ? motifSightings(options.notes[0].check, recomposed.heights) : null,
+    openingFound: recomposed && options.status === "ready" && options.notes[0]?.status === "ready" ? motifSightings(options.notes[0].check, recomposed.opening) : null,
     fixing,
     askFix,
     freedomOf: recompose.status === "ready" ? recompose.input.freedom : undefined,

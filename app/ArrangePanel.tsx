@@ -586,7 +586,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [] }: { 
             <p className="spark-note">
               Motif from your bars {arranged.recomposed.plan.motif.from} to {arranged.recomposed.plan.motif.to}: {arranged.recomposed.plan.motif.what}
               {arranged.recomposed.tuneBars > 0 && ` Its tune runs through ${arranged.recomposed.tuneBars} of ${arranged.recomposed.bars} bars.`}
-              {arranged.motifFound && ` Measured in what's written, the motif's shape comes back ${arranged.motifFound.same} times as it was, ${arranged.motifFound.inverted} upside down and ${arranged.motifFound.backwards} backwards.`}
+              {arranged.motifFound && arranged.openingFound && ` Measured in what's written, the shape of your opening comes back ${arranged.openingFound.same} times as it was and ${arranged.openingFound.inverted} upside down, and the motif's ${arranged.motifFound.same} and ${arranged.motifFound.inverted}.`}
             </p>
           )}
           {options.status === "ready" && options.notes[0]?.status === "ready" && !options.notes[0].writing && arranged.view && (

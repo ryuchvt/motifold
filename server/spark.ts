@@ -73,12 +73,14 @@ export async function callSpark(call: SparkCall, key: string, fetchImpl: typeof 
   let res: Response;
   let text: string;
   try {
-    res = await fetchImpl(SPARK_URL, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
-      body: JSON.stringify(requestBody(call)),
-      signal: abort.signal,
-    });
+    const send = () => fetchImpl(SPARK_URL, { method: "POST", headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" }, body: JSON.stringify(requestBody(call)), signal: abort.signal });
+    try {
+      res = await send();
+    } catch (e) {
+      // A connection that was already dead fails at once, before the request can have reached Meta, and a held reservation for it would be a false alarm.
+      if (abort.signal.aborted || ms() > 2000) throw e;
+      res = await send();
+    }
     text = call.onEvent && res.ok ? await readEvents(res, call.onEvent) : await res.text();
   } catch (e) {
     const timedOut = abort.signal.aborted;
