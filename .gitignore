@@ -1,0 +1,11 @@
+node_modules/
+dist/
+coverage/
+.wrangler/
+.dev.vars
+.env
+.env.*
+*.local
+.DS_Store
+local-inputs/
+server/worker-configuration.d.ts

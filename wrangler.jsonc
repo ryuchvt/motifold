@@ -1,0 +1,19 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "motifold",
+  "main": "server/worker.ts",
+  "compatibility_date": "2026-09-30",
+  // The built app is served as static files. Only /api/* runs the Worker.
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*"]
+  },
+  "durable_objects": {
+    "bindings": [{ "name": "LEDGER", "class_name": "LedgerObject" }]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["LedgerObject"] }],
+  // META_API_KEY and VISITOR_SALT are secrets, never here.
+  "vars": { "MODE": "hosted" },
+  "observability": { "enabled": true }
+}
