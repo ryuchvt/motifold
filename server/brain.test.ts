@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { MOODS, PIANO_WRITING, READING_A_SCORE } from "./brain";
-import { arrange, distribute, fitForm, planOptions, readPiece, type ArrangeInput, type OptionPlan, type WriteInput } from "./shapes";
+import { arrange, distribute, fitForm, planOptions, planRecompose, readPiece, SHAPES, writeTheme, type ArrangeInput, type OptionPlan, type WriteInput } from "./shapes";
 
 const asked = (change: Partial<ArrangeInput> = {}): ArrangeInput =>
   ({
@@ -80,5 +80,33 @@ describe("what the arranger knows about music", () => {
     expect(readPiece.build(asked()).instructions).toContain(READING_A_SCORE);
     expect(distribute.build({ ...asked(), instruments: ["Cello"], roles: [] }).instructions).toContain("translation and not copying");
     expect(fitForm.build({ ...asked(), roles: [], moments: [{ beats: 0, time: "0:00", what: "" }] }).instructions).toContain("Not every moment deserves a hit");
+  });
+});
+
+describe("recomposing and writing from a source", () => {
+  it("says how free it can go, and writes the tune before anything else", () => {
+    const instructions = (freedom: number) => planRecompose.build({ ...asked({ moreBars: 32, freedom }) }).instructions;
+    expect(instructions(1)).toContain("How free: close");
+    expect(instructions(5)).toContain("How free: seed");
+    expect(SHAPES.write_theme).toBe(writeTheme);
+    const theme = writeTheme.build({ ...asked({ moreBars: 32 }), chosen: { name: "A", idea: "B", motif: { from: "1", to: "1", what: "C" }, fifths: 0, time: "3/4", qpm: 90, why: [] } });
+    expect(theme.instructions).toContain("Write three lines across every bar");
+    expect(writeTheme.check(asked(), { lines: [{ role: "bass", bar: "1", events: "C2@0+3" }] })).toBe("no tune");
+  });
+
+  it("uses the sketch as source when only the tune is on the score", () => {
+    const withSource = planOptions.build(asked({ source: "Bar 1: upper: C5 lower: C3" }));
+    expect(withSource.instructions).toContain("your source material");
+    expect(withSource.input).toContain("Bar 1: upper: C5 lower: C3");
+    expect(planOptions.build(asked()).instructions).toContain("that's their harmony and it's fixed");
+    expect(distribute.build({ ...asked(), instruments: ["Cello"], roles: [], tuneOnly: true }).instructions).toContain("Place only the composer's tune");
+  });
+
+  it("asks for layers, ornament and a role for each part", () => {
+    const built = arrange.build(written());
+    expect(built.instructions).toContain("Keep at least three things a listener could follow apart");
+    expect(built.instructions).toContain("Decoration is what makes a line sound played");
+    const schema = built.schema as { properties: { adds: { items: { required: string[] } } } };
+    expect(schema.properties.adds.items.required).toEqual(expect.arrayContaining(["role", "art"]));
   });
 });

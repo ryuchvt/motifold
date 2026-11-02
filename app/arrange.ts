@@ -34,11 +34,11 @@ export function arrangeInput(
   ask: string | null,
   moreBars: number,
   reading: ArrangeInput["reading"],
-  more: Partial<Pick<ArrangeInput, "instruments" | "where" | "tracks" | "answers" | "cues">> = {},
+  more: Partial<Pick<ArrangeInput, "instruments" | "where" | "tracks" | "answers" | "cues" | "source" | "freedom">> = {},
 ): ArrangeInput {
   const reachesEnd = to >= (wholeScoreParts(score) ?? [part])[0]!.measures.length - 1;
   const where = more.where ?? "both";
-  return { ...pieceInput(score, part, from, to), moreBars: reachesEnd && where !== "inside" ? moreBars : 0, ask: ask?.trim() || null, reading, instruments: more.instruments ?? null, where, tracks: more.tracks ?? [], answers: more.answers ?? [], cues: more.cues ?? [] };
+  return { ...pieceInput(score, part, from, to), moreBars: reachesEnd && where !== "inside" ? moreBars : 0, ask: ask?.trim() || null, reading, instruments: more.instruments ?? null, where, tracks: more.tracks ?? [], answers: more.answers ?? [], cues: more.cues ?? [], ...(more.source ? { source: more.source } : {}), ...(more.freedom ? { freedom: more.freedom } : {}) };
 }
 
 export interface NewEvent {
@@ -79,12 +79,76 @@ export function velocityIn(dyn: Dyn, at: number, barBeats: number): number {
 const percent = (word: string) => Math.round(LEVELS[word]! / 0.09) / 10;
 
 /** A level on the page and in playback: the mark before the notes, unless it hasn't changed, and the end of a swell after them. */
-function dynMarks(dyn: Dyn, last: string | null, staffTag: string): { before: string; after: string } {
+function dynMarks(dyn: Dyn | null, last: string | null, staffTag: string, say: "pizz." | "arco" | null = null): { before: string; after: string } {
   const direction = (inner: string, level?: string) => `<direction placement="below"><direction-type>${inner}</direction-type>${staffTag}${level ? `<sound dynamics="${percent(level)}"/>` : ""}</direction>`;
   return {
-    before: (dyn.from !== last ? direction(`<dynamics><${dyn.from}/></dynamics>`, dyn.from) : "") + (dyn.wedge ? direction(`<wedge type="${dyn.wedge}"/>`, dyn.from) : ""),
-    after: dyn.to ? direction(`<wedge type="stop"/>`, dyn.to) : "",
+    before: (say ? `<direction placement="above"><direction-type><words>${say}</words></direction-type>${staffTag}</direction>` : "") + (dyn ? (dyn.from !== last ? direction(`<dynamics><${dyn.from}/></dynamics>`, dyn.from) : "") + (dyn.wedge ? direction(`<wedge type="${dyn.wedge}"/>`, dyn.from) : "") : ""),
+    after: dyn?.to ? direction(`<wedge type="stop"/>`, dyn.to) : "",
   };
+}
+
+/** What's new on the page, with what a listener should follow picked out from what supports it. */
+const TUNE_INK = "#d9531e";
+const COUNTER_INK = "#2466d1";
+const inkOf = (role: string | undefined, color: string | undefined) => (!color || color === FADED ? color : role === "melody" ? TUNE_INK : role === "countermelody" ? COUNTER_INK : color);
+
+/** Sounding a Bb or F instrument's notes as its player reads them: how far up it's written, in steps and semitones, and what that does to the key. */
+const TRANSPOSING: [RegExp, { diatonic: number; chromatic: number; fifths: number }][] = [
+  [/bass clarinet/i, { diatonic: 8, chromatic: 14, fifths: 2 }],
+  [/clarinet/i, { diatonic: 1, chromatic: 2, fifths: 2 }],
+  [/trumpet|cornet/i, { diatonic: 1, chromatic: 2, fifths: 2 }],
+  [/english horn|cor anglais/i, { diatonic: 4, chromatic: 7, fifths: 1 }],
+  [/horn/i, { diatonic: 4, chromatic: 7, fifths: 1 }],
+];
+
+const STEP_NAMES = ["C", "D", "E", "F", "G", "A", "B"];
+const STEP_SEMITONES = [0, 2, 4, 5, 7, 9, 11];
+
+/** The same score with each Bb and F instrument written as its player reads it, for parts to play from. What it sounds doesn't change. */
+export function transposedForPlayers(xmlText: string): string {
+  const doc = parseXml(xmlText);
+  const root = doc.documentElement;
+  const names = new Map(childrenOf(childrenOf(root, "part-list")[0]!, "score-part").map((p) => [p.getAttribute("id"), childrenOf(p, "part-name")[0]?.textContent ?? ""]));
+  for (const part of childrenOf(root, "part")) {
+    const rule = TRANSPOSING.find(([word]) => word.test(names.get(part.getAttribute("id")) ?? ""))?.[1];
+    if (!rule) continue;
+    let first = true;
+    for (const measure of childrenOf(part, "measure")) {
+      for (const attributes of childrenOf(measure, "attributes")) {
+        for (const key of childrenOf(attributes, "key")) {
+          const fifths = childrenOf(key, "fifths")[0];
+          if (fifths) fifths.textContent = String(Number(fifths.textContent) + rule.fifths);
+        }
+        if (first) {
+          append(attributes, `<transpose><diatonic>${-rule.diatonic}</diatonic><chromatic>${-rule.chromatic}</chromatic></transpose>`);
+          first = false;
+        }
+      }
+      for (const note of childrenOf(measure, "note")) {
+        const pitch = childrenOf(note, "pitch")[0];
+        if (!pitch) continue;
+        const step = childrenOf(pitch, "step")[0]!;
+        const octave = childrenOf(pitch, "octave")[0]!;
+        const alterEl = childrenOf(pitch, "alter")[0];
+        const from = STEP_NAMES.indexOf(step.textContent!);
+        const alter = Number(alterEl?.textContent ?? 0);
+        const height = (Number(octave.textContent) + 1) * 12 + STEP_SEMITONES[from]! + alter + rule.chromatic;
+        const place = from + rule.diatonic;
+        const newStep = ((place % 7) + 7) % 7;
+        const newOctave = Number(octave.textContent) + Math.floor(place / 7);
+        const newAlter = height - ((newOctave + 1) * 12 + STEP_SEMITONES[newStep]!);
+        step.textContent = STEP_NAMES[newStep]!;
+        octave.textContent = String(newOctave);
+        if (alterEl) pitch.removeChild(alterEl);
+        if (newAlter) {
+          const made = doc.createElement("alter");
+          made.textContent = String(newAlter);
+          pitch.insertBefore(made, octave);
+        }
+      }
+    }
+  }
+  return serialize(doc);
 }
 
 /** Parts that only double another part, copied out exactly. What's written for a part in a bar wins over a doubling of it. */
@@ -97,7 +161,7 @@ export function withDoubles(answer: WriteAnswer, bars: string[]): WriteAnswer["a
     for (const bar of bars.slice(from, to + 1)) {
       if (out.some((a) => a.part === d.part && a.bar === bar)) continue;
       for (const source of answer.adds.filter((a) => a.part === d.of && a.bar === bar)) {
-        out.push({ part: d.part, bar, events: source.events.replace(/([A-G](?:##|bb|#|b)?)(-?\d)/g, (_, name: string, octave: string) => `${name}${Number(octave) + d.octave}`), ...(source.dyn ? { dyn: source.dyn } : {}) });
+        out.push({ part: d.part, bar, events: source.events.replace(/([A-G](?:##|bb|#|b)?)(-?\d)/g, (_, name: string, octave: string) => `${name}${Number(octave) + d.octave}`), ...(source.dyn ? { dyn: source.dyn } : {}), ...(source.role ? { role: source.role } : {}), ...(source.art ? { art: source.art } : {}) });
       }
     }
   }
@@ -197,6 +261,10 @@ export interface OptionCheck {
     measure?: number;
     /** Its level in this bar, as written, like mp or p<mf. */
     dyn?: string;
+    /** What it's doing, which is what picks it out on the page and the stage. */
+    role?: string;
+    /** Plucked, which goes on a track of its own. */
+    art?: string;
   }[];
   notes: number;
   /** New notes that landed on a bar the composer already plays in, and were left out. */
@@ -282,7 +350,7 @@ export function checkOption(option: ArrangeOption, score: Score, input: ArrangeI
         kept.push({ bar: add.bar, part: add.part, start: e.start, length: e.length, height, name });
       }
     }
-    if (usable.length) check.adds.push({ part: add.part, bar: add.bar, events: usable, ...(measure >= 0 ? { measure } : {}), ...(dyn ? { dyn: add.dyn } : {}) });
+    if (usable.length) check.adds.push({ part: add.part, bar: add.bar, events: usable, ...(measure >= 0 ? { measure } : {}), ...(dyn ? { dyn: add.dyn } : {}), ...(add.role ? { role: add.role } : {}), ...(add.art === "pizz" && /violin|viola|cello|double bass|contrabass|string/i.test(add.part) ? { art: "pizz" } : {}) });
   }
   for (const n of kept) {
     if (n.length < 1) continue;
@@ -547,13 +615,26 @@ export function withOption(xmlText: string, score: Score, check: OptionCheck, co
   const newBars = Array.from({ length: furthest - lastNumber }, (_, k) => String(lastNumber + k + 1));
   const inOrder = [...barList, ...newBars];
   const levelOf = (part: string, bar: string | undefined) => readDyn(check.adds.find((a) => a.part === part && a.bar === bar)?.dyn);
-  /** A part's level in a bar, marked only where it changes, and after a swell, where the page should say what it reached. */
-  const marksOf = (part: string | undefined, bar: string, staffTag = "") => {
-    const dyn = part ? levelOf(part, bar) : null;
-    if (!part || !dyn) return undefined;
-    const last = levelOf(part, inOrder[inOrder.indexOf(bar) - 1]);
-    return dynMarks(dyn, last && !last.to ? last.from : null, staffTag);
+  /** Whether a part was last plucked, looking back past any bars it rested in. */
+  const pluckedBefore = (part: string, bar: string) => {
+    for (let k = inOrder.indexOf(bar) - 1; k >= 0; k--) {
+      const add = check.adds.find((a) => a.part === part && a.bar === inOrder[k]);
+      if (add) return add.art === "pizz";
+    }
+    return false;
   };
+  /** A part's level in a bar, marked only where it changes, and after a swell, where the page should say what it reached. Plucking is said when it starts and stops. */
+  const marksOf = (part: string | undefined, bar: string, staffTag = "") => {
+    if (!part) return undefined;
+    const dyn = levelOf(part, bar);
+    const plucked = check.adds.find((a) => a.part === part && a.bar === bar)?.art === "pizz";
+    const before = pluckedBefore(part, bar);
+    const say = plucked && !before ? "pizz." : !plucked && before && check.adds.some((a) => a.part === part && a.bar === bar) ? "arco" : null;
+    if (!dyn && !say) return undefined;
+    const last = levelOf(part, inOrder[inOrder.indexOf(bar) - 1]);
+    return dynMarks(dyn, last && !last.to ? last.from : null, staffTag, say);
+  };
+  const roleIn = (part: string | undefined, bar: string) => check.adds.find((a) => a.part === part && a.bar === bar)?.role;
   // The composer's own, or kept from an option before this one, and either way it stays.
   const usedIds = new Set(childrenOf(root, "part").map((el) => el.getAttribute("id")));
   const lastBar = lastTime(lead) ?? { beats: 4, beatType: 4 };
@@ -572,7 +653,7 @@ export function withOption(xmlText: string, score: Score, check: OptionCheck, co
         for (const tag of ["note", "forward", "backup"]) for (const el of childrenOf(measure, tag)) measure.removeChild(el);
         const closing = childrenOf(measure, "barline").filter((line) => line.getAttribute("location") !== "left");
         for (const line of closing) measure.removeChild(line);
-        append(measure, staffXml(check.adds.filter((a) => a.bar === bar && a.part === part.name).flatMap((a) => a.events), null, 1, Math.round((inScore.length / score.ticksPerQuarter) * DIV), color, 0, part.transposition, marksOf(part.name, bar)));
+        append(measure, staffXml(check.adds.filter((a) => a.bar === bar && a.part === part.name).flatMap((a) => a.events), null, 1, Math.round((inScore.length / score.ticksPerQuarter) * DIV), inkOf(roleIn(part.name, bar), color), 0, part.transposition, marksOf(part.name, bar)));
         for (const line of closing) measure.appendChild(line);
       }
     }
@@ -582,7 +663,7 @@ export function withOption(xmlText: string, score: Score, check: OptionCheck, co
         const here = check.adds.filter((a) => a.bar === bar && (laidOut(a.part)?.id === id || (lineOf(a.part)?.partId === id && lineOf(a.part)?.staff === staff)));
         const events = here.flatMap((a) => a.events);
         if (staff > 1) inside += `<backup><duration>${fullBar}</duration></backup>`;
-        inside += staffXml(events, part.staves > 1 ? staff : null, staff === 1 ? 1 : 5, fullBar, color, 0, part.transposition, marksOf(here[0]?.part, bar, part.staves > 1 ? `<staff>${staff}</staff>` : ""));
+        inside += staffXml(events, part.staves > 1 ? staff : null, staff === 1 ? 1 : 5, fullBar, inkOf(here[0]?.role, color), 0, part.transposition, marksOf(here[0]?.part, bar, part.staves > 1 ? `<staff>${staff}</staff>` : ""));
       }
       append(partEl, `<measure number="${bar}">${inside}</measure>`);
     }
@@ -623,7 +704,7 @@ export function withOption(xmlText: string, score: Score, check: OptionCheck, co
       shownKey = key;
       // A bar number a score uses twice, like a first ending or a new movement, takes the notes where they were asked for.
       const events = mine.filter((a) => (a.measure === undefined ? a.bar === bar && allBars.indexOf(bar) === b : a.measure === b)).flatMap((a) => a.events);
-      xml += `<measure number="${bar}">${changes.length ? `<attributes>${changes.join("")}</attributes>` : ""}${staffXml(events, null, 1, ticks, color, octaveShift, null, marksOf(mine.find((a) => a.bar === bar)?.part, bar))}</measure>`;
+      xml += `<measure number="${bar}">${changes.length ? `<attributes>${changes.join("")}</attributes>` : ""}${staffXml(events, null, 1, ticks, inkOf(mine.find((a) => a.bar === bar)?.role, color), octaveShift, null, marksOf(mine.find((a) => a.bar === bar)?.part, bar))}</measure>`;
     });
     append(root, `${xml}</part>`);
   });
@@ -739,6 +820,8 @@ export interface PlacedPart {
 }
 
 export interface PlacedCheck {
+  /** Only the tune was placed, and the rest of the sketch is material for what's written next. */
+  material?: boolean;
   notes: number;
   /** Notes the plan placed. Anything else stays on a part of its own. */
   placed: number;
@@ -920,7 +1003,7 @@ const moveOctave = (name: string, octaves: number) => name.replace(/(-?\d+)$/, (
  * The composer's notes on the instruments they chose. Muse Spark's plan says only who plays which line, so no pitch or rhythm can change,
  * and whatever the plan leaves out goes on a part of its own for the composer to place or delete.
  */
-export function placeNotes(score: Score, input: StudyScoreInput, answer: DistributeAnswer, instruments: string[]): { parts: PlacedPart[]; check: PlacedCheck } {
+export function placeNotes(score: Score, input: StudyScoreInput, answer: DistributeAnswer, instruments: string[], tuneOnly = false): { parts: PlacedPart[]; check: PlacedCheck } {
   const bars = input.written.map((w) => w.bar);
   const check: PlacedCheck = { notes: 0, placed: 0, notPlaced: [], moved: 0, merged: 0, outOfRange: [], together: [], grace: 0, ignored: 0 };
   const read = readLines(score, input);
@@ -963,6 +1046,11 @@ export function placeNotes(score: Score, input: StudyScoreInput, answer: Distrib
     check.placed += struck(inBars) - struck(left);
     if (!left.some((notes) => notes.length)) continue;
     check.notPlaced.push({ line: label, notes: struck(left) });
+    // What isn't the tune is what the rest gets written from, so it doesn't stay on the score as well.
+    if (tuneOnly) {
+      check.material = true;
+      continue;
+    }
     const target: PlacedPart = { name: `${label} (not placed)`, bars: bars.map(() => []) };
     parts.set(target.name, target);
     left.forEach((notes, k) => notes.forEach((n) => put(target, k, n, 0)));
@@ -986,6 +1074,7 @@ export function placeNotes(score: Score, input: StudyScoreInput, answer: Distrib
 export function placedWords(check: PlacedCheck, chosen = true): string[] {
   const some = <T>(list: T[], word: (x: T) => string) => list.slice(0, 4).map(word).join(", ") + (list.length > 4 ? ` and ${list.length - 4} more` : "");
   const onto = chosen ? "the instruments you chose" : "these instruments";
+  if (check.material) return [`Your tune is on ${onto}, ${check.placed} notes at the rhythm you played. Your other ${check.notes - check.placed} notes are the harmony and bass that the rest of the orchestra is written from.`];
   const sentences = [check.notPlaced.length ? `${check.placed} of your ${check.notes} notes are on ${onto}.` : `All ${check.notes} of your notes are on ${onto}, at the rhythm you wrote.`];
   const left = check.notes - check.placed;
   if (check.notPlaced.length) sentences.push(`${left === 1 ? "The other one is on a part of its own" : `The other ${left} are on parts of their own`} at the bottom, so nothing is lost: ${some(check.notPlaced, (n) => `${n.line}, ${n.notes} ${n.notes === 1 ? "note" : "notes"}`)}.`);
@@ -1209,8 +1298,14 @@ export function scoreTracks(score: Score): MidiTrack[] {
     return staves.flatMap((staff) => {
       const open = new Map<number, MidiTrack["notes"][number]>();
       const notes: MidiTrack["notes"] = [];
+      const plucked: MidiTrack["notes"] = [];
+      let pizz = false;
       const levels = levelPoints(part, score.ticksPerQuarter);
       for (const m of part.measures) {
+        for (const word of m.words) {
+          if (/^pizz/i.test(word.trim())) pizz = true;
+          if (/^arco/i.test(word.trim())) pizz = false;
+        }
         for (const i of m.noteIndexes) {
           const n = part.notes[i]!;
           if (n.staff !== staff || n.rest || n.grace || n.hidden || n.cue || !n.pitch || n.soundingMidi === null) continue;
@@ -1222,7 +1317,7 @@ export function scoreTracks(score: Score): MidiTrack[] {
             const start = (m.start + n.onset) / score.ticksPerQuarter;
             const velocity = n.velocity ?? levelAt(levels, start);
             const note = { start, length, height, ...(velocity !== undefined ? { velocity } : {}) };
-            notes.push(note);
+            (pizz ? plucked : notes).push(note);
             if (n.tieStart) open.set(height, note);
           }
           if (!n.tieStart) open.delete(height);
@@ -1230,7 +1325,11 @@ export function scoreTracks(score: Score): MidiTrack[] {
       }
       const name = part.staves > 1 ? `${part.name} ${["upper", "lower"][staff - 1] ?? staff}` : part.name;
       const controls = levelCurve(levels);
-      return notes.length ? [{ name, program: PROGRAMS.find(([word]) => word.test(name))?.[1] ?? 0, notes, ...(controls.length ? { controls } : {}) }] : [];
+      // Plucked notes get a track of their own, because a sample library plays them from a different patch.
+      return [
+        ...(notes.length ? [{ name, program: PROGRAMS.find(([word]) => word.test(name))?.[1] ?? 0, notes, ...(controls.length ? { controls } : {}) }] : []),
+        ...(plucked.length ? [{ name: `${name} pizz`, program: 45, notes: plucked, ...(controls.length ? { controls } : {}) }] : []),
+      ];
     });
   });
 }
@@ -1327,8 +1426,9 @@ function newTracks(score: Score, check: OptionCheck): MidiTrack[] {
   for (const add of check.adds) {
     const measure = add.measure !== undefined ? lead.measures[add.measure] : lead.measures.find((m) => m.number === add.bar);
     if (!measure) continue;
-    const track: MidiTrack = byName.get(add.part) ?? { name: add.part, program: PROGRAMS.find(([word]) => word.test(add.part))?.[1] ?? 0, notes: [] };
-    byName.set(add.part, track);
+    const trackName = add.art === "pizz" ? `${add.part} pizz` : add.part;
+    const track: MidiTrack = byName.get(trackName) ?? { name: trackName, program: add.art === "pizz" ? 45 : (PROGRAMS.find(([word]) => word.test(add.part))?.[1] ?? 0), notes: [] };
+    byName.set(trackName, track);
     const start = measure.start / score.ticksPerQuarter;
     for (const e of add.events) for (const name of e.names) track.notes.push({ start: start + e.start, length: e.length, height: noteHeight(name)!, ...(e.velocity !== undefined ? { velocity: e.velocity } : {}) });
     const dyn = readDyn(add.dyn);
@@ -1351,7 +1451,7 @@ function meterMap(score: Score): { beat: number; beats: number; beatType: number
 }
 
 /** A folder for a DAW: all the parts, each part alone, what's new on its own, the notation, and why. */
-export function packageFiles(xmlText: string, added: OptionCheck | null, about: string, markers: { beat: number; text: string }[] = []): Uint8Array {
+export function packageFiles(xmlText: string, added: OptionCheck | null, about: string, markers: { beat: number; text: string }[] = [], forPlayers = false): Uint8Array {
   const score = parseScore(xmlText);
   const qpm = (score.parts[0]?.measures ?? []).flatMap((m) => m.tempos.map((t) => ({ beat: (m.start + t.onset) / score.ticksPerQuarter, qpm: t.qpm })));
   const time = meterMap(score);
@@ -1362,6 +1462,7 @@ export function packageFiles(xmlText: string, added: OptionCheck | null, about: 
     "all-parts.mid": midiFile(tracks, qpm, time, markers),
     "score.musicxml": encoder.encode(xmlText),
     "why.txt": encoder.encode(about),
+    ...(forPlayers ? { "score-transposed-for-players.musicxml": encoder.encode(transposedForPlayers(xmlText)) } : {}),
   };
   if (fresh.length) files["new-parts.mid"] = midiFile(fresh, qpm, time);
   tracks.forEach((track, i) => {

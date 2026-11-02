@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { parseScore, type Part, type Score } from "../score";
-import { newBarNumbers, type ArrangeInput, type DistributeAnswer, type DistributeInput, type FitAnswer, type FitInput, type OptionPlan, type PieceReading, type RecomposePlan, type PlanAnswer, type Settled, type StudyScoreInput, type WriteAnswer, type WriteInput } from "../server/shapes";
+import { newBarNumbers, type ArrangeInput, type DistributeAnswer, type DistributeInput, type FitAnswer, type FitInput, type OptionPlan, placedNotes, type PieceReading, type RecomposePlan, type ThemeAnswer, type ThemeInput, type PlanAnswer, type Settled, type StudyScoreInput, type WriteAnswer, type WriteInput } from "../server/shapes";
 import { arrangeInput, checkOption, emptyScore, motifSightings, withDoubles, writingWindows, chordTracks, dropParts, FADED, packageFiles, pieceInput, placeNotes, rolesAfter, scoreOfParts, scoreWithSplits, snap, onlyBars, whyText, withOption, withoutParts, withRoleColours, withStructure, type OptionCheck, type PlacedCheck, type RoleFocus } from "./arrange";
 import { barsToReach, placeCues, timeWords, type Cue } from "./cues";
 import { markersOf } from "./midi";
@@ -55,10 +55,28 @@ interface Saved {
 
 export type RecomposeState = { status: "none" } | { status: "asking" } | { status: "unavailable" } | { status: "ready"; plans: RecomposePlan[]; input: ArrangeInput };
 
-/** The top notes of the bars a motif comes from, on the line that has the tune. */
+/** The composer's sketch as text, for a call that writes from it but doesn't have it on the score. */
+export function sourceText(input: Pick<ArrangeInput, "written" | "lines">): string {
+  return input.written.map((w) => `Bar ${w.bar}: ${w.at ? placedNotes(w, input.lines) : w.notes}`).join(" / ").replace(/[\u0000-\u001f]/g, " ").slice(0, 16000);
+}
+
+/** The bars a motif comes from, as a line: the top note of each moment on the upper staff, because a piano's lower hand isn't the tune. */
 export function motifHeights(input: ArrangeInput, from: string, to: string): number[] {
   const bars = input.written.map((w) => w.bar);
-  return input.written.slice(bars.indexOf(from), bars.indexOf(to) + 1).flatMap((w) => w.notes.split(" ").filter(Boolean).flatMap((n) => noteHeight(n) ?? [])).slice(0, 8);
+  return input.written.slice(bars.indexOf(from), bars.indexOf(to) + 1).flatMap((w) => {
+    const names = w.notes.split(" ").filter(Boolean);
+    const at = (w.at ?? "").split(" ");
+    const staves = (w.staves ?? "").split(" ");
+    const top = new Map<string, number>();
+    names.forEach((name, k) => {
+      if (staves[k] && staves[k] !== "1") return;
+      const height = noteHeight(name);
+      if (height === null) return;
+      const when = at[k] ?? String(k);
+      top.set(when, Math.max(top.get(when) ?? 0, height));
+    });
+    return [...top.entries()].sort((a, b) => Number(a[0]) - Number(b[0])).map(([, height]) => height);
+  }).slice(0, 8);
 }
 
 export function useArrange(loaded: (Page & { fileName: string }) | null, part: Part | null, range: { from: number; to: number }, savedFile: string | null) {
@@ -95,7 +113,7 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
   const [fitting, setFitting] = useState<"none" | "asking" | "unavailable">("none");
   const [recompose, setRecompose] = useState<RecomposeState>({ status: "none" });
   /** The new piece being written, once one is chosen. */
-  const [recomposed, setRecomposed] = useState<{ plan: RecomposePlan; heights: number[] } | null>(null);
+  const [recomposed, setRecomposed] = useState<{ plan: RecomposePlan; heights: number[]; tuneBars: number; bars: number } | null>(null);
   const [fixing, setFixing] = useState<"none" | "asking" | "unavailable">("none");
   const turn = useRef(0);
 
@@ -233,7 +251,7 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
   }, [piece, roles, placed, base]);
 
   /** Their notes on the instruments they chose. Always from what they wrote, so it can be asked again. */
-  const askPlaced = async (chosen: string[], words: string) => {
+  const askPlaced = async (chosen: string[], words: string, tuneOnly = false) => {
     if (!source || !part || piece.status !== "ready") return;
     const now = ++turn.current;
     setTrying(null);
@@ -242,11 +260,11 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     const instruments = inScoreOrder(chosen);
     const from = split ? (wholeScoreParts(source.score)?.[0] ?? source.score.parts[0]!) : part;
     const written = split ? pieceInput(source.score, from, 0, from.measures.length - 1) : pieceInput(source.score, part, range.from, range.to);
-    const input: DistributeInput = { ...written, instruments, roles, answers, ask: words.trim() || null, tracks: (written.lines ?? []).flatMap((line) => (tracks[line]?.trim() ? [{ line, instrument: tracks[line]!.trim() }] : [])) };
+    const input: DistributeInput = { ...written, instruments, roles, answers, ...(tuneOnly ? { tuneOnly: true } : {}), ask: words.trim() || null, tracks: (written.lines ?? []).flatMap((line) => (tracks[line]?.trim() ? [{ line, instrument: tracks[line]!.trim() }] : [])) };
     const reply = await askSpark("distribute", input);
     if (turn.current !== now) return;
     const ready = (answer: DistributeAnswer, onto: string[], saved: boolean) => {
-      const { parts, check } = placeNotes(source.score, input, answer, onto);
+      const { parts, check } = placeNotes(source.score, input, answer, onto, tuneOnly);
       const xmlText = scoreOfParts(source.score, input, parts);
       setKept({ xmlText, score: parseScore(xmlText) });
       setGone([]);
@@ -289,6 +307,7 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
       where: going,
       answers,
       tracks: lines.flatMap((line) => (tracks[line]?.trim() ? [{ line, instrument: tracks[line]!.trim() }] : [])),
+      ...(placed.status === "ready" && placed.check.material && sketch ? { source: sourceText(sketch.input) } : {}),
     });
     const reachable = new Set([...input.written.map((w) => w.bar), ...newBarNumbers(input)]);
     // On the grid the notes will be written on, or it asks for a moment nobody can write down.
@@ -307,7 +326,7 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
   const askedOf = recomposed ? "recompose" : "arrange";
   const moodWord = options.status === "ready" ? /The mood I want: (\w+)/.exec(options.input.ask ?? "")?.[1]?.toLowerCase() : null;
   /** Which prepared run this is, if any, like arrange-hopeful. */
-  const moodKey = moodWord ? `${askedOf}-${moodWord}` : null;
+  const moodKey = moodWord ? (recomposed ? `recompose-${options.status === "ready" ? (options.input.freedom ?? 3) : 3}-${moodWord}` : `${askedOf}-${moodWord}`) : null;
 
   /** The notes of the option the composer chose, which go straight on the score. */
   const askNotes = async (index: number) => {
@@ -316,7 +335,7 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
   };
 
   /** Writes a plan a section at a time, so a failure loses only that section, and what's written shows up as it's written. Asking again finds the finished ones saved. */
-  const writeNotes = async (page: Page, input: ArrangeInput, plan: OptionPlan, index: number, isSaved: boolean, seed: WriteInput["seed"] | null) => {
+  const writeNotes = async (page: Page, input: ArrangeInput, plan: OptionPlan, index: number, isSaved: boolean, seed: WriteInput["seed"] | null, theme: ThemeAnswer["lines"] = []) => {
     const now = turn.current;
     const setNotes = (notes: OptionNotes) => setOptions((state) => (state.status === "ready" && state.input === input ? { ...state, notes: { ...state.notes, [index]: notes } } : state));
     const written = (adds: WriteAnswer["adds"], progress: Pick<Extract<OptionNotes, { status: "ready" }>, "writing" | "missing"> = {}) => {
@@ -335,7 +354,9 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
       if (k && adds.length && window) written(adds, { writing: { ...window, done: k, of: windows.length } });
       const before = window ? bars[bars.indexOf(window.from) - 1] : undefined;
       const earlier = adds.filter((a) => a.bar === before).map((a) => `${a.part}: ${a.events}`).join(" / ");
-      const asked: WriteInput = { ...input, chosen: plan, ...(window ? { window } : {}), ...(earlier ? { earlier: earlier.slice(0, 8000) } : {}), ...(seed ? { seed } : {}) };
+      const these = window ? bars.slice(bars.indexOf(window.from), bars.indexOf(window.to) + 1) : bars;
+      const composed = theme.filter((l) => these.includes(l.bar)).map((l) => `Bar ${l.bar} ${l.role}: ${l.events}`).join(" / ").slice(0, 8000);
+      const asked: WriteInput = { ...input, chosen: plan, ...(window ? { window } : {}), ...(earlier ? { earlier: earlier.slice(0, 8000) } : {}), ...(seed ? { seed: { ...seed, ...(composed ? { theme: composed } : {}) } } : {}) };
       const reply = await askSpark("arrange", asked);
       if (turn.current !== now) return;
       if (reply.status === "ok") {
@@ -357,23 +378,25 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
   };
 
   /** Two new pieces in words, from the composer's tune taken as a main motif (Ryu, 11-02). */
-  const askRecompose = async (words: string, length: number, instruments: string[]) => {
+  const askRecompose = async (words: string, length: number, instruments: string[], freedom = 3) => {
     if (!base || !mine) return;
     const now = ++turn.current;
     setRecompose({ status: "asking" });
     const lines = pieceInput(base.score, mine, span.from, span.to).lines ?? [];
     const reading = piece.status === "ready" && map ? { roles: map.roles.filter((r) => lines.includes(r.line)).slice(0, 200), missing: piece.answer.missing } : null;
-    const input = { ...arrangeInput(base.score, mine, span.from, span.to, words, 0, reading, { instruments, where: "after", answers, tracks: lines.flatMap((line) => (tracks[line]?.trim() ? [{ line, instrument: tracks[line]!.trim() }] : [])) }), moreBars: length };
+    const input = { ...arrangeInput(base.score, mine, span.from, span.to, words, 0, reading, { instruments, where: "after", answers, freedom, tracks: lines.flatMap((line) => (tracks[line]?.trim() ? [{ line, instrument: tracks[line]!.trim() }] : [])) }), moreBars: length };
     const reply = await askSpark("plan_recompose", input);
     if (turn.current !== now) return;
     setRecompose(reply.status === "ok" ? { status: "ready", plans: (reply.answer as { options: RecomposePlan[] }).options, input } : { status: "unavailable" });
   };
 
-  /** One of those pieces, on a new empty score of the shape it asks for. */
+  /** One of those pieces: its tune, countermelody and bass first, then everything else around them, on a new empty score of the shape it asks for. */
   const writeRecomposed = async (index: number) => {
     if (recompose.status !== "ready") return;
-    const plan = recompose.plans[index]!;
+    // At its closest a recomposition keeps the composer's key and metre, whatever it proposed.
+    const proposed = recompose.plans[index]!;
     const asked = recompose.input;
+    const plan = asked.freedom === 1 ? { ...proposed, fifths: asked.fifths ?? proposed.fifths, time: asked.time ?? proposed.time } : proposed;
     const instruments = asked.instruments ?? [];
     const length = asked.moreBars;
     const qpm = Math.max(30, Math.min(220, plan.qpm));
@@ -385,12 +408,15 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     setPlaced({ status: "none" });
     setOff([]);
     setOffBars([]);
-    setRecomposed({ plan, heights });
-    const input = arrangeInput(page.score, page.score.parts[0]!, 0, length - 1, asked.ask, 0, null, { instruments, where: "inside", answers: asked.answers });
+    setRecomposed({ plan, heights, tuneBars: 0, bars: length });
+    const input = arrangeInput(page.score, page.score.parts[0]!, 0, length - 1, asked.ask, 0, null, { instruments, where: "inside", answers: asked.answers, freedom: asked.freedom });
     setOptions({ status: "ready", plans: [plan], input, notes: {}, saved: false });
-    turn.current = now;
-    const tune = asked.written.map((w) => `${w.bar}: ${w.notes}`).join(" / ").slice(0, 12000);
-    await writeNotes(page, input, plan, 0, false, { tune, motif: `${plan.motif.what} From bars ${plan.motif.from} to ${plan.motif.to}.` });
+    const composed = await askSpark("write_theme", { ...asked, chosen: plan } satisfies ThemeInput);
+    if (turn.current !== now) return;
+    const lines = composed.status === "ok" ? (composed.answer as ThemeAnswer).lines : [];
+    setRecomposed({ plan, heights, tuneBars: new Set(lines.filter((l) => l.role === "tune").map((l) => l.bar)).size, bars: length });
+    const tune = sourceText(asked).slice(0, 16000);
+    await writeNotes(page, input, plan, 0, false, { tune, motif: `${plan.motif.what} From bars ${plan.motif.from} to ${plan.motif.to}.` }, lines);
   };
 
   /** Rewrites only these bars of what's been written, from what the composer says. Everything else stays. */
@@ -571,7 +597,7 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
   };
 
   /** A folder of MIDI and notation for a DAW, of whatever's on the page, lined up with the composer's session at bar 1. */
-  const download = () => {
+  const download = (forPlayers = false) => {
     if (!loaded || !base) return;
     const xmlText = tried() ?? base.xmlText;
     const title = base.score.movementTitle ?? base.score.title ?? loaded.fileName;
@@ -587,7 +613,7 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
         : whyText(title, placed.status === "ready" ? "On your instruments" : "The score as it stands", placed.status === "ready" ? placed.answer.idea : "", [], null, placedCheck);
     // The moments go back to the DAW as markers, on the beat they fall on in this score.
     const markers = placeCues(cues, parseScore(xmlText)).map((m) => ({ beat: m.beats, text: m.what || timeWords(m.seconds) }));
-    const bytes = packageFiles(xmlText, check, why, markers);
+    const bytes = packageFiles(xmlText, check, why, markers, forPlayers);
     const link = document.createElement("a");
     link.href = URL.createObjectURL(new Blob([bytes as BlobPart], { type: "application/zip" }));
     link.download = `${title.replace(/[^\w.-]+/g, "-")}-arrangement.zip`;
@@ -673,6 +699,7 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     motifFound: recomposed && options.status === "ready" && options.notes[0]?.status === "ready" ? motifSightings(options.notes[0].check, recomposed.heights) : null,
     fixing,
     askFix,
+    freedomOf: recompose.status === "ready" ? recompose.input.freedom : undefined,
     keep,
     startAgain: clear,
     download,

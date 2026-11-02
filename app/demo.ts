@@ -64,9 +64,10 @@ export function startDemo(piece: DemoPiece, recorded: string): void {
   };
   const transport: Transport = async (shape, input, think) => {
     const ask = (input as WriteLike).ask;
-    const mode = shape === "plan_recompose" || (input as { seed?: unknown }).seed ? "recompose" : "arrange";
+    const freedom = (input as { freedom?: number }).freedom;
+    const recomposing = shape === "plan_recompose" || shape === "write_theme" || !!(input as { seed?: unknown }).seed;
     const sharedCalls = await shared;
-    const moodCalls = moodOf(ask) ? await runOf(`${mode}-${moodOf(ask)}`) : [];
+    const moodCalls = moodOf(ask) ? await runOf(recomposing ? `recompose-${freedom ?? 3}-${moodOf(ask)}` : `arrange-${moodOf(ask)}`) : [];
     const found = [...moodCalls, ...sharedCalls].find((c) => callKey(c.shape, c.input) === callKey(shape, input));
     if (!found) return { status: "fallback", reason: "not-prepared" } satisfies SparkReply;
     replay.active = true;

@@ -4,7 +4,7 @@ import type { RoleFocus } from "./arrange";
 import { createPreview, beatClock } from "./audio/preview";
 import { loadManifest } from "./audio/samples";
 import { timeWords, type PlacedCue } from "./cues";
-import { notesToHear, type NoteKind, type PieceData, type PieceRow } from "./pieceData";
+import { familyOf, notesToHear, type NoteKind, type PieceData, type PieceRow } from "./pieceData";
 
 const ROLE_NAMES: Record<(typeof ROLES)[number], string> = {
   melody: "Melody",
@@ -29,10 +29,12 @@ function rowPaths(row: PieceRow) {
   const span = Math.max(row.high - row.low, 1);
   const yOf = (height: number) => (row.high === row.low ? h / 2 : pad + ((row.high - height) / span) * (h - pad * 2));
   const byKind = new Map<NoteKind, string[]>();
+  const fresh = new Set<NoteKind>();
   for (const n of row.notes) {
     const parts = byKind.get(n.kind) ?? [];
     parts.push(`M${(n.start * UNITS).toFixed(1)} ${yOf(n.height).toFixed(1)}h${Math.max(n.length * UNITS - 1, 2).toFixed(1)}`);
     byKind.set(n.kind, parts);
+    if (n.fresh) fresh.add(n.kind);
   }
   // The shape of the tune, drawn between its notes, so it reads as a line someone could sing.
   const tune = row.notes.filter((n) => n.kind === "melody").sort((a, b) => a.start - b.start || b.height - a.height);
@@ -41,7 +43,7 @@ function rowPaths(row: PieceRow) {
     const next = tune[k + 1];
     if (next && next.start > n.start && next.start - (n.start + n.length) < 2) contour.push(`M${((n.start + n.length) * UNITS).toFixed(1)} ${yOf(n.height).toFixed(1)}L${(next.start * UNITS).toFixed(1)} ${yOf(next.height).toFixed(1)}`);
   });
-  return { h, byKind, contour: contour.join("") };
+  return { h, byKind, fresh, family: familyOf(row.label), contour: contour.join("") };
 }
 
 /**
@@ -188,6 +190,15 @@ export function PieceView(props: {
           <span className="stage-key" role="group" aria-label="What the colours mean. Press one to see and hear only that.">
             {present.map((role) => chip(role, ROLE_NAMES[role]))}
             {hasNew && chip("new", "New")}
+            {hasNew && (
+              <span className="stage-families" aria-label="What the other colours mean">
+                {["winds", "brass", "percussion", "harp", "strings"].map((family) => (
+                  <span key={family} className="stage-family">
+                    <i className={`fam-${family}`} aria-hidden /> {family[0]!.toUpperCase() + family.slice(1)}
+                  </span>
+                ))}
+              </span>
+            )}
           </span>
         )}
       </div>
@@ -276,7 +287,7 @@ export function PieceView(props: {
         >
           <div className="stage-picked" style={{ left: along(beatOfBar((dragged ?? selected).from), totalBeats), width: along(endOfBar((dragged ?? selected).to) - beatOfBar((dragged ?? selected).from), totalBeats) } as CSSProperties} />
           <svg viewBox={`0 0 ${Math.max(totalBeats * UNITS, 1)} ${Math.max(tall, 1)}`} preserveAspectRatio="none" style={{ height: tall }} role="img" aria-label={`${rows.length} tracks over ${bars.length} bars`}>
-            {drawn.map(({ row, h, byKind, contour }, k) => {
+            {drawn.map(({ row, h, byKind, fresh, family, contour }, k) => {
               const y = drawn.slice(0, k).reduce((sum, d) => sum + d.h, 0);
               const quiet = solo.length > 0 && !solo.includes(row.label);
               return (
@@ -284,7 +295,7 @@ export function PieceView(props: {
                   <line className="stage-rule" x1="0" x2={totalBeats * UNITS} y1={h} y2={h} vectorEffect="non-scaling-stroke" />
                   {contour && <path className={`contour${dim("melody") ? " dim" : ""}`} d={contour} vectorEffect="non-scaling-stroke" />}
                   {[...byKind].map(([kind, parts]) => (
-                    <path key={String(kind)} className={`note kind-${kind ?? "plain"}${dim(kind) ? " dim" : ""}`} d={parts.join("")} vectorEffect="non-scaling-stroke" />
+                    <path key={String(kind)} className={`note kind-${kind ?? "plain"}${kind === "melody" || kind === "countermelody" ? " accent" : fresh.has(kind) ? ` support fam-${family}` : ""}${dim(kind) ? " dim" : ""}`} d={parts.join("")} vectorEffect="non-scaling-stroke" />
                   ))}
                 </g>
               );

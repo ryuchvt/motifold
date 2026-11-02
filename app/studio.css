@@ -346,6 +346,110 @@ button.door-card:hover {
   border-color: var(--ink);
   background: rgba(255, 255, 255, 0.05);
 }
+/* What a listener should follow stands out from what supports it, and the sections each have a colour. */
+.studio {
+  --fam-winds: #58c4c9;
+  --fam-brass: #e8c352;
+  --fam-percussion: #b58cf0;
+  --fam-harp: #f08bb4;
+  --fam-strings: #8fb0ff;
+}
+.studio .note.accent {
+  stroke-width: 3.6px;
+  opacity: 1;
+  filter: drop-shadow(0 0 3px currentColor);
+}
+.studio .note.kind-melody.accent {
+  stroke: #ff7a33;
+  color: #ff7a33;
+}
+.studio .note.kind-countermelody.accent {
+  stroke: #4da3ff;
+  color: #4da3ff;
+}
+.studio .note.support {
+  stroke-width: 1.5px;
+  opacity: 0.62;
+}
+.studio .note.fam-winds {
+  stroke: var(--fam-winds);
+}
+.studio .note.fam-brass {
+  stroke: var(--fam-brass);
+}
+.studio .note.fam-percussion {
+  stroke: var(--fam-percussion);
+}
+.studio .note.fam-harp {
+  stroke: var(--fam-harp);
+}
+.studio .note.fam-strings,
+.studio .note.fam-other {
+  stroke: var(--fam-strings);
+}
+.stage-families {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-left: 10px;
+  font: 10px var(--mono);
+  color: var(--muted);
+}
+.stage-family i {
+  display: inline-block;
+  width: 10px;
+  height: 3px;
+  vertical-align: middle;
+}
+.stage-family i.fam-winds {
+  background: var(--fam-winds);
+}
+.stage-family i.fam-brass {
+  background: var(--fam-brass);
+}
+.stage-family i.fam-percussion {
+  background: var(--fam-percussion);
+}
+.stage-family i.fam-harp {
+  background: var(--fam-harp);
+}
+.stage-family i.fam-strings {
+  background: var(--fam-strings);
+}
+.freedom {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.freedom-stops {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 3px;
+}
+.freedom-stop {
+  padding: 8px 2px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: none;
+  color: var(--muted);
+  font: 10px var(--mono);
+  cursor: pointer;
+}
+.freedom-stop.on {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--bg);
+}
+.arrange-check {
+  display: block;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.arrange-check input {
+  width: auto;
+  margin-right: 6px;
+}
 /* What the older sheet assumes is a light page. */
 .studio .button,
 .studio .chip-button,

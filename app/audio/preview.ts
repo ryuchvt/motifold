@@ -15,6 +15,8 @@ export interface HeardNote {
   instrument?: string;
   /** How hard it's played, 1 to 127. */
   velocity?: number;
+  /** Plucked. */
+  pizz?: boolean;
 }
 
 export function voiceOf(name: string): Voice {
@@ -154,7 +156,7 @@ export function createPreview() {
       const manifest = knownManifest();
       const pick = (n: HeardNote) => {
         const set = n.instrument ? setOf(n.instrument) : null;
-        return manifest && set ? chooseSample(manifest, set, n.height, secondsOf(n)) : null;
+        return manifest && set ? chooseSample(manifest, set, n.height, secondsOf(n), !!n.pizz) : null;
       };
       const needed = [...new Set(notes.filter((n) => n.start + n.length > fromBeat).flatMap((n) => pick(n)?.url ?? []))];
       if (needed.some((u) => !buffers.has(u))) {

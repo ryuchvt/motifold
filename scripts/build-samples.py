@@ -37,6 +37,8 @@ PITCHED = {
     "marimba": ("Percussion/Marimba", None),
     "piano": ("Keys/Upright Nr1", None),
 }
+# Plucked strings, each on its own track when it's exported.
+PLUCKED = {"violins": "Strings/Violin Section/Pizz", "violas": "Strings/Viola Section/pizz", "cellos": "Strings/Cello Section/pizzT", "basses": "Strings/Solo Contrabass/Pizz"}
 # One recording that plays whatever note is asked for.
 HITS = {
     "snare": "Percussion/Snare2-HitNS_v3_rr1_Sum.wav",
@@ -135,6 +137,11 @@ def main():
         for midi, p in sorted(shorts.items()):
             encode(fetch(p, cache), out / name / f"s{midi + shift}.m4a", SECONDS["short"], ffmpeg)
             entry["short"].append(midi + shift)
+        if name in PLUCKED:
+            plucked = round_robin_first([p for p in paths if str(Path(p).parent) == PLUCKED[name]])
+            for midi, p in sorted(plucked.items()):
+                encode(fetch(p, cache), out / name / f"p{midi + shift}.m4a", 1.5, ffmpeg)
+            entry["pizz"] = [midi + shift for midi in sorted(plucked)]
         manifest[name] = entry
     # Timpani files name a drum and not a note.
     for n, midi in TIMPANI.items():

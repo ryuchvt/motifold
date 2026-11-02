@@ -4,6 +4,7 @@
 export interface SampleSet {
   long?: number[];
   short?: number[];
+  pizz?: number[];
   hit?: boolean;
 }
 export type Manifest = Record<string, SampleSet>;
@@ -71,10 +72,14 @@ export interface Chosen {
 }
 
 /** The recording nearest a note. Null if there's none, or the nearest is too far from it to sound like the instrument. */
-export function chooseSample(manifest: Manifest, set: string, height: number, seconds: number): Chosen | null {
+export function chooseSample(manifest: Manifest, set: string, height: number, seconds: number, pizz = false): Chosen | null {
   const entry = manifest[set];
   if (!entry) return null;
   if (entry.hit) return { url: `/samples/${set}/hit.m4a`, rate: 1, sustains: false };
+  if (pizz && entry.pizz?.length) {
+    const near = entry.pizz.reduce((best, m) => (Math.abs(m - height) < Math.abs(best - height) ? m : best));
+    if (Math.abs(near - height) <= 12) return { url: `/samples/${set}/p${near}.m4a`, rate: 2 ** ((height - near) / 12), sustains: false };
+  }
   const wantShort = seconds < SHORT_UNDER && !!entry.short?.length;
   const pool = wantShort ? entry.short! : (entry.long ?? []);
   if (!pool.length) return null;

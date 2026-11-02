@@ -18,6 +18,23 @@ export interface PieceNote {
   kind: NoteKind;
   /** How hard it's played, 1 to 127. Absent: nothing has said. */
   velocity?: number;
+  /** Written by Muse Spark, whatever it's doing. */
+  fresh?: boolean;
+  /** Plucked. */
+  pizz?: boolean;
+}
+
+/** What a new note's role shows as on the stage. Only a tune and a second tune stand out, and the rest is the texture they sit on. */
+const KIND_OF_ROLE: Record<string, NoteKind> = { melody: "melody", countermelody: "countermelody", bass: "bass", harmony: "harmony", figure: "rhythm", rhythm: "rhythm", ornament: "rhythm", pedal: "pedal" };
+
+/** The sections of an orchestra, which colour what's supporting. */
+export function familyOf(name: string): string {
+  if (/snare|bass drum|cymbal|tam-?tam|gong|triangle|timpani|glockenspiel|xylophone|marimba|vibraphone|tubular|percussion/i.test(name)) return "percussion";
+  if (/harp|piano|celesta/i.test(name)) return "harp";
+  if (/horn|trumpet|trombone|tuba|cornet/i.test(name) && !/english horn/i.test(name)) return "brass";
+  if (/flute|piccolo|oboe|clarinet|bassoon|english horn|cor anglais/i.test(name)) return "winds";
+  if (/violin|viola|cello|double bass|contrabass|string/i.test(name)) return "strings";
+  return "other";
 }
 
 export interface PieceRow {
@@ -97,7 +114,7 @@ export function pieceData(score: Score, roles: PieceReading["roles"], bars: stri
       row = { label: add.part, notes: [], low: 0, high: 0, tall: false };
       rows.push(row);
     }
-    for (const e of add.events) for (const name of e.names) row.notes.push({ start: start + e.start, length: e.length, height: noteHeight(name)!, kind: "new", ...(e.velocity !== undefined ? { velocity: e.velocity } : {}) });
+    for (const e of add.events) for (const name of e.names) row.notes.push({ start: start + e.start, length: e.length, height: noteHeight(name)!, kind: (add.role && KIND_OF_ROLE[add.role]) || "new", fresh: true, ...(add.art === "pizz" ? { pizz: true } : {}), ...(e.velocity !== undefined ? { velocity: e.velocity } : {}) });
   }
   const lastEnd = Math.max(endOfBars, ...rows.flatMap((r) => r.notes.map((n) => n.start + n.length)));
   for (let next = endOfBars, number = lastNumber + 1; next < lastEnd - 1e-6; next += barLength, number++) pieceBars.push({ number: String(number), start: next, length: barLength });
@@ -126,6 +143,6 @@ export function notesToHear(data: PieceData, instrumentOf: (label: string) => st
     if (solo.length && !solo.includes(row.label)) return [];
     const instrument = `${instrumentOf(row.label)} ${row.label}`;
     const voice = voiceOf(instrument);
-    return row.notes.filter((n) => !focus || n.kind === focus).map((n) => ({ start: n.start, length: n.length, height: n.height, voice, level: level(n.kind), instrument, ...(n.velocity !== undefined ? { velocity: n.velocity } : {}) }));
+    return row.notes.filter((n) => !focus || n.kind === focus || (focus === "new" && n.fresh)).map((n) => ({ start: n.start, length: n.length, height: n.height, voice, level: level(n.kind), instrument, ...(n.velocity !== undefined ? { velocity: n.velocity } : {}), ...(n.pizz ? { pizz: true } : {}) }));
   });
 }

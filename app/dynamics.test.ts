@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { readMidi } from "./midi";
-import { checkOption, midiFile, readDyn, scoreTracks, velocityIn, withDoubles, withOption, writingWindows, type ArrangeOption } from "./arrange";
+import { checkOption, midiFile, readDyn, scoreTracks, transposedForPlayers, velocityIn, withDoubles, withOption, writingWindows, type ArrangeOption } from "./arrange";
 import { parseScore } from "../score";
 import type { ArrangeInput, OptionPlan } from "../server/shapes";
 
@@ -92,5 +92,45 @@ describe("writing a section at a time", () => {
   });
   it("skips bars the plan doesn't name, and doesn't write a bar twice", () => {
     expect(writingWindows([stretch(1, 4), stretch(3, 6), stretch(20, 22)], bars)).toEqual([{ from: "1", to: "6" }, { from: "20", to: "22" }]);
+  });
+});
+
+describe("what the players read", () => {
+  const score = `<?xml version="1.0"?><score-partwise><part-list><score-part id="P1"><part-name>Clarinet 1</part-name></score-part><score-part id="P2"><part-name>Horn 1</part-name></score-part><score-part id="P3"><part-name>Flute</part-name></score-part></part-list>${["P1", "P2", "P3"].map((id) => `<part id="${id}"><measure number="1"><attributes><divisions>4</divisions><key><fifths>-1</fifths></key><time><beats>3</beats><beat-type>4</beat-type></time></attributes><note><pitch><step>B</step><alter>-1</alter><octave>4</octave></pitch><duration>4</duration></note><note><pitch><step>F</step><alter>1</alter><octave>4</octave></pitch><duration>4</duration></note><note><pitch><step>C</step><octave>5</octave></pitch><duration>4</duration></note></measure></part>`).join("")}</score-partwise>`;
+  const sounds = (xml: string) => parseScore(xml).parts.map((p) => p.notes.map((n) => n.soundingMidi));
+
+  it("writes a Bb and an F instrument as they read, and what they sound doesn't change", () => {
+    const written = transposedForPlayers(score);
+    expect(sounds(written)).toEqual(sounds(score));
+    const [clarinet, horn, flute] = parseScore(written).parts;
+    expect(clarinet!.notes[2]!.pitch).toMatchObject({ step: "D", octave: 5 });
+    expect(clarinet!.measures[0]!.key.fifths).toBe(1);
+    expect(horn!.notes[2]!.pitch).toMatchObject({ step: "G", octave: 5 });
+    expect(horn!.measures[0]!.key.fifths).toBe(0);
+    expect(flute!.notes[2]!.pitch).toMatchObject({ step: "C", octave: 5 });
+  });
+});
+
+describe("plucked strings", () => {
+  it("say so on the page, and go on a MIDI track of their own", () => {
+    const parsed = parseScore(xml);
+    const check = checkOption(option([{ part: "Cello", bar: "1", events: "C3@0+1 G3@1+1", dyn: "mf", role: "figure", art: "pizz" }, { part: "Cello", bar: "2", events: "D3@0+3", dyn: "mf", role: "bass" }, { part: "Flute", bar: "1", events: "C5@0+1", art: "pizz" }]), parsed, input);
+    expect(check.adds.find((a) => a.part === "Flute")!.art).toBeUndefined();
+    const text = withOption(xml, parsed, check);
+    expect(text).toContain("pizz.");
+    expect(text).toContain("arco");
+    const names = scoreTracks(parseScore(text)).map((t) => t.name);
+    expect(names).toContain("Cello");
+    expect(names).toContain("Cello pizz");
+    expect(scoreTracks(parseScore(text)).find((t) => t.name === "Cello pizz")!.notes).toHaveLength(2);
+  });
+
+  it("picks out a tune and a second tune on the page", () => {
+    const parsed = parseScore(xml);
+    const check = checkOption(option([{ part: "Cello", bar: "1", events: "C3@0+3", role: "melody" }, { part: "Viola", bar: "1", events: "C4@0+3", role: "countermelody" }, { part: "Flute", bar: "1", events: "C5@0+3", role: "harmony" }]), parsed, input);
+    const text = withOption(xml, parsed, check, "#a8329b");
+    expect(text).toContain("#d9531e");
+    expect(text).toContain("#2466d1");
+    expect(text).toContain("#a8329b");
   });
 });

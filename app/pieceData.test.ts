@@ -36,7 +36,7 @@ describe("the whole piece as a picture", () => {
   it("puts new notes on their row, or a row of their own, past the last bar if they must", () => {
     const more = pieceData(score, roles, BARS, { adds: [{ part: "Tuba", bar: "4", events: [{ start: 0, length: 4, names: ["C2"] }] }, { part: "Flute", bar: "1", events: [{ start: 0, length: 1, names: ["C5"] }] }] });
     expect(more.rows.map((r) => r.label)).toEqual(["Violin", "Tuba", "Flute"]);
-    expect(more.rows[1]!.notes.at(-1)).toEqual({ start: 12, length: 4, height: 36, kind: "new" });
+    expect(more.rows[1]!.notes.at(-1)).toEqual({ start: 12, length: 4, height: 36, kind: "new", fresh: true });
     expect(more.bars.map((b) => b.number)).toEqual(["1", "2", "3", "4"]);
     expect(more.totalBeats).toBe(16);
     expect(more.fullness.added[0]).toBe(1);

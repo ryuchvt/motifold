@@ -163,6 +163,15 @@ export function StretchHead({ arranged }: { arranged: Arranged }) {
   );
 }
 
+/** How far a recomposition may go, and what stays at each. */
+const FREEDOMS: [string, string][] = [
+  ["Close", "Your whole tune, in order, in its own key and metre. It can be decorated, and the chords are new."],
+  ["Reshaped", "Your whole tune, in order, still easy to recognise. Its rhythm, major or minor, chords and metre can change."],
+  ["Themes", "Your main phrases, clearly heard. Their order can change, with new connecting music and a contrasting section."],
+  ["Motif", "Your opening bar or two drives the piece and is heard plainly at least once. A new melody grows from it."],
+  ["Seed", "Only a small cell stays, and it may never be heard plainly. Everything else is new."],
+];
+
 /** Moods to start from. Words of their own go in the box beside these. */
 const MOODS = ["Sad", "Tender", "Hopeful", "Dreamy", "Pastoral", "Wonder", "Storybook", "Playful", "Heroic", "Epic", "Pulse", "Action", "Tense", "Dark"];
 
@@ -182,6 +191,11 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [] }: { 
   /** Stay with the composer's melody, or take it as a motif (Ryu, 11-02). */
   const [mode, setMode] = useState<"arrange" | "recompose">("arrange");
   const [length, setLength] = useState(32);
+  /** How far a recomposition may go from the tune. */
+  const [freedom, setFreedom] = useState(3);
+  /** Keep only the tune and write the rest new from the sketch, or keep every note on the instruments. */
+  const [tuneOnly, setTuneOnly] = useState(true);
+  const [forPlayers, setForPlayers] = useState(false);
   const [autoWrite, setAutoWrite] = useState(false);
   const [fixWords, setFixWords] = useState("");
   // One press goes all the way from a mood to notes, so a plan doesn't wait for a second press.
@@ -195,12 +209,12 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [] }: { 
       void arranged.writeRecomposed(0);
     } else if (arranged.options.status === "unavailable" || arranged.recompose.status === "unavailable") setAutoWrite(false);
   }, [autoWrite, arranged.options.status, arranged.recompose.status]);
-  const moodsHere = demo ? MOODS.filter((m) => prepared.some((p) => p.mode === mode && p.mood === m.toLowerCase())) : MOODS;
+  const moodsHere = demo ? MOODS.filter((m) => prepared.some((p) => p.key === (mode === "recompose" ? `recompose-${freedom}-${m.toLowerCase()}` : `arrange-${m.toLowerCase()}`))) : MOODS;
   const askedWords = () => [mood ? `The mood I want: ${mood.toLowerCase()}.` : "", writeWords.trim()].filter(Boolean).join(" ");
   const generate = () => {
     setAutoWrite(true);
     if (mode === "arrange") void askOptions(askedWords(), moreBars, where);
-    else void arranged.askRecompose(askedWords(), length, chosen.length ? chosen : TEMPLATES.find((t) => t.name === "Full orchestra")!.instruments);
+    else void arranged.askRecompose(askedWords(), length, chosen.length ? chosen : TEMPLATES.find((t) => t.name === "Full orchestra")!.instruments, freedom);
   };  const [fitWords, setFitWords] = useState("");
   const [moreBars, setMoreBars] = useState(8);
   const [where, setWhere] = useState<ArrangeInput["where"]>("both");
@@ -232,9 +246,12 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [] }: { 
   const footer = (
     <footer className="arrange-foot">
       <span className="arrange-actions">
-        <button className="button small" onClick={download}>
+        <button className="button small" onClick={() => download(forPlayers)}>
           Download MIDI
         </button>
+        <label className="arrange-check">
+          <input type="checkbox" checked={forPlayers} onChange={(e) => setForPlayers(e.target.checked)} /> Also a score transposed for the players, in MusicXML for Sibelius, Dorico or MuseScore
+        </label>
         {kept && (
           <button className="button small" onClick={startAgain}>
             Back to my score
@@ -401,6 +418,16 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [] }: { 
               <button className="button small">Add</button>
             </form>
           </More>}
+          <div className="arrange-modes" role="group" aria-label="What happens to your sketch">
+            <button className={`arrange-mode${tuneOnly ? " on" : ""}`} aria-pressed={tuneOnly} onClick={() => setTuneOnly(true)}>
+              <strong>Keep my tune, write the rest new</strong>
+              Your sketch is the source. Your chords and bass show the harmony, and the orchestra is written new from them.
+            </button>
+            <button className={`arrange-mode${tuneOnly ? "" : " on"}`} aria-pressed={!tuneOnly} onClick={() => setTuneOnly(false)}>
+              <strong>Keep every note of mine</strong>
+              Everything you wrote goes on the instruments, and new parts are added around it.
+            </button>
+          </div>
           <More title="Say how">
             <textarea className="arrange-box" rows={2} maxLength={400} aria-label="How you want it laid out" value={placeWords} placeholder="Violas have the tune first, and hold the violins back." onChange={(e) => setPlaceWords(e.target.value)} />
           </More>
@@ -408,7 +435,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [] }: { 
             <p className="arrange-said">Choosing who plays what. This takes a minute or two.</p>
           ) : (
             <>
-              <button className={`button arrange-go${placed.status === "ready" ? "" : " primary"}`} disabled={busy || chosen.length === 0} onClick={() => void askPlaced(chosen, placeWords)}>
+              <button className={`button arrange-go${placed.status === "ready" ? "" : " primary"}`} disabled={busy || chosen.length === 0} onClick={() => void askPlaced(chosen, placeWords, tuneOnly)}>
                 {placed.status === "ready" ? "Lay it out again" : "Put my notes on these"}
               </button>
               {placed.status !== "ready" && (
@@ -473,6 +500,19 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [] }: { 
               Take my melody as a motif and write a new piece from it, with its own key, metre and form.
             </button>
           </div>
+          {mode === "recompose" && (
+            <div className="freedom" role="group" aria-label="How far from your tune">
+              <span className="spark-note">How far from your tune</span>
+              <span className="freedom-stops">
+                {FREEDOMS.map(([name], k) => (
+                  <button key={name} className={`freedom-stop${freedom === k + 1 ? " on" : ""}`} aria-pressed={freedom === k + 1} onClick={() => setFreedom(k + 1)}>
+                    {k + 1} {name}
+                  </button>
+                ))}
+              </span>
+              <span className="spark-note">{FREEDOMS[freedom - 1]![1]}</span>
+            </div>
+          )}
           {mode === "recompose" ? (
             <label className="arrange-inline">
               Bars
@@ -545,7 +585,8 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [] }: { 
           {arranged.recomposed && (
             <p className="spark-note">
               Motif from your bars {arranged.recomposed.plan.motif.from} to {arranged.recomposed.plan.motif.to}: {arranged.recomposed.plan.motif.what}
-              {arranged.motifFound && ` Measured in what's written, its shape comes back ${arranged.motifFound.same} times as it was, ${arranged.motifFound.inverted} upside down and ${arranged.motifFound.backwards} backwards.`}
+              {arranged.recomposed.tuneBars > 0 && ` Its tune runs through ${arranged.recomposed.tuneBars} of ${arranged.recomposed.bars} bars.`}
+              {arranged.motifFound && ` Measured in what's written, the motif's shape comes back ${arranged.motifFound.same} times as it was, ${arranged.motifFound.inverted} upside down and ${arranged.motifFound.backwards} backwards.`}
             </p>
           )}
           {options.status === "ready" && options.notes[0]?.status === "ready" && !options.notes[0].writing && arranged.view && (
