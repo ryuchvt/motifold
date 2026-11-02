@@ -91,7 +91,7 @@ describe("recomposing and writing from a source", () => {
     expect(SHAPES.write_theme).toBe(writeTheme);
     const theme = writeTheme.build({ ...asked({ moreBars: 32 }), chosen: { name: "A", idea: "B", motif: { from: "1", to: "1", what: "C" }, fifths: 0, time: "3/4", qpm: 90, why: [] } });
     expect(theme.instructions).toContain("Write three lines across every bar");
-    expect(writeTheme.check(asked(), { lines: [{ role: "bass", bar: "1", events: "C2@0+3" }] })).toBe("no tune");
+    expect(writeTheme.check(asked() as never, { lines: [{ role: "bass", bar: "1", events: "C2@0+3" }] })).toBe("no tune");
   });
 
   it("uses the sketch as source when only the tune is on the score", () => {
