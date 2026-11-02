@@ -30,7 +30,7 @@ export interface CallContext {
   onEvent?: (event: SparkEvent) => void;
 }
 
-export type Fallback = Refusal | "bad-input" | "disabled" | "timeout" | "failed" | "rejected";
+export type Fallback = Refusal | "bad-input" | "disabled" | "timeout" | "network" | "failed" | "rejected";
 
 export type CallResult =
   | { status: "ok"; answer: unknown; sources: Source[]; cached: boolean }
@@ -68,7 +68,7 @@ export async function runCall(shape: AnyShape, raw: unknown, ctx: CallContext): 
     effort: shape.effort,
     maxOutputTokens: shape.maxOutputTokens,
     deadlineMs: shape.deadlineMs,
-    cacheKey: `phrasepath-${shape.version}`,
+    cacheKey: `motifold-${shape.version}`,
     maxSearches: shape.maxSearches,
     safetyId: ctx.visitor.slice(0, 64),
     onEvent: ctx.onEvent,
@@ -92,7 +92,7 @@ export async function runCall(shape: AnyShape, raw: unknown, ctx: CallContext): 
   const outcome = await callSpark(call, ctx.key, ctx.fetchImpl);
   if (outcome.status === "unknown") {
     await ctx.ledger.uncertain(ctx.attemptId, JSON.stringify(outcome));
-    return { status: "fallback", reason: outcome.reason === "timeout" ? "timeout" : "failed" };
+    return { status: "fallback", reason: outcome.reason === "timeout" ? "timeout" : outcome.reason === "network" ? "network" : "failed" };
   }
   const charged = costMicros(outcome.usage, outcome.searches);
   const log = {

@@ -109,7 +109,14 @@ export function FreeBars(props: { auto?: boolean; fileName: string; bytes: Uint8
         </button>
       )}
       {state.status === "asking" && <p className="spark-note">Muse Spark is finding the bars from the notes. This takes about a minute.</p>}
-      {state.status === "unavailable" && <p className="spark-note">Muse Spark can't answer here, so there are no bars to offer.</p>}
+      {state.status === "unavailable" && (
+        <>
+          <p className="spark-note">Muse Spark can't answer here, so there are no bars to offer.</p>
+          <button className="button primary" onClick={() => void ask(null)}>
+            Try again
+          </button>
+        </>
+      )}
       {state.status === "ready" && answer && (
         <>
           {state.stale && <p className="spark-note">Muse Spark couldn't read it again just now, so this is still its last answer.</p>}

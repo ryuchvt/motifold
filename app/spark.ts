@@ -62,6 +62,12 @@ function headers(): Record<string, string> {
 }
 
 export async function askSpark(shape: string, input: unknown, signal?: AbortSignal): Promise<SparkReply> {
+  const reply = await askOnce(shape, input, signal);
+  // A connection dropped halfway is worth one more go, and anything else isn't.
+  return reply.status === "fallback" && reply.reason === "network" && !signal?.aborted ? askOnce(shape, input, signal) : reply;
+}
+
+async function askOnce(shape: string, input: unknown, signal?: AbortSignal): Promise<SparkReply> {
   emit({ kind: "start", shape, input });
   const started = Date.now();
   const thinking: RecordedCall["thinking"] = [];

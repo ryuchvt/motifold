@@ -55,11 +55,7 @@ const BAR = /^[0-9A-Za-z.-]{1,8}$/;
 const NOTE_NAME = /^[A-G](##|bb|#|b)?-?[0-9]$/;
 
 function wordsProblem(words: string[]): string | null {
-  // A study number from memory could be invented, so only the listed books are named.
-  if (words.some((w) => /(?<!suite\s)\bno\.?\s*\d|\b(op\.?|opus|study|etude|étude)\s*\d/i.test(w))) return "the words cite a study by number";
-  // The numbers on screen are measured. Spark's words can't add any of their own.
-  if (words.some((w) => /\d\s*(cents?\b|¢|ms\b|milliseconds?\b|%|percent\b|bpm\b|db\b|decibels?\b)|♩/i.test(w))) return "the words state a measurement of their own";
-  // Never health advice, and never called a coach (rules, anti-projects).
+  // Never health advice, and never called a coach (rules, anti-projects). Nothing else is worth throwing away a paid answer for.
   if (words.some((w) => /\b(coach|coaching|pain|injur\w*|tendon\w*|health\w*|doctor)\b/i.test(w))) return "the words stray outside the music";
   return null;
 }

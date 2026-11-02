@@ -345,7 +345,7 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
       last = reply;
       if (window) missing.push(window);
       // No money or no way to ask won't change for the next section.
-      if (reply.reason !== "failed" && reply.reason !== "timeout" && reply.reason !== "rejected") break;
+      if (reply.reason !== "failed" && reply.reason !== "timeout" && reply.reason !== "network" && reply.reason !== "rejected") break;
     }
     if (adds.length) return written(adds, missing.length ? { missing } : {});
     const saved = isSaved ? await savedOf() : null;
@@ -353,7 +353,7 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     const kept = saved?.notes?.[index];
     if (kept) return written(kept.adds);
     // It ran out of room or time, which is different from having no way to ask.
-    setNotes({ status: last && last.reason !== "failed" && last.reason !== "timeout" && last.reason !== "rejected" ? "unavailable" : "unfinished" });
+    setNotes({ status: last && last.reason !== "failed" && last.reason !== "timeout" && last.reason !== "network" && last.reason !== "rejected" ? "unavailable" : "unfinished" });
   };
 
   /** Two new pieces in words, from the composer's tune taken as a main motif (Ryu, 11-02). */

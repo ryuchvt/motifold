@@ -200,7 +200,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [] }: { 
   const generate = () => {
     setAutoWrite(true);
     if (mode === "arrange") void askOptions(askedWords(), moreBars, where);
-    else void arranged.askRecompose(askedWords(), length, allParts.length ? allParts.map((p) => p.name) : picked.length ? chosen : TEMPLATES.find((t) => t.name === "Full orchestra")!.instruments);
+    else void arranged.askRecompose(askedWords(), length, chosen.length ? chosen : TEMPLATES.find((t) => t.name === "Full orchestra")!.instruments);
   };  const [fitWords, setFitWords] = useState("");
   const [moreBars, setMoreBars] = useState(8);
   const [where, setWhere] = useState<ArrangeInput["where"]>("both");
@@ -280,7 +280,15 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [] }: { 
     );
   }
   if (piece.status === "asking") return <p className="arrange-said">Reading every part. This takes about a minute.</p>;
-  if (piece.status === "unavailable") return <p className="arrange-said">Muse Spark can't answer here.</p>;
+  if (piece.status === "unavailable")
+    return (
+      <div className="reading arrange">
+        <p className="arrange-said">Muse Spark can't answer here.</p>
+        <button className="button small" disabled={busy} onClick={() => void askPiece()}>
+          Try again
+        </button>
+      </div>
+    );
 
   const { answer: reading, lines, saved } = piece;
   const guessOf = (line: string) => reading.tracks?.find((t) => t.line === line);
@@ -349,7 +357,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [] }: { 
         <>
           <h2 className="arrange-title">Who plays it?</h2>
           <span className="arrange-chips" role="group" aria-label="Templates">
-            {TEMPLATES.map((t) => (
+            {TEMPLATES.filter((t) => !demo || t.name === "Full orchestra").map((t) => (
               <button
                 key={t.name}
                 className={`chip-button${template === t.name ? " on" : ""}`}
@@ -363,7 +371,8 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [] }: { 
               </button>
             ))}
           </span>
-          <More title="Pick my own">
+          {demo && <p className="spark-note">This demo was prepared for a full orchestra. Any other players run live with your own key.</p>}
+          {!demo && <More title="Pick my own">
             <span className="arrange-chips" role="group" aria-label="Your instruments">
               {inScoreOrder([...new Set([...PICKABLE, ...picked])]).map((name) => (
                 <button
@@ -391,7 +400,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [] }: { 
               <input maxLength={40} aria-label="Another instrument" placeholder="Another instrument" value={ownInstrument} onChange={(e) => setOwnInstrument(e.target.value)} />
               <button className="button small">Add</button>
             </form>
-          </More>
+          </More>}
           <More title="Say how">
             <textarea className="arrange-box" rows={2} maxLength={400} aria-label="How you want it laid out" value={placeWords} placeholder="Violas have the tune first, and hold the violins back." onChange={(e) => setPlaceWords(e.target.value)} />
           </More>
@@ -449,6 +458,11 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [] }: { 
       {current === 4 && (
         <>
           <h2 className="arrange-title">Where should it go?</h2>
+          {arranged.recomposed && (
+            <button className="button small" onClick={startAgain}>
+              Back to my sketch
+            </button>
+          )}
           <div className="arrange-modes" role="group" aria-label="How free">
             <button className={`arrange-mode${mode === "arrange" ? " on" : ""}`} aria-pressed={mode === "arrange"} onClick={() => setMode("arrange")}>
               <strong>Arrange</strong>

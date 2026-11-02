@@ -34,8 +34,9 @@ describe("finding the bars", () => {
     expect(readBars.check(input, answer({ phrases: [{ fromBar: 1, toBar: 90, what: "Too far" }] }))).toBe("a phrase outside the bars");
   });
 
-  it("won't let its words state a measurement of their own", () => {
-    expect(readBars.check(input, answer({ why: "It runs at 73 bpm" }))).toBe("the words state a measurement of their own");
+  it("keeps a good answer that mentions a number, because it's paid for and the bars are what matter", () => {
+    expect(readBars.check(input, answer({ why: "It runs at 73 bpm" }))).toBeNull();
+    expect(readBars.check(input, answer({ why: "Your coach would say so" }))).toBe("the words stray outside the music");
   });
 
   it("shows it every attack and tells it the file's grid means nothing", () => {
