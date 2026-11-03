@@ -99,21 +99,34 @@ it("keeps Expand intent even when development stays within the existing bars", a
   expect(screen.calls.find((call) => call.shape === "plan_options")!.input).toMatchObject({ intent: "expand", where: "inside", moreBars: 0 });
 });
 
-it("does not silently ignore the explicit melody-only replacement choice under the current-instruments default", async () => {
+it("keeps Expand neutral and preserves all source tracks when changing ensemble", async () => {
   const screen = await setup();
   await press(screen.host, "Next: Setup"); await press(screen.host, "Expand");
-  expect(screen.host.querySelector('[aria-label="Mood"]')).not.toBeNull();
-  const checkbox = [...screen.host.querySelectorAll<HTMLInputElement>('input[type="checkbox"]')].find((input) => input.parentElement?.textContent?.includes("Use only my melody"))!;
-  expect(checkbox.disabled).toBe(true);
-  expect(screen.host.textContent).toContain('Choose a new ensemble');
+  expect(screen.host.querySelector('[aria-label="Mood"]')).toBeNull();
+  expect(screen.host.textContent).toContain('All of your source notes stay');
+  expect([...screen.host.querySelectorAll('input[type="checkbox"]')].some(input => input.parentElement?.textContent?.includes('Use only my melody'))).toBe(false);
   const ensemble = screen.host.querySelector('[aria-label="Ensemble"]') as unknown as HTMLSelectElement;
   act(() => { ensemble.value = 'String orchestra'; ensemble.dispatchEvent(new Event('change', { bubbles: true })); });
-  const enabled = [...screen.host.querySelectorAll<HTMLInputElement>('input[type="checkbox"]')].find(input => input.parentElement?.textContent?.includes('Use only my melody'))!;
-  expect(enabled.disabled).toBe(false);
-  act(() => enabled.click());
   await press(screen.host, "Create");
   await vi.waitFor(() => expect(screen.now.options.status).toBe("ready"));
-  expect(screen.calls.find((call) => call.shape === "distribute")?.input).toMatchObject({ tuneOnly: true, intent: "expand" });
+  expect(screen.calls.find((call) => call.shape === "distribute")?.input).toMatchObject({ intent: "expand" });
+  expect(screen.calls.find((call) => call.shape === "distribute")?.input.tuneOnly).not.toBe(true);
+  expect(screen.calls.find((call) => call.shape === "plan_options")?.input).toMatchObject({ intent: "expand", moreBars: 16, where: "both", ask: null });
+});
+
+it("defaults Recompose to a recognisable Reshaped tune and never carries its mood into Expand", async () => {
+  const screen = await setup();
+  await press(screen.host, "Next: Setup"); await press(screen.host, "Recompose");
+  expect([...screen.host.querySelectorAll('button')].find(button => button.textContent === 'Reshaped')?.getAttribute('aria-pressed')).toBe('true');
+  const ensembles = [...screen.host.querySelectorAll('[aria-label="Ensemble"] option')].map(option => option.textContent);
+  expect(ensembles).toEqual(expect.arrayContaining(['String orchestra','String quartet','Chamber orchestra','Full orchestra','Woodwind quintet','Brass quintet']));
+  await press(screen.host, "Sad"); await press(screen.host, "Create");
+  expect(screen.calls.find(call => call.shape === 'plan_recompose')?.input).toMatchObject({ freedom: 2, ask: 'The mood I want: sad.' });
+  await press(screen.host, "Setup"); await press(screen.host, "Expand");
+  expect(screen.host.querySelector('[aria-label="Mood"]')).toBeNull();
+  await press(screen.host, "Create");
+  await vi.waitFor(() => expect(screen.now.options.status).toBe('ready'));
+  expect(screen.calls.find(call => call.shape === 'plan_options')?.input).toMatchObject({ intent:'expand', ask:null, moreBars:16 });
 });
 
 it("returns a new workflow step to the top of the inspector", async () => {

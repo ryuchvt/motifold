@@ -63,6 +63,10 @@ async function press(host:Element,text:string){
   if(!button)throw Error(`No button ${text}`);
   await act(async()=>button.click());
 }
+async function direction(host:Element,words:string){
+  const field=host.querySelector('[aria-label="What you want, or what inspired it"]') as unknown as HTMLTextAreaElement;
+  await act(async()=>{Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype,'value')!.set!.call(field,words);field.dispatchEvent(new Event('input',{bubbles:true}));});
+}
 async function opened(screen:ReturnType<typeof setup>){
   await act(()=>screen.now.askPiece());
   await press(screen.host,"Confirm tracks");
@@ -89,18 +93,18 @@ it("Create snapshots its recipe and waits for a fresh layout before planning ove
   await act(async()=>{ const ensemble=screen.host.querySelector('[aria-label="Ensemble"]') as unknown as HTMLSelectElement; ensemble.value='Brass quintet'; ensemble.dispatchEvent(new Event('change',{bubbles:true})); });
   const expand=[...screen.host.querySelectorAll<HTMLButtonElement>('.intent-choice')].find(button=>button.textContent?.startsWith('Expand'))!;
   await act(async()=>expand.click());
-  await press(screen.host,"Sad");
+  await direction(screen.host,"Hold low warm inner voices.");
   screen.holdLayout();
   await press(screen.host,"Create");
   expect(screen.layouts).toHaveLength(2);
   expect(screen.plans).toHaveLength(1);
   expect(screen.writes).toHaveLength(2);
   await press(screen.host,"Setup");
-  await press(screen.host,"Hopeful");
+  await direction(screen.host,"Light answering figure.");
   await act(async()=>{screen.release();});
   await finished(screen,2);
-  expect(screen.layouts[1]!.ask).toBe("The mood I want: sad.");
-  expect(screen.plans[1]!.ask).toBe("The mood I want: sad.");
+  expect(screen.layouts[1]!.ask).toBe("Hold low warm inner voices.");
+  expect(screen.plans[1]!.ask).toBe("Hold low warm inner voices.");
   expect(screen.plans[1]!.lines).toContain("Trumpet 1");
   expect(screen.plans[1]!.lines).not.toContain("Violin I");
   expect(screen.writes.slice(2).map(w=>w.chosen.name)).toEqual(["Run 2 A","Run 2 B"]);
@@ -128,7 +132,7 @@ it("defaults to neutral Arrange and never carries a previous mood into its reque
   await opened(screen);
   expect(screen.host.querySelector('[aria-label="Mood"]')).toBeNull();
   const intent=(name:string)=>[...screen.host.querySelectorAll<HTMLButtonElement>('.intent-choice')].find(button=>button.textContent?.startsWith(name))!;
-  await act(async()=>intent('Expand').click());
+  await act(async()=>intent('Recompose').click());
   await press(screen.host,'Hopeful');
   await act(async()=>intent('Arrange').click());
   await press(screen.host,'Create');
