@@ -1371,7 +1371,11 @@ const vlq = (n: number): number[] => {
 const ascii = (s: string) => [...s].map((c) => (c.charCodeAt(0) < 128 ? c.charCodeAt(0) : 63));
 const be32 = (n: number) => [(n >>> 24) & 255, (n >>> 16) & 255, (n >>> 8) & 255, n & 255];
 
-function trackBytes(track: MidiTrack, channel: number): number[] {
+/** Channel 10 is drums in General MIDI, so it's left out every time round. Fifteen parts fill a port, and the next part starts another. */
+const PITCHED_CHANNELS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15];
+export const midiSlot = (track: number) => ({ port: Math.floor(track / PITCHED_CHANNELS.length), channel: PITCHED_CHANNELS[track % PITCHED_CHANNELS.length]! });
+
+function trackBytes(track: MidiTrack, { port, channel }: ReturnType<typeof midiSlot>): number[] {
   const events = [
     // A level has to be in place before the note it's for.
     ...(track.controls ?? []).map((c) => ({ tick: Math.round(c.beat * 480), rank: 0, data: [0xb0 | channel, 1, c.value] })),
@@ -1381,7 +1385,7 @@ function trackBytes(track: MidiTrack, channel: number): number[] {
     ]),
   ].sort((a, b) => a.tick - b.tick || a.rank - b.rank);
   const name = ascii(track.name);
-  const body = [0, 0xff, 3, ...vlq(name.length), ...name, 0, 0xc0 | channel, track.program];
+  const body = [0, 0xff, 3, ...vlq(name.length), ...name, ...(port ? [0, 0xff, 0x21, 1, port] : []), 0, 0xc0 | channel, track.program];
   let at = 0;
   for (const e of events) {
     body.push(...vlq(e.tick - at), ...e.data);
@@ -1414,8 +1418,7 @@ export function midiFile(tracks: MidiTrack[], qpm: number | { beat: number; qpm:
   }
   meta.push(0, 0xff, 0x2f, 0);
   const bytes = [...ascii("MThd"), ...be32(6), 0, 1, 0, tracks.length + 1, 480 >> 8, 480 & 255, ...ascii("MTrk"), ...be32(meta.length), ...meta];
-  // Channel 10 is drums in General MIDI.
-  tracks.forEach((track, i) => bytes.push(...trackBytes(track, (i >= 9 ? i + 1 : i) % 16)));
+  tracks.forEach((track, i) => bytes.push(...trackBytes(track, midiSlot(i))));
   return new Uint8Array(bytes);
 }
 
