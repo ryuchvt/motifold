@@ -267,7 +267,7 @@ export function Studio({ initialScore = null, sample = false, initialSetup, samp
     setOwnKey(null);tutorial.exit();setAccess('demo');setDemoPiece(piece);setExploring(true);setError(null);
   };
   const rawGuide=!!guide&&guide.step===0;
-  const acceptedGuide=!!guide&&!!loaded&&(guide.step===1||!guide.events['study-started']);
+  const acceptedGuide=!!guide&&!rawGuide&&!!loaded&&(guide.step===1||!guide.events['study-started']);
   const inWork = (!!loaded&&!rawGuide)||exploring;
 
   // DAW bounces are only available in the explorer, bound to the actual exported score hash.
