@@ -27,7 +27,7 @@ export type PlacedState =
   | { status: "ready"; answer: DistributeAnswer; check: PlacedCheck; instruments: string[]; chosen: string[]; saved: boolean };
 
 /** The notes of one option, written only once the composer has chosen it. */
-export type OptionNotes = { status: "asking" } | { status: "unfinished" } | { status: "unavailable" } | { status: "ready"; writing?: { from: string; to: string; done: number; of: number }; missing?: { from: string; to: string }[]; adds: WriteAnswer["adds"]; check: OptionCheck };
+export type OptionNotes = { status: "asking" } | { status: "unfinished" } | { status: "unavailable" } | { status: "ready"; writing?: { from: string; to: string; done: number; of: number }; missing?: { from: string; to: string }[]; again?: { seed: WriteInput["seed"] | null; theme: ThemeAnswer["lines"] }; adds: WriteAnswer["adds"]; check: OptionCheck };
 
 export type OptionsState =
   | { status: "none" }
@@ -331,27 +331,32 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
   /** The notes of the option the composer chose, which go straight on the score. */
   const askNotes = async (index: number) => {
     if (!base || options.status !== "ready") return;
-    await writeNotes(base, options.input, options.plans[index]!, index, options.saved, null);
+    const held = options.notes[index];
+    const unfinished = held?.status === "ready" && held.missing?.length ? { adds: held.adds, missing: held.missing } : null;
+    const again = held?.status === "ready" ? held.again : undefined;
+    await writeNotes(base, options.input, options.plans[index]!, index, options.saved, again?.seed ?? null, again?.theme ?? [], unfinished);
   };
 
-  /** Writes a plan a section at a time, so a failure loses only that section, and what's written shows up as it's written. Asking again finds the finished ones saved. */
-  const writeNotes = async (page: Page, input: ArrangeInput, plan: OptionPlan, index: number, isSaved: boolean, seed: WriteInput["seed"] | null, theme: ThemeAnswer["lines"] = []) => {
+  /** Writes a plan a section at a time, so a failure loses only that section, and what's written shows up as it's written. Coming back for what's unfinished asks only for those sections, and whatever is on the score stays. */
+  const writeNotes = async (page: Page, input: ArrangeInput, plan: OptionPlan, index: number, isSaved: boolean, seed: WriteInput["seed"] | null, theme: ThemeAnswer["lines"] = [], unfinished: { adds: WriteAnswer["adds"]; missing: { from: string; to: string }[] } | null = null) => {
     const now = turn.current;
     const setNotes = (notes: OptionNotes) => setOptions((state) => (state.status === "ready" && state.input === input ? { ...state, notes: { ...state.notes, [index]: notes } } : state));
-    const written = (adds: WriteAnswer["adds"], progress: Pick<Extract<OptionNotes, { status: "ready" }>, "writing" | "missing"> = {}) => {
+    const written = (adds: WriteAnswer["adds"], progress: Pick<Extract<OptionNotes, { status: "ready" }>, "writing" | "missing" | "again"> = {}) => {
       setNotes({ status: "ready", adds, check: checkOption({ ...plan, adds }, page.score, input), ...progress });
       setTrying({ kind: "option", index });
     };
-    setNotes({ status: "asking" });
+    if (!unfinished) setNotes({ status: "asking" });
     const bars = [...input.written.map((w) => w.bar), ...newBarNumbers(input)];
     // A plan that names no bars still gets written, in one go.
     const sections = writingWindows(plan.why, bars);
-    const windows: ({ from: string; to: string } | null)[] = sections.length ? sections : [null];
-    let adds: WriteAnswer["adds"] = [];
+    const windows: ({ from: string; to: string } | null)[] = unfinished ? unfinished.missing : sections.length ? sections : [null];
+    const already = sections.length - (unfinished ? windows.length : sections.length);
+    const finished = new Set(unfinished?.adds.map((a) => a.bar));
+    let adds: WriteAnswer["adds"] = unfinished?.adds ?? [];
     const missing: { from: string; to: string }[] = [];
     let last: { status: "fallback"; reason: string } | null = null;
     for (const [k, window] of windows.entries()) {
-      if (k && adds.length && window) written(adds, { writing: { ...window, done: k, of: windows.length } });
+      if ((k || unfinished) && adds.length && window) written(adds, { writing: { ...window, done: already + k, of: sections.length } });
       const before = window ? bars[bars.indexOf(window.from) - 1] : undefined;
       const earlier = adds.filter((a) => a.bar === before).map((a) => `${a.part}: ${a.events}`).join(" / ");
       const these = window ? bars.slice(bars.indexOf(window.from), bars.indexOf(window.to) + 1) : bars;
@@ -360,15 +365,19 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
       const reply = await askSpark("arrange", asked);
       if (turn.current !== now) return;
       if (reply.status === "ok") {
-        adds = [...adds, ...withDoubles(reply.answer as WriteAnswer, bars)];
+        adds = [...adds, ...withDoubles(reply.answer as WriteAnswer, bars).filter((a) => !finished.has(a.bar))];
         continue;
       }
       last = reply;
       if (window) missing.push(window);
-      // No money or no way to ask won't change for the next section.
-      if (reply.reason !== "failed" && reply.reason !== "timeout" && reply.reason !== "network" && reply.reason !== "rejected") break;
+      // No money or no way to ask won't change for the next section, so the sections after it are unfinished too.
+      if (reply.reason !== "failed" && reply.reason !== "timeout" && reply.reason !== "network" && reply.reason !== "rejected") {
+        missing.push(...windows.slice(k + 1).flatMap((w) => (w ? [w] : [])));
+        break;
+      }
     }
-    if (adds.length) return written(adds, missing.length ? { missing } : {});
+    if (unfinished) adds = [...adds].sort((a, b) => bars.indexOf(a.bar) - bars.indexOf(b.bar));
+    if (adds.length) return written(adds, missing.length ? { missing, again: { seed, theme } } : {});
     const saved = isSaved ? await savedOf() : null;
     if (turn.current !== now) return;
     const kept = saved?.notes?.[index];
@@ -437,7 +446,9 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     setFixing(reply.status === "ok" ? "none" : "unavailable");
     if (reply.status !== "ok") return;
     const adds = [...held.adds.filter((a) => !these.includes(a.bar)), ...withDoubles(reply.answer as WriteAnswer, bars)];
-    setOptions((state) => (state.status === "ready" && state.input === input ? { ...state, notes: { ...state.notes, [index]: { status: "ready", adds, check: checkOption({ ...plan, adds }, base.score, input) } } } : state));
+    // A section this fix wrote all of isn't missing any more. Any other unfinished section still is.
+    const missing = held.missing?.filter((m) => !(these.includes(m.from) && these.includes(m.to)));
+    setOptions((state) => (state.status === "ready" && state.input === input ? { ...state, notes: { ...state.notes, [index]: { status: "ready", adds, check: checkOption({ ...plan, adds }, base.score, input), ...(missing?.length ? { missing, ...(held.again ? { again: held.again } : {}) } : {}) } } } : state));
   };
 
   /** Orders of the composer's own bars that put the right music on their moments. */
