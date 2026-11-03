@@ -8,7 +8,7 @@ import { instrumentFromName, inScoreOrder, ONE_NOTE_AT_A_TIME } from "./orchestr
 import { pieceData } from "./pieceData";
 import { askSpark } from "./spark";
 import { noteHeight } from "./notes";
-import { scoreLines, soundsAtAll, wholeScoreParts } from "./scoreInput";
+import { scoreLines, soundsAtAll, wholeScoreInput, wholeScoreParts } from "./scoreInput";
 import { marksOnPage, studyMarksOf } from "./ScoreStudy";
 
 /** What's new on the page: blue, the one colour besides the melody's orange, and the pair colour-blind readers tell apart best. */
@@ -216,17 +216,21 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     const now = ++turn.current;
     setPiece({ status: "asking" });
     const input = pieceInput(base.score, mine, span.from, span.to);
-    // The study goes at the same time, on the same notes, and doesn't hold up the reading.
     const studied = ++studyTurn.current;
-    const parts = wholeScoreParts(base.score) ?? [soundsAtAll(mine) ? mine : (base.score.parts.find(soundsAtAll) ?? mine)];
+    // The parts its note numbers count through: every part only when that's what was sent, because a big score falls back to one line (review F4).
+    const line = soundsAtAll(mine) ? mine : (base.score.parts.find(soundsAtAll) ?? mine);
+    const parts = wholeScoreInput(base.score, span.from, span.to) ? wholeScoreParts(base.score)! : [line];
     setStudy({ status: "asking" });
-    void askSpark("study_score", input).then((r) => {
+    const reply = await askSpark("read_piece", input);
+    if (turn.current !== now) return;
+    // The study comes after the reading, which every later step needs, so it can never take the credit the reading would have had (review F3),
+    // and only once there's a reading to show it beside.
+    const study = async () => {
+      const r = await askSpark("study_score", input);
       if (studyTurn.current !== studied) return;
       const answer = r.status === "ok" ? (r.answer as StudyScoreAnswer | undefined) : undefined;
       setStudy(answer && [answer.sections, answer.harmony, answer.moments].every(Array.isArray) ? { status: "ready", answer, written: input.written, parts } : { status: "unavailable" });
-    });
-    const reply = await askSpark("read_piece", input);
-    if (turn.current !== now) return;
+    };
     const ready = (answer: PieceReading, saved: boolean) => {
       const lines = input.lines ?? [];
       // A name that says what it is needs no judgement, and anything else starts as Muse Spark's guess.
@@ -234,12 +238,21 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
       setAnswered({});
       setPiece({ status: "ready", answer, written: input.written, lines, saved });
     };
-    if (reply.status === "ok") return ready(reply.answer as PieceReading, false);
+    if (reply.status === "ok") {
+      ready(reply.answer as PieceReading, false);
+      void study();
+      return;
+    }
     const saved = await savedOf();
     if (turn.current !== now) return;
     // Only for the very notes it was made from.
-    if (saved?.read?.answer && JSON.stringify(saved.read.input?.written) === JSON.stringify(input.written)) ready(saved.read.answer, true);
-    else setPiece({ status: "unavailable" });
+    if (saved?.read?.answer && JSON.stringify(saved.read.input?.written) === JSON.stringify(input.written)) {
+      ready(saved.read.answer, true);
+      void study();
+      return;
+    }
+    setPiece({ status: "unavailable" });
+    setStudy({ status: "none" });
   };
 
   /** Their answers, as what goes to Muse Spark next. */
@@ -362,7 +375,8 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
   const askNotes = async (index: number) => {
     if (!base || options.status !== "ready") return;
     const held = options.notes[index];
-    const unfinished = held?.status === "ready" && held.missing?.length ? { adds: held.adds, missing: held.missing } : null;
+    // Changed chords are written again everywhere, finished sections too, or bars written from the old chords would stay under the new ones (review M4).
+    const unfinished = held?.status === "ready" && held.missing?.length && !held.changed ? { adds: held.adds, missing: held.missing } : null;
     const again = held?.status === "ready" ? held.again : undefined;
     await writeNotes(base, options.input, options.plans[index]!, index, options.saved, again?.seed ?? null, again?.theme ?? [], unfinished);
   };
@@ -657,6 +671,9 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     setKept({ xmlText, score: parseScore(xmlText) });
     setGone([]);
     setOptions({ status: "none" });
+    // A kept recomposition is simply the composer's score now, so going again offers new plans for it (review F2).
+    setRecomposed(null);
+    setRecompose({ status: "none" });
     // A new order renumbers the bars, so the old reading no longer points at anything.
     if (trying?.kind === "structure") {
       setPiece({ status: "none" });
@@ -699,6 +716,8 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     const marks = studyMarksOf(study.answer, study.written, study.parts);
     if (!view) return marks;
     const measures = base.score.parts[0]?.measures ?? [];
+    // Printed numbers that start again, in a later movement, can't say which bars are on the page, so nothing is marked rather than the wrong music (review F5).
+    if (new Set(measures.map((m) => m.number)).size !== measures.length) return null;
     const [from, to] = [measures.findIndex((m) => m.number === view.from), measures.findIndex((m) => m.number === view.to)];
     return from < 0 || to < from ? null : marksOnPage(marks, page.score, from, to);
   }, [study, trying, kept, base, page, view]);

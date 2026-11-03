@@ -526,7 +526,7 @@ describe("the study", () => {
     });
     const screen = setUp();
     await press(screen.host, "Read my score");
-    expect(asked).toEqual(["study_score", "read_piece"]);
+    expect(asked).toEqual(["read_piece", "study_score"]);
     await press(screen.host, "Looks right");
     await press(screen.host, "Skip this");
     expect(screen.host.textContent).toContain("Two bars that rise a step.");

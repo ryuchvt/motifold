@@ -220,10 +220,11 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [] }: { 
     if (mode === "arrange") void askOptions(askedWords(), moreBars, where);
     else void arranged.askRecompose(askedWords(), length, chosen.length ? chosen : TEMPLATES.find((t) => t.name === "Full orchestra")!.instruments, freedom);
   };
-  const write = (index: number) => {
+  /** Writes the plan that was pressed, from the list it's in, whatever the other mode has left behind (review F1). */
+  const write = (index: number, from: "arrange" | "recompose") => {
     setPick(index);
     go(4);
-    void (arranged.recompose.status === "ready" && !arranged.recomposed ? arranged.writeRecomposed(index) : askNotes(index));
+    void (from === "recompose" ? arranged.writeRecomposed(index) : askNotes(index));
   };
 
   // What's already there opens its step, so a composer who comes back finds it where they left it.
@@ -649,21 +650,21 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [] }: { 
             </button>
           )}
           {(options.status === "unavailable" || arranged.recompose.status === "unavailable") && <p className="arrange-said">{demo ? "That one isn't prepared. It runs live with your own key." : "Muse Spark can't answer right now. Today's shared credit may have run out, and your own key will still work."}</p>}
-          {arranged.recompose.status === "ready" && !arranged.recomposed && (
+          {mode === "recompose" && arranged.recompose.status === "ready" && !arranged.recomposed && (
             <ul className="arrange-list">
               {arranged.recompose.plans.map((plan, index) => (
                 <li key={plan.name}>
                   <strong>{plan.name}</strong>
                   <span className="card-text">{sentences(plan.idea)} {plan.time}, {plan.qpm} a minute.</span>
                   <span className="spark-note">Motif from bars {plan.motif.from} to {plan.motif.to}: {plan.motif.what}</span>
-                  <button className="button small primary arrange-pick" disabled={busy} onClick={() => write(index)}>
+                  <button className="button small primary arrange-pick" disabled={busy} onClick={() => write(index, "recompose")}>
                     Write this one
                   </button>
                 </li>
               ))}
             </ul>
           )}
-          {options.status === "ready" && !arranged.recomposed && (
+          {mode === "arrange" && options.status === "ready" && !arranged.recomposed && (
             <ul className="arrange-list">
               {options.plans.map((plan, index) => {
                 const these = options.notes[index];
@@ -695,7 +696,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [] }: { 
                       </div>
                     )}
                     {these?.status === "ready" && these.changed && !these.writing ? (
-                      <button className="button small primary" disabled={busy} onClick={() => write(index)}>
+                      <button className="button small primary" disabled={busy} onClick={() => write(index, "arrange")}>
                         Write again with these chords
                       </button>
                     ) : these ? (
@@ -710,7 +711,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [] }: { 
                         See what's written
                       </button>
                     ) : (
-                      <button className="button small primary arrange-pick" disabled={busy} onClick={() => write(index)}>
+                      <button className="button small primary arrange-pick" disabled={busy} onClick={() => write(index, "arrange")}>
                         Write this one
                       </button>
                     )}
@@ -737,7 +738,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [] }: { 
           {notes?.status === "unfinished" && <p className="arrange-said">It didn't finish this one. Try again, or use fewer instruments or fewer new bars.</p>}
           {notes?.status === "unavailable" && <p className="arrange-said">Muse Spark can't answer here.</p>}
           {(notes?.status === "unfinished" || notes?.status === "unavailable") && (
-            <button className="button small primary" disabled={busy} onClick={() => write(shownAt!)}>
+            <button className="button small primary" disabled={busy} onClick={() => write(shownAt!, "arrange")}>
               Try again
             </button>
           )}
@@ -745,7 +746,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [] }: { 
           {done && !!notes.missing?.length && (
             <>
               <p className="arrange-hit">{notes.missing.map((m) => barsWords(m.from, m.to)).join(", ")} didn't finish.</p>
-              <button className="button small" disabled={busy} onClick={() => write(shownAt!)}>
+              <button className="button small" disabled={busy} onClick={() => write(shownAt!, "arrange")}>
                 Write what's missing
               </button>
             </>

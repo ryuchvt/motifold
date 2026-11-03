@@ -17,11 +17,15 @@ const clock = (ms: number) => `${Math.floor(ms / 60000)}:${String(Math.floor(ms 
 
 /** The wait, shown for what it is: which stage this is, the model's own thinking as it comes, and how long it's taken. On a replay it says it's a replay. */
 export function Thinking() {
-  const [current, setCurrent] = useState<{ shape: string; label: string; started: number } | null>(null);
-  const [lines, setLines] = useState<string[]>([]);
+  // Calls can run side by side, like the study after the reading, so each keeps its own label, clock and thinking (review F6).
+  const [running, setRunning] = useState<{ shape: string; label: string; started: number; lines: string[] }[]>([]);
   const [done, setDone] = useState<string[]>([]);
   const [now, setNow] = useState(Date.now());
   const list = useRef<HTMLOListElement>(null);
+  const runningNow = useRef(running);
+  runningNow.current = running;
+  const current = running[running.length - 1] ?? null;
+  const lines = current?.lines ?? [];
 
   useEffect(() => {
     const unsubscribe = onSpark((event: SparkEvent) => {
@@ -29,14 +33,18 @@ export function Thinking() {
         const window = (event.input as { window?: { from: string; to: string } }).window;
         const stage = STAGES[event.shape];
         const label = `${stage?.what ?? "Thinking"}${window ? `: bars ${window.from} to ${window.to}` : ""}`;
-        setCurrent({ shape: event.shape, label, started: Date.now() });
-        setLines([]);
+        setRunning((all) => [...all, { shape: event.shape, label, started: Date.now(), lines: [] }]);
       } else if (event.kind === "thinking") {
-        setLines((all) => [...all.slice(-24), event.text]);
+        setRunning((all) => {
+          const at = all.map((r) => r.shape).lastIndexOf(event.shape);
+          return at < 0 ? all : all.map((r, k) => (k === at ? { ...r, lines: [...r.lines.slice(-24), event.text] } : r));
+        });
       } else {
-        setCurrent((was) => {
-          if (was && event.ok) setDone((all) => [...all.slice(-5), was.label]);
-          return null;
+        const ended = runningNow.current.find((r) => r.shape === event.shape);
+        if (ended && event.ok) setDone((labels) => [...labels.slice(-5), ended.label]);
+        setRunning((all) => {
+          const at = all.findIndex((r) => r.shape === event.shape);
+          return at < 0 ? all : all.filter((_, k) => k !== at);
         });
       }
     });
