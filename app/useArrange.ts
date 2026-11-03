@@ -10,6 +10,7 @@ import { askSpark } from "./spark";
 import { noteHeight } from "./notes";
 import { scoreLines, soundsAtAll, wholeScoreInput, wholeScoreParts } from "./scoreInput";
 import { marksOnPage, studyMarksOf } from "./ScoreStudy";
+import { fixCurrent } from "./fixContext";
 
 /** What's new on the page: blue, the one colour besides the melody's orange, and the pair colour-blind readers tell apart best. */
 export const NEW_NOTES = "#2f6fd6";
@@ -639,8 +640,9 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     writingTurns.current.set(index, operation);
     setFixing("asking");
     setFixingReason(null);
-    const current = held.adds.filter((a) => these.includes(a.bar)).map((a) => `${a.part}, bar ${a.bar}: ${a.events}`).join(" / ").slice(0, 8000);
-    const reply = await askSpark("arrange", { ...input, chosen: plan, window: { from, to }, fix: { ask: words, current: current || "nothing yet" } } satisfies WriteInput);
+    const seed = held.again?.seed;
+    const composed = held.again?.theme.filter((line) => these.includes(line.bar)).map((line) => `Bar ${line.bar} ${line.role}: ${line.events}`).join(" / ").slice(0, 8000);
+    const reply = await askSpark("arrange", { ...input, chosen: plan, window: { from, to }, ...(seed ? { seed: { ...seed, ...(composed ? { theme: composed } : {}) } } : {}), fix: { ask: words, current: fixCurrent(held.adds, these) } } satisfies WriteInput);
     if (turn.current !== now || writingTurns.current.get(index) !== operation) return;
     setFixing(reply.status === "ok" ? "none" : "unavailable");
     setFixingReason(reply.status === "fallback" ? reply.reason : null);
