@@ -3,8 +3,9 @@
 // Worker secret and never reaches the browser.
 import { DurableObject } from "cloudflare:workers";
 import { runCall, sha256, type LedgerPort } from "./call";
-import { Answers, type CacheClaim, Ledger, type ReserveRequest, type Sql } from "./ledger";
+import { Answers, type Access, type AccessRequest, type CacheClaim, Ledger, type ReserveRequest, type Sql } from "./ledger";
 import { OWN_KEY, POOLS, SLOTS } from "./pools";
+import { CONTEXT_WINDOW, PRICES, reservationMicros, SEARCH_QUALIFIED } from "./prices";
 import { SHAPES } from "./shapes";
 import { MODEL } from "./spark";
 
@@ -60,14 +61,38 @@ export class LedgerObject extends DurableObject<Env> {
   balance(pool: string) {
     return this.ledger.balance(pool);
   }
+  access(request: AccessRequest) {
+    return this.ledger.access(request);
+  }
 }
 
 export default {
   async fetch(request, env, ctx): Promise<Response> {
     const url = new URL(request.url);
     const dev = env.MODE === "dev" && (url.hostname === "localhost" || url.hostname === "127.0.0.1");
-    const stub = env.LEDGER.get(env.LEDGER.idFromName("global"));
 
+    if (url.pathname === "/api/access") {
+      const headers = { "Cache-Control": "no-store" };
+      if (request.method !== "GET") return new Response("Method not allowed", { status: 405, headers: { ...headers, Allow: "GET" } });
+      const unavailable = (): Access => ({ state: "serviceerror", resetAt: null });
+      // This describes shared credit, independently of any own-key header. The default is the
+      // reading that starts a piece. Later screens may ask about their specific paid stage.
+      const name = url.searchParams.get("shape") ?? "read_piece";
+      const shape = Object.hasOwn(SHAPES, name) ? SHAPES[name] : undefined;
+      if (!shape || shape.devOnly || typeof env.META_API_KEY !== "string" || !env.META_API_KEY.trim() || MODEL !== CONTEXT_WINDOW.model || (shape.maxSearches && !SEARCH_QUALIFIED)) {
+        return Response.json(unavailable(), { headers });
+      }
+      try {
+        const stub = env.LEDGER.get(env.LEDGER.idFromName("global"));
+        const pool = dev ? "dev" : "public";
+        const access = await stub.access({ pool, shape: shape.name, visitor: await visitorKey(request, env, dev), reserveMicros: reservationMicros(shape.maxOutputTokens), model: MODEL, priceVersion: PRICES.version, slots: SLOTS[pool] ?? 1 });
+        // Only these coarse fields leave the ledger. No identity, usage or money is returned.
+        return Response.json({ state: access.state, resetAt: access.resetAt }, { headers });
+      } catch {
+        return Response.json(unavailable(), { headers });
+      }
+    }
+    const stub = env.LEDGER.get(env.LEDGER.idFromName("global"));
     if (dev && url.pathname === "/api/ledger" && request.method === "GET") {
       return Response.json(await stub.balance("dev"));
     }

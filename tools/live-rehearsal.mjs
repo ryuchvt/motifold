@@ -7,6 +7,18 @@ import { pathToFileURL } from 'node:url';
 import { spawn } from 'node:child_process';
 import { createConnection } from 'node:net';
 
+export const RECORDING_PROFILES = Object.freeze({
+  rehearsal: Object.freeze({ run: 'sample-sketch-faithful-2026-11-04', ceilingMicros: 5_000_000, poolCapMicros: 26_000_000, recordName: 'live-rehearsal-approved-run.json' }),
+  'night-204': Object.freeze({ run: 'motifold-night-204-2026-11-04', ceilingMicros: 23_000_000, poolCapMicros: 44_048_076, recordName: 'live-night-204-approved-run.json' }),
+});
+
+export function recordingProfile(name = 'rehearsal') {
+  if (!Object.hasOwn(RECORDING_PROFILES, name)) throw Error('Unknown approved recording profile');
+  const profile = RECORDING_PROFILES[name];
+  if (!profile) throw Error('Unknown approved recording profile');
+  return profile;
+}
+
 export function localOrigin(value) {
   const url = new URL(value);
   if (url.protocol !== 'http:' || !['127.0.0.1', 'localhost'].includes(url.hostname) || url.username || url.password || url.search || url.hash || url.pathname !== '/') throw Error('Only a loopback HTTP origin is allowed');
@@ -40,13 +52,13 @@ export function resultOf(text) {
 export function recordedCall(entry) {
   if (typeof entry.sent !== 'boolean' || !entry.shape) return null;
   const { version, model, ...reply } = entry.reply ?? { status: 'fallback', reason: 'unreachable' };
-  return { shape: entry.shape, input: entry.input, reply, ms: entry.ms ?? 0, thinking: entry.thinking ?? [], version, model, usage: entry.receipt?.usage };
+  return { shape: entry.shape, input: entry.input, reply, ms: entry.ms ?? 0, thinking: entry.thinking ?? [], version, model, usage: entry.receipt?.usage, ...(entry.captureCase ? { captureCase: entry.captureCase, attemptId: entry.attemptId } : {}) };
 }
 
 /** One approved rehearsal retains its ceiling and attempt identities across operator restarts. */
-export function approvedRun(file, balance) {
-  const saved = existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : { version: 1, run: 'sample-sketch-faithful-2026-11-04', ceilingMicros: 5_000_000, started: new Date().toISOString(), initialBalance: balance, attempts: [] };
-  if (saved.version !== 1 || saved.run !== 'sample-sketch-faithful-2026-11-04' || saved.ceilingMicros !== 5_000_000 || !Array.isArray(saved.attempts)) throw Error('The approved rehearsal record changed; review before running');
+export function approvedRun(file, balance, profile = RECORDING_PROFILES.rehearsal) {
+  const saved = existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : { version: 1, run: profile.run, ceilingMicros: profile.ceilingMicros, started: new Date().toISOString(), initialBalance: balance, attempts: [] };
+  if (saved.version !== 1 || saved.run !== profile.run || saved.ceilingMicros !== profile.ceilingMicros || !Array.isArray(saved.attempts)) throw Error('The approved rehearsal record changed; review before running');
   const owned = new Map(saved.attempts);
   for (const [id, entry] of owned) if (typeof id !== 'string' || !Number.isSafeInteger(entry.reservation) || entry.reservation < 0 || typeof entry.noCharge !== 'boolean') throw Error('Invalid retained rehearsal attempt');
   const persist = () => { saved.attempts = [...owned]; writeFileSync(`${file}.tmp`, JSON.stringify(saved, null, 2), { mode: 0o600 }); renameSync(`${file}.tmp`, file); };
@@ -55,7 +67,7 @@ export function approvedRun(file, balance) {
 }
 
 /** Serial release means each next request sees the previous request's actual settlement or retained reservation. */
-export function createGuard({ upstream, ledger, shapes, reserve, ceilingMicros = 5_000_000, armed = false, record = () => {}, owned = new Map(), persist = () => {}, afterSettled }) {
+export function createGuard({ upstream, ledger, shapes, reserve, ceilingMicros = 5_000_000, armed = false, record = () => {}, owned = new Map(), persist = () => {}, afterSettled, continueSettledFailures = false, requireCaptureCase = false }) {
   upstream = localOrigin(upstream);
   let chain = Promise.resolve();
   let stopped = false;
@@ -103,9 +115,12 @@ export function createGuard({ upstream, ledger, shapes, reserve, ceilingMicros =
           const refused = reply?.status === 'fallback' && ['bad-input', 'disabled', 'busy', 'empty', 'today', 'quota', 'closed', 'conflict', 'duplicate', 'stopped'].includes(reply.reason);
           if (!row && (cached || refused)) { owned.get(entry.attemptId).noCharge = true; persist(); }
           record({ ...entry, sent: true, ms: Date.now() - started, httpStatus: source.statusCode, reply, thinking, response: text, receipt: row, sessionExposureMicros: exposure(), balance: ledger.balance() });
-          if (!reply || (reply.status === 'fallback' && !['bad-input', 'disabled', 'busy', 'empty', 'daily', 'visitor'].includes(reply.reason))) stopped = true;
-          if (afterSettled && !stopped && reply?.status === 'ok' && !cached) {
-            if (reply.cached !== false || row?.state !== 'settled') {
+          // A rejected answer with reported usage has settled. The night recorder may move on
+          // after isolating that runtime; it does not automatically retry the failed request.
+          const settledFailure = continueSettledFailures && reply?.status === 'fallback' && ['failed', 'rejected'].includes(reply.reason) && row?.state === 'settled' && Number.isSafeInteger(row.charged_micros) && row.charged_micros >= 0;
+          if (!reply || (reply.status === 'fallback' && !['bad-input', 'disabled', 'busy', 'empty', 'daily', 'visitor'].includes(reply.reason) && !settledFailure)) stopped = true;
+          if (afterSettled && !stopped && ((reply?.status === 'ok' && !cached) || settledFailure)) {
+            if ((!settledFailure && reply.cached !== false) || row?.state !== 'settled') {
               stopped = true;
               record({ kind: 'worker-isolation', phase: 'blocked-missing-settlement', attemptId: entry.attemptId });
             } else isolation = { attemptId: entry.attemptId, shape: entry.shape };
@@ -141,7 +156,7 @@ export function createGuard({ upstream, ledger, shapes, reserve, ceilingMicros =
     const url = new URL(request.url, 'http://127.0.0.1');
     const route = /^\/api\/spark\/([a-z_]+)$/.exec(url.pathname);
     if (!route) {
-      if (url.pathname.startsWith('/api/') && !(url.pathname === '/api/ledger' && request.method === 'GET')) return block(response, {}, 'unknown-route');
+      if (url.pathname.startsWith('/api/') && !(['/api/ledger', '/api/access'].includes(url.pathname) && request.method === 'GET')) return block(response, {}, 'unknown-route');
       chain = chain.then(() => forward(request, response));
       return chain;
     }
@@ -150,11 +165,13 @@ export function createGuard({ upstream, ledger, shapes, reserve, ceilingMicros =
     const body = Buffer.concat(chunks);
     let input;
     try { input = JSON.parse(body); } catch { return block(response, {}, 'bad-input'); }
-    const entry = { at: new Date().toISOString(), shape: route[1], attemptId: input.attemptId, input: input.input };
+    const captureCase = request.headers['x-motifold-record-case'];
+    const entry = { at: new Date().toISOString(), shape: route[1], attemptId: input.attemptId, input: input.input, ...(typeof captureCase === 'string' && /^[a-z0-9-]{1,120}$/.test(captureCase) ? { captureCase } : {}) };
     const operation = async () => {
       if (response.destroyed || request.aborted) { record({ ...entry, sent: false, blocked: 'browser-left-before-release', sessionExposureMicros: exposure() }); return; }
       if (!armed) return block(response, entry, 'rehearsal-unarmed');
       if (stopped) return block(response, entry, 'rehearsal-stopped');
+      if (requireCaptureCase && !entry.captureCase) return block(response, entry, 'recording-case-required');
       if (request.headers['x-motifold-key'] !== undefined) return block(response, entry, 'own-key-outside-dev-budget');
       if (request.method !== 'POST' || !/^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/.test(entry.attemptId ?? '') || !shapes[entry.shape]) return block(response, entry, 'bad-input');
       if (owned.has(entry.attemptId) || ledger.attempt(entry.attemptId)) return block(response, entry, 'reused-attempt-id');
@@ -236,10 +253,12 @@ export function ownedWorker({ launch, ready, isDown, onUnexpectedExit, exitTimeo
 async function main() {
   const args = process.argv.slice(2);
   if (args.includes('--help')) {
-    console.log('After the coordinated go-ahead and a fresh production build:\nnode tools/live-rehearsal.mjs --repo <repo> --start-worker --armed [--isolate-settled] [--out <local receipts directory>]\nOpen http://127.0.0.1:8788/?record and use one browser flow. The proxy starts no model call itself.\n--isolate-settled restarts only its owned Worker after each fresh, confirmed settled success. It requires --start-worker, never retries a request, and skips cache hits.\nWithout --armed, all model requests are refused. The existing ledger and its $26 cap are never reset or raised.');
+    console.log('After a fresh production build:\nnode tools/live-rehearsal.mjs --repo <repo> --start-worker --armed --isolate-settled [--profile rehearsal|night-204] [--out <receipts directory>]\nProfiles are explicit approvals, not fresh allowances on restart. rehearsal retains its $5 ceiling. night-204 retains the separately approved $23 batch ceiling and $44.048076 cumulative dev cap. Existing holds, the $100 public pool and the $1 personal reserve are preserved.\nThe night profile may proceed after a charged, settled rejection; it never retries a request. Unknown charges stop the guard.\nWithout --armed, all model requests are refused.');
     return;
   }
   const value = (name, fallback) => { const at = args.indexOf(name); return at < 0 ? fallback : args[at + 1]; };
+  const profileName = value('--profile', 'rehearsal');
+  const profile = recordingProfile(profileName);
   const repo = resolve(value('--repo', process.cwd()));
   const output = resolve(value('--out', join(repo, 'output/live-rehearsal', new Date().toISOString().replaceAll(':', '-'))));
   const upstream = localOrigin(value('--upstream', 'http://127.0.0.1:8790'));
@@ -258,20 +277,22 @@ async function main() {
   const modules = await createServer({ root: repo, configFile: false, server: { middlewareMode: true }, appType: 'custom' });
   const { SHAPES } = await modules.ssrLoadModule('/server/shapes.ts');
   const { reservationMicros } = await modules.ssrLoadModule('/server/prices.ts');
+  const { POOLS } = await modules.ssrLoadModule('/server/pools.ts');
+  if (POOLS.find((pool) => pool.id === 'dev')?.capMicros !== profile.poolCapMicros) throw Error('The configured dev cap does not match this approved recording profile');
   await modules.close();
   mkdirSync(output, { recursive: true });
   const baseline = ledger.balance();
-  if (baseline.capMicros !== 26_000_000) throw Error('The existing approved dev cap changed; review before running');
+  if (![26_000_000, profile.poolCapMicros].includes(baseline.capMicros)) throw Error('The existing approved dev cap changed; review before running');
   const lockPath = join(shared, 'live-rehearsal.lock');
   const lock = openSync(lockPath, 'wx', 0o600);
   writeFileSync(lock, JSON.stringify({ pid: process.pid, started: new Date().toISOString(), output }));
   let worker;
   process.once('exit', () => { worker?.kill(); closeSync(lock); unlinkSync(lockPath); });
-  const run = approvedRun(join(shared, 'live-rehearsal-approved-run.json'), baseline);
+  const run = approvedRun(join(shared, profile.recordName), baseline, profile);
   const baselineFile = join(output, 'baseline.json');
-  if (!existsSync(baselineFile)) writeFileSync(baselineFile, JSON.stringify({ at: new Date().toISOString(), repo, upstream, port, ceilingMicros: 5_000_000, armed: args.includes('--armed'), balance: baseline, approvedRun: run.snapshot() }, null, 2));
+  if (!existsSync(baselineFile)) writeFileSync(baselineFile, JSON.stringify({ at: new Date().toISOString(), repo, upstream, port, profile: profileName, ceilingMicros: profile.ceilingMicros, armed: args.includes('--armed'), balance: baseline, approvedRun: run.snapshot() }, null, 2));
   const calls = [];
-  const guard = createGuard({ upstream, ledger, shapes: SHAPES, reserve: reservationMicros, owned: run.owned, persist: run.persist, armed: args.includes('--armed'), afterSettled: isolate ? () => worker.restart() : undefined, record(entry) {
+  const guard = createGuard({ upstream, ledger, shapes: SHAPES, reserve: reservationMicros, ceilingMicros: profile.ceilingMicros, owned: run.owned, persist: run.persist, armed: args.includes('--armed'), continueSettledFailures: profileName === 'night-204', requireCaptureCase: profileName === 'night-204', afterSettled: isolate ? () => worker.restart() : undefined, record(entry) {
     appendFileSync(join(output, 'receipts.jsonl'), JSON.stringify(entry) + '\n');
     const call = recordedCall(entry);
     if (call) {
@@ -283,7 +304,7 @@ async function main() {
   const ready = async () => {
     const response = await fetch(`${upstream}/api/ledger`, { signal: AbortSignal.timeout(1000) });
     const balance = await response.json();
-    return response.ok && balance.capMicros === baseline.capMicros && balance.committedMicros === ledger.balance().committedMicros;
+    return response.ok && balance.capMicros === profile.poolCapMicros && balance.committedMicros === ledger.balance().committedMicros;
   };
   const isDown = () => new Promise((done) => {
     const socket = createConnection({ host: '127.0.0.1', port: new URL(upstream).port });
@@ -302,7 +323,7 @@ async function main() {
     await new Promise((done, reject) => { guard.server.once('error', reject); guard.server.listen(port, '127.0.0.1', done); });
   } catch (error) { worker?.kill(); ledger.close(); throw error; }
   console.log(`Local ${args.includes('--armed') ? 'ARMED' : 'UNARMED'} rehearsal: http://127.0.0.1:${port}/?record`);
-  console.log(`Receipts: ${output}. New exposure ceiling $5. Existing ledger cap unchanged.`);
+  console.log(`Receipts: ${output}. Profile ${profileName}; new exposure ceiling $${profile.ceilingMicros / 1_000_000}. Existing holds remain counted.`);
   const finish = () => { guard.stop(); guard.server.close(); worker?.kill(); ledger.close(); process.exit(0); };
   process.once('SIGINT', finish); process.once('SIGTERM', finish);
 }

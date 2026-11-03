@@ -64,6 +64,15 @@ export interface Balance {
   todayMicros: number;
 }
 
+/** A read-only view of whether a fresh shared-credit call can start. Never a reservation. */
+export interface Access {
+  state: "available" | "busy" | "daily" | "userlimit" | "totalunavailable" | "serviceerror";
+  /** UTC epoch milliseconds when a known allowance resets or the pool opens. */
+  resetAt: number | null;
+}
+
+export type AccessRequest = Pick<ReserveRequest, "pool" | "shape" | "visitor" | "reserveMicros" | "model" | "priceVersion" | "slots">;
+
 const DAY_MS = 86_400_000;
 
 /** The UTC day a moment falls in, as a number: days since 1970. */
@@ -284,6 +293,22 @@ export class Ledger {
     };
   }
 
+  /** Uses the same bounds as reserve, without claiming a quota, expiring a lease or changing a hold. */
+  access(r: AccessRequest): Access {
+    const now = this.now();
+    const day = dayOf(now);
+    const resets = (day + 1) * DAY_MS;
+    const pool = this.pool(r.pool);
+    if (!pool || (pool.closesAt !== null && now >= pool.closesAt)) return { state: "totalunavailable", resetAt: null };
+    if (pool.opensAt !== null && now < pool.opensAt) return { state: "totalunavailable", resetAt: pool.opensAt };
+    if (this.tripped(r.model, r.priceVersion)) return { state: "serviceerror", resetAt: null };
+    if (this.committed(pool.id) + r.reserveMicros > pool.capMicros) return { state: "totalunavailable", resetAt: null };
+    if (pool.dailyMicros !== null && this.committed(pool.id, day) + r.reserveMicros > pool.dailyMicros) return { state: "daily", resetAt: resets };
+    if (this.quotaUsed(pool, r, day)) return { state: "userlimit", resetAt: resets };
+    const running = this.one(`SELECT COUNT(*) AS n FROM attempts WHERE pool = ? AND state IN ('reserved', 'dispatched') AND lease_until > ?`, pool.id, now);
+    return { state: Number(running?.n ?? 0) >= r.slots ? "busy" : "available", resetAt: null };
+  }
+
   attempt(attemptId: string): Record<string, SqlValue> | null {
     return this.one(`SELECT * FROM attempts WHERE id = ?`, attemptId);
   }
@@ -320,7 +345,7 @@ export class Ledger {
     return pool;
   }
 
-  private quotaUsed(pool: Pool, r: CacheClaim, day: number): boolean {
+  private quotaUsed(pool: Pool, r: Pick<CacheClaim, "shape" | "visitor">, day: number): boolean {
     const limit = pool.perVisitor[r.shape];
     if (limit === undefined) return false;
     const used = this.one(

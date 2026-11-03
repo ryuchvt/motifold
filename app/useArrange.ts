@@ -18,30 +18,30 @@ export const NEW_NOTES = "#2f6fd6";
 export type StudyState =
   | { status: "none" }
   | { status: "asking" }
-  | { status: "unavailable" }
+  | { status: "unavailable"; reason?: string }
   | { status: "ready"; answer: StudyScoreAnswer; written: StudyScoreInput["written"]; parts: Part[] };
 
 export type PieceState =
   | { status: "none" }
   | { status: "asking" }
-  | { status: "unavailable" }
+  | { status: "unavailable"; reason?: string }
   | { status: "ready"; answer: PieceReading; written: StudyScoreInput["written"]; lines: string[]; saved: boolean };
 
 export type PlacedState =
   | { status: "none" }
   | { status: "asking" }
-  | { status: "unavailable" }
+  | { status: "unavailable"; reason?: string }
   /** `chosen`: what the composer asked for, which a saved answer wasn't made for unless it matches `instruments`. */
   | { status: "ready"; answer: DistributeAnswer; check: PlacedCheck; instruments: string[]; chosen: string[]; saved: boolean };
 
 /** The notes of one option, written only once the composer has chosen it. */
 type WritingSource = { seed: WriteInput["seed"] | null; theme: ThemeAnswer["lines"] };
-export type OptionNotes = { status: "asking" } | { status: "unfinished" | "unavailable"; missing?: Stretch[]; again?: WritingSource } | { status: "ready"; writing?: { from: string; to: string; done: number; of: number }; missing?: Stretch[]; again?: WritingSource; adds: WriteAnswer["adds"]; check: OptionCheck; changed?: boolean; preview?: boolean };
+export type OptionNotes = { status: "asking" } | { status: "unfinished" | "unavailable"; reason?: string; missing?: Stretch[]; again?: WritingSource } | { status: "ready"; reason?: string; writing?: { from: string; to: string; done: number; of: number }; missing?: Stretch[]; again?: WritingSource; adds: WriteAnswer["adds"]; check: OptionCheck; changed?: boolean; preview?: boolean };
 
 export type OptionsState =
   | { status: "none" }
   | { status: "asking" }
-  | { status: "unavailable" }
+  | { status: "unavailable"; reason?: string }
   | { status: "ready"; plans: OptionPlan[]; input: ArrangeInput; notes: Record<number, OptionNotes>; saved: boolean };
 
 /** Index -1 is the order the composer put together by hand. */
@@ -62,7 +62,7 @@ interface Saved {
   notes?: (WriteAnswer | null)[];
 }
 
-export type RecomposeState = { status: "none" } | { status: "asking" } | { status: "unavailable" } | { status: "ready"; plans: RecomposePlan[]; input: ArrangeInput };
+export type RecomposeState = { status: "none" } | { status: "asking" } | { status: "unavailable"; reason?: string } | { status: "ready"; plans: RecomposePlan[]; input: ArrangeInput };
 
 /** The composer's sketch as text, for a call that writes from it but doesn't have it on the score. */
 export function sourceText(input: Pick<ArrangeInput, "written" | "lines">): string {
@@ -133,16 +133,21 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
   /** Orders Muse Spark found for those moments. */
   const [fitted, setFitted] = useState<PieceReading["structures"]>([]);
   const [fitting, setFitting] = useState<"none" | "asking" | "unavailable">("none");
+  const [fittingReason, setFittingReason] = useState<string | null>(null);
   const [recompose, setRecompose] = useState<RecomposeState>({ status: "none" });
   /** The new piece being written, once one is chosen. */
   const [recomposed, setRecomposed] = useState<{ plan: RecomposePlan; heights: number[]; opening: number[]; tuneBars: number; bars: number } | null>(null);
   const [fixing, setFixing] = useState<"none" | "asking" | "unavailable">("none");
+  const [fixingReason, setFixingReason] = useState<string | null>(null);
+  const [themeReason, setThemeReason] = useState<string | null>(null);
   const turn = useRef(0);
 
   const clear = () => {
     setRecompose({ status: "none" });
     setRecomposed(null);
     setFixing("none");
+    setFixingReason(null);
+    setThemeReason(null);
     turn.current++;
     setKept(null);
     setSplitting([]);
@@ -166,6 +171,7 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     setMarkerNote(null);
     setFitted([]);
     setFitting("none");
+    setFittingReason(null);
   };
   useEffect(clear, [loaded?.score, part?.id, range.from, range.to]);
 
@@ -224,6 +230,7 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     setPiece((now) => (now.status === "asking" ? { status: "none" } : now));
     setPlaced((now) => (now.status === "asking" ? { status: "none" } : now));
     setFitting("none");
+    setFittingReason(null);
     setTrying(null);
     setOptions({ status: "none" });
   };
@@ -240,7 +247,7 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     const reply = await askSpark('study_score', source.input);
     if (studyTurn.current !== now || studySource.current !== source) return;
     const answer = reply.status === 'ok' ? reply.answer as StudyScoreAnswer : undefined;
-    setStudy(answer && [answer.sections, answer.harmony, answer.moments].every(Array.isArray) ? { status: 'ready', answer, written: source.input.written, parts: source.parts } : { status: 'unavailable' });
+    setStudy(answer && [answer.sections, answer.harmony, answer.moments].every(Array.isArray) ? { status: 'ready', answer, written: source.input.written, parts: source.parts } : { status: 'unavailable', reason: reply.status === 'fallback' ? reply.reason : 'malformed' });
   };
 
   const askPiece = async () => {
@@ -283,7 +290,7 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
       void study();
       return;
     }
-    setPiece({ status: "unavailable" });
+    setPiece({ status: "unavailable", reason: reply.reason });
     setStudy({ status: "none" });
   };
 
@@ -341,7 +348,7 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     if (turn.current !== now) return;
     // A saved answer was made for its own instruments, whatever's ticked now.
     if (saved?.distribute?.answer && saved.distribute.input?.instruments && JSON.stringify(saved.distribute.input.written) === JSON.stringify(input.written)) ready(saved.distribute.answer, saved.distribute.input.instruments, true);
-    else setPlaced({ status: "unavailable" });
+    else setPlaced({ status: "unavailable", reason: reply.reason });
   };
 
   /** An instrument that plays one note at a time, given chords, as single lines. No note changes. */
@@ -387,13 +394,13 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     if (turn.current !== now) return;
     // A saved answer was asked for its own number of new bars, whatever the box says now.
     if (saved?.plan?.answer && JSON.stringify(saved.plan.input?.written) === JSON.stringify(input.written)) setOptions(ready(saved.plan.answer, { ...input, moreBars: saved.plan.input?.moreBars ?? input.moreBars }, true));
-    else setOptions({ status: "unavailable" });
+    else setOptions({ status: "unavailable", reason: reply.reason });
   };
 
   const askedOf = recomposed ? "recompose" : "arrange";
   const moodWord = options.status === "ready" ? /The mood I want: (\w+)/.exec(options.input.ask ?? "")?.[1]?.toLowerCase() : null;
   /** Which prepared run this is, if any, like arrange-hopeful. */
-  const moodKey = moodWord ? (recomposed ? `recompose-${options.status === "ready" ? (options.input.freedom ?? 3) : 3}-${moodWord}` : `${askedOf}-${moodWord}`) : null;
+  const moodKey = moodWord ? (recomposed ? `recompose-${options.status === "ready" ? (options.input.freedom ?? 2) : 2}-${moodWord}` : `${askedOf}-${moodWord}`) : null;
 
   /** The composer's own chords for one stretch of a plan, which the notes are then written from. Notes already written stay until they ask again. */
   const setChords = (index: number, stretch: number, chords: string) =>
@@ -463,7 +470,7 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
       setOptions((state) => state.status === "ready" && state.input === input && state.plans[index] === plan ? { ...state, notes: { ...state.notes, [index]: notes } } : state);
       return notes;
     };
-    const written = (adds: WriteAnswer["adds"], progress: Pick<Extract<OptionNotes, { status: "ready" }>, "writing" | "missing" | "again"> = {}) => {
+    const written = (adds: WriteAnswer["adds"], progress: Pick<Extract<OptionNotes, { status: "ready" }>, "writing" | "missing" | "again" | "reason"> = {}) => {
       const notes = setNotes({ status: "ready", adds, check: checkOption({ ...plan, adds }, page.score, input), ...progress });
       if (notes && !onlyFirst && selected() && displayed()) showTrying({ kind: "option", index });
       return notes;
@@ -513,28 +520,29 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     }
     if (unfinished) adds = [...adds].sort((a, b) => bars.indexOf(a.bar) - bars.indexOf(b.bar));
     if (adds.length || completed) {
-      if (rest.length || onlyFirst) return setNotes({ status: "ready", adds, check: checkOption({ ...plan, adds }, page.score, input), ...(missing.length || rest.length ? { missing: [...missing, ...rest] } : {}), again: { seed, theme }, ...(onlyFirst && (missing.length || rest.length) ? { preview: true } : {}) });
-      return written(adds, { ...(missing.length ? { missing } : {}), ...(seed || theme.length || missing.length ? { again: { seed, theme } } : {}) });
+      if (rest.length || onlyFirst) return setNotes({ status: "ready", ...(last ? { reason: last.reason } : {}), adds, check: checkOption({ ...plan, adds }, page.score, input), ...(missing.length || rest.length ? { missing: [...missing, ...rest] } : {}), again: { seed, theme }, ...(onlyFirst && (missing.length || rest.length) ? { preview: true } : {}) });
+      return written(adds, { ...(last ? { reason: last.reason } : {}), ...(missing.length ? { missing } : {}), ...(seed || theme.length || missing.length ? { again: { seed, theme } } : {}) });
     }
     const saved = isSaved ? await savedOf() : null;
     if (!current()) return;
     const kept = saved?.notes?.[index];
     if (kept) return onlyFirst ? setNotes({ status: "ready", adds: kept.adds, check: checkOption({ ...plan, adds: kept.adds }, page.score, input), preview: true }) : written(kept.adds);
     // It ran out of room or time, which is different from having no way to ask.
-    return setNotes({ status: last && last.reason !== "failed" && last.reason !== "timeout" && last.reason !== "network" && last.reason !== "rejected" ? "unavailable" : "unfinished", ...(missing.length ? { missing } : {}), again: { seed, theme } });
+    return setNotes({ ...(last ? { reason: last.reason } : {}), status: last && last.reason !== "failed" && last.reason !== "timeout" && last.reason !== "network" && last.reason !== "rejected" ? "unavailable" : "unfinished", ...(missing.length ? { missing } : {}), again: { seed, theme } });
   };
 
   /** Two new pieces in words, from the composer's tune taken as a main motif (Ryu, 11-02). */
-  const askRecompose = async (words: string, length: number, instruments: string[], freedom = 3) => {
+  const askRecompose = async (words: string, length: number, instruments: string[], freedom = 2) => {
     if (!base || !mine) return;
     const now = ++turn.current;
     setRecompose({ status: "asking" });
+    setThemeReason(null);
     const lines = pieceInput(base.score, mine, span.from, span.to).lines ?? [];
     const reading = piece.status === "ready" && map ? { roles: map.roles.filter((r) => lines.includes(r.line)).slice(0, 200), missing: piece.answer.missing } : null;
     const input = { ...arrangeInput(base.score, mine, span.from, span.to, words, 0, reading, { instruments, where: "after", answers, freedom, tracks: lines.flatMap((line) => (tracks[line]?.trim() ? [{ line, instrument: tracks[line]!.trim() }] : [])) }), moreBars: length };
     const reply = await askSpark("plan_recompose", input);
     if (turn.current !== now) return;
-    setRecompose(reply.status === "ok" ? { status: "ready", plans: (reply.answer as { options: RecomposePlan[] }).options, input } : { status: "unavailable" });
+    setRecompose(reply.status === "ok" ? { status: "ready", plans: (reply.answer as { options: RecomposePlan[] }).options, input } : { status: "unavailable", reason: reply.reason });
   };
 
   /** One of those pieces: its tune, countermelody and bass first, then everything else around them, on a new empty score of the shape it asks for. */
@@ -561,8 +569,10 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     setRecomposed({ plan, heights, opening, tuneBars: 0, bars: length });
     const input = arrangeInput(page.score, page.score.parts[0]!, 0, length - 1, asked.ask, 0, null, { instruments, where: "inside", answers: asked.answers, freedom: asked.freedom });
     setOptions({ status: "ready", plans: [plan], input, notes: {}, saved: false });
+    setThemeReason(null);
     const composed = await askSpark("write_theme", { ...asked, chosen: plan } satisfies ThemeInput);
     if (turn.current !== now) return;
+    setThemeReason(composed.status === "fallback" ? composed.reason : null);
     const lines = composed.status === "ok" ? (composed.answer as ThemeAnswer).lines : [];
     setRecomposed({ plan, heights, opening, tuneBars: new Set(lines.filter((l) => l.role === "tune").map((l) => l.bar)).size, bars: length });
     const tune = sourceText(asked).slice(0, 16000);
@@ -584,10 +594,12 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     const operation = (writingTurns.current.get(index) ?? 0) + 1;
     writingTurns.current.set(index, operation);
     setFixing("asking");
+    setFixingReason(null);
     const current = held.adds.filter((a) => these.includes(a.bar)).map((a) => `${a.part}, bar ${a.bar}: ${a.events}`).join(" / ").slice(0, 8000);
     const reply = await askSpark("arrange", { ...input, chosen: plan, window: { from, to }, fix: { ask: words, current: current || "nothing yet" } } satisfies WriteInput);
     if (turn.current !== now || writingTurns.current.get(index) !== operation) return;
     setFixing(reply.status === "ok" ? "none" : "unavailable");
+    setFixingReason(reply.status === "fallback" ? reply.reason : null);
     if (reply.status !== "ok") return;
     const adds = [...held.adds.filter((a) => !these.includes(a.bar)), ...withDoubles(reply.answer as WriteAnswer, bars)];
     // A successful fix owns all its bars, including silence. Subtract even a partial overlap from each unfinished section.
@@ -597,7 +609,7 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
       if (last < a || first > b) return [m];
       return [...(a < first ? [{ from: bars[a]!, to: bars[first - 1]! }] : []), ...(b > last ? [{ from: bars[last + 1]!, to: bars[b]! }] : [])];
     });
-    setOptions((state) => (state.status === "ready" && state.input === input && state.plans[index] === plan ? { ...state, notes: { ...state.notes, [index]: { status: "ready", adds, check: checkOption({ ...plan, adds }, base.score, input), ...(missing?.length ? { missing, ...(held.preview ? { preview: true } : {}) } : {}), ...(held.again ? { again: held.again } : {}) } } } : state));
+    setOptions((state) => (state.status === "ready" && state.input === input && state.plans[index] === plan ? { ...state, notes: { ...state.notes, [index]: { status: "ready", adds, check: checkOption({ ...plan, adds }, base.score, input), ...(missing?.length ? { missing, ...(held.reason ? { reason: held.reason } : {}), ...(held.preview ? { preview: true } : {}) } : {}), ...(held.again ? { again: held.again } : {}) } } } : state));
   };
 
   /** Orders of the composer's own bars that put the right music on their moments. */
@@ -605,6 +617,7 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     if (!base || !mine || !cues.length) return;
     const now = ++turn.current;
     setFitting("asking");
+    setFittingReason(null);
     const written = pieceInput(base.score, mine, span.from, span.to);
     const lines = written.lines ?? [];
     const input: FitInput = {
@@ -615,9 +628,10 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     };
     const reply = await askSpark("fit_form", input);
     if (turn.current !== now) return;
-    if (reply.status !== "ok") return setFitting("unavailable");
+    if (reply.status !== "ok") { setFittingReason(reply.reason); return setFitting("unavailable"); }
     setFitted((reply.answer as FitAnswer).structures);
     setFitting("none");
+    setFittingReason(null);
   };
 
   /** A DAW's markers, added to whatever's been typed. */
@@ -915,6 +929,7 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     structures,
     orders,
     fitting,
+    fittingReason,
     askFit,
     shown,
     page,
@@ -946,6 +961,8 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     motifFound: recomposed && options.status === "ready" && options.notes[0]?.status === "ready" ? motifSightings(options.notes[0].check, recomposed.heights) : null,
     openingFound: recomposed && options.status === "ready" && options.notes[0]?.status === "ready" ? motifSightings(options.notes[0].check, recomposed.opening) : null,
     fixing,
+    fixingReason,
+    themeReason,
     askFix,
     freedomOf: recompose.status === "ready" ? recompose.input.freedom : undefined,
     keep,
