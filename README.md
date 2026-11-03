@@ -1,6 +1,6 @@
 # Motifold
 
-Motifold turns a musical sketch into an orchestral score you can read, change and take into your DAW. You bring a melody or a piano part, as MIDI, MusicXML or audio. It works out what you played, reads it, asks what it can't tell, and writes the rest as notes.
+Motifold turns a musical sketch into an orchestral score you can read, change and take into your DAW. You bring a melody or a piano part, as MIDI or MusicXML. It works out what you played, reads it, asks what it can't tell, and writes the rest as notes.
 
 You choose how free it gets. **Arrange** keeps your melody exactly as it is and builds around it. **Recompose** takes your melody as a motif and writes a new piece from it, with its own key, metre and form.
 
@@ -31,7 +31,7 @@ What it's told about music is in `server/brain.ts`, in my own words: harmony on 
 
 The code measures and checks, and never makes a musical decision. It reads a free performance into a tempo map, beat by beat, so the score and the MIDI keep your timing. It moves your notes onto instruments without adding any and counts them. It checks every new note against what's sounding and the instrument's range. It copies doublings exactly, so a full orchestra stays within what one call can write. It carries levels through to the page, to MIDI velocity and to a mod wheel curve. On a recomposition it measures how often the motif's shape really comes back, as written, upside down or backwards. It says all of this on screen, and it doesn't tell you the music is good. That's your ear.
 
-Audio is turned into notes in your browser by Basic Pitch, and nothing is uploaded. It works best on a piano or one instrument at a time. I chose its settings against one piece, my own theme, where it found 91% of the notes of the piano version and 96% of the melody, so that says nothing yet about anyone else's recording.
+Muse Spark 1.3 is the only AI model Motifold uses. Every call goes from the server to Meta's Model API, on my key or on yours.
 
 Every call goes through a ledger that reserves the worst case first and stops at a cap, so no one can spend more than I've allowed.
 
@@ -50,7 +50,7 @@ Open the address it prints and press **Watch it work**. No key is needed for tha
 
 ## What it can't do yet
 
-It writes notes and levels, and no marks like pizzicato or mutes. No choir. Audio import is for a piano or one instrument, not a full mix. I've tested it on short orchestral sketches of mine, so I'm not claiming it does this for everyone's music. A live mood takes several minutes, because it thinks about every section. It sounds like a good notation program in the browser, and it's your own instruments that say how it really sounds.
+It writes notes and levels, and no marks like pizzicato or mutes. No choir. It doesn't read audio, so a recording has to become MIDI first. I've tested it on short orchestral sketches of mine, so I'm not claiming it does this for everyone's music. A live mood takes several minutes, because it thinks about every section. It sounds like a good notation program in the browser, and it's your own instruments that say how it really sounds.
 
 ## Made before the event
 
@@ -70,8 +70,6 @@ The instrument sounds in `public/samples/` are from Versilian Studios' [VSCO 2 C
 
 | Library | Licence | What it does here |
 | --- | --- | --- |
-| [Basic Pitch](https://github.com/spotify/basic-pitch-ts) and its model | Apache 2.0 | Turns audio into notes |
-| [TensorFlow.js](https://github.com/tensorflow/tfjs) | Apache 2.0 | Runs that model in the browser |
 | [@xmldom/xmldom](https://github.com/xmldom/xmldom) | MIT | Reads MusicXML |
 | [fflate](https://github.com/101arrowz/fflate) | MIT | Compressed files |
 | [OpenSheetMusicDisplay](https://github.com/opensheetmusicdisplay/opensheetmusicdisplay) | BSD 3-Clause | Draws the score |

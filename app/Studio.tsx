@@ -11,7 +11,6 @@ import { ScoreView, type ScoreViewHandle } from "./ScoreView";
 import { hasOwnKey, onSpark, setOwnKey } from "./spark";
 import { Thinking } from "./Thinking";
 import { looksFreelyPlayed } from "./timing";
-import { AUDIO_FILE, isAudioFile, transcribeFile } from "./transcribe";
 import { useArrange } from "./useArrange";
 
 type Access = "demo" | "live" | "own";
@@ -37,14 +36,13 @@ export function Studio() {
   const [typedKey, setTypedKey] = useState("");
   const [loaded, setLoaded] = useState<{ fileName: string; xmlText: string; score: Score } | null>(null);
   const [unbarred, setUnbarred] = useState<{ fileName: string; bytes: Uint8Array } | null>(null);
-  const [hearing, setHearing] = useState<{ fileName: string; done: number } | null>(null);
   const [freePiece, setFreePiece] = useState<FreePiece | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [thinking, setThinking] = useState(false);
   const [zoom, setZoom] = useState(0.8);
-  const [audioNote, setAudioNote] = useState<string | null>(null);
+  const [sourceNote, setSourceNote] = useState<string | null>(null);
   const input = useRef<HTMLInputElement>(null);
-  // Only the last thing opened may change the page. Listening takes a while, and the composer can leave or open something else meanwhile.
+  // Only the last thing opened may change the page, because the composer can leave or open something else while a file is still being read.
   const opening = useRef(0);
   const view = useRef<ScoreViewHandle>(null);
 
@@ -61,30 +59,11 @@ export function Studio() {
     if (loaded && arranged.piece.status === "none" && !arranged.kept) void arranged.askPiece();
   }, [loaded]);
 
-  /** Listens to a recording for whichever open asked. If that's no longer the latest, the throw from its progress stops the listening. */
-  const hear = (file: File, mine: number) =>
-    transcribeFile(file, (done) => {
-      if (opening.current !== mine) throw new Error("Something newer was opened.");
-      setHearing({ fileName: file.name, done });
-    });
-
   const open = async (file: File, keepBars = false) => {
     const mine = ++opening.current;
     setError(null);
     setFreePiece(null);
-    setHearing(null);
     try {
-      if (!/\.(mid|midi|xml|musicxml|mxl)$/i.test(file.name) && isAudioFile(file)) {
-        setLoaded(null);
-        setUnbarred(null);
-        setHearing({ fileName: file.name, done: 0 });
-        const heard = await hear(file, mine);
-        if (opening.current !== mine) return;
-        setHearing(null);
-        if (heard.notes < 8) throw new Error("It couldn't hear enough notes in that recording. A piano or one instrument works best.");
-        setAudioNote(`Heard ${heard.notes} notes in ${Math.round(heard.seconds)} seconds of audio, here in your browser.`);
-        return await open(new File([heard.midi as BlobPart], file.name.replace(AUDIO_FILE, ".mid")));
-      }
       const bytes = new Uint8Array(await file.arrayBuffer());
       if (opening.current !== mine) return;
       if (!keepBars && isMidi(bytes) && looksFreelyPlayed(bytes)) {
@@ -97,32 +76,16 @@ export function Studio() {
       setLoaded({ fileName: file.name, xmlText, score });
     } catch (e) {
       if (opening.current !== mine) return;
-      setHearing(null);
       setLoaded(null);
       setError(e instanceof Error ? e.message : String(e));
     }
   };
 
-  const openDemo = async (piece: DemoPiece, kind: "midi" | "xml" | "audio") => {
+  const openDemo = async (piece: DemoPiece, kind: "midi" | "xml") => {
     const mine = ++opening.current;
     setDemoPiece(piece);
-    if (kind === "audio") {
-      // Listening is real and free, so it really runs. The prepared answers were made from the MIDI, so that's what carries on.
-      const res = await fetch(piece.audio);
-      const file = new File([await res.arrayBuffer()], piece.audio.split("/").pop()!);
-      if (opening.current !== mine) return;
-      setHearing({ fileName: file.name, done: 0 });
-      try {
-        const heard = await hear(file, mine);
-        if (opening.current !== mine) return;
-        setAudioNote(`Heard ${heard.notes} notes in ${Math.round(heard.seconds)} seconds of audio, here in your browser. This prepared run carries on from my own MIDI, because that's what it was made from.`);
-      } catch {
-        if (opening.current !== mine) return;
-        setAudioNote("This browser couldn't listen to the recording. This prepared run carries on from my own MIDI.");
-      }
-      setHearing(null);
-    } else if (kind === "xml") setAudioNote("The MusicXML holds the same notes, and this prepared run was made from the MIDI, so that's what carries on.");
-    else setAudioNote(null);
+    if (kind === "xml") setSourceNote("The MusicXML holds the same notes, and this prepared run was made from the MIDI, so that's what carries on.");
+    else setSourceNote(null);
     const res = await fetch(piece.midi);
     const midi = await res.arrayBuffer();
     if (opening.current !== mine) return;
@@ -137,22 +100,20 @@ export function Studio() {
   const choosePiece = (piece: DemoPiece) => demo && startDemo(piece, demo.recorded);
   const leave = () => {
     opening.current++;
-    setHearing(null);
     stopDemo();
     setAccess(null);
     setLoaded(null);
     setUnbarred(null);
     setFreePiece(null);
     setDemoPiece(null);
-    setAudioNote(null);
+    setSourceNote(null);
   };
   const another = () => {
     opening.current++;
-    setHearing(null);
     setLoaded(null);
     setUnbarred(null);
     setFreePiece(null);
-    setAudioNote(null);
+    setSourceNote(null);
   };
 
   const inWork = !!loaded;
@@ -223,14 +184,6 @@ export function Studio() {
 
       {access && !inWork && !unbarred && (
         <main className="import">
-          {hearing ? (
-            <div className="hearing">
-              <p className="hud-label">LISTENING</p>
-              <h2>{hearing.fileName}</h2>
-              <progress max={1} value={hearing.done} aria-label="How far along" />
-              <p>Turning the recording into notes, here in your browser. Nothing is uploaded. A piano or one instrument works best, and a full mix won't.</p>
-            </div>
-          ) : (
             <>
               <p className="hud-label">01 —— IMPORT</p>
               {access === "demo" &&
@@ -259,15 +212,6 @@ export function Studio() {
                       >
                         MusicXML
                       </button>
-                      <button
-                        className="button"
-                        onClick={() => {
-                          choosePiece(piece);
-                          void openDemo(piece, "audio");
-                        }}
-                      >
-                        Audio
-                      </button>
                     </span>
                   </div>
                 ))}
@@ -283,7 +227,7 @@ export function Studio() {
                   }}
                 >
                   <span className="drop-title">Open your sketch</span>
-                  <span className="drop-sub">A MIDI, MusicXML or audio file. Drop it here, or tap to choose one.</span>
+                  <span className="drop-sub">A MIDI or MusicXML file. Drop it here, or tap to choose one.</span>
                 </button>
               )}
               {error && <p className="error">{error}</p>}
@@ -291,7 +235,7 @@ export function Studio() {
                 ref={input}
                 type="file"
                 hidden
-                accept=".musicxml,.xml,.mxl,.mid,.midi,.wav,.mp3,.m4a,.aac,.flac,.aif,.aiff,.ogg,.opus"
+                accept=".musicxml,.xml,.mxl,.mid,.midi"
                 onChange={(e) => {
                   const file = e.target.files?.[0];
                   if (file) void open(file);
@@ -299,7 +243,6 @@ export function Studio() {
                 }}
               />
             </>
-          )}
         </main>
       )}
 
@@ -322,7 +265,7 @@ export function Studio() {
       {inWork && (
         <div className="work-grid">
           <main className="work-main">
-            {audioNote && <p className="note-line">{audioNote}</p>}
+            {sourceNote && <p className="note-line">{sourceNote}</p>}
             {arranged.overview && arranged.view && (
               <PieceView
                 data={arranged.overview}

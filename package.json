@@ -13,7 +13,6 @@
     "typecheck": "tsc -p . && npm run types --silent && tsc -p server"
   },
   "dependencies": {
-    "@spotify/basic-pitch": "^1.0.1",
     "@xmldom/xmldom": "^0.9.12",
     "fflate": "^0.8.3",
     "opensheetmusicdisplay": "^2.2.1",

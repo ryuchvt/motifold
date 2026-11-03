@@ -8,7 +8,6 @@ export interface DemoPiece {
   words: string;
   midi: string;
   xml: string;
-  audio: string;
   /** What's prepared, by the key its run is saved under, like arrange-hopeful or recompose-action. */
   runs: { key: string; mode: "arrange" | "recompose"; mood: string; render?: string }[];
 }

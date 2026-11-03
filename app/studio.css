@@ -193,14 +193,6 @@ button.door-card:hover {
   margin: 0;
   color: var(--muted);
 }
-.hearing progress {
-  width: 100%;
-  height: 4px;
-  accent-color: var(--ink);
-}
-.hearing p:last-child {
-  color: var(--muted);
-}
 .free-bars {
   max-width: 760px;
   margin: 0 auto;
