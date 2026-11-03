@@ -206,6 +206,7 @@ function parsePart(id: string, info: PartInfo | undefined, measureEls: Element[]
     const jumps: JumpKind[] = [];
     const tempos: TempoMark[] = [];
     const levels: NonNullable<Measure["levels"]> = [];
+    const dynamicMarks: NonNullable<Measure["dynamicMarks"]> = [];
     const words: string[] = [];
     let repeatForward = false;
     let repeatBackward: number | null = null;
@@ -290,6 +291,15 @@ function parsePart(id: string, info: PartInfo | undefined, measureEls: Element[]
           break;
         case "direction": {
           for (const dt of children(el, "direction-type")) {
+            const staff = num(el, "staff");
+            for (const dynamics of children(dt, "dynamics")) {
+              for (const mark of children(dynamics)) dynamicMarks.push({ onset: cursor, kind: "dynamics", value: mark.tagName, ...(mark.textContent?.trim() ? { text: mark.textContent.trim() } : {}), ...(staff ? { staff } : {}) });
+            }
+            for (const wedge of children(dt, "wedge")) {
+              const type = wedge.getAttribute("type");
+              const number = wedge.getAttribute("number");
+              if (type) dynamicMarks.push({ onset: cursor, kind: "wedge", value: type, ...(number ? { number } : {}), ...(staff ? { staff } : {}) });
+            }
             const metronome = child(dt, "metronome");
             const perMinute = num(metronome, "per-minute");
             const unit = text(metronome, "beat-unit");
@@ -355,6 +365,7 @@ function parsePart(id: string, info: PartInfo | undefined, measureEls: Element[]
       jumps,
       tempos,
       ...(levels.length ? { levels } : {}),
+      ...(dynamicMarks.length ? { dynamicMarks } : {}),
       words,
       octaveShift: octaveShift || octaveShiftOpen,
       noteIndexes,

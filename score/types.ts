@@ -94,6 +94,16 @@ export interface TempoMark {
   qpm: number;
 }
 
+/** Printed dynamics and hairpins, kept separately from playback level points. */
+export interface DynamicMark {
+  onset: number;
+  kind: "dynamics" | "wedge";
+  value: string;
+  text?: string;
+  number?: string;
+  staff?: number;
+}
+
 export interface Measure {
   index: number;
   /** The printed number attribute, which can repeat, skip or be text. */
@@ -118,6 +128,8 @@ export interface Measure {
   tempos: TempoMark[];
   /** Playback levels the measure's directions set (MusicXML `sound dynamics`), as velocities. Only there if it has some. */
   levels?: { onset: number; velocity: number }[];
+  /** Only marks the source actually printed. Level changes alone imply no hairpin. */
+  dynamicMarks?: DynamicMark[];
   /** Printed words in the measure's directions, in order: "Prélude.", "cresc.", "Molto adagio". */
   words: string[];
   /** An octave-shift (8va and the like) is in force somewhere in the measure. */

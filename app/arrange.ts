@@ -3,7 +3,7 @@
 import { XMLSerializer } from "@xmldom/xmldom";
 import { zipSync } from "fflate";
 import { noteHeight } from "./notes";
-import { parseScore, type Part, type Score } from "../score";
+import { parseScore, type DynamicMark, type Part, type Score } from "../score";
 import { parseXml } from "../score/file";
 import { noteName } from "./notes";
 import { newBarNumbers, type ArrangeInput, type DistributeAnswer, type OptionPlan, type PieceReading, type StudyScoreInput, type WriteAnswer } from "../server/shapes";
@@ -833,7 +833,11 @@ export interface PlacedPart {
   bars: NewEvent[][];
   /** Playback levels, by position in the score's bars too, when the notes came from a part that had some. */
   levels?: BarLevel[][];
+  /** The source's printed dynamics and wedges, independent of its playback levels. */
+  dynamicMarks?: BarDynamicMark[][];
 }
+
+export type BarDynamicMark = Omit<DynamicMark, "onset" | "staff"> & { beat: number };
 
 /** A level at its beat in crotchets from the barline. */
 export interface BarLevel {
@@ -873,16 +877,18 @@ interface LineNote {
 }
 
 /** Every line of a score, bar by bar, as the notes that sound, with how many there are and how many grace notes aren't counted among them. */
-function readLines(score: Score, input: StudyScoreInput): { lines: Map<string, LineNote[][]>; levels: Map<string, BarLevel[][]>; notes: number; grace: number } {
+function readLines(score: Score, input: StudyScoreInput): { lines: Map<string, LineNote[][]>; levels: Map<string, BarLevel[][]>; dynamicMarks: Map<string, BarDynamicMark[][]>; notes: number; grace: number } {
   const source = wholeScoreParts(score) ?? score.parts;
   const measures = input.written.map((w, k) => w.measure ?? k);
   let notes = 0;
   let grace = 0;
   const levels = new Map<string, BarLevel[][]>();
+  const dynamicMarks = new Map<string, BarDynamicMark[][]>();
   const lines = new Map(
     scoreLines(source).map((line) => {
       const part = source.find((p) => p.id === line.partId)!;
       levels.set(line.label, measures.map((m) => (part.measures[m]?.levels ?? []).map((l) => ({ beat: l.onset / score.ticksPerQuarter, velocity: l.velocity }))));
+      dynamicMarks.set(line.label, measures.map((m) => (part.measures[m]?.dynamicMarks ?? []).filter((mark) => !mark.staff || mark.staff === line.staff).map(({ onset, staff: _staff, ...mark }) => ({ beat: onset / score.ticksPerQuarter, ...mark }))));
       const inBars = measures.map((m) =>
         (part.measures[m]?.noteIndexes ?? []).flatMap((i): LineNote[] => {
           const n = part.notes[i]!;
@@ -901,7 +907,7 @@ function readLines(score: Score, input: StudyScoreInput): { lines: Map<string, L
       return [line.label, inBars] as const;
     }),
   );
-  return { lines, levels, notes, grace };
+  return { lines, levels, dynamicMarks, notes, grace };
 }
 
 /** Where each bar starts, in crotchets, so a tie or an overlap can be seen across a barline. */
@@ -1008,15 +1014,17 @@ export function splitLine(inBars: LineNote[][], barStart: number[], label: strin
 
 /** The score with these lines split into single lines. Every other line stays as it is, and no note changes. */
 export function scoreWithSplits(score: Score, input: StudyScoreInput, splitting: string[]): string {
-  const { lines, levels } = readLines(score, input);
+  const { lines, levels, dynamicMarks } = readLines(score, input);
   const barStart = barStarts(score, input);
   // A staff with nothing on it yet is still one the composer chose, so it stays where it is.
   const parts = scoreLines(score.parts).flatMap(({ label }): PlacedPart[] => {
     const inBars = lines.get(label);
     if (!inBars) return [{ name: label, bars: input.written.map(() => []) }];
     const held = levels.get(label);
-    if (splitting.includes(label) && mostAtOnce(inBars, barStart) > 1) return splitLine(inBars, barStart, label, inBars.length).map((part) => ({ ...part, ...(held ? { levels: held } : {}) }));
-    return [{ name: label, ...(held ? { levels: held } : {}), bars: inBars.map((notes) => notes.map((n) => ({ start: n.start, length: n.length, names: [n.name], ...(n.velocity !== undefined ? { velocity: n.velocity } : {}), tieStart: n.tieStart, tieStop: n.tieStop }))) }];
+    const printed = dynamicMarks.get(label);
+    const expression = { ...(held ? { levels: held } : {}), ...(printed ? { dynamicMarks: printed } : {}) };
+    if (splitting.includes(label) && mostAtOnce(inBars, barStart) > 1) return splitLine(inBars, barStart, label, inBars.length).map((part) => ({ ...part, ...expression }));
+    return [{ name: label, ...expression, bars: inBars.map((notes) => notes.map((n) => ({ start: n.start, length: n.length, names: [n.name], ...(n.velocity !== undefined ? { velocity: n.velocity } : {}), tieStart: n.tieStart, tieStop: n.tieStop }))) }];
   });
   for (const part of parts) settleTies(part, barStart);
   return scoreOfParts(score, input, parts);
@@ -1054,6 +1062,7 @@ export function placeNotes(score: Score, input: StudyScoreInput, answer: Distrib
     for (let k = from; k <= to; k++) {
       // Where two lines come to one part in a bar, the first one's levels are the ones it plays.
       if (read.levels.get(entry.line)?.[k]?.length && !target.levels?.[k]?.length) (target.levels ??= bars.map(() => []))[k] = read.levels.get(entry.line)![k]!;
+      if (read.dynamicMarks.get(entry.line)?.[k]?.length && !target.dynamicMarks?.[k]?.length) (target.dynamicMarks ??= bars.map(() => []))[k] = read.dynamicMarks.get(entry.line)![k]!;
       const attacks = new Map<number, LineNote[]>();
       for (const n of line[k]!) attacks.set(n.start, [...(attacks.get(n.start) ?? []), n]);
       for (const chord of attacks.values()) {
@@ -1078,7 +1087,7 @@ export function placeNotes(score: Score, input: StudyScoreInput, answer: Distrib
       check.material = true;
       continue;
     }
-    const target: PlacedPart = { name: `${label} (not placed)`, bars: bars.map(() => []), ...(read.levels.get(label)?.some((l) => l.length) ? { levels: read.levels.get(label)! } : {}) };
+    const target: PlacedPart = { name: `${label} (not placed)`, bars: bars.map(() => []), ...(read.levels.get(label)?.some((l) => l.length) ? { levels: read.levels.get(label)! } : {}), ...(read.dynamicMarks.get(label)?.some((m) => m.length) ? { dynamicMarks: read.dynamicMarks.get(label)! } : {}) };
     parts.set(target.name, target);
     left.forEach((notes, k) => notes.forEach((n) => put(target, k, n, 0)));
   }
@@ -1129,30 +1138,27 @@ export interface BarHead {
   moreTempos?: { beat: number; qpm: number }[];
 }
 
-const LEVEL_WORDS = new Map(Object.entries(LEVELS).map(([word, velocity]) => [velocity, word]));
-
-/** A bar's levels, each at its beat, with the marks they read as: a word where a level has one, and a swell where two sit apart in the bar, which is how playback takes them too. */
-function levelsXml(levels: BarLevel[], barBeats: number, shown: { word: string | null }): { before: string; after: string } {
+/** Playback points and printed marks travel separately. A change in velocity never invents a hairpin. */
+function levelsXml(levels: BarLevel[], marks: BarDynamicMark[], barBeats: number): { before: string; after: string } {
   const out = { before: "", after: "" };
-  levels.forEach((level, k) => {
-    const [earlier, later] = [levels[k - 1], levels[k + 1]];
-    const word = LEVEL_WORDS.get(level.velocity) ?? null;
-    let mark = "";
-    if (earlier && earlier.beat < level.beat) mark = `<wedge type="stop"/>`;
-    else if (later && later.beat > level.beat && later.velocity !== level.velocity) mark = `<wedge type="${later.velocity > level.velocity ? "crescendo" : "diminuendo"}"/>`;
-    else if (word && word !== shown.word) {
-      mark = `<dynamics><${word}/></dynamics>`;
-      shown.word = word;
-    }
-    const sound = `<sound dynamics="${Math.round(level.velocity / 0.09) / 10}"/>`;
-    const direction = mark ? `<direction placement="below"><direction-type>${mark}</direction-type>${sound}</direction>` : sound;
-    // The end of the bar is where the notes leave off. Anything before it steps there and back.
-    if (level.beat >= barBeats - 1e-6) out.after += direction;
-    else if (level.beat > 1e-6) {
-      const gap = Math.round(level.beat * DIV);
-      out.before += `<forward><duration>${gap}</duration></forward>${direction}<backup><duration>${gap}</duration></backup>`;
-    } else out.before += direction;
-  });
+  const events = [
+    ...levels.map((level) => ({ beat: level.beat, xml: `<sound dynamics="${Math.round(level.velocity / 0.09) / 10}"/>` })),
+    ...marks.map((mark) => {
+      const inside = mark.kind === "wedge"
+        ? `<wedge type="${esc(mark.value)}"${mark.number ? ` number="${esc(mark.number)}"` : ""}/>`
+        : /^[A-Za-z_][\w.-]*$/.test(mark.value) ? `<dynamics><${mark.value}${mark.text ? `>${esc(mark.text)}</${mark.value}>` : "/>"}</dynamics>` : "";
+      return { beat: mark.beat, xml: inside ? `<direction placement="below"><direction-type>${inside}</direction-type></direction>` : "" };
+    }),
+  ].sort((a, b) => a.beat - b.beat);
+  for (const { beat, xml } of events) {
+    if (!xml) continue;
+    // The end of the bar follows its notes. Earlier events step there and back.
+    if (beat >= barBeats - 1e-6) out.after += xml;
+    else if (beat > 1e-6) {
+      const gap = Math.round(beat * DIV);
+      out.before += `<forward><duration>${gap}</duration></forward>${xml}<backup><duration>${gap}</duration></backup>`;
+    } else out.before += xml;
+  }
   return out;
 }
 
@@ -1166,7 +1172,6 @@ export function scoreXml(about: { title: string | null; movementTitle: string | 
     const octaveShift = WRITTEN_OCTAVE.find(([word]) => word.test(part.name))?.[1] ?? 0;
     let shownTime = "";
     let shownKey: number | null = null;
-    const shownLevel = { word: null as string | null };
     const written = bars.map((m, k) => {
       const ticks = Math.round(m.length * DIV);
       const timeKey = m.time ? `${m.time.beats}/${m.time.beatType}` : "";
@@ -1185,7 +1190,7 @@ export function scoreXml(about: { title: string | null; movementTitle: string | 
         const gap = Math.round(t.beat * DIV);
         return `<forward><duration>${gap}</duration></forward><sound tempo="${t.qpm}"/><backup><duration>${gap}</duration></backup>`;
       });
-      const levels = levelsXml(part.levels?.[k] ?? [], m.length, shownLevel);
+      const levels = levelsXml(part.levels?.[k] ?? [], part.dynamicMarks?.[k] ?? [], m.length);
       const marks = p === 0 ? [...m.words.map((w) => `<direction placement="above"><direction-type><words>${esc(w)}</words></direction-type></direction>`), ...(m.qpm ? [`<sound tempo="${m.qpm}"/>`] : []), ...later].join("") : "";
       return `<measure number="${esc(m.number)}"${m.implicit ? ` implicit="yes"` : ""}>${opens.length ? `<barline location="left">${opens.join("")}</barline>` : ""}${changes.length ? `<attributes>${changes.join("")}</attributes>` : ""}${marks}${levels.before}${staffXml(part.bars[k] ?? [], null, 1, ticks, undefined, octaveShift)}${levels.after}${closes.length ? `<barline location="right">${closes.join("")}</barline>` : ""}</measure>`;
     });
