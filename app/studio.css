@@ -1249,3 +1249,34 @@ button.door-card:hover {
   opacity: 0.5;
   cursor: default;
 }
+
+/* The tempo map on Find the bars: notes and bar lines in ink and grey, the measured lines in one muted ink, no other colour. */
+.studio .free-bars .played-chart {
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: var(--stage);
+}
+.studio .free-bars .played-bar {
+  stroke: rgba(255, 255, 255, 0.28);
+}
+.studio .free-bars .played-zero {
+  stroke: rgba(255, 255, 255, 0.22);
+}
+.studio .free-bars .played-line {
+  stroke: var(--ink);
+  stroke-width: 1.5;
+}
+.studio .free-bars .played-note {
+  fill: #ff7a33;
+}
+.studio .free-bars {
+  max-width: 1040px;
+}
+.studio .free-bars .played-chart,
+.studio .free-bars .played-chart svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  box-sizing: border-box;
+}

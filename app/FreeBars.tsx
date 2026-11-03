@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ReadBarsAnswer, ReadBarsInput } from "../server/shapes";
+import { PlayedChart } from "./PlayedView";
 import { askSpark } from "./spark";
 import { attacksOf, barsInput, barsOf, mappedMidi, playedFromMidi, readWithinBars, type Attack, type Played, type Reading } from "./timing";
 import { scoreOfReading } from "./timingScore";
@@ -124,6 +125,8 @@ export function FreeBars(props: { auto?: boolean; fileName: string; bytes: Uint8
             Muse Spark hears {answer.meter.beats}/{answer.meter.beatType}, {barsOf(attacks, state.reading).length} bars.
           </p>
           <p>{answer.why}</p>
+          {/* The bar lines it found, over the notes as you played them, with how fast each bar went and how far it drifts from a steady pulse. */}
+          <PlayedChart piece={{ played, attacks, reading: state.reading, answer, saved: state.saved }} levels={null} audio={null} onBar={() => {}} />
           {measured && (
             <p className="spark-note">
               The measurements on their own would pick {measured.meter} with {measured.bars} bars{attacks.some((a) => a.notes.length > 1) ? ` and ${measured.bassOn} of ${measured.bassOf} bass notes on a downbeat` : ""}.
