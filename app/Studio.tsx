@@ -361,6 +361,10 @@ export function Studio() {
                 onSelectRange={arranged.selectRange}
                 onFocus={arranged.setFocus}
                 onSolo={arranged.toggleSolo}
+                orders={arranged.options.status === "none" && arranged.trying?.kind !== "option" ? arranged.orders : []}
+                ordered={arranged.trying?.kind === "structure" ? arranged.trying.index : null}
+                onOrder={(index) => arranged.setTrying(index === null ? null : { kind: "structure", index })}
+                onKeepOrder={arranged.keep}
               />
             )}
             {render && <p className="note-line">You're hearing my own bounce of Muse Spark's notes through my own instruments, with no note corrected. I chose the sounds and the balance.</p>}

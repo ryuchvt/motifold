@@ -549,3 +549,86 @@ button.door-card:hover {
 .hearing p:last-child {
   color: var(--muted);
 }
+
+/* Other orders of the composer's bars, one row each, the same colour for the same section. */
+.studio .stage-orders {
+  display: grid;
+  gap: 4px;
+  padding: 10px 14px 12px;
+  border-top: 1px solid var(--stage-line);
+}
+.studio .stage-orders-title {
+  margin: 0 0 4px;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+.studio .stage-order {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.studio .stage-order-pick {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(140px, 220px) 1fr;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  padding: 6px 8px;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.studio .stage-order-pick:hover {
+  background: var(--card);
+}
+.studio .stage-order.on .stage-order-pick {
+  border-color: var(--line2);
+  background: var(--card);
+}
+.studio .stage-order-words strong {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+.studio .stage-order-words span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.74rem;
+  line-height: 1.3;
+}
+.studio .stage-order-blocks {
+  display: flex;
+  gap: 2px;
+  height: 26px;
+  min-width: 0;
+}
+.studio .stage-order-block {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  padding: 0 6px;
+  border-radius: 2px;
+  font-size: 0.72rem;
+}
+.studio .stage-order-block span {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.studio .order-tint-0 { background: rgba(232, 126, 61, 0.34); }
+.studio .order-tint-1 { background: rgba(76, 175, 130, 0.34); }
+.studio .order-tint-2 { background: rgba(90, 140, 230, 0.38); }
+.studio .order-tint-3 { background: rgba(196, 120, 220, 0.34); }
+.studio .order-tint-4 { background: rgba(220, 190, 80, 0.32); }
+.studio .order-tint-5 { background: rgba(80, 200, 210, 0.3); }
+.studio .order-tint-none { background: rgba(255, 255, 255, 0.12); }
+@media (max-width: 700px) {
+  .studio .stage-order-pick {
+    grid-template-columns: 1fr;
+  }
+}

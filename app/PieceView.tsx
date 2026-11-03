@@ -16,6 +16,13 @@ const ROLE_NAMES: Record<(typeof ROLES)[number], string> = {
   doubling: "Doubling",
 };
 
+export interface OrderRow {
+  index: number | null;
+  name: string;
+  why: string;
+  blocks: { from: string; to: string; name: string; tint: number; beats: number }[];
+}
+
 /** A beat's place along the piece, for anything laid over it. */
 const along = (beat: number, total: number) => `${(beat / Math.max(total, 1)) * 100}%`;
 
@@ -65,8 +72,14 @@ export function PieceView(props: {
   onSelectRange: (from: string, to: string) => void;
   onFocus: (focus: RoleFocus) => void;
   onSolo: (label: string) => void;
+  /** Other orders of the composer's bars, each as its blocks, to see side by side and put on the score. */
+  orders?: OrderRow[];
+  /** Which order is on the score: a structure's index, -1 for one put together by hand, null for the order as written. */
+  ordered?: number | null;
+  onOrder?: (index: number | null) => void;
+  onKeepOrder?: () => void;
 }) {
-  const { data, sections, moments, selected, focus, solo, instrumentOf, hasNew, render, onSelect, onSelectRange, onFocus, onSolo } = props;
+  const { data, sections, moments, selected, focus, solo, instrumentOf, hasNew, render, onSelect, onSelectRange, onFocus, onSolo, orders = [], ordered = null, onOrder, onKeepOrder } = props;
   const { rows, bars, totalBeats } = data;
   const [playing, setPlaying] = useState(false);
   const [from, setFrom] = useState(0);
@@ -309,6 +322,42 @@ export function PieceView(props: {
           <div className="stage-head" ref={head} />
         </div>
       </div>
+      {orders.length > 1 && <Orders orders={orders} ordered={ordered} onOrder={onOrder} onKeep={onKeepOrder} />}
     </section>
+  );
+}
+
+/** Each order of the same bars as its own row of blocks, the same colour for the same section, so what moved is seen at once. */
+function Orders({ orders, ordered, onOrder, onKeep }: { orders: OrderRow[]; ordered: number | null; onOrder?: (index: number | null) => void; onKeep?: () => void }) {
+  const longest = Math.max(1, ...orders.map((o) => o.blocks.reduce((n, b) => n + b.beats, 0)));
+  return (
+    <div className="stage-orders" role="group" aria-label="Orders of your bars">
+      <p className="stage-orders-title">Other orders of your bars. Press one to hear it and see it on the score. None of them adds a note.</p>
+      {orders.map((o) => {
+        const on = o.index === ordered;
+        return (
+          <div key={`${o.index}`} className={`stage-order${on ? " on" : ""}`}>
+            <button className="stage-order-pick" aria-pressed={on} onClick={() => onOrder?.(o.index)}>
+              <span className="stage-order-words">
+                <strong>{o.name}</strong>
+                {o.why && <span>{o.why}</span>}
+              </span>
+              <span className="stage-order-blocks">
+                {o.blocks.map((b, k) => (
+                  <span key={k} className={`stage-order-block order-tint-${b.tint < 0 ? "none" : b.tint % 6}`} style={{ width: `${(b.beats / longest) * 100}%` }} title={`${b.name ? `${b.name}, ` : ""}${b.from === b.to ? `bar ${b.from}` : `bars ${b.from} to ${b.to}`}`}>
+                    <span>{b.name || (b.from === b.to ? b.from : `${b.from}–${b.to}`)}</span>
+                  </span>
+                ))}
+              </span>
+            </button>
+            {on && o.index !== null && (
+              <button className="button small primary" onClick={onKeep}>
+                Keep this order
+              </button>
+            )}
+          </div>
+        );
+      })}
+    </div>
   );
 }

@@ -551,6 +551,35 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
 
   const readBars = useMemo(() => map?.written.map((w) => w.bar) ?? [], [map]);
 
+  /** The composer's bars as they stand, to measure every order by. */
+  const baseBars = useMemo(() => (base ? pieceData(base.score, [], []).bars : []), [base]);
+  /**
+   * Each order as blocks of the composer's own sections, so the difference is seen and not read (Ryu, 11-03). The first is the order as written.
+   * `index` is the structure's, -1 for one put together by hand, and null for the order as written.
+   */
+  const orders = useMemo(() => {
+    if (piece.status !== "ready" || baseBars.length === 0) return [];
+    const numbers = baseBars.map((b) => b.number);
+    const named = piece.answer.sections ?? [];
+    const sectionAt = (k: number) => named.findIndex((s) => numbers.indexOf(s.from) <= k && k <= numbers.indexOf(s.to));
+    const blocks = (order: Stretch[]) =>
+      order.flatMap(({ from, to }) => {
+        const [a, b] = [numbers.indexOf(from), numbers.indexOf(to)];
+        const out: { from: string; to: string; name: string; tint: number; beats: number }[] = [];
+        for (let k = a; a >= 0 && k <= b; k++) {
+          const at = sectionAt(k);
+          const last = out[out.length - 1];
+          if (last && last.tint === at && numbers.indexOf(last.to) === k - 1) {
+            last.to = numbers[k]!;
+            last.beats += baseBars[k]!.length;
+          } else out.push({ from: numbers[k]!, to: numbers[k]!, name: named[at]?.name ?? "", tint: at, beats: baseBars[k]!.length });
+        }
+        return out;
+      });
+    const written = { index: null, name: "As you wrote it", why: "", blocks: blocks([{ from: numbers[0]!, to: numbers[numbers.length - 1]! }]) };
+    return [written, ...structures.map((s, index) => ({ index, name: s.name, why: s.why, blocks: blocks(s.order) })), ...(handOrder.length ? [{ index: -1, name: "Your own order", why: "", blocks: blocks(handOrder) }] : [])];
+  }, [piece, baseBars, structures, handOrder]);
+
   /** The whole piece as a picture. It's there as soon as a score opens, and the colours arrive with the reading. */
   const overview = useMemo(() => {
     if (!base) return null;
@@ -726,6 +755,7 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     /** The score the moments are checked against. */
     standing: base?.score ?? null,
     structures,
+    orders,
     fitting,
     askFit,
     shown,

@@ -555,6 +555,20 @@ describe("the study", () => {
   });
 });
 
+describe("other orders", () => {
+  it("draws each order as blocks of the composer's sections, and puts one on the score", async () => {
+    vi.stubGlobal("fetch", async (url: string, init?: RequestInit) => spark(url, init));
+    const screen = setUp();
+    await act(() => screen.arranged.askPiece());
+    expect(screen.arranged.orders.map((o) => [o.name, o.blocks.map((b) => `${b.name} ${b.from}-${b.to}`)])).toEqual([
+      ["As you wrote it", ["Opening 1-1", "Answer 2-2"]],
+      ["Backwards", ["Answer 2-2", "Opening 1-1"]],
+    ]);
+    // Same section, same colour, wherever it moved to.
+    expect(screen.arranged.orders[1]!.blocks.map((b) => b.tint)).toEqual([1, 0]);
+  });
+});
+
 describe("the panel", () => {
   it("asks one thing at a time, in order, before it writes", async () => {
     vi.stubGlobal("fetch", async (url: string, init?: RequestInit) => spark(url, init));
@@ -591,8 +605,7 @@ describe("the panel", () => {
     await press(host, "Next: Export");
     expect(host.textContent).toContain("Download MIDI");
     await press(host, "Study");
-    expect(host.textContent).toContain("Change the order of my bars");
-    expect(host.textContent).toContain("Bar 2, then bar 1.");
+    expect(host.textContent).toContain("drawn under the overview");
     await press(host, "Add a stretch");
     expect(host.querySelector('input[aria-label="Stretch 1 from bar"]')).toBeTruthy();
   });

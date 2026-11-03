@@ -397,8 +397,8 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [] }: { 
                 </ul>
               </More>
             )}
-            <More title="Change the order of my bars" open={handOrder.length > 0 || trying?.kind === "structure"}>
-              <p className="spark-note">A new order adds no notes. Keep one and it's read again before anything is written.</p>
+            {structures.length > 0 && <p className="spark-note">Other orders of your bars are drawn under the overview, to see side by side.</p>}
+            <More title="Put my own order together" open={handOrder.length > 0}>
               {timed &&
                 (fitting === "asking" ? (
                   <p className="arrange-said">Fitting your bars to the timing. This takes about a minute.</p>
@@ -411,21 +411,6 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [] }: { 
                     {fitting === "unavailable" && <p className="arrange-said">Muse Spark can't answer here.</p>}
                   </>
                 ))}
-              <ul className="arrange-list">
-                {structures.map((s, index) => (
-                  <li key={`${s.name}-${index}`} className={trying?.kind === "structure" && trying.index === index ? "on" : undefined}>
-                    <strong>{s.name}</strong>
-                    <span className="card-text">{orderWords(s.order)}.</span>
-                    {standing &&
-                      orderHits(cues, standing, s.order, roles).map((sentence) => (
-                        <span key={sentence} className="arrange-hit">
-                          {sentence}
-                        </span>
-                      ))}
-                    {onScore("structure", index)}
-                  </li>
-                ))}
-              </ul>
               <ol className="arrange-order">
                 {handOrder.map((stretch, k) => {
                   const change = (next: Partial<Stretch>) => setHandOrder(handOrder.map((s, i) => (i === k ? { ...s, ...next } : s)));
