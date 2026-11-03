@@ -60,6 +60,24 @@ it('uses genuine fresh metadata for a matching cache hit and refuses missing ori
   expect(() => canonicalCalls([{ ...x.summary.requests[0], caseId: 'another-case-read-study' }], [...x.receipts, cached], x.caseId)).toThrow('another case');
 });
 
+it('retains both authentic layout takes and proves the final repaired placement; the repair phase permits only distribute', () => {
+  const x = fixture(), initial = x.receipts.find(row => row.shape === 'distribute');
+  const repair = structuredClone(initial);
+  repair.attemptId = 'local-register-repair'; repair.captureCase = `${x.caseId}-layout-range-repair`;
+  repair.input.ask = 'Register repair only: preserve source pitch classes, onsets, durations and harmony; fit the sounding ranges with whole octaves or existing voice redistribution.';
+  initial.reply.answer.plan[0].octave = 3;
+  x.receipts.push(repair);
+  const request = { shape: repair.shape, input: repair.input, caseId: repair.captureCase, status: 'ok', attemptId: repair.attemptId };
+  x.summary.requests.push(request);
+  const result = validateOutcome(x.summary, archive, { recipe, readers, receipts: x.receipts, sourceXml });
+  const layouts = result.calls.filter(call => call.shape === 'distribute');
+  expect(layouts).toHaveLength(2);
+  expect(layouts[0].reply.answer.plan[0].octave).toBe(3);
+  expect(layouts[1].reply.answer).toEqual(x.summary.sourceLayout.answer);
+  expect(result.placement.placed).toBe(114);
+  expect(() => canonicalCalls([{ ...request, shape: 'plan_options' }], x.receipts, x.caseId)).toThrow('invalid phase');
+});
+
 function sourceOnly(x, moveOctave = false) {
   const layout = x.receipts.find(row => row.shape === 'distribute');
   if (moveOctave) layout.reply.answer.plan[0].octave = 1;

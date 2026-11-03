@@ -21,7 +21,7 @@ const reasonOf = error => error?.code ? 'Captured files are missing or unreadabl
 const write = (file, bytes) => { mkdirSync(dirname(file), { recursive: true }); writeFileSync(`${file}.tmp`, bytes); renameSync(`${file}.tmp`, file); };
 const answerOf = reply => { const { cached, model, version, ...answer } = reply; return answer; };
 const identity = call => stable({ shape: call.shape, input: call.input, version: call.version, model: call.model });
-const PHASES = { 'read-study': ['read_piece', 'study_score'], layout: ['distribute'], plan: ['plan_options', 'plan_recompose'], 'a-preview': ['arrange'], 'b-preview': ['arrange'], 'a-full': ['arrange', 'write_theme'], 'b-full': ['arrange', 'write_theme'] };
+const PHASES = { 'read-study': ['read_piece', 'study_score'], layout: ['distribute'], 'layout-range-repair': ['distribute'], plan: ['plan_options', 'plan_recompose'], 'a-preview': ['arrange'], 'b-preview': ['arrange'], 'a-full': ['arrange', 'write_theme'], 'b-full': ['arrange', 'write_theme'] };
 
 export function expectedRecipes(templates) {
   const recipe = (intent, ensemble, mood = 'Neutral') => ({ id: `${intent}-${slug(mood)}-${slug(ensemble.name)}`, intent, ensemble: ensemble.name, instruments: [...ensemble.instruments], mood, bars: intent === 'arrange' ? 24 : intent === 'expand' ? 40 : 32, moreBars: intent === 'expand' ? 16 : intent === 'recompose' ? 32 : 0, where: intent === 'expand' ? 'both' : intent === 'recompose' ? 'after' : 'inside', tuneOnly: false, freedom: 2 });

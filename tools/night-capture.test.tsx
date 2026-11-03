@@ -11,7 +11,8 @@ import { useArrange, type Arranged } from '../app/useArrange';
 import { setTransport } from '../app/spark';
 import { TEMPLATES } from '../app/orchestra';
 import { emptyScore, packageFiles, scoreTracks } from '../app/arrange';
-import { captureHookDownload, runNightRecipe, type NightIO } from './night-capture-client';
+import { distribute } from '../server/shapes';
+import { captureHookDownload, claimRegisterRepair, runNightRecipe, type NightIO } from './night-capture-client';
 import { NIGHT_RECIPES } from './night-capture-matrix';
 
 (globalThis as any).IS_REACT_ACT_ENVIRONMENT = true;
@@ -31,16 +32,27 @@ it('enumerates102 unique recipes and204 outcomes in the approved priority order'
   expect(NIGHT_RECIPES.filter(item => item.intent === 'recompose')).toHaveLength(90);
 });
 
-async function setup(failure?: 'notes' | 'theme' | 'zero-adds' | 'grouped-theme') {
+async function setup(failure?: 'notes' | 'theme' | 'zero-adds' | 'grouped-theme' | 'range-fixed' | 'range-repeat' | 'range-fallback' | 'range-other-flags' | 'layout-fallback') {
   vi.stubGlobal('crypto', webcrypto);
   vi.stubGlobal('fetch', vi.fn(() => { throw Error('No real network is allowed'); }));
   const requests: { shape: string; input: any }[] = [];
+  let context = 'idle';
+  const repairClaims = new Set<string>();
   const recordedPlan = saved.find((call: any) => call.shape === 'plan_options').reply.answer.options[0];
   const plans = (recompose: boolean, expand: boolean) => ['A', 'B'].map(name => ({ ...recordedPlan, name: `Synthetic ${name}`, ...(recompose ? { motif: { from: '1', to: '2', what: 'A rising gesture' }, fifths: 0, time: '3/4', qpm: 80 } : {}), why: recompose ? [1, 9, 17, 25].map(from => ({ from: String(from), to: String(from + 7), what: 'A line', principle: 'Continue', chords: 'C', variation: 'Keep the gesture' })) : [...recordedPlan.why, ...(expand ? [{ from: '25', to: '32', what: 'Continue', principle: 'Connect', chords: 'C' }, { from: '33', to: '40', what: 'Finish', principle: 'Return', chords: 'C' }] : [])] }));
   setTransport(async (shape, input) => {
+    claimRegisterRepair(context, shape, repairClaims);
     const asked = input as any; requests.push({ shape, input });
     if (shape === 'read_piece' || shape === 'study_score') return structuredClone(shared.find((call: any) => call.shape === shape).reply);
-    if (shape === 'distribute') return structuredClone(saved.find((call: any) => call.shape === shape).reply);
+    if (shape === 'distribute') {
+      const count = requests.filter(call => call.shape === 'distribute').length;
+      if (failure === 'layout-fallback') return { status: 'fallback', reason: 'unknown-charge' };
+      if (failure === 'range-fallback' && count === 2) return { status: 'fallback', reason: 'network' };
+      const reply = structuredClone(saved.find((call: any) => call.shape === shape).reply);
+      if (failure?.startsWith('range-') && (count === 1 || failure === 'range-repeat')) reply.answer.plan.find((entry: any) => entry.part === 'Double Bass').octave = 3;
+      if (failure === 'range-other-flags') reply.answer.plan = reply.answer.plan.filter((entry: any) => !(entry.line === 'Piano upper' && entry.from === '1'));
+      return reply;
+    }
     if (shape === 'plan_options') return { status: 'ok', cached: false, answer: { options: plans(false, asked.moreBars > 0) } };
     if (shape === 'plan_recompose') return { status: 'ok', cached: false, answer: { options: plans(true, false) } };
     if (shape === 'write_theme') return failure === 'theme' ? { status: 'fallback', reason: 'failed' } : { status: 'ok', cached: false, answer: { lines: Array.from({ length: 32 }, (_, index) => ({ role: 'tune', bar: String(index + 1), events: 'C5@0+3' })) } };
@@ -64,7 +76,7 @@ async function setup(failure?: 'notes' | 'theme' | 'zero-adds' | 'grouped-theme'
   const io: NightIO = {
     invoke: async action => { await act(async () => { await action(); }); },
     settle: async () => { await act(async () => { await Promise.resolve(); }); },
-    capture: captureHookDownload, phase: (_caseId, phase) => { phases.push(phase); },
+    capture: captureHookDownload, phase: (caseId, phase) => { context = `${caseId}-${phase}`; phases.push(phase); },
     save: async (_caseId, file, data) => { files.set(file, data); },
   };
   return { current: () => current, io, files, phases, requests };
@@ -143,6 +155,51 @@ it('exports a valid zero-addition faithful arrangement with all114 original sour
     for (const event of original) { const at = available.indexOf(event); expect(at, event).toBeGreaterThanOrEqual(0); available.splice(at, 1); }
     expect(summary.notes).toBeGreaterThanOrEqual(114);
   }
+});
+
+it('uses one real-hook neutral technical layout repair, retains both requests, then captures both actual exports', async () => {
+  const { current, io, files, phases, requests } = await setup('range-fixed');
+  const recipe = NIGHT_RECIPES.find(item => item.intent === 'arrange' && item.ensemble === 'String orchestra')!;
+  const result = await runNightRecipe(recipe, current, io, 'one-register-repair');
+  expect(result.status, result.error).toBe('complete');
+  const layouts = requests.filter(call => call.shape === 'distribute');
+  expect(layouts).toHaveLength(2);
+  expect(layouts[0]!.input.ask).toBeNull();
+  expect(layouts[1]!.input.ask).toContain('Register repair only');
+  expect(layouts[1]!.input.ask).toContain('Double Bass E1..G4');
+  expect(layouts[1]!.input.ask).toMatch(/Double Bass bar\d+:[A-G]/);
+  expect(layouts[1]!.input.ask.length).toBeLessThanOrEqual(400);
+  expect(layouts[1]!.input.written).toEqual(layouts[0]!.input.written);
+  expect(distribute.parse(layouts[1]!.input)).not.toBeNull();
+  expect(requests.find(call => call.shape === 'plan_options')!.input).toMatchObject({ ask: null, intent: 'arrange', moreBars: 0 });
+  expect(phases.filter(phase => phase === 'layout-range-repair')).toHaveLength(1);
+  const repair = JSON.parse(strFromU8(files.get('range-repair.json')!));
+  expect(repair.before).toMatchObject({ notes: 114, placed: 114, notPlaced: [], together: [], ignored: 0 });
+  expect(repair.before.outOfRange.length).toBeGreaterThan(0);
+  expect(repair.after.check).toMatchObject({ notes: 114, placed: 114, outOfRange: [], notPlaced: [], together: [], ignored: 0 });
+  const original = scoreTracks(score).flatMap(track => track.notes).map(note => JSON.stringify([note.height % 12, note.start, note.length, note.velocity]));
+  expect(original).toHaveLength(114);
+  for (const label of ['a', 'b']) {
+    const summary = JSON.parse(strFromU8(files.get(`${label}-summary.json`)!));
+    expect(summary.sourceLayout.check.moved).toBeGreaterThan(0);
+    const exported = parseScore(strFromU8(unzipSync(files.get(`${label}.zip`)!)['score.musicxml']!));
+    expect(exported.parts.every(part => part.measures.length === 24)).toBe(true);
+    const available = scoreTracks(exported).flatMap(track => track.notes).map(note => JSON.stringify([note.height % 12, note.start, note.length, note.velocity]));
+    for (const note of original) { const index = available.indexOf(note); expect(index, note).toBeGreaterThanOrEqual(0); available.splice(index, 1); }
+  }
+  expect(fetch).not.toHaveBeenCalled();
+});
+
+it.each(['range-repeat', 'range-fallback', 'range-other-flags', 'layout-fallback'] as const)('stops %s without a third layout call or any writing/export', async failure => {
+  const { current, io, files, phases, requests } = await setup(failure);
+  const recipe = NIGHT_RECIPES.find(item => item.intent === 'arrange' && item.ensemble === 'String orchestra')!;
+  const result = await runNightRecipe(recipe, current, io, `stopped-${failure}`);
+  expect(result.status).toBe('failed');
+  expect(requests.filter(call => call.shape === 'distribute')).toHaveLength(failure === 'range-repeat' || failure === 'range-fallback' ? 2 : 1);
+  expect(phases.filter(phase => phase === 'layout-range-repair')).toHaveLength(failure === 'range-repeat' || failure === 'range-fallback' ? 1 : 0);
+  expect(requests.some(call => call.shape === 'plan_options' || call.shape === 'arrange')).toBe(false);
+  expect(files.has('failure.json')).toBe(true); expect(files.has('a.zip')).toBe(false); expect(files.has('b.zip')).toBe(false);
+  expect(fetch).not.toHaveBeenCalled();
 });
 
 it('still rejects a genuinely all-rest full exported score', async () => {

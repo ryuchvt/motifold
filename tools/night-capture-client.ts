@@ -2,7 +2,8 @@ import { createElement } from 'react';
 import { createRoot } from 'react-dom/client';
 import { unzipSync, strFromU8 } from 'fflate';
 import { parseScore } from '../score';
-import { scoreTracks } from '../app/arrange';
+import { rangeOf, scoreTracks, type PlacedCheck } from '../app/arrange';
+import { noteName } from '../app/notes';
 import { useArrange, type Arranged } from '../app/useArrange';
 import { setOwnKey, setTransport } from '../app/spark';
 import { NIGHT_RECIPES, NIGHT_SOURCE, type NightRecipe } from './night-capture-matrix';
@@ -19,6 +20,33 @@ export interface NightIO {
 const bytes = (value: unknown) => new TextEncoder().encode(JSON.stringify(value, null, 2));
 export interface NightRequest { shape: string; status: string; reason?: string; attemptId?: string; caseId?: string; input?: unknown; cached?: boolean; model?: string; version?: string }
 function fail(condition: unknown, message: string): asserts condition { if (!condition) throw Error(message); }
+
+/** Keep askSpark's ordinary network retry from releasing a second register-repair request. */
+export function claimRegisterRepair(context: string, shape: string, claimed: Set<string>): void {
+  if (!context.endsWith('-layout-range-repair')) return;
+  fail(shape === 'distribute', 'Register repair permits only distribute');
+  fail(!claimed.has(context), 'Register repair was already attempted');
+  claimed.add(context);
+}
+
+/** One bounded technical layout request; it cannot authorize changing source note classes or timing. */
+export function registerRepairWords(check: PlacedCheck): string | null {
+  if (check.notes !== NIGHT_SOURCE.notes || check.placed !== NIGHT_SOURCE.notes || check.notPlaced.length || check.together.length || check.ignored || !check.outOfRange.length) return null;
+  const parts = [...new Set(check.outOfRange.map(note => note.part))];
+  if (parts.some(part => !rangeOf(part))) return null;
+  const bounds = parts.map(part => { const range = rangeOf(part)!; return `${part} ${noteName(range[1])}..${noteName(range[2])}`; }).join('; ');
+  let words = `Register repair only: keep every source note's pitch class, onset, duration and harmony. Whole-octave placement or redistribute existing voices only; no new material or mood. Sounding ranges: ${bounds}.`;
+  // The existing distribute/UI words limit is400. Never truncate an instrument's range or a note name.
+  if (words.length > 400) return null;
+  const examples = parts.map(part => [...new Set(check.outOfRange.filter(note => note.part === part).map(note => `${note.part} bar${note.bar}:${note.name}`))]);
+  const facts = Array.from({ length: Math.max(...examples.map(items => items.length)) }, (_, index) => examples.flatMap(items => items[index] ? [items[index]!] : [])).flat();
+  for (const fact of facts) {
+    const more = ` ${fact};`;
+    if (words.length + more.length > 400) break;
+    words += more;
+  }
+  return words;
+}
 const digest = async (data: Uint8Array) => [...new Uint8Array(await crypto.subtle.digest('SHA-256', new Uint8Array(data).buffer))].map(byte => byte.toString(16).padStart(2, '0')).join('');
 function options(now: Arranged) { fail(now.options.status === 'ready', `Options ${now.options.status}`); return now.options; }
 function notes(now: Arranged, index: number, full: boolean) {
@@ -93,8 +121,17 @@ export async function runNightRecipe(recipe: NightRecipe, current: () => Arrange
     if (recipe.intent !== 'recompose') {
       const intent = recipe.intent;
       await step('layout', () => current().askPlaced(recipe.instruments, '', false, intent));
-      const placement = current().placed;
+      let placement = current().placed;
       fail(placement.status === 'ready', 'Layout unavailable');
+      const repair = registerRepairWords(placement.check);
+      if (repair) {
+        const before = placement.check;
+        await save('range-repair.json', { ask: repair, before, status: 'asking' });
+        await step('layout-range-repair', () => current().askPlaced(recipe.instruments, repair, false, intent));
+        placement = current().placed;
+        await save('range-repair.json', { ask: repair, before, after: placement, status: placement.status });
+        fail(placement.status === 'ready', 'Range repair unavailable');
+      }
       fail(!placement.check.notPlaced.length && !placement.check.outOfRange.length && !placement.check.together.length && !placement.check.ignored && placement.check.notes === NIGHT_SOURCE.notes && placement.check.placed === NIGHT_SOURCE.notes, 'Layout needs repair');
       await step('plan', () => current().askOptions('', recipe.moreBars, recipe.where, intent));
       fail(options(current()).plans.length === 2, 'Expected exactly A and B');
@@ -138,6 +175,7 @@ export async function captureHookDownload(action: () => void): Promise<Uint8Arra
 async function boot() {
   const nativeFetch = window.fetch.bind(window);
   let context = 'idle', stopped = false, active = false, status: unknown = { status: 'loading-source' };
+  const repairClaims = new Set<string>();
   const observations: Promise<NightRequest>[] = [];
   window.fetch = async (input, init) => {
     const url = new URL(typeof input === 'string' ? input : input instanceof URL ? input.href : input.url, location.href);
@@ -145,6 +183,7 @@ async function boot() {
     if (!url.pathname.startsWith('/api/')) return nativeFetch(input, init);
     fail(active && /^\/api\/spark\/(?:read_piece|study_score|distribute|plan_options|plan_recompose|write_theme|arrange)$/.test(url.pathname), 'Unexpected API call');
     if (stopped) return Response.json({ status: 'fallback', reason: 'capture-stopped' });
+    claimRegisterRepair(context, url.pathname.split('/').at(-1)!, repairClaims);
     const headers = new Headers(init?.headers); headers.delete('x-motifold-key'); headers.set('x-motifold-record-case', context);
     const caseId = context;
     const request = JSON.parse(String(init?.body)) as { attemptId: string; input: unknown };
