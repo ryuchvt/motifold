@@ -5,6 +5,7 @@ import { pathToFileURL } from 'node:url';
 import { createHash } from 'node:crypto';
 import { unzipSync, zipSync, strFromU8, strToU8 } from 'fflate';
 import { inspectArchive } from './live-rehearsal-inspect.mjs';
+import { buildPerformanceSources } from './performance-source.mjs';
 
 const MOODS = ['Neutral', 'Sad', 'Tender', 'Hopeful', 'Dreamy', 'Pastoral', 'Wonder', 'Storybook', 'Playful', 'Heroic', 'Epic', 'Pulse', 'Action', 'Tense', 'Dark'];
 const ORIGINAL_SHA = '782c244e9d31572a3c3225c6af170a75ea94224b7e92ea1e1a6d6183ddb70d54';
@@ -205,6 +206,8 @@ export function buildCatalog({ repo, input, output, receipts, readers, templates
   demand(sha(original) === ORIGINAL_SHA && sha(strToU8(sourceXml)) === SOURCE_SHA, 'Frozen source asset hash changed');
   const sourceTracks = readers.scoreTracks(readers.parseScore(sourceXml));
   demand(sourceTracks.reduce((sum, track) => sum + track.notes.length, 0) === 114 && readers.readMidi(original).tracks.reduce((sum, track) => sum + track.notes.length, 0) === 117, 'Frozen source note counts changed');
+  const savedBars = JSON.parse(readFileSync(join(repo, 'test-fixtures/sample-sketch-bars.json'), 'utf8'));
+  const sources = buildPerformanceSources({ original, sourceXml, savedBars, readers });
   const candidates = [], warnings = [];
   try { const old = tutorialFallback(repo, recipes, readers, receipts, sourceXml); if (old) candidates.push(old); }
   catch (error) { warnings.push(`Original tutorial not added to catalog: ${error.message}`); }
@@ -255,7 +258,7 @@ export function buildCatalog({ repo, input, output, receipts, readers, templates
   const pairs = recipes.filter(recipe => catalog.outcomes.filter(entry => entry.runKey === recipe.id && entry.status === 'complete').length === 2).length;
   const attempted = new Set(candidates.filter(candidate => !candidate.legacy).map(candidate => candidate.recipe.id));
   const failed = catalog.outcomes.filter(entry => entry.status !== 'complete' && attempted.has(entry.runKey)).length;
-  const publicReport = { version: 1, recorded: catalog.recorded, expectedOutcomes: 204, complete, completePairs: pairs, failedOrIncomplete: failed, unrecorded: 204 - complete - failed, unavailable: 204 - complete, outcomes: catalog.outcomes.map(({ id, status, reason }) => ({ id, status, ...(reason ? { reason } : {}) })), source: { originalMidiNotes: 117, acceptedScoreNotes: 114, originalMidiSha256: ORIGINAL_SHA, acceptedXmlSha256: SOURCE_SHA }, audio: 'No rendered audio is included. Render audio only from the matching outcome score and MIDI.' };
+  const publicReport = { version: 1, recorded: catalog.recorded, expectedOutcomes: 204, complete, completePairs: pairs, failedOrIncomplete: failed, unrecorded: 204 - complete - failed, unavailable: 204 - complete, outcomes: catalog.outcomes.map(({ id, status, reason }) => ({ id, status, ...(reason ? { reason } : {}) })), source: sources.manifest, audio: 'No rendered audio is included. Render audio only from the matching outcome score and MIDI.' };
   let tutorialCalls = null;
   if (promotion) {
     const unique = new Map();
@@ -270,15 +273,16 @@ export function buildCatalog({ repo, input, output, receipts, readers, templates
   }
   pack['manifest.json'] = json(publicReport);
   pack['generation-notes.txt'] = strToU8(`This pack contains ${complete} verified complete outcomes from the planned 204. The manifest lists what is available and why the rest is unavailable.\n\nI have not added DAW audio yet. My DAW bounces are pending. No audio file in this pack is presented as rendered music.\n\nI may record more outcomes later, including after this morning. This generation does not claim that all 204 are complete. The calls are real saved Meta replies and may include successful stages assembled after cold retries. Actual model, prompt version, thinking and elapsed time stay in each run.json.\n`);
-  pack['source/original-performance-117.mid'] = original; pack['source/accepted-score.musicxml'] = strToU8(sourceXml);
-  const accepted = unzipSync(readers.packageFiles(sourceXml, null, 'Accepted score reading. Three soft attacks remain only in the original MIDI.'));
-  pack['source/accepted-score-114.mid'] = accepted['all-parts.mid']; pack['source/manifest.json'] = json(publicReport.source);
+  for (const [name, data] of Object.entries(sources.files)) pack[`source/${name}`] = data;
   const packBytes = zipSync(pack), report = { ...publicReport, generatedAt: new Date().toISOString(), captureMayContinue: true, dawAudioStatus: 'pending-real-bounces', results, warnings, budget: exposureReport(receipts), renderPack: { file: 'Motifold_DAW_Render_Pack.zip', path: join(output, 'Motifold_DAW_Render_Pack.zip'), sha256: sha(packBytes), bytes: packBytes.length } };
   write(join(output, 'Motifold_DAW_Render_Pack.zip'), packBytes); write(join(output, 'build-report.json'), json(report));
   if (publish) {
     write(join(sourceFolder, 'catalog.json'), json(catalog));
     const indexFile = join(repo, 'public/demo/index.json'), index = JSON.parse(readFileSync(indexFile, 'utf8'));
     const piece = index.pieces.find(piece => piece.id === 'sample-sketch'); demand(piece, 'Existing genuine tutorial is missing');
+    for (const [name, data] of Object.entries(sources.files)) write(join(sourceFolder, 'source', name), data);
+    piece.mappedMidi = '/demo/sample-sketch/source/performance-tempo-map-117.mid';
+    piece.acceptedMidi = '/demo/sample-sketch/source/accepted-score-114.mid';
     piece.catalog = '/demo/sample-sketch/catalog.json';
     if (promotion) {
       const a = promotion.outcomes.get('a'), b = promotion.outcomes.get('b');
@@ -315,7 +319,7 @@ async function main() {
   const { createServer } = await import('vite');
   const modules = await createServer({ root: repo, configFile: false, server: { middlewareMode: true }, appType: 'custom' });
   try {
-    const readers = { ...(await modules.ssrLoadModule('/score/index.ts')), ...(await modules.ssrLoadModule('/app/arrange.ts')), ...(await modules.ssrLoadModule('/app/midi.ts')), newBarNumbers: (await modules.ssrLoadModule('/server/shapes.ts')).newBarNumbers };
+    const readers = { ...(await modules.ssrLoadModule('/score/index.ts')), ...(await modules.ssrLoadModule('/app/arrange.ts')), ...(await modules.ssrLoadModule('/app/midi.ts')), ...(await modules.ssrLoadModule('/app/timing.ts')), newBarNumbers: (await modules.ssrLoadModule('/server/shapes.ts')).newBarNumbers };
     const { TEMPLATES } = await modules.ssrLoadModule('/app/orchestra.ts');
     const { report } = buildCatalog({ repo, input, output, receipts, readers, templates: TEMPLATES, publish: args.includes('--publish') });
     console.log(JSON.stringify({ complete: report.complete, completePairs: report.completePairs, unavailable: report.unavailable, budget: report.budget, renderPack: report.renderPack }, null, 2));

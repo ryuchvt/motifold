@@ -7,11 +7,12 @@ import { unzipSync, zipSync, strFromU8 } from 'fflate';
 import { parseScore } from '../score/index.ts';
 import * as arrange from '../app/arrange.ts';
 import { readMidi } from '../app/midi.ts';
+import * as timing from '../app/timing.ts';
 import { newBarNumbers } from '../server/shapes.ts';
 import { TEMPLATES } from '../app/orchestra.ts';
 import { buildCatalog, canonicalCalls, expectedRecipes, exposureReport, validateOutcome } from './build-night-catalog.mjs';
 
-const readers = { parseScore, ...arrange, readMidi, newBarNumbers };
+const readers = { parseScore, ...arrange, ...timing, readMidi, newBarNumbers };
 const sourceXml = readFileSync('public/demo/sample-sketch/sample-sketch.musicxml', 'utf8');
 const source = parseScore(sourceXml), recipe = expectedRecipes(TEMPLATES)[0];
 const publicCalls = [...JSON.parse(readFileSync('public/demo/sample-sketch/shared.json', 'utf8')), ...JSON.parse(readFileSync('public/demo/sample-sketch/arrange-neutral.json', 'utf8'))];
@@ -148,6 +149,7 @@ it('publishes only a verified A, leaves203 entries disabled, and preserves the o
   const folder = mkdtempSync(join(tmpdir(), 'motifold-catalog-')); folders.push(folder);
   const repo = join(folder, 'repo'), input = join(folder, 'capture'), output = join(folder, 'report'), publicFolder = join(repo, 'public/demo/sample-sketch');
   mkdirSync(publicFolder, { recursive: true });
+  mkdirSync(join(repo, 'test-fixtures'), { recursive: true }); writeFileSync(join(repo, 'test-fixtures/sample-sketch-bars.json'), readFileSync('test-fixtures/sample-sketch-bars.json'));
   for (const name of ['sample-sketch.musicxml', 'Sample_sketch.mid', 'shared.json', 'arrange-neutral.json', 'neutral-strings-a.zip']) writeFileSync(join(publicFolder, name), readFileSync(`public/demo/sample-sketch/${name}`));
   const index = readFileSync('public/demo/index.json'); writeFileSync(join(repo, 'public/demo/index.json'), index);
   const x = fixture(); mkdirSync(join(input, x.caseId), { recursive: true });
@@ -162,7 +164,18 @@ it('publishes only a verified A, leaves203 entries disabled, and preserves the o
   expect(JSON.parse(readFileSync(join(repo, 'public/demo/index.json'))).pieces[0].runs).toEqual(JSON.parse(index).pieces[0].runs);
   const pack = unzipSync(result.pack);
   expect(readMidi(pack['source/original-performance-117.mid']).tracks.flatMap(track => track.notes)).toHaveLength(117);
+  expect(pack['source/original-performance-117.mid']).toEqual(new Uint8Array(readFileSync('test-fixtures/Sample_sketch.mid')));
+  expect(readMidi(pack['source/performance-tempo-map-117.mid']).tracks.flatMap(track => track.notes)).toHaveLength(117);
   expect(readMidi(pack['source/accepted-score-114.mid']).tracks.flatMap(track => track.notes)).toHaveLength(114);
+  const publishedPiece = JSON.parse(readFileSync(join(repo, 'public/demo/index.json'))).pieces[0];
+  expect(publishedPiece.mappedMidi).toBe('/demo/sample-sketch/source/performance-tempo-map-117.mid');
+  expect(publishedPiece.acceptedMidi).toBe('/demo/sample-sketch/source/accepted-score-114.mid');
+  expect(new Uint8Array(readFileSync(join(publicFolder, 'source/performance-tempo-map-117.mid')))).toEqual(pack['source/performance-tempo-map-117.mid']);
+  const sourceManifest = JSON.parse(strFromU8(pack['source/manifest.json']));
+  expect(sourceManifest.files).toHaveLength(3);
+  expect(sourceManifest.normalization).toMatchObject({ notes: 117, originalDawLeadSeconds: 2698 });
+  expect(strFromU8(pack['source/render-checklist.txt'])).toContain('note-offs within MIDI tick rounding');
+  expect(strFromU8(pack['source/render-checklist.txt'])).toContain('Nearby attacks are grouped and note durations are interpreted');
   expect(Object.keys(pack).some(name => /\.(wav|mp3|flac)$/.test(name))).toBe(false);
   expect(JSON.stringify(JSON.parse(strFromU8(pack['manifest.json'])))).not.toContain('charged_micros');
 });
@@ -182,6 +195,7 @@ it('promotes only a verified same-case full A/B pair into a self-contained tutor
   const folder = mkdtempSync(join(tmpdir(), 'motifold-paired-tutorial-')); folders.push(folder);
   const repo = join(folder, 'repo'), input = join(folder, 'captures'), output = join(folder, 'report'), sourceFolder = join(repo, 'public/demo/sample-sketch');
   mkdirSync(sourceFolder, { recursive: true });
+  mkdirSync(join(repo, 'test-fixtures'), { recursive: true }); writeFileSync(join(repo, 'test-fixtures/sample-sketch-bars.json'), readFileSync('test-fixtures/sample-sketch-bars.json'));
   for (const name of ['sample-sketch.musicxml', 'Sample_sketch.mid', 'shared.json', 'arrange-neutral.json', 'neutral-strings-a.zip']) writeFileSync(join(sourceFolder, name), readFileSync(`public/demo/sample-sketch/${name}`));
   const oldIndex = JSON.parse(readFileSync('public/demo/index.json'));
   writeFileSync(join(repo, 'public/demo/index.json'), JSON.stringify(oldIndex));
