@@ -281,8 +281,8 @@ export interface Hit {
 export interface OptionPlan {
   name: string;
   idea: string;
-  /** `chords` is the stretch's harmony bar by bar, and `dynamics` its level. Saved answers from before they were asked for don't have them. */
-  why: { from: string; to: string; what: string; principle: string; chords?: string; dynamics?: string }[];
+  /** `chords` is the stretch's harmony bar by bar, and `dynamics` its level. Saved answers from before they were asked for don't have them. `yours` says the composer set these chords. */
+  why: { from: string; to: string; what: string; principle: string; chords?: string; dynamics?: string; yours?: boolean }[];
 }
 
 export interface PlanAnswer {
@@ -731,7 +731,7 @@ export const writeTheme: Shape<ThemeInput> = {
  */
 export const arrange: Shape<WriteInput> = {
   name: "arrange",
-  version: "arrange-11",
+  version: "arrange-12",
   effort: "medium",
   // Reasoning counts here too. One section at a time, so this is plenty.
   maxOutputTokens: 40000,
@@ -749,7 +749,7 @@ export const arrange: Shape<WriteInput> = {
     if (r?.fix && !(typeof r.fix.ask === "string" && typeof r.fix.current === "string" && isText(r.fix.ask, 400) && isText(r.fix.current, 8000))) return null;
     return {
       ...asked,
-      chosen: { name: chosen.name, idea: chosen.idea, why: chosen.why.map(({ from, to, what, principle, chords, dynamics }) => ({ from, to, what, principle, ...(chords ? { chords } : {}), ...(dynamics ? { dynamics } : {}) })) },
+      chosen: { name: chosen.name, idea: chosen.idea, why: chosen.why.map(({ from, to, what, principle, chords, dynamics, yours }) => ({ from, to, what, principle, ...(chords ? { chords } : {}), ...(dynamics ? { dynamics } : {}), ...(yours === true ? { yours: true } : {}) })) },
       ...(r?.window ? { window: { from: r.window.from, to: r.window.to } } : {}),
       ...(r?.earlier ? { earlier: r.earlier } : {}),
       ...(r?.fix ? { fix: { ask: r.fix.ask, current: r.fix.current } } : {}),
@@ -792,7 +792,7 @@ export const arrange: Shape<WriteInput> = {
         ...askedLines(input),
         "",
         `The plan to write: ${input.chosen.name}. ${input.chosen.idea}`,
-        ...input.chosen.why.map((w) => `Bars ${w.from} to ${w.to}: ${w.what}. ${w.principle}${w.chords ? ` Chords: ${w.chords}` : ""}${w.dynamics ? ` Level: ${w.dynamics}` : ""}`),
+        ...input.chosen.why.map((w) => `Bars ${w.from} to ${w.to}: ${w.what}. ${w.principle}${w.chords ? ` Chords${w.yours ? ", which the composer set themselves, so they're fixed" : ""}: ${w.chords}` : ""}${w.dynamics ? ` Level: ${w.dynamics}` : ""}`),
         ...(input.window ? ["", `In this call write only bars ${input.window.from} to ${input.window.to}. Other calls write the rest, so lines can carry on past the end of these bars.`] : []),
         ...(input.seed ? ["", `The composer's tune, which is your raw material: ${input.seed.tune}`, `The motif you chose from it: ${input.seed.motif}`, ...(input.seed.theme ? [`The music you've already composed for these bars, which you keep note for note, giving each line to the instruments the plan names and building everything else around it: ${input.seed.theme}`] : [])] : []),
         ...(input.earlier ? ["", "What you've just written before these bars:", input.earlier] : []),

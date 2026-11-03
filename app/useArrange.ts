@@ -27,7 +27,7 @@ export type PlacedState =
   | { status: "ready"; answer: DistributeAnswer; check: PlacedCheck; instruments: string[]; chosen: string[]; saved: boolean };
 
 /** The notes of one option, written only once the composer has chosen it. */
-export type OptionNotes = { status: "asking" } | { status: "unfinished" } | { status: "unavailable" } | { status: "ready"; writing?: { from: string; to: string; done: number; of: number }; missing?: { from: string; to: string }[]; again?: { seed: WriteInput["seed"] | null; theme: ThemeAnswer["lines"] }; adds: WriteAnswer["adds"]; check: OptionCheck };
+export type OptionNotes = { status: "asking" } | { status: "unfinished" } | { status: "unavailable" } | { status: "ready"; writing?: { from: string; to: string; done: number; of: number }; missing?: { from: string; to: string }[]; again?: { seed: WriteInput["seed"] | null; theme: ThemeAnswer["lines"] }; adds: WriteAnswer["adds"]; check: OptionCheck; changed?: boolean };
 
 export type OptionsState =
   | { status: "none" }
@@ -327,6 +327,15 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
   const moodWord = options.status === "ready" ? /The mood I want: (\w+)/.exec(options.input.ask ?? "")?.[1]?.toLowerCase() : null;
   /** Which prepared run this is, if any, like arrange-hopeful. */
   const moodKey = moodWord ? (recomposed ? `recompose-${options.status === "ready" ? (options.input.freedom ?? 3) : 3}-${moodWord}` : `${askedOf}-${moodWord}`) : null;
+
+  /** The composer's own chords for one stretch of a plan, which the notes are then written from. Notes already written stay until they ask again. */
+  const setChords = (index: number, stretch: number, chords: string) =>
+    setOptions((state) => {
+      if (state.status !== "ready") return state;
+      const plans = state.plans.map((plan, k) => (k === index ? { ...plan, why: plan.why.map((w, j) => (j === stretch ? { ...w, chords, yours: true } : w)) } : plan));
+      const notes = state.notes[index];
+      return { ...state, plans, notes: notes?.status === "ready" ? { ...state.notes, [index]: { ...notes, changed: true } } : state.notes };
+    });
 
   /** The notes of the option the composer chose, which go straight on the score. */
   const askNotes = async (index: number) => {
@@ -703,6 +712,7 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     splitPlaced,
     askOptions,
     askNotes,
+    setChords,
     lastAsk: moodKey,
     recompose,
     recomposed,

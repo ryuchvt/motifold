@@ -619,6 +619,24 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [] }: { 
                         ))}
                       </ul>
                     </More>
+                    {!arranged.recomposed && !demo && o.why.some((w) => w.chords !== undefined) && (
+                      <div className="arrange-chord-edit">
+                        <span className="spark-note">The chords, bar by bar. Change any of them and the notes are written from yours.</span>
+                        {o.why.map((w, k) =>
+                          w.chords === undefined ? null : (
+                            <label key={`${w.from}-${k}`}>
+                              <span>{barsWords(w.from, w.to)}</span>
+                              <input value={w.chords} maxLength={400} spellCheck={false} disabled={busy || notes?.status === "asking" || (notes?.status === "ready" && !!notes.writing)} aria-label={`Chords for ${barsWords(w.from, w.to).toLowerCase()}`} onChange={(e) => arranged.setChords(index, k, e.target.value)} />
+                            </label>
+                          ),
+                        )}
+                      </div>
+                    )}
+                    {notes?.status === "ready" && notes.changed && !notes.writing && (
+                      <button className="button small primary" disabled={busy} onClick={() => void askNotes(index)}>
+                        Write again with these chords
+                      </button>
+                    )}
                     {notes?.status === "asking" && <span className="arrange-said">Writing the notes. This takes a minute or two.</span>}
                     {notes?.status === "unfinished" && <span className="arrange-said">It didn't finish this one. Try again, or use fewer instruments or fewer new bars.</span>}
                     {notes?.status === "unavailable" && <span className="arrange-said">Muse Spark can't answer here.</span>}

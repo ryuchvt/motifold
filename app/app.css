@@ -1534,6 +1534,30 @@ button {
   overflow-wrap: anywhere;
 }
 
+.arrange-chord-edit {
+  display: grid;
+  gap: 6px;
+  margin: 8px 0;
+}
+
+.arrange-chord-edit label {
+  display: grid;
+  grid-template-columns: minmax(84px, auto) 1fr;
+  gap: 8px;
+  align-items: center;
+  font-size: 0.8rem;
+}
+
+.arrange-chord-edit input {
+  min-width: 0;
+  padding: 5px 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--card);
+  font: inherit;
+  font-family: var(--mono, inherit);
+}
+
 .arrange-line:hover {
   color: var(--gold);
 }

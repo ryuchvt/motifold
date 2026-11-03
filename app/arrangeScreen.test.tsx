@@ -651,3 +651,73 @@ describe("the panel", () => {
     expect(host.textContent).toContain("can't answer here");
   });
 });
+
+describe("the composer's own chords", () => {
+  const withChords: PlanAnswer = { options: [{ name: "Strings", idea: "Add a viola and a cello", why: [{ from: "1", to: "2", what: "Viola answers", principle: "Answer the tune", chords: "C | G" }] }, plans.options[1]!] };
+  const asked: Record<string, unknown>[] = [];
+  const stub = () => {
+    asked.length = 0;
+    vi.stubGlobal("fetch", async (url: string, init: RequestInit) => {
+      const shape = url.split("/").pop()!;
+      const input = JSON.parse(init.body as string).input;
+      if (shape === "arrange") asked.push(input);
+      return reply("ok", { answer: shape === "plan_options" ? withChords : shape === "arrange" ? written[input.chosen.name] : answers[shape] });
+    });
+  };
+  const type = (input: HTMLInputElement, value: string) =>
+    act(() => {
+      Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")!.set!.call(input, value);
+      input.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+
+  it("shows the plan's chords to change, and writes the notes from the composer's", async () => {
+    stub();
+    const screen = setUp();
+    await act(() => screen.arranged.askPiece());
+    await act(() => screen.arranged.askOptions("", 0, "inside"));
+    await press(screen.host, "Direction");
+    const box = screen.host.querySelector<HTMLInputElement>('input[aria-label="Chords for bars 1 to 2"]')!;
+    expect(box.value).toBe("C | G");
+    await type(box, "Am | F");
+    await press(screen.host, "Write this one");
+    expect(asked[0]).toMatchObject({ chosen: { why: [{ chords: "Am | F", yours: true }] } });
+  });
+
+  it("keeps the notes it wrote until the composer asks again with new chords", async () => {
+    stub();
+    const screen = setUp();
+    await act(() => screen.arranged.askPiece());
+    await act(() => screen.arranged.askOptions("", 0, "inside"));
+    await act(() => screen.arranged.askNotes(0));
+    await press(screen.host, "Direction");
+    expect(asked[0]).toMatchObject({ chosen: { why: [{ chords: "C | G" }] } });
+    expect(asked[0]!.chosen).not.toMatchObject({ why: [{ yours: true }] });
+    expect(screen.host.textContent).not.toContain("Write again with these chords");
+    await type(screen.host.querySelector<HTMLInputElement>('input[aria-label="Chords for bars 1 to 2"]')!, "Dm | G7");
+    const options = screen.arranged.options;
+    expect(options.status === "ready" && options.notes[0]?.status).toBe("ready");
+    expect(asked).toHaveLength(1);
+    await press(screen.host, "Write again with these chords");
+    expect(asked[1]).toMatchObject({ chosen: { why: [{ chords: "Dm | G7", yours: true }] } });
+    expect(screen.host.textContent).not.toContain("Write again with these chords");
+  });
+
+  it("can't be changed on a recorded replay, which has no answer for other chords", async () => {
+    stub();
+    const now: { arranged: Arranged | null } = { arranged: null };
+    function Host() {
+      const arranged = useArrange(loaded, part, range, null);
+      now.arranged = arranged;
+      return <ArrangePanel arranged={arranged} busy={false} demo />;
+    }
+    const host = document.body.appendChild(document.createElement("div"));
+    const root = createRoot(host);
+    act(() => root.render(<Host />));
+    unmount = () => root.unmount();
+    await act(() => now.arranged!.askPiece());
+    await act(() => now.arranged!.askOptions("", 0, "inside"));
+    await press(host, "Direction");
+    expect(host.textContent).toContain("Strings");
+    expect(host.querySelector(".arrange-chord-edit")).toBeNull();
+  });
+});
