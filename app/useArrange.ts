@@ -746,6 +746,30 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
   }, [trying, options, off, view, barNumbers]);
   const offHere = newHere.length > 0 && newHere.every((bar) => offBars.includes(bar));
 
+  // A muted tail remains addressable even when its notes no longer extend the overview.
+  const optionBarNumbers = useMemo(() => {
+    const notes = trying?.kind === "option" && options.status === "ready" ? options.notes[trying.index] : undefined;
+    return base && notes?.status === "ready" ? pieceData(base.score, [], [], { adds: notes.check.adds }).bars.map((bar) => bar.number) : [];
+  }, [base, trying, options]);
+
+  /** What's new in this displayed range, without moving the notation to it. Printed labels follow score order. */
+  const newInRange = (from: string, to: string): string[] => {
+    const notes = trying?.kind === "option" && options.status === "ready" ? options.notes[trying.index] : undefined;
+    if (notes?.status !== "ready") return [];
+    const [first, last] = [optionBarNumbers.indexOf(from), optionBarNumbers.indexOf(to)];
+    if (first < 0 || last < first) return [];
+    const bars = optionBarNumbers.slice(first, last + 1);
+    // A label used twice cannot identify which occurrence to leave out.
+    if (bars.some((bar) => optionBarNumbers.indexOf(bar) !== optionBarNumbers.lastIndexOf(bar))) return [];
+    const fresh = new Set(withoutParts(notes.check, off).adds.map((a) => a.bar));
+    return bars.filter((bar) => fresh.has(bar));
+  };
+  const toggleRange = (from: string, to: string) => {
+    const bars = newInRange(from, to);
+    if (!bars.length) return;
+    setOffBars((now) => bars.every((bar) => now.includes(bar)) ? now.filter((bar) => !bars.includes(bar)) : [...new Set([...now, ...bars])]);
+  };
+
   /** The same score for looking at: one stretch of it, with only the staves that play there, and every note in the colour of what it's doing. Nothing that leaves the page goes through this. */
   const page: Page | null = useMemo(() => {
     if (!base) return null;
@@ -839,6 +863,9 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     offHere,
     /** Leave out what's new in the bars on the page, or put it back. */
     toggleHere: () => setOffBars((now) => (offHere ? now.filter((bar) => !newHere.includes(bar)) : [...new Set([...now, ...newHere])])),
+    newInRange,
+    /** Leave out what's new in a picked passage, or put it back, keeping the current notation view. */
+    toggleRange,
     putBackBars: () => setOffBars([]),
     /** An option as it stands, less whatever's been left out of it. */
     remaining: (check: OptionCheck) => withoutParts(check, off, offBars),
