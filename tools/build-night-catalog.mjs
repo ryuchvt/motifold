@@ -148,14 +148,24 @@ export function validateOutcome(summary, archive, { recipe, readers, receipts, s
   }
   const input = writes[0].input, bars = [...input.written.map(bar => bar.bar), ...readers.newBarNumbers(input)];
   demand(bars.length === recipe.bars && new Set(bars).size === bars.length, 'Recorded writing grid has the wrong length');
+  const planned = readers.writingWindows(summary.plan.why, bars);
+  const expectedWindows = planned.length ? planned : [{ from: bars[0], to: bars.at(-1) }];
+  const actualWindows = writes.map(call => call.input.window ?? { from: bars[0], to: bars.at(-1) });
+  const observedWrites = requests.filter(call => call.shape === 'arrange' && !call.input?.fix && call.status === 'ok');
+  demand(observedWrites.length === writes.length && equal(actualWindows, expectedWindows), 'Missing, repeated or unexpected authenticated plan window');
   const coverage = new Map(bars.map(bar => [bar, 0]));
   for (const call of writes) {
     demand(equal(call.input.written, input.written) && call.input.moreBars === input.moreBars, 'Writing windows use different score grids');
     const from = call.input.window ? bars.indexOf(call.input.window.from) : 0, to = call.input.window ? bars.indexOf(call.input.window.to) : bars.length - 1;
     demand(from >= 0 && to >= from, 'Invalid recorded writing window');
-    for (const bar of bars.slice(from, to + 1)) coverage.set(bar, coverage.get(bar) + 1);
+    const these = bars.slice(from, to + 1);
+    demand(readers.withDoubles(call.reply.answer, bars).every(add => these.includes(add.bar)), 'Written answer contains a bar outside its authenticated window');
+    for (const bar of these) coverage.set(bar, coverage.get(bar) + 1);
   }
-  demand([...coverage.values()].every(count => count === 1), 'Missing or overlapping authenticated writing windows');
+  // The hook leaves unrequested source spans alone. Their notes and clock were
+  // proved above; every new bar (or every Recompose bar) still needs a window.
+  const required = new Set(recipe.intent === 'recompose' ? bars : readers.newBarNumbers(input));
+  demand([...coverage].every(([bar, count]) => count <= 1 && (!required.has(bar) || count === 1)), 'Missing new bars or overlapping authenticated writing windows');
   let adds = writes.flatMap(call => readers.withDoubles(call.reply.answer, bars));
   // Only a preview followed by further windows takes useArrange's unfinished/resume branch.
   // A one-call preview is reused as-is; a fresh recomposition also retains raw reply order.
