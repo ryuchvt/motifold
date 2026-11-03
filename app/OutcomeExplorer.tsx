@@ -73,10 +73,18 @@ export function OutcomeExplorer({piece,onExit}:{piece:DemoPiece;onExit:()=>void}
   const boundRender=record?boundOutcomeRender(record.outcome,record.hash):undefined;
   const exactRender=solo.length===0?boundRender:undefined;
   const selectRange=(from:string,to:string)=>setView({from,to});
+  const changeDirection=(intent:Filters['intent'])=>setFilters(old=>{
+    const complete=catalog?.outcomes.filter(item=>item.intent===intent&&item.status==='complete')??[];
+    const neutral=complete.filter(item=>mood(item.mood)==='Neutral');
+    const local=neutral.filter(item=>item.ensemble===old.ensemble);
+    const pool=local.length?local:neutral.length?neutral:complete;
+    const prepared=pool.find(item=>item.option===0)??pool[0];
+    return prepared?{intent,ensemble:prepared.ensemble,mood:mood(prepared.mood),option:prepared.option}:{...old,intent,mood:'Neutral',option:0};
+  });
   return <main className="outcome-explorer">
     <div className="explorer-heading"><div><h1>Explore the recorded outcomes</h1><p>Choose a prepared score, compare A and B, and take the complete result into your DAW. No credit is used.</p></div><button className="button" onClick={onExit}>Back to the start</button></div>
     <div className="explorer-filters">
-      <label>Direction<select aria-label="Recorded direction" value={filters.intent} onChange={event=>setFilters(old=>({...old,intent:event.target.value as Filters['intent'],mood:'Neutral',option:0}))}><option value="arrange">Arrange · original bars</option><option value="expand">Expand · longer, same character</option><option value="recompose">Recompose · recognisable tune, new harmony</option></select></label>
+      <label>Direction<select aria-label="Recorded direction" value={filters.intent} onChange={event=>changeDirection(event.target.value as Filters['intent'])}><option value="arrange">Arrange · original bars</option><option value="expand">Expand · longer, same character</option><option value="recompose">Recompose · recognisable tune, new harmony</option></select></label>
       <label>Players<select aria-label="Recorded ensemble" value={filters.ensemble} onChange={event=>setFilters(old=>({...old,ensemble:event.target.value,option:0}))}>{TEMPLATES.map(item=><option key={item.name}>{item.name}</option>)}</select></label>
       {filters.intent==='recompose'&&<label>Mood<select aria-label="Recorded mood" value={filters.mood} onChange={event=>setFilters(old=>({...old,mood:event.target.value,option:0}))}>{moods.map(value=><option key={value}>{value}</option>)}</select></label>}
       <span className="explorer-availability" role="status">{!catalogDone?'Loading the recorded catalog':catalog?`${available} of ${catalog.outcomes.length} outcomes prepared`:'The outcome catalog is not available yet.'}</span>

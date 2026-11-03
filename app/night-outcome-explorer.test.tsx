@@ -22,12 +22,12 @@ const b:DemoOutcome={...a,id:'arrange-b',option:1,name:'Local B',xml:'/demo/samp
 const piece:DemoPiece={id:'sample-sketch',name:'Local recorded test',words:'Local files only.',midi:'/demo/sample-sketch/Sample_sketch.mid',xml:'/demo/sample-sketch/sample-sketch.musicxml',catalog:'/demo/sample-sketch/catalog.json',recipe:{intent:'arrange',ensemble:'String orchestra',moreBars:0,where:'inside',useMelodyOnly:false},guide:['Use recorded choices.'],runs:[{key:'arrange-neutral',mode:'arrange',mood:''}]};
 let root:Root|null=null;
 afterEach(()=>{act(()=>root?.unmount());root=null;document.body.replaceChildren();vi.unstubAllGlobals();vi.clearAllMocks()});
-async function setup(rows:DemoOutcome[]=[a,b],heldA?:Promise<Response>){
+async function setup(rows:DemoOutcome[]=[a,b],heldA?:Promise<Response>,assets:Record<string,string>={}){
   vi.stubGlobal('crypto',webcrypto);
   const frames=new Map<number,FrameRequestCallback>();let next=0;
   vi.stubGlobal('requestAnimationFrame',(callback:FrameRequestCallback)=>{frames.set(++next,callback);return next});vi.stubGlobal('cancelAnimationFrame',(id:number)=>frames.delete(id));
   const catalog:DemoCatalog={version:1,pieceId:piece.id,recorded:'2026-11-04',outcomes:rows};
-  const fetcher=vi.fn(async(url:string)=>{if(url===piece.catalog)return Response.json(catalog);if(url===a.xml)return heldA??new Response(original);if(url===b.xml)return new Response(xmlB);throw Error(`Unexpected request ${url}`)});vi.stubGlobal('fetch',fetcher);
+  const fetcher=vi.fn(async(url:string)=>{if(url===piece.catalog)return Response.json(catalog);if(url===a.xml)return heldA??new Response(original);if(url===b.xml)return new Response(xmlB);if(assets[url]!==undefined)return new Response(assets[url]);throw Error(`Unexpected request ${url}`)});vi.stubGlobal('fetch',fetcher);
   const host=document.body.appendChild(document.createElement('div'));root=createRoot(host);await act(async()=>root!.render(<OutcomeExplorer piece={piece} onExit={()=>{}}/>));
   const flush=()=>act(()=>{for(const callback of frames.values())callback(0);frames.clear()});
   return{host,fetcher,flush};
@@ -86,4 +86,44 @@ it('plays the exported dynamics, joined ties and pizzicato rather than discardin
   expect(data.rows).toHaveLength(1);expect(data.rows[0]!.label).toBe('Viola pizz');
   expect(data.rows[0]!.notes).toEqual([{start:0,length:6,height:60,velocity:27,kind:null,pizz:true}]);
   expect(data.tempos).toEqual([{beat:0,qpm:92}]);
+});
+
+const recomposeXml=`<score-partwise><part-list><score-part id="P1"><part-name>Flute</part-name></score-part></part-list><part id="P1">${Array.from({length:32},(_,k)=>`<measure number="${k+1}">${k?'':'<attributes><divisions>1</divisions><time><beats>4</beats><beat-type>4</beat-type></time></attributes>'}<note><pitch><step>C</step><octave>5</octave></pitch><duration>4</duration></note></measure>`).join('')}</part></score-partwise>`;
+const recompose:DemoOutcome={...a,id:'recompose-full-a',runKey:'recompose-neutral-full',intent:'recompose',ensemble:'Full orchestra',freedom:2,name:'Prepared Full recomposition',bars:32,xml:'/demo/sample-sketch/recompose.musicxml',midi:'/demo/sample-sketch/recompose.mid',zip:'/demo/sample-sketch/recompose.zip',xmlSha256:hash(recomposeXml)};
+const select=(host:Element,label:string)=>host.querySelector(`[aria-label="${label}"]`) as unknown as HTMLSelectElement;
+const change=async(host:Element,label:string,value:string)=>{const field=select(host,label);await act(async()=>{field.value=value;field.dispatchEvent(new Event('change',{bubbles:true}))})};
+
+it('opens the prepared Full orchestra when entering Recompose, while explicit unavailable choices stay selected with no score or model calls',async()=>{
+  const unavailable:DemoOutcome={...recompose,id:'recompose-full-mysterious',runKey:'recompose-mysterious-full',mood:'Mysterious',name:'Not recorded',status:'unavailable',reason:'This choice has not been recorded.',xml:undefined,midi:undefined,zip:undefined};
+  const screen=await setup([a,b,recompose,unavailable],undefined,{[recompose.xml!]:recomposeXml});await ready(screen.host);
+  await change(screen.host,'Recorded direction','recompose');await ready(screen.host,recompose.name);
+  expect(select(screen.host,'Recorded ensemble').value).toBe('Full orchestra');
+  expect(screen.host.querySelector('.explorer-preset')?.textContent).toContain('32 bars. Reshaped 2');
+  expect(screen.host.querySelector(`[href="${recompose.zip}"]`)).not.toBeNull();
+  await change(screen.host,'Recorded mood','Mysterious');
+  expect(select(screen.host,'Recorded mood').value).toBe('Mysterious');
+  expect(screen.host.querySelector('.explorer-downloads')).toBeNull();expect(screen.host.querySelector('.explorer-score')).toBeNull();
+  expect(screen.host.textContent).toContain('This choice has not been recorded.');
+  await change(screen.host,'Recorded ensemble','Brass quintet');
+  expect(select(screen.host,'Recorded ensemble').value).toBe('Brass quintet');
+  expect(screen.host.querySelector('.explorer-downloads')).toBeNull();expect(screen.host.querySelector('.explorer-score')).toBeNull();
+  expect(screen.host.textContent).toContain('This combination has no recorded outcome.');
+  expect(screen.fetcher.mock.calls.map(row=>row[0])).toEqual([piece.catalog,a.xml,recompose.xml]);
+});
+
+it.each([
+  {name:'the current ensemble Neutral B before another ensemble A',rows:[{...recompose,id:'other-a'},{...recompose,id:'local-b',ensemble:'String orchestra',option:1 as const,name:'Local Neutral B'}],expected:'Local Neutral B',ensemble:'String orchestra',mood:'Neutral',option:'B'},
+  {name:'A over B within the current ensemble Neutral',rows:[{...recompose,id:'local-b',ensemble:'String orchestra',option:1 as const,name:'Local Neutral B'},{...recompose,id:'local-a',ensemble:'String orchestra',name:'Local Neutral A'}],expected:'Local Neutral A',ensemble:'String orchestra',mood:'Neutral',option:'A'},
+  {name:'another complete Neutral A over its B',rows:[{...recompose,id:'other-b',option:1 as const,name:'Full Neutral B'},recompose],expected:recompose.name,ensemble:'Full orchestra',mood:'Neutral',option:'A'},
+  {name:'an actual complete B when no complete A exists',rows:[{...recompose,id:'other-b',option:1 as const,name:'Full Neutral B'}],expected:'Full Neutral B',ensemble:'Full orchestra',mood:'Neutral',option:'B'},
+  {name:'a complete mood example when no Neutral recording exists',rows:[{...recompose,id:'hopeful-a',mood:'Hopeful',name:'Full Hopeful A'}],expected:'Full Hopeful A',ensemble:'Full orchestra',mood:'Hopeful',option:'A'},
+  {name:'a complete other ensemble instead of a local preview',rows:[{...recompose,id:'preview-local',ensemble:'String orchestra',status:'preview' as const,name:'Preview only'},recompose],expected:recompose.name,ensemble:'Full orchestra',mood:'Neutral',option:'A'},
+])('direction changes prefer $name',async({rows,expected,ensemble,mood,option})=>{
+  const screen=await setup([a,...rows],undefined,{[recompose.xml!]:recomposeXml});await ready(screen.host);
+  await change(screen.host,'Recorded direction','recompose');await ready(screen.host,expected);
+  expect(select(screen.host,'Recorded ensemble').value).toBe(ensemble);
+  expect(select(screen.host,'Recorded mood').value).toBe(mood);
+  expect(screen.host.querySelector('.explorer-choice[aria-pressed="true"]>span')?.textContent).toBe(option);
+  expect(screen.host.querySelector('.explorer-downloads')).not.toBeNull();
+  expect(screen.fetcher.mock.calls.map(row=>row[0])).toEqual([piece.catalog,a.xml,recompose.xml]);
 });
