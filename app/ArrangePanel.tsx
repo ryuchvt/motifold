@@ -218,6 +218,15 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
   const [keepTracks, setKeepTracks] = useState(false);
   /** Where Create has got to. It runs the layout, the two plans and their first sections one after another, each from the last one's result. */
   const [creating, setCreating] = useState<null | "layout" | "plan" | "preview">(null);
+  /** Later stages use the recipe pressed, even if the composer edits the next setup while it runs. */
+  const createRecipe = useRef<{
+    words: string;
+    moreBars: number;
+    where: ArrangeInput["where"];
+    placedBefore: Arranged["placed"];
+    optionsBefore: Arranged["options"];
+    previewInput?: ArrangeInput;
+  } | null>(null);
   useEffect(() => onMode?.(mode), [mode]);
   const go = (to: number) => {
     setStep(to);
@@ -233,37 +242,51 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
   /** Everything chosen, so Muse Spark takes it from here and stops only where there's a choice to make. */
   const create = () => {
     go(3);
+    const words = askedWords();
     if (mode === "recompose") {
+      createRecipe.current = null;
       setCreating(null);
-      void arranged.askRecompose(askedWords(), length, chosen.length ? chosen : TEMPLATES.find((t) => t.name === "Full orchestra")!.instruments, freedom);
+      void arranged.askRecompose(words, length, chosen.length ? chosen : TEMPLATES.find((t) => t.name === "Full orchestra")!.instruments, freedom);
       return;
     }
+    createRecipe.current = { words, moreBars, where, placedBefore: placed, optionsBefore: options };
     if (keepTracks) {
       setCreating("plan");
-      void askOptions(askedWords(), moreBars, where);
+      void askOptions(words, moreBars, where);
       return;
     }
     setCreating("layout");
-    void askPlaced(chosen, [askedWords(), placeWords.trim()].filter(Boolean).join(" "), tuneOnly);
+    void askPlaced(chosen, [words, placeWords.trim()].filter(Boolean).join(" "), tuneOnly);
   };
   // Each stage starts from what the last one left, after it's on the page, so the plans are made for the laid-out score.
   useEffect(() => {
+    const recipe = createRecipe.current;
+    if (!creating || !recipe) return;
+    const finish = () => {
+      createRecipe.current = null;
+      setCreating(null);
+    };
+    if (piece.status !== "ready") return finish();
     if (creating === "layout") {
+      if (placed === recipe.placedBefore) return;
       if (placed.status === "ready") {
+        recipe.optionsBefore = options;
         setCreating("plan");
-        void askOptions(askedWords(), moreBars, where);
-      } else if (placed.status === "unavailable") setCreating(null);
+        void askOptions(recipe.words, recipe.moreBars, recipe.where);
+      } else if (placed.status === "unavailable") finish();
     } else if (creating === "plan") {
+      if (options === recipe.optionsBefore) return;
       if (options.status === "ready") {
         // A replay has no answers for previews, and a recorded run never had them.
-        if (demo || options.saved) return setCreating(null);
+        if (demo || options.saved) return finish();
+        recipe.previewInput = options.input;
         setCreating("preview");
         options.plans.forEach((_, index) => void arranged.askPreview(index));
-      } else if (options.status === "unavailable") setCreating(null);
+      } else if (options.status === "unavailable") finish();
     } else if (creating === "preview") {
-      if (options.status !== "ready" || options.plans.every((_, index) => options.notes[index] && options.notes[index]!.status !== "asking")) setCreating(null);
+      if (options.status !== "ready" || options.input !== recipe.previewInput || options.plans.every((_, index) => options.notes[index] && options.notes[index]!.status !== "asking")) finish();
     }
-  }, [creating, placed.status, options]);
+  }, [creating, placed, options, piece.status]);
   const stateOf = (status: string) => (status === "ready" ? "done" : status === "asking" ? "now" : status === "unavailable" ? "failed" : "waiting");
   const previewState = options.status !== "ready" ? "waiting" : creating === "preview" ? "now" : options.plans.some((_, index) => options.notes[index]?.status === "ready") ? "done" : "waiting";
   /** Writes the plan that was pressed, from the list it's in, whatever the other mode has left behind (review F1). */
