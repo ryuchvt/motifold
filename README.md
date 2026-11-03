@@ -2,7 +2,7 @@
 
 Motifold turns a musical sketch into an orchestral score you can read, change and take into your DAW. You bring a melody or a piano part, as MIDI or MusicXML, or one line you sing, hum or play into a recording. It works out what you played, reads it, asks what it can't tell, and writes the rest as notes.
 
-You choose the job. **Arrange** is neutral. It keeps your notes, harmony, key, metre, timing, character and section order, and adds no bars. It can voice your music for different instruments and add a supporting counterline within your theme. **Expand** develops the same piece with related new material or sections. Your written notes stay, and a mood is optional. **Recompose** writes a new piece within the freedom you choose, from keeping the whole tune to drawing on a small idea from it.
+You choose the job. **Arrange** is neutral. It keeps your notes, harmony, key, metre, timing, character and section order, and adds no bars. It can voice your music for different instruments and add a supporting counterline within your theme. **Expand** keeps that character and develops the same piece with a connected section, a return or a finished ending. Your written notes and harmony stay. **Recompose** writes a new piece within the freedom you choose, with a new mood and harmony if you want them. Its default keeps your whole tune recognisable while allowing its rhythm and harmony to change.
 
 I write to picture, so I often play an idea in with no click. A file like that has no bars that mean anything, and anything that reads notation needs bars. Most tools stop there. Motifold starts there.
 
@@ -32,7 +32,7 @@ Muse Spark 1.3 makes the musical decisions through strict JSON schemas on the Re
 
 What it's told about music is in `server/brain.ts`, in my own words: harmony on a fixed tune, film harmony, variation, form, orchestration, dynamics and scoring to picture. A plan names its chords bar by bar, so you can read the harmony and reject it before anything is written.
 
-Faithful Arrange keeps the source harmony and character. Mood and freer development belong in Expand or Recompose. A theme is a recognisable musical statement. A motif is a smaller distinctive gesture within it. Inspiration is a broader influence and does not promise that the original theme will be recognisable. The chosen freedom states what must remain. My source-backed reasoning is in [the intent research note](docs/research/2026-11-04-arrangement-intents.md).
+Faithful Arrange keeps the source harmony and character. A theme is a recognisable musical statement. A motif is a smaller distinctive gesture within it. Inspiration is a broader influence and does not promise that the original theme will be recognisable. The chosen freedom states what must remain.
 
 ## What the code does
 
@@ -67,11 +67,7 @@ It writes notes, dynamics and plucked string parts, but not a general set of art
 
 I wrote all the code in this repo during the building period, from October 27 to November 4. This repo starts from a snapshot of my private working repo, so its first commit holds the work up to that day and the commits after it show the rest. My private repo also holds an earlier practice tool that isn't part of this.
 
-These things are older. I wrote early design documents before October 27. The piano theme and the recordings in `public/demo/` are my own composition and my own playing, and they're input data. The principles Muse Spark is told to use come from what I read, and I wrote them down for this app in my own words. The knowledge is older than the event.
-
-## What I read
-
-Rimsky-Korsakov's Principles of Orchestration and Goetschius, both public domain. [Open Music Theory](https://human.libretexts.org/Bookshelves/Music/Music_Theory/Open_Music_Theory_2e_(Gotham_et_al.)) (CC BY-SA 4.0). [Murphy on the major tritone progression](https://mtosmt.org/issues/mto.06.12.2/mto.06.12.2.murphy.html) and his article Scoring Loss. [Schneller on modal interchange](https://api.equinoxpub.com/articles/20221). [Moreira on polychords](https://www.mtosmt.org/issues/mto.25.31.4/mto.25.31.4.moreira.html). [Eerola, Friberg and Bresin on musical cues and emotion](https://pmc.ncbi.nlm.nih.gov/articles/PMC3726864). [Farbood and Upham on musical tension](https://pmc.ncbi.nlm.nih.gov/articles/PMC3874841). [McAdams, Goodchild and Soden on orchestral grouping](https://mtosmt.org/issues/mto.22.28.3/mto.22.28.3.mcadams.html). No text or examples are copied from them, and no composer or film is named to the model.
+These things are older. I wrote early design documents before October 27. The piano theme and the recordings in `public/demo/` are my own composition and my own playing, and they're input data. The musical principles are established knowledge. The app's code and musical guidance were written during the event.
 
 ## Sounds and data
 

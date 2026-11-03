@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { MOODS, PIANO_WRITING, READING_A_SCORE } from "./brain";
+import { FAITHFUL_LAYOUT, MOODS, PIANO_WRITING, READING_A_SCORE } from "./brain";
 import { arrange, distribute, fitForm, planOptions, planRecompose, readPiece, SHAPES, writeTheme, type ArrangeInput, type OptionPlan, type WriteInput } from "./shapes";
 
 const asked = (change: Partial<ArrangeInput> = {}): ArrangeInput =>
@@ -65,8 +65,9 @@ describe("what the arranger knows about music", () => {
     expect(arrange.build(written()).instructions).toContain("still has the notes it names");
   });
 
-  it("thinks about mood when planning, and doesn't spend the writing call's time on it", () => {
-    expect(planOptions.build(asked({ intent: "expand", moreBars: 8 })).instructions).toContain(MOODS);
+  it("reserves mood planning for Recompose", () => {
+    expect(planRecompose.build(asked({ moreBars: 8 })).instructions).toContain(MOODS);
+    expect(planOptions.build(asked({ intent: "expand", moreBars: 8 })).instructions).not.toContain(MOODS);
     expect(planOptions.build(asked()).instructions).not.toContain(MOODS);
     expect(arrange.build(written()).instructions).not.toContain(MOODS);
   });
@@ -79,7 +80,7 @@ describe("what the arranger knows about music", () => {
 
   it("reaches every call that makes a musical decision", () => {
     expect(readPiece.build(asked()).instructions).toContain(READING_A_SCORE);
-    expect(distribute.build({ ...asked(), intent: "expand", instruments: ["Cello"], roles: [] }).instructions).toContain("translation and not copying");
+    expect(distribute.build({ ...asked(), intent: "expand", instruments: ["Cello"], roles: [] }).instructions).toContain(FAITHFUL_LAYOUT);
     expect(fitForm.build({ ...asked(), roles: [], moments: [{ beats: 0, time: "0:00", what: "" }] }).instructions).toContain("Not every moment deserves a hit");
   });
 });
@@ -103,8 +104,8 @@ describe("recomposing and writing from a source", () => {
     expect(distribute.build({ ...asked(), instruments: ["Cello"], roles: [], tuneOnly: true }).instructions).toContain("Place only the composer's tune");
   });
 
-  it("asks for layers, ornament and a role for each part", () => {
-    const built = arrange.build({ ...written(), intent: "expand" });
+  it("can ask for layers and ornament in Recompose, with a role for each part", () => {
+    const built = arrange.build({ ...written(), seed: { tune: "C5 D5", motif: "Rising step" } });
     expect(built.instructions).toContain("Keep at least three things a listener could follow apart");
     expect(built.instructions).toContain("Decoration is what makes a line sound played");
     const schema = built.schema as { properties: { adds: { items: { required: string[] } } } };
