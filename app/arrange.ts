@@ -207,17 +207,44 @@ export function snap(beats: number): number {
 export function parseEvents(text: string): { events: NewEvent[]; unreadable: number } {
   const events: NewEvent[] = [];
   let unreadable = 0;
+  type Token = { names: string[]; heights: Set<number>; start: number; end: number; on: number; off: number; held: boolean; event?: NewEvent };
+  const tokens: Token[] = [];
   for (const token of text.trim().split(/\s+/).filter(Boolean)) {
     const m = /^([^@]+)@([0-9.]+)\+([0-9.]+)$/.exec(token);
-    const names = m ? m[1]!.split(",") : [];
+    const written = m ? m[1]!.split(",") : [];
+    const held = written.some((name) => name.includes("~"));
+    const names = held ? written.map((name) => name.replace(/~$/, "")) : written;
     const [start, length] = m ? [Number(m[2]), Number(m[3])] : [NaN, NaN];
-    if (!m || !names.every((n) => noteHeight(n) !== null) || !Number.isFinite(start) || !(length > 0)) {
+    const end = start + length;
+    if (!m || (held && !written.every((name) => name.endsWith("~"))) || !names.every((name) => noteHeight(name) !== null) || ![start, length, end].every(Number.isFinite) || !(length > 0)) {
       unreadable++;
       continue;
     }
-    const on = snap(start);
-    const off = snap(start + length);
-    events.push({ start: on, length: off > on ? off - on : 0.25, names });
+    tokens.push({ names, heights: new Set(names.map((name) => noteHeight(name)!)), start, end, on: snap(start), off: snap(end), held });
+  }
+  // Only absorb floating-point arithmetic roundoff, not a musical gap or overlap.
+  const sameTime = (a: number, b: number) => Math.abs(a - b) <= Number.EPSILON * 4 * Math.max(1, Math.abs(a), Math.abs(b));
+  const before = (a: number, b: number) => a < b && !sameTime(a, b);
+  for (const token of tokens) {
+    if (!token.held) {
+      token.event = { start: token.on, length: token.off > token.on ? token.off - token.on : 0.25, names: token.names };
+      events.push(token.event);
+      continue;
+    }
+    const predecessors = tokens.filter((other) => other !== token && sameTime(other.end, token.start) && other.names.length === token.names.length && token.names.every((name) => other.names.includes(name)));
+    const previous = predecessors.length === 1 ? predecessors[0] : undefined;
+    // Look through the whole entry: a later-listed duplicate or overlapping attack
+    // must not turn an ambiguous continuation into a guessed tie. Chords must be
+    // held in their entirety; a mixed held/reattacked chord needs separate voices.
+    const ambiguous = previous && tokens.some((other) => other !== token && other !== previous && [...token.heights].some((height) => other.heights.has(height)) && before(other.start, token.end) && before(previous.start, other.end));
+    if (!previous?.event || token.heights.size !== token.names.length || previous.heights.size !== previous.names.length || ambiguous || !before(token.on, token.off) || !sameTime(previous.event.start + previous.event.length, token.on)) {
+      unreadable++;
+      continue;
+    }
+    // This is one attack. Keeping one event also keeps new-parts MIDI consistent
+    // with the full score; the notation writer splits its length into tied pieces.
+    previous.event.length = token.off - previous.event.start;
+    token.event = previous.event;
   }
   return { events, unreadable };
 }
