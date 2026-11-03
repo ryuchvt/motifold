@@ -27,17 +27,17 @@ it("keeps one activity identity per network attempt while retaining the existing
   } finally { off(); }
 });
 
-it("gives a recorded replay the same event identity contract without changing its saved format", async () => {
+it("gives a recorded replay the same event identity contract with real recorded provenance", async () => {
   vi.useFakeTimers();
-  const saved = { shape: "read_piece", input: {}, reply: { status: "ok", answer: "recorded", cached: false } as SparkReply, ms: 1800, thinking: [{ at: 0, text: "Reading the recorded tune." }] };
+  const saved = { version: "read-piece-test", model: "local-test", shape: "read_piece", input: {}, reply: { status: "ok", answer: "recorded", cached: false } as SparkReply, ms: 1800, thinking: [{ at: 0, text: "Reading the recorded tune." }] };
   const fetchNow = vi.fn(async (_url: string) => Response.json([saved]));
   vi.stubGlobal("fetch", fetchNow);
-  startDemo({ id: "local", name: "Local replay", words: "A replay", midi: "/demo/local.mid", xml: "/demo/local.xml", runs: [] }, "2026-11-03");
+  startDemo({ id: "local", name: "Local replay", words: "A replay", midi: "/demo/local.mid", xml: "/demo/local.xml", recipe: { intent: "arrange", ensemble: "String orchestra", moreBars: 0, where: "inside", useMelodyOnly: false }, guide: ["Use the recorded choices."], runs: [] }, "2026-11-03");
   const events: SparkEvent[] = [];
   const off = onSpark(event => events.push(event));
   try {
     const pending = askSpark("read_piece", {});
-    await vi.advanceTimersByTimeAsync(1);
+    await vi.advanceTimersByTimeAsync(1800);
     expect(await pending).toEqual(saved.reply);
     expect(events.map(event => event.kind)).toEqual(["start", "thinking", "end"]);
     expect(events.every(event => event.callId === events[0]!.callId)).toBe(true);
@@ -45,6 +45,6 @@ it("gives a recorded replay the same event identity contract without changing it
     expect(fetchNow).toHaveBeenCalledOnce();
     expect(fetchNow.mock.calls[0]![0]).toBe("/demo/local/shared.json");
     expect(recording).toEqual([]);
-    expect(Object.keys(saved).sort()).toEqual(["input", "ms", "reply", "shape", "thinking"]);
+    expect(Object.keys(saved).sort()).toEqual(["input", "model", "ms", "reply", "shape", "thinking", "version"]);
   } finally { off(); }
 });

@@ -1,14 +1,22 @@
-// The prepared demo: real runs of the real app, recorded, and played back through the same screens at no cost and with no key. The screen always says it's a replay,
-// when it was recorded and how long it really took, because a saved answer must never pass as a live one.
+// Replays use real recorded requests and replies. Unprepared edits never become a model call.
 import { setTransport, type RecordedCall, type SparkReply, type Transport } from "./spark";
 
+export interface DemoRecipe {
+  intent: "arrange";
+  ensemble: "String orchestra";
+  moreBars: 0;
+  where: "inside";
+  useMelodyOnly: false;
+}
 export interface DemoPiece {
   id: string;
   name: string;
   words: string;
   midi: string;
   xml: string;
-  /** What's prepared, by the key its run is saved under, like arrange-hopeful or recompose-action. */
+  recipe: DemoRecipe;
+  /** The exact choices made in the recording, including any answers and which option is complete. */
+  guide: string[];
   runs: { key: string; mode: "arrange" | "recompose"; mood: string; render?: string; renderPlan?: string }[];
 }
 export interface DemoIndex {
@@ -16,81 +24,126 @@ export interface DemoIndex {
   pieces: DemoPiece[];
 }
 
+type Saved = RecordedCall & { version: string; model: string };
+const object = (value: unknown): value is Record<string, unknown> => !!value && typeof value === "object" && !Array.isArray(value);
+const text = (value: unknown): value is string => typeof value === "string" && !!value.trim();
+const fileKey = (value: unknown): value is string => typeof value === "string" && /^[a-z0-9][a-z0-9-]{0,63}$/.test(value);
+const localAsset = (value: unknown): value is string => typeof value === "string" && /^\/demo\/[a-z0-9-]+\/[A-Za-z0-9_.-]+$/.test(value);
+
+/** No index is published until the real recorded path and its exact directions are ready. */
+export function recordedDemoIndex(value: unknown): DemoIndex | null {
+  if (!object(value) || !text(value.recorded) || !Number.isFinite(Date.parse(value.recorded)) || !Array.isArray(value.pieces) || value.pieces.length !== 1) return null;
+  const valid = value.pieces.every((piece: unknown) => {
+    if (!object(piece) || !fileKey(piece.id) || !text(piece.name) || !text(piece.words) || !localAsset(piece.midi) || !localAsset(piece.xml)) return false;
+    const recipe = piece.recipe;
+    if (!object(recipe) || recipe.intent !== "arrange" || recipe.ensemble !== "String orchestra" || recipe.moreBars !== 0 || recipe.where !== "inside" || recipe.useMelodyOnly !== false) return false;
+    if (!Array.isArray(piece.guide) || piece.guide.length === 0 || !piece.guide.every(text) || !Array.isArray(piece.runs) || piece.runs.length !== 1) return false;
+    return piece.runs.every((run: unknown) => object(run) && fileKey(run.key) && run.mode === "arrange" && run.mood === "" && (run.render === undefined || localAsset(run.render)) && (run.renderPlan === undefined || text(run.renderPlan)));
+  });
+  return valid ? value as unknown as DemoIndex : null;
+}
+
 export async function loadDemoIndex(): Promise<DemoIndex | null> {
   try {
     const res = await fetch("/demo/index.json");
-    return res.ok ? ((await res.json()) as DemoIndex) : null;
+    return res.ok ? recordedDemoIndex(await res.json()) : null;
   } catch {
     return null;
   }
 }
 
-/** What's on screen during a replay. */
-export const replay = { active: false, realMs: 0, skip: false, recorded: "" };
-export const skipReplay = () => {
-  replay.skip = true;
-};
+/** What's on screen during a replay. `enabled` also identifies the brief local-file loading phase. */
+export const replay = { enabled: false, active: false, realMs: 0, skip: false, recorded: "", model: "", version: "" };
+export const skipReplay = () => { replay.skip = true; };
+let generation = 0;
+const active = new Map<symbol, { ms: number; recorded: string; model: string; version: string }>();
+function showActive() {
+  const last = [...active.values()].at(-1);
+  replay.active = !!last;
+  if (last) Object.assign(replay, { realMs: last.ms, recorded: last.recorded, model: last.model, version: last.version });
+}
 
-type Saved = Pick<RecordedCall, "shape" | "input" | "reply" | "ms" | "thinking">;
-type WriteLike = { ask?: string | null; window?: { from: string }; fix?: { ask: string } };
+/** Object property order is irrelevant. Every value sent over JSON remains part of the identity. */
+function stable(value: unknown): string {
+  if (Array.isArray(value)) return `[${value.map(stable).join(",")}]`;
+  if (object(value)) return `{${Object.keys(value).sort().map(key => `${JSON.stringify(key)}:${stable(value[key])}`).join(",")}}`;
+  return JSON.stringify(value);
+}
+export function recordedRequestKey(shape: string, input: unknown): string | null {
+  try { return `${shape}|${stable(JSON.parse(JSON.stringify(input)))}`; } catch { return null; }
+}
 
-/** A mood's name from what's asked, which is how a call finds its recording. */
-export const moodOf = (ask: string | null | undefined) => /The mood I want: (\w+)/.exec(ask ?? "")?.[1]?.toLowerCase() ?? "";
-const callKey = (shape: string, input: unknown) => {
-  const i = input as WriteLike;
-  return [shape, i.window?.from ?? "", i.fix?.ask ?? ""].join("|");
-};
-
-/** At most this long on one call, so a run of many minutes can be watched. The screen says how long it really took. */
-const LONGEST_REPLAY_MS = 7000;
-
+function savedCall(value: unknown): value is Saved {
+  if (!object(value) || !text(value.shape) || !object(value.input) || !text(value.version) || !text(value.model) || typeof value.ms !== "number" || !Number.isFinite(value.ms) || value.ms < 0) return false;
+  if (!object(value.reply) || value.reply.status !== "ok" || !("answer" in value.reply) || typeof value.reply.cached !== "boolean") return false;
+  return Array.isArray(value.thinking) && value.thinking.every((line: unknown) => object(line) && typeof line.at === "number" && Number.isFinite(line.at) && line.at >= 0 && typeof line.text === "string");
+}
 async function load(url: string): Promise<Saved[]> {
   try {
     const res = await fetch(url);
-    return res.ok ? ((await res.json()) as Saved[]) : [];
-  } catch {
-    return [];
-  }
+    const calls: unknown = res.ok ? await res.json() : null;
+    // Failed attempts belong in the audit. They cannot mask a later successful cold retry here.
+    return Array.isArray(calls) ? calls.filter(savedCall) : [];
+  } catch { return []; }
 }
 
-/** Answers from the recordings of this piece. A call that wasn't prepared says so, and the page offers the live way. */
+const LONGEST_REPLAY_MS = 7000;
+function wait(ms: number, current: () => boolean): Promise<void> {
+  if (ms <= 0 || replay.skip || !current()) return Promise.resolve();
+  return new Promise(resolve => {
+    const finish = () => { clearTimeout(timer); clearInterval(check); resolve(); };
+    const timer = setTimeout(finish, ms);
+    const check = setInterval(() => { if (replay.skip || !current()) finish(); }, 60);
+  });
+}
+
+/** Only this piece's declared files are read. No match is an explicit recorded-only failure. */
 export function startDemo(piece: DemoPiece, recorded: string): void {
-  const shared = load(`/demo/${piece.id}/shared.json`);
-  const runs = new Map<string, Promise<Saved[]>>();
-  const runOf = (key: string) => {
-    if (!runs.has(key)) runs.set(key, load(`/demo/${piece.id}/${key}.json`));
-    return runs.get(key)!;
-  };
+  const session = ++generation;
+  active.clear(); showActive();
+  replay.enabled = true;
+  replay.recorded = recorded;
+  replay.skip = false;
+  const current = () => session === generation;
+  const files = [`/demo/${piece.id}/shared.json`, ...piece.runs.map(run => `/demo/${piece.id}/${run.key}.json`)];
+  const calls = Promise.all(files.map(load)).then(groups => groups.flat());
   const transport: Transport = async (shape, input, think) => {
-    const ask = (input as WriteLike).ask;
-    const freedom = (input as { freedom?: number }).freedom;
-    const recomposing = shape === "plan_recompose" || shape === "write_theme" || !!(input as { seed?: unknown }).seed;
-    const sharedCalls = await shared;
-    const moodCalls = moodOf(ask) ? await runOf(recomposing ? `recompose-${freedom ?? 3}-${moodOf(ask)}` : `arrange-${moodOf(ask)}`) : [];
-    const found = [...moodCalls, ...sharedCalls].find((c) => callKey(c.shape, c.input) === callKey(shape, input));
-    if (!found) return { status: "fallback", reason: "not-prepared" } satisfies SparkReply;
-    replay.active = true;
-    replay.realMs = found.ms;
-    replay.recorded = recorded;
-    replay.skip = false;
-    const scale = Math.min(1, LONGEST_REPLAY_MS / Math.max(found.ms, 1));
+    const key = recordedRequestKey(shape, input);
+    const available = await calls;
+    if (!current()) return { status: "fallback", reason: "stale" };
+    const matches = key === null ? [] : available.filter(call => recordedRequestKey(call.shape, call.input) === key);
+    // Conflicting receipts for one exact request are ambiguous. Packaging must choose the actual take.
+    const first = matches[0];
+    if (!first || matches.some(call => stable(call.reply) !== stable(first.reply) || call.model !== first.model || call.version !== first.version)) return { status: "fallback", reason: "not-prepared" };
+    const id = Symbol();
+    active.set(id, { ms: first.ms, recorded, model: first.model, version: first.version });
+    replay.skip = false; showActive();
+    const duration = Math.min(first.ms, LONGEST_REPLAY_MS);
+    const scale = duration / Math.max(first.ms, 1);
     let at = 0;
-    for (const line of found.thinking) {
-      const wait = line.at * scale - at;
-      at = line.at * scale;
-      await new Promise((done) => {
-        const stop = setInterval(() => replay.skip && (clearInterval(stop), clearTimeout(timer), done(null)), 60);
-        const timer = setTimeout(() => (clearInterval(stop), done(null)), replay.skip ? 0 : Math.max(0, wait));
-      });
-      think(line.text);
+    try {
+      for (const line of first.thinking) {
+        const target = Math.max(at, Math.min(duration, line.at * scale));
+        await wait(target - at, current);
+        if (!current()) return { status: "fallback", reason: "stale" };
+        at = target;
+        think(line.text);
+      }
+      await wait(duration - at, current);
+      if (!current()) return { status: "fallback", reason: "stale" };
+      return structuredClone(first.reply);
+    } finally {
+      active.delete(id); showActive();
     }
-    replay.active = false;
-    return found.reply;
   };
   setTransport(transport);
 }
 
 export function stopDemo(): void {
+  generation++;
+  active.clear();
+  replay.enabled = false;
+  replay.skip = false;
+  showActive();
   setTransport(null);
-  replay.active = false;
 }
