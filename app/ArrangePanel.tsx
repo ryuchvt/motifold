@@ -997,7 +997,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
           {notes?.status === "ready" && left && (
             <>
               <p className="spark-note">{notes.check.notes && !left.notes ? "All of it is left out." : checkWords(left)[0]}</p>
-              {options.status === "ready" &&
+              {!notes.preview && !notes.writing && options.status === "ready" &&
                 planGaps(o.why, notes.check, options.input).map((gap) => (
                   <p key={gap.from} className="arrange-hit">
                     No new notes came back for {barsWords(gap.from, gap.to).toLowerCase()}. If the plan wanted something there, ask again or say what you want.

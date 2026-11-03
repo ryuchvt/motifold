@@ -35,3 +35,17 @@
   .studio .workspace > .inspector-action { width:100%; margin:0; border:0; border-top:1px solid var(--line); padding:9px 16px; }
   .studio .workspace .workspace-body { padding-bottom:0; }
 }
+/* On desktop, use the otherwise blank space to the left of the action footer
+   for the score. The inspector action and activity retain their own layout rows. */
+@media(min-width:761px) {
+  .studio .workspace { display:grid; grid-template-columns:minmax(0,1fr) 346px; grid-template-rows:47px minmax(0,1fr) auto; }
+  .studio .workspace > .workflow { grid-column:1/-1; grid-row:1; }
+  .studio .workspace > .workspace-body { display:contents; }
+  .studio .workspace > .workspace-body > .music-space { grid-column:1; grid-row:2 / span 2; overflow:auto; }
+  .studio .workspace .score-desk { min-height:320px; }
+  .studio .workspace > .workspace-body > .composer-inspector { grid-column:2; grid-row:2; }
+  .studio .workspace > .inspector-action { grid-column:2; grid-row:3; }
+  .studio .workspace.inspector-hidden { grid-template-columns:minmax(0,1fr); }
+}
+@media(min-width:761px) and (max-width:1120px) { .studio .workspace { grid-template-columns:minmax(0,1fr) 310px; } }
+@media(min-width:1600px) { .studio .workspace { grid-template-columns:minmax(0,1fr) 380px; } }
