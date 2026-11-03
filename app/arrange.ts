@@ -112,8 +112,14 @@ export function transposedForPlayers(xmlText: string): string {
   for (const part of childrenOf(root, "part")) {
     const rule = TRANSPOSING.find(([word]) => word.test(names.get(part.getAttribute("id")) ?? ""))?.[1];
     if (!rule) continue;
+    const measures = childrenOf(part, "measure");
+    const frames = measures.flatMap((m) => childrenOf(m, "attributes").flatMap((a) => childrenOf(a, "transpose")));
+    // Supplied written frames, including a change of instrument, remain authoritative.
+    if (frames.some((frame) => ["diatonic", "chromatic", "octave-change"].some((tag) => Number(childrenOf(frame, tag)[0]?.textContent ?? 0) !== 0))) continue;
+    // Explicit zero frames are concert pitch. Replace them with the one written frame below.
+    for (const frame of frames) frame.parentNode!.removeChild(frame);
     let first = true;
-    for (const measure of childrenOf(part, "measure")) {
+    for (const measure of measures) {
       for (const attributes of childrenOf(measure, "attributes")) {
         for (const key of childrenOf(attributes, "key")) {
           const fifths = childrenOf(key, "fifths")[0];
