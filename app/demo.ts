@@ -9,7 +9,7 @@ export interface DemoPiece {
   midi: string;
   xml: string;
   /** What's prepared, by the key its run is saved under, like arrange-hopeful or recompose-action. */
-  runs: { key: string; mode: "arrange" | "recompose"; mood: string; render?: string }[];
+  runs: { key: string; mode: "arrange" | "recompose"; mood: string; render?: string; renderPlan?: string }[];
 }
 export interface DemoIndex {
   recorded: string;

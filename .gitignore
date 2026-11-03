@@ -9,3 +9,7 @@ coverage/
 .DS_Store
 local-inputs/
 server/worker-configuration.d.ts
+
+# Local frontend inspection artifacts
+.playwright-cli/
+output/

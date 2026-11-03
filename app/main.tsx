@@ -4,13 +4,17 @@ import { Studio } from "./Studio";
 import { recording, rememberOwnKey } from "./spark";
 import "./app.css";
 import "./studio.css";
+import "./workspace.css";
 
 rememberOwnKey();
 // For building a prepared demo out of a real run.
 if (location.search.includes("record")) (window as unknown as { __recording: unknown }).__recording = recording;
 
-createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <Studio />
-  </StrictMode>,
-);
+async function start() {
+  const sample = import.meta.env.MODE === "ui" ? await import("./uiPreview") : null;
+  sample?.installUiPreview();
+  createRoot(document.getElementById("root")!).render(
+    <StrictMode><Studio initialScore={sample?.previewScore} sample={!!sample} /></StrictMode>,
+  );
+}
+void start();

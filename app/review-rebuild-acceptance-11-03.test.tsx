@@ -92,7 +92,7 @@ it('selecting shared credit after own-key use omits the remembered own key', asy
   setOwnKey('review-visitor-fake');
   const screen = await hostStudio();
   await press(screen.host, 'Carry on with the key you gave');
-  await press(screen.host, /MOTIFOLD/);
+  await press(screen.host, /Motifold/);
   await press(screen.host, /try.*credit|shared credit/i);
   await dropScore(screen.host);
   expect(screen.calls.some((c) => c.shape === 'read_piece')).toBe(true);

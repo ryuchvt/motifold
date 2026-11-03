@@ -76,7 +76,7 @@ it("stops listening when the composer leaves, and opens nothing afterwards", asy
   const host = await openStudio();
   await choose(host, new File(["audio"], "old.wav", { type: "audio/wav" }));
   expect(host.textContent).toContain("LISTENING");
-  await act(async () => button(host, "MOTIFOLD").click());
+  await act(async () => button(host, "Motifold").click());
   expect(signal.aborted).toBe(true);
   await act(async () => finish({ midi: line(24), notes: 24, seconds: 15 }));
   await act(async () => button(host, "try one piece live").click());
@@ -127,7 +127,7 @@ it("a file still being read when the composer leaves opens nothing", async () =>
   const slow = new File([xml], "slow.musicxml");
   Object.defineProperty(slow, "arrayBuffer", { value: () => new Promise<ArrayBuffer>((done) => (release = () => done(new TextEncoder().encode(xml).buffer as ArrayBuffer))) });
   await choose(host, slow);
-  await act(async () => button(host, "MOTIFOLD").click());
+  await act(async () => button(host, "Motifold").click());
   await act(async () => release());
   await act(async () => button(host, "try one piece live").click());
   expect(host.querySelector(".on-page")).toBeNull();

@@ -30,7 +30,7 @@ export interface OrderRow {
 const along = (beat: number, total: number) => `${(beat / Math.max(total, 1)) * 100}%`;
 
 const UNITS = 12;
-const heightOf = (row: PieceRow) => (row.notes.length === 0 ? 14 : row.tall ? 46 : 24);
+const heightOf = (row: PieceRow) => (row.tall ? 46 : 24);
 
 /** Notes as one path for each thing they're doing, because a long score is thousands of notes. */
 function rowPaths(row: PieceRow) {
@@ -192,6 +192,8 @@ export function PieceView(props: {
     if (back) moveHead(0);
   };
   // The transport in the top bar plays whatever this overview would.
+  const playingNow = useRef(playing);
+  playingNow.current = playing;
   const fromNow = useRef(from);
   fromNow.current = from;
   const startNow = useRef(start);
@@ -206,7 +208,7 @@ export function PieceView(props: {
     moveHead(beat);
     if (playing) startNow.current(beat);
   };
-  useEffect(() => playhead.register({ play: () => startNow.current(fromNow.current), pause: () => stopNow.current(), stop: () => stopNow.current(true), seek: (beat) => seekNow.current(beat) }), []);
+  useEffect(() => playhead.register({ play: () => startNow.current(fromNow.current), pause: () => stopNow.current(), stop: () => stopNow.current(true), seek: (beat) => seekNow.current(beat), position: () => playingNow.current ? heard.current : fromNow.current }), []);
   // A passage can be selected from notation or a plan, without a pointer gesture on this overview.
   useEffect(() => {
     const target = bars.find((bar) => bar.number === selected.from)?.start;

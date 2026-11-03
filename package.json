@@ -10,11 +10,13 @@
     "build": "tsc -p . && vite build",
     "test": "vitest run",
     "types": "wrangler types server/worker-configuration.d.ts --include-env=false",
-    "typecheck": "tsc -p . && npm run types --silent && tsc -p server"
+    "typecheck": "tsc -p . && npm run types --silent && tsc -p server",
+    "dev:ui": "vite --mode ui --host 127.0.0.1 --port 5199 --strictPort"
   },
   "dependencies": {
     "@xmldom/xmldom": "^0.9.12",
     "fflate": "^0.8.3",
+    "lucide-react": "^1.67.0",
     "opensheetmusicdisplay": "^2.2.1",
     "react": "^19.3.1",
     "react-dom": "^19.3.1"

@@ -25,6 +25,8 @@ export function Compare(props: {
   previewed: number[];
   onPreview?: (index: number) => void;
   busy: boolean;
+  compact?: boolean;
+  onAudition?: (index: number) => void;
   onShowBars: (from: string, to: string) => void;
 }) {
   const { data, sections, orders, ordered, onOrder, onKeepOrder, plans, recompose, chosen, onChoose, written, previewed, onPreview, busy, onShowBars } = props;
@@ -34,6 +36,17 @@ export function Compare(props: {
   // Orders are a side road, so they start shut. Plans are the decision of the step, so they start open.
   const isShut = shut[kind] ?? kind === "orders";
   const title = kind === "plans" ? `Compare ${plans!.length} ${recompose ? "new pieces" : "plans"}` : `Compare ${orders.length - 1} other orders of your bars`;
+  if (props.compact && kind === "plans") return (
+    <section className="idea-comparison" aria-label={title}>
+      <div className="idea-tabs" role="group" aria-label="Choose a plan">
+        {plans!.map((plan, index) => <div key={`${index}-${plan.name}`} className={`idea-tab${chosen === index ? ' chosen' : ''}`}>
+          <button className="idea-choose" aria-pressed={chosen === index} onClick={() => onChoose(index)}><span className="idea-letter">{String.fromCharCode(65 + index)}</span><span><strong>{plan.name}</strong><small>{previewed.includes(index) ? 'First section ready' : written.includes(index) ? 'Notes ready' : recompose ? 'A proposed new piece' : 'Plan only'}</small></span></button>
+          {!recompose && <button className="idea-play" aria-label={`Audition plan ${String.fromCharCode(65 + index)}`} disabled={!written.includes(index) && (busy || !onPreview)} onClick={() => props.onAudition?.(index)}><svg viewBox="0 0 12 12" aria-hidden><path d="M3 1.5v9l7-4.5z"/></svg></button>}
+        </div>)}
+      </div>
+      <details className="idea-detail"><summary>Compare the musical plans</summary><div className="compare-plans">{plans!.map((plan, index) => <PlanCard key={`${index}-${plan.name}`} plan={plan} index={index} data={recompose ? null : data} sections={recompose ? [] : sections} chosen={chosen === index} written={written.includes(index)} previewed={previewed.includes(index)} onPreview={recompose || !onPreview ? undefined : () => onPreview(index)} busy={busy} onChoose={() => onChoose(index)} onShowBars={recompose ? undefined : onShowBars} recompose={recompose}/>)}</div></details>
+    </section>
+  );
   return (
     <section className={`compare${isShut ? " shut" : ""}`} aria-label={title}>
       <button className="compare-head" aria-expanded={!isShut} onClick={() => setShut({ ...shut, [kind]: !isShut })}>
