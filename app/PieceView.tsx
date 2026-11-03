@@ -5,6 +5,7 @@ import { createPreview, beatClock } from "./audio/preview";
 import { loadManifest } from "./audio/samples";
 import { timeWords, type PlacedCue } from "./cues";
 import { familyOf, notesToHear, type NoteKind, type PieceData, type PieceRow } from "./pieceData";
+import { playhead } from "./playhead";
 
 const ROLE_NAMES: Record<(typeof ROLES)[number], string> = {
   melody: "Melody",
@@ -98,6 +99,7 @@ export function PieceView(props: {
   const moveHead = (beat: number) => {
     if (head.current) head.current.style.left = along(beat, totalBeats);
     if (readout.current) readout.current.textContent = words(beat);
+    playhead.set({ words: words(beat) });
   };
 
   useEffect(() => {
@@ -106,6 +108,7 @@ export function PieceView(props: {
   useEffect(() => () => {
     preview.current?.stop();
     bounce.current?.pause();
+    playhead.set({ playing: false });
   }, []);
   useEffect(() => {
     bounce.current?.pause();
@@ -158,13 +161,23 @@ export function PieceView(props: {
       },
     );
   };
-  const stop = () => {
+  /** Pause carries on from the bar it stopped in. Stop goes back to the start. */
+  const stop = (back = false) => {
     bounce.current?.pause();
     preview.current?.stop();
     setPlaying(false);
-    // It carries on from the bar it stopped in.
-    setFrom(barOf(heard.current)?.start ?? 0);
+    setFrom(back ? 0 : (barOf(heard.current)?.start ?? 0));
+    if (back) moveHead(0);
   };
+  // The transport in the top bar plays whatever this overview would.
+  const fromNow = useRef(from);
+  fromNow.current = from;
+  const startNow = useRef(start);
+  startNow.current = start;
+  const stopNow = useRef(stop);
+  stopNow.current = stop;
+  useEffect(() => playhead.register({ play: () => startNow.current(fromNow.current), pause: () => stopNow.current(), stop: () => stopNow.current(true) }), []);
+  useEffect(() => playhead.set({ playing }), [playing]);
   const beatAt = (e: ReactPointerEvent<HTMLElement>) => {
     const box = e.currentTarget.getBoundingClientRect();
     return (Math.max(0, Math.min(1, (e.clientX - box.left) / Math.max(box.width, 1))) * totalBeats);
@@ -195,9 +208,6 @@ export function PieceView(props: {
   return (
     <section className="stage" aria-label="The whole piece">
       <div className="stage-bar">
-        <button className="stage-play" aria-label={playing ? "Stop" : "Play"} onClick={() => (playing ? stop() : start(from))}>
-          {playing ? "■" : "▶"}
-        </button>
         <span className="stage-readout" ref={readout} />
         {(present.length > 0 || hasNew) && (
           <span className="stage-key" role="group" aria-label="What the colours mean. Press one to see and hear only that.">

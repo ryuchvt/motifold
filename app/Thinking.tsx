@@ -1,90 +1,198 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { replay, skipReplay } from "./demo";
 import { onSpark, type SparkEvent } from "./spark";
 
-const STAGES: Record<string, { what: string; usually: string }> = {
-  read_bars: { what: "Finding the bars from your notes", usually: "about a minute" },
-  read_piece: { what: "Reading who has the tune and what's missing", usually: "about a minute" },
-  study_score: { what: "Studying the form and the harmony", usually: "a minute or two" },
-  distribute: { what: "Laying your notes on the instruments", usually: "about a minute" },
-  plan_options: { what: "Choosing chords and form, bar by bar", usually: "about two minutes" },
-  plan_recompose: { what: "Composing a new piece from your motif", usually: "about two minutes" },
-  arrange: { what: "Writing the notes", usually: "a minute or two a section" },
-  fit_form: { what: "Fitting your bars to the moments", usually: "about a minute" },
+const STAGES: Record<string, { what: string; chip: string; usually: string }> = {
+  read_bars: { what: "Finding the bars from your notes", chip: "FINDING THE BARS", usually: "about a minute" },
+  read_piece: { what: "Reading who has the tune and what's missing", chip: "READING YOUR SCORE", usually: "about a minute" },
+  study_score: { what: "Studying the form and the harmony", chip: "STUDYING THE FORM", usually: "a minute or two" },
+  distribute: { what: "Laying your notes on the instruments", chip: "LAYING OUT YOUR NOTES", usually: "about a minute" },
+  plan_options: { what: "Choosing chords and form, bar by bar", chip: "PLANNING TWO WAYS", usually: "about two minutes" },
+  plan_recompose: { what: "Composing a new piece from your motif", chip: "COMPOSING FROM YOUR MOTIF", usually: "about two minutes" },
+  write_theme: { what: "Writing the new tune", chip: "WRITING THE TUNE", usually: "about two minutes" },
+  arrange: { what: "Writing the notes", chip: "WRITING", usually: "a minute or two a section" },
+  fit_form: { what: "Fitting your bars to the moments", chip: "FITTING TO PICTURE", usually: "about a minute" },
 };
 
 const clock = (ms: number) => `${Math.floor(ms / 60000)}:${String(Math.floor(ms / 1000) % 60).padStart(2, "0")}`;
 
-/** The wait, shown for what it is: which stage this is, the model's own thinking as it comes, and how long it's taken. On a replay it says it's a replay. */
-export function Thinking() {
-  // Calls can run side by side, like the study after the reading, so each keeps its own label, clock and thinking (review F6).
-  const [running, setRunning] = useState<{ shape: string; label: string; started: number; lines: string[] }[]>([]);
-  const [done, setDone] = useState<string[]>([]);
-  const [now, setNow] = useState(Date.now());
-  const list = useRef<HTMLOListElement>(null);
-  const runningNow = useRef(running);
-  runningNow.current = running;
-  const current = running[running.length - 1] ?? null;
-  const lines = current?.lines ?? [];
+interface Running {
+  shape: string;
+  label: string;
+  bars: string | null;
+  started: number;
+  updated: number;
+  lines: string[];
+}
+interface Finished {
+  label: string;
+  ok: boolean;
+  ms: number;
+}
 
+/**
+ * What Muse Spark is doing, from the calls' own events only: what started, what it has said, what came back. Calls can run side by side, like
+ * the study after the reading, so each keeps its own label, clock and thinking (review F6). Nothing here is estimated or made up.
+ */
+let running: Running[] = [];
+let finished: Finished[] = [];
+let snapshot = { running, finished };
+const listeners = new Set<() => void>();
+const changed = () => {
+  snapshot = { running, finished };
+  for (const l of listeners) l();
+};
+let watching = false;
+function watch() {
+  if (watching) return;
+  watching = true;
+  onSpark((event: SparkEvent) => {
+    if (event.kind === "start") {
+      const window = (event.input as { window?: { from: string; to: string } }).window;
+      const stage = STAGES[event.shape];
+      const bars = window ? (window.from === window.to ? `bar ${window.from}` : `bars ${window.from} to ${window.to}`) : null;
+      running = [...running, { shape: event.shape, label: `${stage?.what ?? "Thinking"}${bars ? `: ${bars}` : ""}`, bars, started: Date.now(), updated: Date.now(), lines: [] }];
+    } else if (event.kind === "thinking") {
+      const at = running.map((r) => r.shape).lastIndexOf(event.shape);
+      if (at < 0) return;
+      running = running.map((r, k) => (k === at ? { ...r, updated: Date.now(), lines: [...r.lines.slice(-24), event.text] } : r));
+    } else {
+      const at = running.findIndex((r) => r.shape === event.shape);
+      if (at < 0) return;
+      const ended = running[at]!;
+      finished = [...finished.slice(-7), { label: ended.label, ok: event.ok, ms: Date.now() - ended.started }];
+      running = running.filter((_, k) => k !== at);
+    }
+    changed();
+  });
+}
+function useMuse() {
+  watch();
+  return useSyncExternalStore(
+    (l) => {
+      listeners.add(l);
+      return () => void listeners.delete(l);
+    },
+    () => snapshot,
+    () => snapshot,
+  );
+}
+function useNow(on: boolean) {
+  const [now, setNow] = useState(Date.now());
   useEffect(() => {
-    const unsubscribe = onSpark((event: SparkEvent) => {
-      if (event.kind === "start") {
-        const window = (event.input as { window?: { from: string; to: string } }).window;
-        const stage = STAGES[event.shape];
-        const label = `${stage?.what ?? "Thinking"}${window ? `: bars ${window.from} to ${window.to}` : ""}`;
-        setRunning((all) => [...all, { shape: event.shape, label, started: Date.now(), lines: [] }]);
-      } else if (event.kind === "thinking") {
-        setRunning((all) => {
-          const at = all.map((r) => r.shape).lastIndexOf(event.shape);
-          return at < 0 ? all : all.map((r, k) => (k === at ? { ...r, lines: [...r.lines.slice(-24), event.text] } : r));
-        });
-      } else {
-        const ended = runningNow.current.find((r) => r.shape === event.shape);
-        if (ended && event.ok) setDone((labels) => [...labels.slice(-5), ended.label]);
-        setRunning((all) => {
-          const at = all.findIndex((r) => r.shape === event.shape);
-          return at < 0 ? all : all.filter((_, k) => k !== at);
-        });
-      }
-    });
+    if (!on) return;
     const timer = setInterval(() => setNow(Date.now()), 500);
-    return () => {
-      unsubscribe();
-      clearInterval(timer);
-    };
+    return () => clearInterval(timer);
+  }, [on]);
+  return now;
+}
+
+/** The panel's open or shut, shared by the chip and the panel. */
+let shut = false;
+let opened = false;
+const panelListeners = new Set<() => void>();
+const panel = { shut, opened };
+const setPanel = (next: { shut?: boolean; opened?: boolean }) => {
+  shut = next.shut ?? shut;
+  opened = next.opened ?? opened;
+  panel.shut = shut;
+  panel.opened = opened;
+  for (const l of panelListeners) l();
+};
+function usePanel() {
+  const [, tick] = useState(0);
+  useEffect(() => {
+    const l = () => tick((n) => n + 1);
+    panelListeners.add(l);
+    return () => void panelListeners.delete(l);
   }, []);
+  return panel;
+}
+
+/** The status in the top bar, always there: READY, or what it's doing and for how long. Pressing it opens or shuts the panel. */
+export function MuseChip() {
+  watch();
+  const { running: now } = useMuse();
+  const state = usePanel();
+  const clockNow = useNow(now.length > 0);
+  const current = now[now.length - 1];
+  const words = current ? `${STAGES[current.shape]?.chip ?? "THINKING"}${current.shape === "arrange" && current.bars ? ` ${current.bars.replace("bars ", "").replace(" to ", "–").toUpperCase()}` : ""}` : "READY";
+  const showing = current ? !state.shut : state.opened;
+  return (
+    <button className={`muse-chip${current ? " on" : ""}`} aria-expanded={showing} aria-label={`Muse Spark, ${current ? STAGES[current.shape]?.what ?? "thinking" : "ready"}. ${showing ? "Hide" : "Show"} what it's doing.`} onClick={() => (current ? setPanel({ shut: !state.shut }) : setPanel({ opened: !state.opened }))}>
+      <span className={`signal${current ? " on" : ""}`} aria-hidden />
+      <span>MUSE SPARK · {words}</span>
+      {current && <span className="muse-chip-clock">{clock(clockNow - current.started)}</span>}
+      {now.length > 1 && <span className="muse-chip-more">+{now.length - 1}</span>}
+    </button>
+  );
+}
+
+/** The wait, shown for what it is: which stage this is, the model's own thinking as it comes, what's finished, and how long it's taken. On a replay it says it's a replay. */
+export function Thinking() {
+  const { running: now, finished: done } = useMuse();
+  const state = usePanel();
+  const [reasoning, setReasoning] = useState(true);
+  const clockNow = useNow(now.length > 0);
+  const list = useRef<HTMLOListElement>(null);
+  const current = now[now.length - 1] ?? null;
   useEffect(() => {
     list.current?.scrollTo({ top: list.current.scrollHeight });
-  }, [lines]);
+  }, [current?.lines.length]);
+  // A new call opens it again, unless the composer shut it during this one.
+  const started = current?.started;
   useEffect(() => {
-    if (!current) {
-      const fade = setTimeout(() => setDone([]), 4000);
-      return () => clearTimeout(fade);
-    }
-    return undefined;
-  }, [current]);
+    if (started) setPanel({ shut: false });
+  }, [started]);
 
-  if (!current) return null;
-  const stage = STAGES[current.shape];
+  const showing = current ? !state.shut : state.opened;
+  if (!showing) return null;
+  const stage = current ? STAGES[current.shape] : null;
   return (
-    <aside className="thinking" role="status" aria-live="polite">
+    <aside className="thinking" role={current ? "status" : undefined} aria-live="polite" aria-label="What Muse Spark is doing">
       <header>
-        <span className="signal" aria-hidden />
-        <strong>{current.label}</strong>
-        <span className="thinking-clock">{clock(now - current.started)}</span>
+        <span className={`signal${current ? " on" : ""}`} aria-hidden />
+        <strong>{current ? current.label : "Muse Spark is ready"}</strong>
+        {current && <span className="thinking-clock">{clock(clockNow - current.started)}</span>}
+        <button className="thinking-hide" aria-label="Hide" onClick={() => (current ? setPanel({ shut: true }) : setPanel({ opened: false }))}>
+          –
+        </button>
       </header>
-      <ol className="thinking-done">
-        {done.map((label, k) => (
-          <li key={`${label}-${k}`}>{label}</li>
-        ))}
-      </ol>
-      <ol className="thinking-lines" ref={list}>
-        {lines.map((line, k) => (
-          <li key={k}>{line}</li>
-        ))}
-        {lines.length === 0 && <li className="quiet">Muse Spark is starting on this.</li>}
-      </ol>
+      {now.length > 1 && (
+        <ol className="thinking-also">
+          {now.slice(0, -1).map((r) => (
+            <li key={`${r.shape}-${r.started}`}>
+              Also working: {r.label} · {clock(clockNow - r.started)}
+            </li>
+          ))}
+        </ol>
+      )}
+      {done.length > 0 && (
+        <ol className="thinking-done">
+          {done.map((d, k) => (
+            <li key={`${d.label}-${k}`} className={d.ok ? undefined : "failed"}>
+              {d.label} · {clock(d.ms)}
+              {d.ok ? "" : " · didn't come back"}
+            </li>
+          ))}
+        </ol>
+      )}
+      {current && (
+        <>
+          <button className="thinking-toggle" aria-expanded={reasoning} onClick={() => setReasoning(!reasoning)}>
+            {reasoning ? "Hide its reasoning" : "Show its reasoning, as it comes"}
+            {current.lines.length > 0 && <span> · last word {clock(Math.max(0, clockNow - current.updated))} ago</span>}
+          </button>
+          {reasoning && (
+            <ol className="thinking-lines" ref={list}>
+              {current.lines.map((line, k) => (
+                <li key={k}>{line}</li>
+              ))}
+              {current.lines.length === 0 && <li className="quiet">Muse Spark is starting on this.</li>}
+            </ol>
+          )}
+        </>
+      )}
       <footer>
         {replay.active ? (
           <>
@@ -93,8 +201,10 @@ export function Thinking() {
               Skip
             </button>
           </>
-        ) : (
+        ) : current ? (
           <span>Live on Muse Spark. This usually takes {stage?.usually ?? "a minute or two"}.</span>
+        ) : (
+          <span>Nothing is running. What it did last is above.</span>
         )}
       </footer>
     </aside>

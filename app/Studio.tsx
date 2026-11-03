@@ -10,13 +10,40 @@ import { ScoreView, type ScoreViewHandle } from "./ScoreView";
 import { AUDIO_FILE, isAudioFile, listenTo } from "./listen";
 import { OWN_KEY } from "../server/pools";
 import { hasOwnKey, onSpark, setOwnKey } from "./spark";
-import { Thinking } from "./Thinking";
+import { MuseChip, Thinking } from "./Thinking";
+import { playhead, usePlayhead } from "./playhead";
 import { looksFreelyPlayed } from "./timing";
 import { useArrange } from "./useArrange";
 
 type Access = "demo" | "live" | "own";
 const NO_MARKS: never[] = [];
 const NO_TAP = () => {};
+
+/** Play, pause and stop, and where it is. The overview below owns the sound. */
+function Transport() {
+  const { playing, words } = usePlayhead();
+  return (
+    <span className="transport" role="group" aria-label="Transport">
+      <button className="transport-button" aria-label={playing ? "Pause" : "Play"} onClick={() => (playing ? playhead.pause() : playhead.play())}>
+        {playing ? (
+          <svg viewBox="0 0 12 12" aria-hidden>
+            <path d="M3 2h2v8H3zM7 2h2v8H7z" />
+          </svg>
+        ) : (
+          <svg viewBox="0 0 12 12" aria-hidden>
+            <path d="M3 1.5v9l7-4.5z" />
+          </svg>
+        )}
+      </button>
+      <button className="transport-button" aria-label="Stop" onClick={() => playhead.stop()}>
+        <svg viewBox="0 0 12 12" aria-hidden>
+          <path d="M2.5 2.5h7v7h-7z" />
+        </svg>
+      </button>
+      <span className="transport-where">{words}</span>
+    </span>
+  );
+}
 
 function Clock() {
   const [time, setTime] = useState("");
@@ -41,6 +68,8 @@ export function Studio() {
   const [thinking, setThinking] = useState(false);
   const [zoom, setZoom] = useState(0.8);
   const [sourceNote, setSourceNote] = useState<string | null>(null);
+  /** The workflow stage the panel is on, for the top bar. */
+  const [stage, setStage] = useState("Study");
   const [listening, setListening] = useState<{ fileName: string; recording: boolean } | null>(null);
   const input = useRef<HTMLInputElement>(null);
   // What's listening or recording now, so leaving or opening something else can stop it.
@@ -181,10 +210,11 @@ export function Studio() {
         <button className="hud-name" onClick={leave}>
           MOTIFOLD
         </button>
-        <span className="hud-signal">
-          <span className={`signal${thinking ? " on" : ""}`} aria-hidden /> SIGNAL: {thinking ? "THINKING" : "IDLE"}
-        </span>
-        <span className="hud-mode">{access === "demo" ? "DEMO: RECORDED RUNS" : access === "own" ? "LIVE: YOUR KEY" : access === "live" ? "LIVE: SHARED CREDIT" : "MUSE SPARK 1.3"}</span>
+        {inWork && <span className="hud-project" title={loaded!.fileName}>{loaded!.fileName.replace(/\.[^.]+$/, "")}</span>}
+        {inWork && <Transport />}
+        {inWork && <span className="hud-stage">{stage.toUpperCase()}</span>}
+        <MuseChip />
+        <span className="hud-mode">{access === "demo" ? "REPLAY" : access === "own" ? "YOUR KEY" : access === "live" ? "SHARED CREDIT" : "MUSE SPARK 1.3"}</span>
         <span className="hud-clock">
           <Clock />
         </span>
@@ -383,7 +413,7 @@ export function Studio() {
             )}
           </main>
           <aside className="work-side">
-            <ArrangePanel arranged={arranged} busy={thinking} demo={access === "demo"} prepared={demoPiece?.runs ?? []} />
+            <ArrangePanel arranged={arranged} busy={thinking} demo={access === "demo"} prepared={demoPiece?.runs ?? []} onStage={setStage} />
           </aside>
         </div>
       )}

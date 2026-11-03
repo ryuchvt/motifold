@@ -1,4 +1,4 @@
-import { useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import type { ArrangeInput, PieceReading } from "../server/shapes";
 import { checkWords, placedWords, planGaps, sentences } from "./arrange";
 import { cueHits, cueWords, orderHits, parseTime, placeCues } from "./cues";
@@ -179,7 +179,7 @@ const MOODS = ["Sad", "Tender", "Hopeful", "Dreamy", "Pastoral", "Wonder", "Stor
 /** Whether a saved answer happens to be for the instruments the composer picked. */
 const sameChoice = (placed: { instruments: string[]; chosen: string[] }) => [...placed.instruments].sort().join("|") === [...placed.chosen].sort().join("|");
 
-export function ArrangePanel({ arranged, busy, demo = false, prepared = [] }: { arranged: Arranged; busy: boolean; demo?: boolean; prepared?: { key: string; mode: "arrange" | "recompose"; mood: string }[] }) {
+export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onStage }: { arranged: Arranged; busy: boolean; demo?: boolean; prepared?: { key: string; mode: "arrange" | "recompose"; mood: string }[]; onStage?: (name: string) => void }) {
   const { piece, study, chords, splitting, toggleSplit, splitAll, tracks, setTrack, answered, answer, placed, options, trying, setTrying, off, togglePart, offBars, putBackBars, remaining, allParts, gone, toggleGone, handOrder, setHandOrder, bars, cues, roles, standing, structures, fitting, askFit, kept, askPiece, askPlaced, splitPlaced, askOptions, askNotes, keep, startAgain, download, reachesEnd, wholeScore, selectRange } = arranged;
   /** The step on screen, counted from Study. */
   const [step, setStep] = useState(1);
@@ -232,6 +232,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [] }: { 
   const floor = written.some(([, n]) => n.status === "ready" && !n.writing) ? 5 : written.length ? 4 : options.status !== "none" || arranged.recompose.status !== "none" ? 3 : placed.status !== "none" ? 2 : 1;
   const open = Math.max(reached, floor);
   const current = Math.min(step, open);
+  useEffect(() => onStage?.(STEPS[current - 1]!), [current]);
   const shownAt = arranged.recomposed ? 0 : (pick ?? (trying?.kind === "option" ? trying.index : written.length ? Number(written[0]![0]) : null));
 
   const onShow = trying?.kind === "structure" ? undefined : selectRange;

@@ -721,3 +721,125 @@ button.door-card:hover {
 .studio .form-ink-5 {
   stroke: var(--pencil);
 }
+
+/* The workstation's top bar: what's open, the transport, the stage, and Muse Spark's status. */
+.studio .hud {
+  height: 56px;
+  box-sizing: border-box;
+  padding: 0 20px;
+  gap: 18px;
+}
+.studio .signal.on,
+.studio .thinking .signal.on {
+  background: var(--ink);
+}
+.hud-project {
+  max-width: 220px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--ink);
+  letter-spacing: 0.04em;
+  font-family: var(--sans);
+  font-size: 13px;
+}
+.transport {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding-left: 16px;
+  border-left: 1px solid var(--line);
+}
+.transport-button {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--line2);
+  border-radius: 2px;
+  background: none;
+  color: var(--ink);
+  cursor: pointer;
+}
+.transport-button svg {
+  width: 12px;
+  height: 12px;
+  fill: currentColor;
+}
+.transport-button:hover,
+.muse-chip:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+.transport-where {
+  min-width: 132px;
+  margin-left: 8px;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+}
+.hud-stage {
+  padding: 4px 8px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  color: var(--ink);
+}
+.muse-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+}
+.muse-chip.on {
+  border-color: var(--line2);
+  color: var(--ink);
+}
+.muse-chip-clock,
+.muse-chip-more {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.studio .work-side {
+  top: 56px;
+  max-height: calc(100vh - 56px);
+}
+.thinking-hide {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--line2);
+  border-radius: 2px;
+  background: none;
+  color: var(--ink);
+  font: 16px var(--mono);
+  cursor: pointer;
+}
+.thinking-also {
+  font: 11px var(--mono);
+  color: var(--muted);
+}
+.thinking-also li {
+  padding: 6px 16px 0;
+}
+.thinking-done li.failed::before {
+  content: "×  ";
+}
+.thinking-toggle {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  padding: 8px 16px;
+  border: 0;
+  border-top: 1px solid var(--line);
+  background: none;
+  color: var(--muted);
+  font: 11px var(--mono);
+  text-align: left;
+  cursor: pointer;
+}
