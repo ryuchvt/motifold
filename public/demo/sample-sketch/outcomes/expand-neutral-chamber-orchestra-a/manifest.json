@@ -1,0 +1,112 @@
+{
+  "id": "expand-neutral-chamber-orchestra-a",
+  "recipe": {
+    "id": "expand-neutral-chamber-orchestra",
+    "intent": "expand",
+    "ensemble": "Chamber orchestra",
+    "instruments": [
+      "Flute",
+      "Oboe",
+      "Clarinet",
+      "Bassoon",
+      "Horn 1",
+      "Horn 2",
+      "Violin I",
+      "Violin II",
+      "Viola",
+      "Cello",
+      "Double Bass"
+    ],
+    "mood": "Neutral",
+    "bars": 40,
+    "moreBars": 16,
+    "where": "both",
+    "tuneOnly": false,
+    "freedom": 2
+  },
+  "option": 0,
+  "plan": "Thirds Answer, High Return",
+  "status": "complete",
+  "verified": {
+    "sha256": "f270a8409c4082acabb923d749259bfc9d7cd3d46ddd24ee0d8967e33e25dd0f",
+    "files": 14,
+    "parts": [
+      {
+        "name": "Flute",
+        "bars": 40
+      },
+      {
+        "name": "Oboe",
+        "bars": 40
+      },
+      {
+        "name": "Clarinet",
+        "bars": 40
+      },
+      {
+        "name": "Bassoon",
+        "bars": 40
+      },
+      {
+        "name": "Horn 1",
+        "bars": 40
+      },
+      {
+        "name": "Horn 2",
+        "bars": 40
+      },
+      {
+        "name": "Violin I",
+        "bars": 40
+      },
+      {
+        "name": "Violin II",
+        "bars": 40
+      },
+      {
+        "name": "Viola",
+        "bars": 40
+      },
+      {
+        "name": "Cello",
+        "bars": 40
+      },
+      {
+        "name": "Double Bass",
+        "bars": 40
+      }
+    ],
+    "tracks": 10,
+    "notes": 292,
+    "ppq": 480,
+    "scoreAndMidiAgree": true
+  },
+  "placement": {
+    "acceptedSourceNotes": 114,
+    "placed": 114,
+    "rangeOctaveMoves": 0,
+    "sourceLayoutNotes": 115
+  },
+  "advisoryClashes": [
+    {
+      "bar": "1",
+      "part": "Flute",
+      "name": "C4"
+    },
+    {
+      "bar": "3",
+      "part": "Flute",
+      "name": "C4"
+    },
+    {
+      "bar": "9",
+      "part": "Horn 1",
+      "name": "C4"
+    }
+  ],
+  "audio": {
+    "status": "not-rendered",
+    "expectedFile": "audio/render.wav"
+  },
+  "provenance": "Actual successful Meta calls. The recorded stages may include cold retries. No uninterrupted live session is claimed."
+}

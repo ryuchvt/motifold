@@ -1,0 +1,18 @@
+Sample sketch: Long-note B section with returning lullaby close
+
+Keep cradle waltz rocking; sing B from bar-two held F, return theme low then close softly on C.
+
+Bars 1 to 7. Viola sustains roots, Violin II breathes thirds sparingly. Keep first statement clear, leave tune uncovered. Chords: C|F|C|F|G|C|F Level: pp steady
+Bars 8 to 11. Viola steps bass, Violin II answers held G in gaps. Mark repeat by change below, not above. Chords: C|C|F|C Level: pp steady
+Bars 12 to 16. Violin II holds thirds, Viola fills tune rests stepwise. Add motion where tune holds, rest where it moves. Chords: F|G|F|G|C Level: p gently rocking
+Bars 17 to 24. Viola takes low octave, Violin II sustains middle. Restore bass the high cello leaves empty. Chords: C|F|C|F|G|C|C|C Level: p easing to pp
+Bars 25 to 32. On C, Violin II answers, Violin I Viola Cello rock. Grow B from bar-two long F and rocking thirds. Chords: Am|Dm|G|C|F|Dm|G|G Level: p growing to mf
+Bars 33 to 40. Violin I recalls theme, Violin II Viola Cello soften to C. Bring tune home, let cadence close gently. Chords: F|C|G|C|F|G|C|C Level: mf softening to pp
+
+All 114 of your notes are on the instruments you chose, at the rhythm you wrote.
+
+168 new notes. The code checked each one against what's sounding and the range of its instrument.
+3 long notes sit a semitone from something else sounding. That can be a good suspension or a slip, so check by ear: Viola C4 in bar 1, Viola C4 in bar 3, Viola C4 in bar 6.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your notes keep their rhythm and their pitches, apart from any octave moves counted above.

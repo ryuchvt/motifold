@@ -262,11 +262,16 @@
       "ensemble": "String quartet",
       "mood": "Neutral",
       "option": 0,
-      "name": "String quartet A",
+      "name": "Long-note B section with returning lullaby close",
       "bars": 40,
       "sourceBars": 24,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/expand-neutral-string-quartet-a/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/expand-neutral-string-quartet-a/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/expand-neutral-string-quartet-a/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/expand-neutral-string-quartet-a/run.json",
+      "xmlSha256": "80e5b7da5478e221f4515ad4b9a3d20a458d0269b333093901d7ba189297cb31",
+      "midiSha256": "b20ff398aa038b72350d3b7b5b4c17ddf6ca6fd222db502bad9508f217d03522"
     },
     {
       "id": "expand-neutral-string-quartet-b",
@@ -275,11 +280,16 @@
       "ensemble": "String quartet",
       "mood": "Neutral",
       "option": 1,
-      "name": "String quartet B",
+      "name": "Leap dialogue with stepwise lullaby ending",
       "bars": 40,
       "sourceBars": 24,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/expand-neutral-string-quartet-b/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/expand-neutral-string-quartet-b/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/expand-neutral-string-quartet-b/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/expand-neutral-string-quartet-b/run.json",
+      "xmlSha256": "7e934bbdb7a4161923b3db41315a710d6e25a94e74e16ec5012ebdb9895d83e1",
+      "midiSha256": "ba05c7032f45b0aedb726bf219d232e844c123c6bdd5f21e4f63a6071f4e53b6"
     },
     {
       "id": "expand-neutral-chamber-orchestra-a",
@@ -288,11 +298,16 @@
       "ensemble": "Chamber orchestra",
       "mood": "Neutral",
       "option": 0,
-      "name": "Chamber orchestra A",
+      "name": "Thirds Answer, High Return",
       "bars": 40,
       "sourceBars": 24,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/expand-neutral-chamber-orchestra-a/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/expand-neutral-chamber-orchestra-a/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/expand-neutral-chamber-orchestra-a/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/expand-neutral-chamber-orchestra-a/run.json",
+      "xmlSha256": "754686c662a391204ea854ac3774584b1ed8f9dc2a0a8634d7d7b5a2f838b0d8",
+      "midiSha256": "b2db2f9d66d1f54e493bec67fdae2ce4d1b07f3cc52deefc06309d723ef38b24"
     },
     {
       "id": "expand-neutral-chamber-orchestra-b",
@@ -301,11 +316,16 @@
       "ensemble": "Chamber orchestra",
       "mood": "Neutral",
       "option": 1,
-      "name": "Chamber orchestra B",
+      "name": "Held Song, Stepwise Close",
       "bars": 40,
       "sourceBars": 24,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/expand-neutral-chamber-orchestra-b/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/expand-neutral-chamber-orchestra-b/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/expand-neutral-chamber-orchestra-b/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/expand-neutral-chamber-orchestra-b/run.json",
+      "xmlSha256": "a38a5cecb8d81145c457a44a2845f37484826d8d75f07c1a3b77b1bb3a43b467",
+      "midiSha256": "548f45f3f509cf5d3fe8b3626c2a733f41c6dc1f54813dd845c0aea31486a6a9"
     },
     {
       "id": "expand-neutral-full-orchestra-a",

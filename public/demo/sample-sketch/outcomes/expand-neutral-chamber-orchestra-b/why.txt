@@ -1,0 +1,17 @@
+Sample sketch: Held Song, Stepwise Close
+
+B section stretches held F-G into calm wind song over walking bass, then stepwise bass leads theme fragment to final C cadence.
+
+Bars 1 to 11. Clarinet Horns cushion chords, Double Bass steadies roots. Softens literal repeat without covering tune. Chords: C | F | C | F | G | C | F | C | C | F | C Level: pp soft and light
+Bars 12 to 24. Bassoon Double Bass fill low octave below cello. Supports octave shift, keeps waltz bass singing. Chords: F | G | F | G | C | C | F | C | F | G | C | C | C Level: p growing to mf
+Bars 25 to 30. Oboe Flute hold long song, bassoon walks stepwise. Held F motif stretches into calm wind answer. Chords: F | C | Dm | Am | F | G Level: mf calm and level
+Bars 31 to 35. Violin II Viola imitate E-B leap, cello answers. Fifth leap generates rising sequence toward dominant. Chords: Em | Am | Dm | G | G Level: mf pushing to f
+Bars 36 to 40. Violin I closes opening fragment, all land C. Fragment return gives missing final cadence home. Chords: C | F | Dm | G | C Level: f easing to pp
+
+All 114 of your notes are on the instruments you chose, at the rhythm you wrote.
+
+191 new notes. The code checked each one against what's sounding and the range of its instrument.
+6 long notes sit a semitone from something else sounding. That can be a good suspension or a slip, so check by ear: Horn 2 C4 in bar 1, Horn 2 C4 in bar 3, Horn 2 C4 in bar 6, Horn 2 C4 in bar 9 and 2 more.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your notes keep their rhythm and their pitches, apart from any octave moves counted above.

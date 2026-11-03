@@ -1,0 +1,18 @@
+Sample sketch: Thirds Answer, High Return
+
+B section turns falling third B-G into answering countertheme in Am, then violin returns high theme for clear V-I close.
+
+Bars 1 to 8. Flute shadows violin thirds, Double Bass roots cello. Keeps tune clear while warming repeat contrast. Chords: C | F | C | F | G | C | F | C Level: p soft and steady
+Bars 9 to 16. Oboe answers gaps, Bassoon Horns pad harmony softly. Answers before tune ends to lift literal repeat. Chords: C | F | C | F | G | F | G | C Level: p growing to mf
+Bars 17 to 24. Double Bass Bassoon double cello octave below. Fills empty low octave, steadies high shift. Chords: C | F | C | F | G | C | C | C Level: mf steady then easing
+Bars 25 to 32. Viola Flute sing third countertheme, cello walks. Falling B-G thirds generate related minor answer. Chords: Am | Dm | F | G | Am | F | Dm | G Level: mf singing, gently arching
+Bars 33 to 36. Horns hold arrivals, violins climb to dominant. Holds back motion so dominant landing feels prepared. Chords: F | Dm | G | G Level: mf growing to f
+Bars 37 to 40. Violin I returns opening, all settle V-I close. Brings theme home, gives missing final cadence. Chords: C | F | G | C Level: f settling to p
+
+All 114 of your notes are on the instruments you chose, at the rhythm you wrote.
+
+177 new notes. The code checked each one against what's sounding and the range of its instrument.
+3 long notes sit a semitone from something else sounding. That can be a good suspension or a slip, so check by ear: Flute C4 in bar 1, Flute C4 in bar 3, Horn 1 C4 in bar 9.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your notes keep their rhythm and their pitches, apart from any octave moves counted above.
