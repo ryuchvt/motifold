@@ -11,8 +11,8 @@ import { noteHeight } from "./notes";
 import { scoreLines, soundsAtAll, wholeScoreParts } from "./scoreInput";
 import { marksOnPage, studyMarksOf } from "./ScoreStudy";
 
-/** What's new on the page. Checked against every role's colour, for colour-blind readers too. */
-export const NEW_NOTES = "#a8329b";
+/** What's new on the page: blue, the one colour besides the melody's orange, and the pair colour-blind readers tell apart best. */
+export const NEW_NOTES = "#2f6fd6";
 
 /** The study of the sketch: its form and harmony, asked with the reading and drawn on the score. `parts` are the ones its note numbers count through. */
 export type StudyState =

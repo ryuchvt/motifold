@@ -620,15 +620,104 @@ button.door-card:hover {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-.studio .order-tint-0 { background: rgba(232, 126, 61, 0.34); }
-.studio .order-tint-1 { background: rgba(76, 175, 130, 0.34); }
-.studio .order-tint-2 { background: rgba(90, 140, 230, 0.38); }
-.studio .order-tint-3 { background: rgba(196, 120, 220, 0.34); }
-.studio .order-tint-4 { background: rgba(220, 190, 80, 0.32); }
-.studio .order-tint-5 { background: rgba(80, 200, 210, 0.3); }
-.studio .order-tint-none { background: rgba(255, 255, 255, 0.12); }
+/* One grey for every block: the section's name is what tells them apart, and only the order being tried is lit. */
+.studio .stage-order-block {
+  background: rgba(255, 255, 255, 0.09);
+  color: var(--muted);
+}
+.studio .stage-order.on .stage-order-block {
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--ink);
+}
 @media (max-width: 700px) {
   .studio .stage-order-pick {
     grid-template-columns: 1fr;
   }
+}
+
+/*
+ * Colour is for meaning only (Ryu, 11-03). Two colours in the whole studio: orange is the composer's melody, blue is what Muse Spark
+ * added. Everything else is a grey, darker or brighter the more it matters, so the eye goes to the one or two things that colour picks out.
+ */
+.studio,
+.studio .stage {
+  --kind-melody: #ff7a33;
+  --kind-countermelody: #e9e9e9;
+  --kind-bass: #a3a7ae;
+  --kind-new: #5b9bff;
+  --kind-support: #5d6270;
+  --kind-faint: #3e424b;
+  --fam-winds: var(--kind-new);
+  --fam-brass: var(--kind-new);
+  --fam-percussion: var(--kind-new);
+  --fam-harp: var(--kind-new);
+  --fam-strings: var(--kind-new);
+}
+.studio .note.kind-countermelody.accent {
+  stroke: var(--kind-countermelody);
+  color: var(--kind-countermelody);
+  filter: none;
+}
+.studio .note.kind-melody.accent {
+  stroke: var(--kind-melody);
+  color: var(--kind-melody);
+}
+/* The study is pencil: one graphite, marked by its shapes and words, and the harmony in greys by how strongly it pulls home. */
+.studio .pp-tone-lands,
+.studio .pp-tone-pulls,
+.studio .pp-tone-moves,
+.studio .pp-tone-with,
+.studio .pp-tone-held {
+  --tone: #4a463f;
+}
+.studio .pp-study .pp-role-tonic {
+  fill: #2e2c28;
+}
+.studio .pp-study .pp-role-dominant {
+  fill: #5f5a53;
+}
+.studio .pp-study .pp-role-predominant {
+  fill: #8f8a81;
+}
+.studio .pp-study .pp-role-bridge {
+  fill: #a39e95;
+}
+.studio .study-swatch.tonic,
+.studio .form-bar.tonic {
+  --role: #d9d6cf;
+}
+.studio .study-swatch.dominant,
+.studio .form-bar.dominant {
+  --role: #8f939b;
+}
+.studio .study-swatch.predominant,
+.studio .form-bar.predominant {
+  --role: #5d6270;
+}
+.studio .study-swatch.bridge,
+.studio .form-bar.bridge,
+.studio .study-swatch.other,
+.studio .form-bar.other {
+  --role: #3e424b;
+}
+.studio .form-tint-0,
+.studio .form-tint-1,
+.studio .form-tint-2,
+.studio .form-tint-3,
+.studio .form-tint-4,
+.studio .form-tint-5 {
+  background: #e6e2da;
+  fill: #e6e2da;
+}
+/* The mood word on the score and in the form chart was the one purple left: it's pencil like the rest. */
+.studio {
+  --accent-pencil: var(--pencil);
+}
+.studio .form-ink-0,
+.studio .form-ink-1,
+.studio .form-ink-2,
+.studio .form-ink-3,
+.studio .form-ink-4,
+.studio .form-ink-5 {
+  stroke: var(--pencil);
 }

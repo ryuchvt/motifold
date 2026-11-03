@@ -207,7 +207,7 @@ export function Studio() {
             <button className="door-card" onClick={() => enter("demo")} disabled={!demo}>
               <span className="door-n">01 ——</span>
               <strong>Watch it work</strong>
-              <span>Real runs on my own piano theme, recorded and replayed. Free, and no key.</span>
+              <span>{demo ? "Real runs on my own piano theme, recorded and replayed. Free, and no key." : "Real runs on my own piano theme, recorded and replayed. They aren't up yet, so try it live below."}</span>
             </button>
             <div className="door-card">
               <span className="door-n">02 ——</span>

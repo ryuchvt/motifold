@@ -202,13 +202,6 @@ export function StudyMap({ answer, written, onBar }: { answer: StudyScoreAnswer;
       <figcaption>
         <strong>{ideasWords(answer, written)}</strong>
         <span className="study-legend">
-          {(Object.keys(TONES) as Tone[]).filter((tone) => tone !== "with" || answer.moments.some((m) => TONE_OF[m.kind] === "with")).map((tone) => (
-            <span key={tone} className={`study-key pp-tone-${tone}`}>
-              <span className="study-swatch tone" aria-hidden /> {TONES[tone]}
-            </span>
-          ))}
-        </span>
-        <span className="study-legend">
           {(Object.keys(ROLE_WORDS) as Role[]).map((role) => (
             <span key={role} className="study-key">
               <span className={`study-swatch ${role}`} aria-hidden /> {ROLE_WORDS[role]}

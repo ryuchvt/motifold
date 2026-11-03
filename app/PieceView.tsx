@@ -203,15 +203,6 @@ export function PieceView(props: {
           <span className="stage-key" role="group" aria-label="What the colours mean. Press one to see and hear only that.">
             {present.map((role) => chip(role, ROLE_NAMES[role]))}
             {hasNew && chip("new", "New")}
-            {hasNew && (
-              <span className="stage-families" aria-label="What the other colours mean">
-                {["winds", "brass", "percussion", "harp", "strings"].map((family) => (
-                  <span key={family} className="stage-family">
-                    <i className={`fam-${family}`} aria-hidden /> {family[0]!.toUpperCase() + family.slice(1)}
-                  </span>
-                ))}
-              </span>
-            )}
           </span>
         )}
       </div>

@@ -1221,15 +1221,19 @@ export function rolesAfter(plan: DistributeAnswer["plan"], roles: PieceReading["
   return moved.sort((a, b) => weight.indexOf(a.role) - weight.indexOf(b.role));
 }
 
-/** What each role looks like on the page: the three lines a composer hunts for in colour, and what only supports them in grey. */
+/**
+ * What each role looks like on the page. Colour is kept for meaning (Ryu, 11-03: easy to read, not everything coloured): orange is the
+ * composer's melody, the one line to follow, and everything that supports it is a grey, darker the more it matters. New notes are the one
+ * other colour.
+ */
 export const ROLE_COLOURS: Record<PieceReading["roles"][number]["role"], string> = {
-  melody: "#eb6834",
-  countermelody: "#2a78d6",
-  bass: "#1baf7a",
-  harmony: "#8f8a81",
-  rhythm: "#8f8a81",
-  pedal: "#8f8a81",
-  doubling: "#b4aea3",
+  melody: "#e8672c",
+  countermelody: "#2f2d2a",
+  bass: "#5f5a53",
+  harmony: "#9b968d",
+  rhythm: "#9b968d",
+  pedal: "#9b968d",
+  doubling: "#bdb8ae",
 };
 
 /** Rests, and whatever isn't being looked at, so the eye can leave it alone. */
