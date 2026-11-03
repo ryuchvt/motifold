@@ -36,6 +36,7 @@ const press = async (host: Element, matches: string | RegExp) => {
 function network() {
   const calls: { shape: string; input: any; headers: Headers }[] = [];
   vi.stubGlobal('fetch', async (url: string, init?: RequestInit) => {
+    if(url==='/api/access')return Response.json({state:'available',resetAt:null});
     if (!url.startsWith('/api/')) return new Response('{}', { status: 404 });
     const shape = url.split('/').at(-1)!;
     const input = JSON.parse(String(init?.body)).input;
@@ -93,7 +94,7 @@ it('selecting shared credit after own-key use omits the remembered own key', asy
   const screen = await hostStudio();
   await press(screen.host, 'Carry on with the key you gave');
   await press(screen.host, /Motifold/);
-  await press(screen.host, /try.*credit|shared credit/i);
+  await press(screen.host, 'Open my piece');
   await dropScore(screen.host);
   expect(screen.calls.some((c) => c.shape === 'read_piece')).toBe(true);
   expect(screen.calls.every((c) => !c.headers.has('x-motifold-key'))).toBe(true);
@@ -105,7 +106,7 @@ it('releases acquired microphone tracks when MediaRecorder.start throws', async 
   vi.stubGlobal('navigator', { ...navigator, mediaDevices: { getUserMedia } });
   vi.stubGlobal('MediaRecorder', class { state = 'inactive'; mimeType = 'audio/webm'; start() { throw new Error('recorder cannot start'); } stop() {} });
   const screen = await hostStudio();
-  await press(screen.host, /try.*credit|shared credit/i);
+  await press(screen.host, 'Open my piece');
   await press(screen.host, /sing, hum or play it in/i);
   expect(getUserMedia).toHaveBeenCalledOnce();
   expect(stopped, 'The failed recorder still owns an acquired stream').toHaveBeenCalledOnce();

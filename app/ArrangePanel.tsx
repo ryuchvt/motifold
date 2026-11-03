@@ -11,6 +11,8 @@ import { playhead } from "./playhead";
 import { Orders } from "./PieceView";
 import type { Selection } from "./selection";
 import type { DemoRun } from "./demo";
+import { useTutorialGuide } from "./Tutorial";
+import { FailureReason } from "./failureReason";
 
 const orderWords = (order: Stretch[]) => order.map((o, k) => (k ? barsWords(o.from, o.to).toLowerCase() : barsWords(o.from, o.to))).join(", then ");
 const barsWords = (from: string, to: string) => (from === to ? `Bar ${from}` : `Bars ${from} to ${to}`);
@@ -58,7 +60,7 @@ function Question({ question, count, of, onAnswer, onSkip, onShow }: { question:
           <button className="button small">Answer</button>
         </form>
       )}
-      <button className="arrange-quiet" onClick={onSkip}>
+      <button className="arrange-quiet" data-tutorial="question-skip" onClick={onSkip}>
         Skip this
       </button>
     </div>
@@ -190,8 +192,9 @@ const sameChoice = (placed: { instruments: string[]; chosen: string[] }) => [...
 export type WorkIntent = "arrange" | "expand" | "recompose";
 export interface InitialSetup { ensemble?: string; mood?: string; moreBars?: number; intent?: WorkIntent; useMelodyOnly?: boolean; where?: ArrangeInput["where"]; freedom?: number; length?: number }
 
-export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onStage, selection = null, attention = [], onPick, onMode, chosenPlan = null, onChoosePlan, navigationHost, actionHost, comparisonHosted = false, onNavigate, initialSetup }: { arranged: Arranged; busy: boolean; demo?: boolean; prepared?: DemoRun[]; onStage?: (name: string) => void; selection?: Selection | null; attention?: Attention[]; onPick?: (selection: Selection | null) => void; onMode?: (mode: WorkIntent) => void; chosenPlan?: number | null; onChoosePlan?: (index: number) => void; navigationHost?: HTMLElement | null; actionHost?: HTMLElement | null; comparisonHosted?: boolean; onNavigate?: () => void; initialSetup?: InitialSetup }) {
+export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onStage, selection = null, attention = [], onPick, onMode, chosenPlan = null, onChoosePlan, navigationHost, actionHost, comparisonHosted = false, onNavigate, initialSetup, onExplore }: { arranged: Arranged; busy: boolean; demo?: boolean; prepared?: DemoRun[]; onStage?: (name: string) => void; selection?: Selection | null; attention?: Attention[]; onPick?: (selection: Selection | null) => void; onMode?: (mode: WorkIntent) => void; chosenPlan?: number | null; onChoosePlan?: (index: number) => void; navigationHost?: HTMLElement | null; actionHost?: HTMLElement | null; comparisonHosted?: boolean; onNavigate?: () => void; initialSetup?: InitialSetup; onExplore?: () => void }) {
   const { piece, study, chords, splitting, toggleSplit, splitAll, tracks, setTrack, answered, answer, placed, options, trying, setTrying, off, togglePart, offBars, putBackBars, remaining, allParts, gone, toggleGone, handOrder, setHandOrder, bars, cues, roles, standing, structures, fitting, askFit, kept, askPiece, askPlaced, splitPlaced, askOptions, askNotes, keep, startAgain, download, reachesEnd, wholeScore, selectRange } = arranged;
+  const guide=useTutorialGuide();
   const action = (node: ReactNode) => actionHost ? createPortal(node, actionHost) : node;
   /** The step on screen, counted from Study. */
   const [step, setStep] = useState(1);
@@ -199,7 +202,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
   const [reached, setReached] = useState(1);
   /** The plan being written, by its place in the list. */
   const [pick, setPick] = useState<number | null>(null);
-  const [skipped, setSkipped] = useState<number[]>([]);
+  const [skipped, setSkipped] = useState<number[]>(()=>guide?.events["questions-done"]&&piece.status==="ready"?(piece.answer.questions??[]).map((_,index)=>index):[]);
   // A string orchestra suits most sketches, and the replay was made for a full one.
   const startWith = TEMPLATES.find((t) => t.name === (initialSetup?.ensemble ?? (demo ? "Full orchestra" : "String orchestra")));
   const [template, setTemplate] = useState<string | null>(startWith?.name ?? null);
@@ -238,6 +241,20 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
     setStep(to);
     setReached((now) => Math.max(now, to));
   };
+  useEffect(()=>{if(guide?.stage)go(STEPS.indexOf(guide.stage)+1)},[guide?.run,guide?.stepId]);
+  const skipQuestion=(index:number)=>{
+    const next=[...new Set([...skipped,index])];setSkipped(next);
+    const questions=piece.status==='ready'?piece.answer.questions??[]:[];
+    if(questions.every((_,i)=>next.includes(i)||!!answered[i]?.trim()))guide?.mark('questions-done',true,true);
+  };
+  const confirmTracks=()=>{arranged.confirmTracks();guide?.mark('tracks-confirmed',true,true)};
+  const recordedChoicesMatch=!guide||(mode===guide.recipe.intent&&template===guide.recipe.ensemble&&!keepTracks&&!writeWords.trim()&&!placeWords.trim()&&!Object.values(answered).some(value=>value.trim())&&Object.values(tracks).every(value=>value==='Piano')&&(mode==='arrange'||(moreBars===guide.recipe.moreBars&&where===guide.recipe.where)));
+  const restoreRecordedChoices=()=>{
+    if(!guide)return;
+    const choice=TEMPLATES.find(item=>item.name===guide.recipe.ensemble);
+    setMode(guide.recipe.intent);setTemplate(choice?.name??null);setPicked(choice?.instruments??[]);setKeepTracks(false);setMood(null);setWriteWords('');setPlaceWords('');setMoreBars(guide.recipe.moreBars);setWhere(guide.recipe.where);
+    if(piece.status==='ready'){(piece.answer.questions??[]).forEach((_,index)=>answer(index,''));setSkipped((piece.answer.questions??[]).map((_,index)=>index));piece.lines.forEach(line=>setTrack(line,'Piano'));arranged.confirmTracks();guide.mark('questions-done',true,true)}
+  };
   const moodsHere = demo ? MOODS.filter((m) => prepared.some((p) => p.mode === "recompose" && p.mood.toLowerCase() === m.toLowerCase() && (p.freedom === undefined || p.freedom === freedom) && (p.ensemble === undefined || p.ensemble === template))) : MOODS;
   const askedWords = () => [mode === "recompose" && mood ? `The mood I want: ${mood.toLowerCase()}.` : "", writeWords.trim()].filter(Boolean).join(" ");
   const chosen = inScoreOrder(picked);
@@ -247,6 +264,8 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
   };
   /** Everything chosen, so Muse Spark takes it from here and stops only where there's a choice to make. */
   const create = () => {
+    if(!recordedChoicesMatch)return;
+    guide?.mark('created',true,true);
     go(3);
     const words = askedWords();
     if (mode === "recompose") {
@@ -300,6 +319,8 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
   const previewState = options.status !== "ready" ? "waiting" : creating === "preview" ? "now" : options.plans.some((_, index) => options.notes[index]?.status === "ready") ? "done" : "waiting";
   /** Writes the plan that was pressed, from the list it's in, whatever the other mode has left behind (review F1). */
   const write = (index: number, from: "arrange" | "recompose") => {
+    if(guide&&!guide.completeOptions.includes(index as 0|1))return;
+    guide?.mark('write-started',true,true);
     setPick(index);
     onChoosePlan?.(index);
     go(4);
@@ -361,7 +382,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
   );
   const steps = navigationHost ? createPortal(stepsContent, navigationHost) : stepsContent;
   const next = (to: number, disabled = false) => action(
-    <button className="button primary arrange-go" disabled={disabled} onClick={() => go(to)}>
+    <button className="button primary arrange-go" data-tutorial={to===5?"export":undefined} disabled={disabled} onClick={() => go(to)}>
       Next: {STEPS[to - 1]}
     </button>
   );
@@ -382,7 +403,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
     <p className="arrange-said">Download the complete score, including every bar and the changes you kept.</p>
     {!hasExportNotes && <p className="arrange-said" role="status">There are no sounding notes to export yet. Write a section or return to your sketch.</p>}
     <p className="spark-note">The ZIP contains MIDI, a MusicXML score, separate instrument tracks and your scene markers. Export works with your original sketch too.</p>
-    {action(<button className="button primary arrange-go" disabled={!hasExportNotes} onClick={() => download(forPlayers)}>Download MIDI</button>)}
+    {action(<button className="button primary arrange-go" disabled={!hasExportNotes} data-tutorial="download" onClick={() => { download(forPlayers); const chosen=trying?.kind==='option'?trying.index:null; const notes=options.status==='ready'&&chosen!==null?options.notes[chosen]:null; if(guide&&chosen!==null&&guide.completeOptions.includes(chosen as 0|1)&&notes?.status==='ready'&&!notes.preview&&!notes.writing&&!notes.missing?.length)guide.mark('downloaded',true,true); }}>Download MIDI</button>)}
     <label className="arrange-check"><input type="checkbox" checked={forPlayers} onChange={(event) => setForPlayers(event.target.checked)}/>Also include a score transposed for the players</label>
     {trying?.kind === 'option' && <button className="arrange-quiet" onClick={() => { keep(); setPick(null); go(2); }}>Build on this arrangement</button>}
     {kept && <button className="arrange-quiet" onClick={startAgain}>Back to my score</button>}
@@ -435,6 +456,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
       <div className="reading arrange">
         {steps}
         <p className="arrange-said">Muse Spark can't answer here.</p>
+        <FailureReason reason={piece.reason??"failed"} onExplore={onExplore}/>
         <button className="button small" disabled={busy} onClick={() => void askPiece()}>
           Try again
         </button>
@@ -501,7 +523,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
             <button className="button small" disabled={busy || !fixWords.trim()} onClick={() => void arranged.askFix(trying!.index, from, to, fixWords.trim())}>
               Rewrite {barsWords(from, to).toLowerCase()}
             </button>
-            {arranged.fixing === "unavailable" && <p className="arrange-said">That didn't come back, so these bars are as they were.</p>}
+            {arranged.fixing === "unavailable" && <FailureReason reason={arranged.fixingReason??"failed"} onExplore={onExplore}/>}
           </More>
         )}
       </>
@@ -559,7 +581,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
           {action(<button
             className="button primary arrange-go"
             onClick={() => {
-              arranged.confirmTracks();
+              confirmTracks();
               closeInspector();
             }}
           >
@@ -579,7 +601,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
               closeInspector();
             }}
             onSkip={() => {
-              setSkipped([...skipped, item.index!]);
+              skipQuestion(item.index!);
               closeInspector();
             }}
             onShow={onShow}
@@ -623,6 +645,8 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
   return (
     <div className="reading arrange">
       {steps}
+      {notes?.status === "ready" && notes.reason && <FailureReason reason={notes.reason} onExplore={onExplore}/>}
+      {arranged.themeReason && <><p className="spark-note">The new melody did not finish. The available score is still here.</p><FailureReason reason={arranged.themeReason} onExplore={onExplore}/></>}
       {inspector}
 
       {!inspector && current === 1 && !arranged.tracksConfirmed && (
@@ -635,7 +659,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
             })}
           </ul>
           <p className="spark-note">{lines.some((line) => !instrumentFromName(line) && !!guessOf(line) && !guessOf(line)!.sure) ? "Check the highlighted names. Muse Spark is unsure of those instruments." : "These names come from your score. Change any that are wrong."}</p>
-          {action(<button className="button primary arrange-go" onClick={() => { arranged.confirmTracks(); onNavigate?.(); }}>
+          {action(<button className="button primary arrange-go" data-tutorial="tracks" onClick={() => { confirmTracks(); onNavigate?.(); }}>
             Confirm tracks
           </button>)}
         </>
@@ -644,7 +668,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
       {!inspector && current === 1 &&
         arranged.tracksConfirmed &&
         (nextQuestion >= 0 ? (
-          <Question key={nextQuestion} question={questions[nextQuestion]!} count={nextQuestion + 1} of={questions.length} onAnswer={(text) => answer(nextQuestion, text)} onSkip={() => setSkipped([...skipped, nextQuestion])} onShow={onShow} />
+          <Question key={nextQuestion} question={questions[nextQuestion]!} count={nextQuestion + 1} of={questions.length} onAnswer={(text) => answer(nextQuestion, text)} onSkip={() => skipQuestion(nextQuestion)} onShow={onShow} />
         ) : (
           <>
             <h2 className="arrange-title">What I hear</h2>
@@ -657,7 +681,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
             ) : study.status === "asking" ? (
               <p className="spark-note">Studying the form and the harmony. This takes a minute or two, and it goes on the score when it's done.</p>
             ) : study.status === "unavailable" ? (
-              <><p className="spark-note">The harmony analysis did not come back. Your score and answers are still here.</p><button className="button small" disabled={busy} onClick={() => void arranged.askStudy()}>Retry harmony analysis</button></>
+              <><FailureReason reason={study.reason??"failed"} onExplore={onExplore}/><button className="button small" disabled={busy} onClick={() => void arranged.askStudy()}>Retry harmony analysis</button></>
             ) : null}
             {reading.missing.length > 0 && <p className="spark-note">Ideas you can develop</p>}
             <ul className="arrange-lines">
@@ -688,7 +712,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
                       Fit my bars to the timing
                     </button>
                     <textarea className="arrange-box" rows={2} maxLength={400} aria-label="Anything else about the timing" value={fitWords} onChange={(e) => setFitWords(e.target.value)} />
-                    {fitting === "unavailable" && <p className="arrange-said">Muse Spark can't answer here.</p>}
+                    {fitting === "unavailable" && <FailureReason reason={arranged.fittingReason??"failed"} onExplore={onExplore}/>}
                   </>
                 ))}
               <ol className="arrange-order">
@@ -762,7 +786,8 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
             <label className="setup-direction"><span>Instrument placement</span><textarea className="arrange-box" rows={2} maxLength={400} aria-label="How you want it laid out" value={placeWords} placeholder="Violas carry the tune first. Bring the violins in later." onChange={(event) => setPlaceWords(event.target.value)}/></label>
             <More title="Timing for a scene" open={cues.length > 0}><p className="spark-note">Add a moment the music should meet. A moment beyond your current ending needs Expand.</p><Moments arranged={arranged}/></More>
           </More>
-          {action(<div><p className="action-summary">{mode === 'arrange' ? 'Arrange / Neutral / All source notes kept' : mode === 'expand' ? 'Expand / Neutral / All source notes kept' : `Recompose / ${FREEDOMS[freedom - 1]![0]} / ${mood ?? 'Neutral'}`}<br/>{keepTracks && mode !== 'recompose' ? 'Current instruments' : template ?? `${chosen.length} players`}</p><button className="button primary arrange-go" disabled={busy || (mode !== 'recompose' && !keepTracks && chosen.length === 0)} onClick={create}>Create</button></div>)}
+          {action(<div><p className="action-summary">{mode === 'arrange' ? 'Arrange / Neutral / All source notes kept' : mode === 'expand' ? 'Expand / Neutral / All source notes kept' : `Recompose / ${FREEDOMS[freedom - 1]![0]} / ${mood ?? 'Neutral'}`}<br/>{keepTracks && mode !== 'recompose' ? 'Current instruments' : template ?? `${chosen.length} players`}</p><button className="button primary arrange-go" data-tutorial="create" disabled={busy || !recordedChoicesMatch || (mode !== 'recompose' && !keepTracks && chosen.length === 0)} onClick={create}>Create</button></div>)}
+          {guide&&!recordedChoicesMatch&&<p className="spark-note" role="status">This guide has one exact recorded setup. Use the explorer for other prepared choices. <button className="arrange-quiet" disabled={busy} onClick={restoreRecordedChoices}>Restore recorded choices</button></p>}
           <p className="spark-note">{mode === 'recompose' ? 'First compare two musical plans. Notes are written after you choose.' : 'Compare two plans and their first sections. Then choose which one to finish.'}</p>
         </>
       )}
@@ -789,7 +814,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
           {mode === "recompose" && arranged.recompose.status === "asking" && <p className="arrange-said">Composing two new pieces from your motif. This takes a minute or two.</p>}
           {placed.status === "unavailable" && (
             <>
-              <p className="arrange-said">Muse Spark couldn't lay out your notes this time, so they haven't moved.</p>
+              <FailureReason reason={placed.reason??"failed"} onExplore={onExplore}/>
               <span className="arrange-actions">
                 <button className="button small" disabled={busy} onClick={create}>
                   Try again
@@ -841,7 +866,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
           )}
           {(options.status === "unavailable" || arranged.recompose.status === "unavailable") && (
             <>
-              <p className="arrange-said">{demo ? "That one isn't prepared. It runs live with your own key." : "Muse Spark can't answer right now. Today's shared credit may have run out, and your own key will still work."}</p>
+              <FailureReason reason={(mode==="recompose"&&arranged.recompose.status==="unavailable"?arranged.recompose.reason:options.status==="unavailable"?options.reason:undefined)??(demo?"not-prepared":"failed")} onExplore={onExplore}/>
               <button className="button small" disabled={busy} onClick={generate}>
                 Try again
               </button>
@@ -895,11 +920,11 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
                       </div>
                     )}
                     {these?.status === "ready" && these.preview && !these.changed && !these.writing ? (
-                      <>{action(<button className="button small primary" disabled={busy} onClick={() => write(index, "arrange")}>
+                      <>{action(<button className="button small primary" data-tutorial="write" disabled={busy || !!guide&&!guide.completeOptions.includes(index as 0|1)} onClick={() => write(index, "arrange")}>
                         Write the rest of this one
-                      </button>)}</>
+                      </button>)}{guide&&!guide.completeOptions.includes(index as 0|1)&&<p className="spark-note">This option has only a recorded preview. Choose a complete option to finish the tutorial.</p>}</>
                     ) : these?.status === "ready" && these.changed && !these.writing ? (
-                      <>{action(<button className="button small primary" disabled={busy} onClick={() => write(index, "arrange")}>
+                      <>{action(<button className="button small primary" data-tutorial="write" disabled={busy || !!guide&&!guide.completeOptions.includes(index as 0|1)} onClick={() => write(index, "arrange")}>
                         Write again with these chords
                       </button>)}</>
                     ) : these?.status === "asking" ? (
@@ -945,8 +970,8 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
             </p>
           )}
           {(!notes || notes.status === "asking") && <p className="arrange-said">Writing the notes. This takes a minute or two.</p>}
-          {notes?.status === "unfinished" && <p className="arrange-said">It didn't finish this one. Try again, or use fewer instruments or fewer new bars.</p>}
-          {notes?.status === "unavailable" && <p className="arrange-said">Muse Spark can't answer here.</p>}
+          {notes?.status === "unfinished" && <><p className="arrange-said">It didn't finish this one.</p><FailureReason reason={notes.reason??"failed"} onExplore={onExplore}/></>}
+          {notes?.status === "unavailable" && <FailureReason reason={notes.reason??"failed"} onExplore={onExplore}/>}
           {(notes?.status === "unfinished" || notes?.status === "unavailable") && (
             <button className="button small primary" disabled={busy} onClick={() => write(shownAt!, "arrange")}>
               Try again
@@ -1015,7 +1040,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
                   <button className="button small" disabled={busy || !fixWords.trim()} onClick={() => void arranged.askFix(shownAt!, arranged.view!.from, arranged.view!.to, fixWords.trim())}>
                     Rewrite these bars
                   </button>
-                  {arranged.fixing === "unavailable" && <p className="arrange-said">That didn't come back, so these bars are as they were.</p>}
+                  {arranged.fixing === "unavailable" && <FailureReason reason={arranged.fixingReason??"failed"} onExplore={onExplore}/>}
                 </More>
               )}
             </>

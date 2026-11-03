@@ -8,12 +8,16 @@ import { isMidi } from "./midi";
 import { openedScore } from "./opened";
 import { AUDIO_FILE, isAudioFile, listenTo } from "./listen";
 import { OWN_KEY } from "../server/pools";
-import { hasOwnKey, onSpark, setOwnKey } from "./spark";
+import { hasOwnKey, onSpark, setOwnKey, setTransport } from "./spark";
 import { MuseChip, Thinking, resetMuseActivity } from "./Thinking";
 import { playhead, usePlayhead } from "./playhead";
 import { looksFreelyPlayed } from "./timing";
 import { useArrange } from "./useArrange";
 import "./replay-workspace.css";
+import { OutcomeExplorer } from "./OutcomeExplorer";
+import { RawSketch, AcceptedSketch } from "./TutorialSketch";
+import { TutorialCoach, TutorialProvider, useTutorialController } from "./Tutorial";
+import { SharedAccess } from "./SharedAccess";
 
 type Access = "demo" | "live" | "own";
 
@@ -62,6 +66,10 @@ export function Studio({ initialScore = null, sample = false, initialSetup, samp
   const [access, setAccess] = useState<Access | null>(initialScore ? "live" : null);
   const [demo, setDemo] = useState<DemoIndex | null>(null);
   const [demoPiece, setDemoPiece] = useState<DemoPiece | null>(null);
+  const [exploring,setExploring]=useState(false);
+  const [guideOpening,setGuideOpening]=useState(false);
+  const tutorial=useTutorialController();
+  const guide=tutorial.guide;
   const [typedKey, setTypedKey] = useState("");
   const [loaded, setLoaded] = useState<LoadedSketch | null>(initialScore);
   const [unbarred, setUnbarred] = useState<{ fileName: string; bytes: Uint8Array } | null>(null);
@@ -96,8 +104,22 @@ export function Studio({ initialScore = null, sample = false, initialSetup, samp
   const arranged = useArrange(loaded, part, range, null);
   // Reading what's opened needs no decision, so it starts by itself.
   useEffect(() => {
-    if (loaded && arranged.piece.status === "none" && !arranged.kept) void arranged.askPiece();
-  }, [loaded]);
+    if (loaded && arranged.piece.status === "none" && !arranged.kept && !exploring && (!guide || guide.events["study-started"])) void arranged.askPiece();
+  }, [loaded, exploring, guide?.events["study-started"]]);
+
+  useEffect(()=>{
+    if(!guide||!loaded||!guide.events['study-started'])return;
+    if(arranged.piece.status==='ready'&&arranged.study.status==='ready')guide.mark('study-ready');
+    if(arranged.tracksConfirmed)guide.mark('tracks-confirmed');
+    if(arranged.piece.status==='ready'&&!(arranged.piece.answer.questions??[]).length)guide.mark('questions-done');
+    if(arranged.options.status==='ready'){
+      if([0,1].every(index=>arranged.options.status==='ready'&&arranged.options.notes[index]?.status==='ready'))guide.mark('previews-ready');
+      const chosen=arranged.trying?.kind==='option'?arranged.trying.index:null;
+      const notes=chosen!==null?arranged.options.notes[chosen]:null;
+      if(chosen!==null&&guide.completeOptions.includes(chosen as 0|1)&&notes?.status==='ready'&&!notes.preview&&!notes.writing&&!notes.missing?.length)guide.mark('write-ready');
+    }
+  },[guide?.run,guide?.events['study-started'],loaded,arranged.piece,arranged.study,arranged.tracksConfirmed,arranged.options,arranged.trying]);
+  useEffect(()=>{if(tutorial.complete&&guide)showExplorer(guide.piece,false)},[tutorial.complete]);
 
   const stopListening = () => {
     hearing.current?.abort();
@@ -205,6 +227,7 @@ export function Studio({ initialScore = null, sample = false, initialSetup, samp
   const choosePiece = (piece: DemoPiece) => demo && startDemo(piece, demo.recorded);
   const leave = () => {
     opening.current++;
+    tutorial.exit();setExploring(false);setGuideOpening(false);
     resetRun();
     stopListening();
     if (!sample) stopDemo();
@@ -215,6 +238,7 @@ export function Studio({ initialScore = null, sample = false, initialSetup, samp
     setSourceNote(null);
   };
   const another = () => {
+    if(guide||exploring)return leave();
     opening.current++;
     resetRun();
     stopListening();
@@ -223,35 +247,39 @@ export function Studio({ initialScore = null, sample = false, initialSetup, samp
     setSourceNote(null);
   };
 
-  const openSample = async () => {
-    const mine = ++opening.current;
-    resetRun();
-    setError(null);
-    try {
-      const { openSampleSketch } = await import('./sampleSketch');
-      const sketch = await openSampleSketch();
-      if (opening.current !== mine) return;
-      enter('live');
-      setLoaded(sketch);
-    } catch (failure) {
-      setError(failure instanceof Error ? failure.message : 'The sample could not be opened.');
-    }
+  const startTutorial=(piece:DemoPiece)=>{
+    opening.current++;stopListening();resetRun();setOwnKey(null);setTypedKey('');
+    startDemo(piece,demo!.recorded);setAccess('demo');setDemoPiece(piece);setLoaded(null);setUnbarred(null);setExploring(false);setError(null);setSourceNote(null);tutorial.start(piece);
   };
-  const inWork = !!loaded;
-  // A bounce is only honest for its explicitly named, complete and unedited saved plan.
-  const run = demoPiece?.runs.find((r) => arranged.lastAsk && r.key === arranged.lastAsk);
-  const auditioned = arranged.trying?.kind === "option" && arranged.options.status === "ready" ? arranged.options.notes[arranged.trying.index] : null;
-  const exactBounce = arranged.trying?.kind === "option" && arranged.options.status === "ready" && run?.renderPlan === arranged.options.plans[arranged.trying.index]?.name && auditioned?.status === "ready" && arranged.options.saved && !auditioned.preview && !auditioned.writing && !auditioned.changed && !arranged.off.length && !arranged.offBars.length && !arranged.gone.length && !arranged.focus && !arranged.solo.length;
-  const render = exactBounce ? run?.render : undefined;
+  const acceptTutorial=async()=>{
+    if(!guide)return;
+    if(loaded&&demoPiece?.id===guide.piece.id){guide.mark('accepted-bars',true,true);return}
+    const mine=++opening.current;setGuideOpening(true);setError(null);
+    try{const response=await fetch(guide.piece.xml);if(!response.ok)throw Error('The saved accepted score could not be opened.');const xmlText=await response.text();const score=parseScore(xmlText);if(opening.current!==mine)return;setLoaded({fileName:guide.piece.xml.split('/').at(-1)!,xmlText,score});setSourceNote(guide.piece.tutorial?.acceptedLabel??'Saved accepted bar analysis.');guide.mark('accepted-bars',true,true)}
+    catch(failure){if(opening.current===mine)setError(failure instanceof Error?failure.message:'The accepted score could not be opened.')}
+    finally{if(opening.current===mine)setGuideOpening(false)}
+  };
+  const showExplorer=(piece=demoPiece??demo?.pieces[0],reset=true)=>{
+    if(!piece)return;
+    opening.current++;stopListening();playhead.stop();if(reset)resetRun();stopDemo();
+    // No pending or unprepared action can become a live call while exploring static exports.
+    setTransport(async()=>({status:'fallback',reason:'not-prepared'}));
+    setOwnKey(null);tutorial.exit();setAccess('demo');setDemoPiece(piece);setExploring(true);setError(null);
+  };
+  const rawGuide=!!guide&&guide.step===0;
+  const acceptedGuide=!!guide&&!!loaded&&(guide.step===1||!guide.events['study-started']);
+  const inWork = (!!loaded&&!rawGuide)||exploring;
+
+  // DAW bounces are only available in the explorer, bound to the actual exported score hash.
 
   return (
-    <div className={`studio${inWork ? " studio-working" : ""}${sample ? " sample-mode" : ""}`}>
+    <TutorialProvider value={guide}><div className={`studio${inWork ? " studio-working" : ""}${sample ? " sample-mode" : ""}`}>
       <header className="hud">
         <button className="hud-name" onClick={leave}>
           <span>Motifold</span>
         </button>
-        {inWork && <span className="hud-project" title={loaded!.fileName}>{loaded!.fileName.replace(/\.[^.]+$/, "")}</span>}
-        {inWork && <Transport />}
+        {loaded&&inWork&&!exploring&&<span className="hud-project" title={loaded.fileName}>{loaded.fileName.replace(/\.[^.]+$/, "")}</span>}
+        {inWork&&!exploring&&<Transport />}
         {inWork && <span className="hud-stage">{stage.toUpperCase()}</span>}
         <MuseChip />
         <span className="hud-mode">{sample ? "SAVED EXAMPLES" : access === "demo" ? "REPLAY" : access === "own" ? "YOUR KEY" : access === "live" ? "SHARED CREDIT" : "MUSE SPARK 1.3"}</span>
@@ -275,18 +303,12 @@ export function Studio({ initialScore = null, sample = false, initialSetup, samp
           </h1>
           <p className="door-sub">Bring a sketch, played or written. Muse Spark reads it, asks what it can't tell, and writes the orchestral score as notes you can read, change and take into your DAW. Keep your melody and build around it, or give it up as a motif and let a new piece grow from it.</p>
           <p className="door-author">Made by Chawanvit Vuthikornudomkit</p>
-          <div className="start-sample"><div><strong>Start with my piano sketch</strong><p>Hear the original, inspect its chords, then arrange it with Muse Spark.</p></div><button className="button primary" onClick={() => void openSample()}>Open sample and analyse</button></div>
+          <div className="start-sample"><div><strong>Learn Motifold with my piano sketch</strong><p>Start with the raw MIDI, inspect the accepted bars and tempo, then choose, hear and export a recorded arrangement. Free and no key.</p></div><span className="tutorial-start-actions"><button className="button primary" disabled={!demo} onClick={()=>demo&&startTutorial(demo.pieces[0]!)}>Start hands-on tutorial</button><button className="button" disabled={!demo} onClick={()=>showExplorer(demo?.pieces[0])}>Explore recorded outcomes</button></span></div>
           {error && <p className="error" role="alert">{error}</p>}
           <div className="doors">
-            <button className="door-card" onClick={() => enter("demo")} disabled={!demo}>
-              <span className="door-n">01 ——</span>
-              <strong>Watch it work</strong>
-              <span>{demo ? "Real runs on my own piano theme, recorded and replayed. Free, and no key." : "Real runs on my own piano theme, recorded and replayed. They aren't up yet, so try it live below."}</span>
-            </button>
             <div className="door-card">
-              <span className="door-n">02 ——</span>
               <strong>Use your own Meta key</strong>
-              <span>On your own piece, live. Your key stays in this tab and is never stored.</span>
+              <span>On your own piece, live. Kept in this browser tab. The server does not store it.</span>
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
@@ -305,14 +327,12 @@ export function Studio({ initialScore = null, sample = false, initialSetup, samp
                 </button>
               )}
             </div>
+            <SharedAccess disabled={sample} onEnter={()=>enter("live")} onExplore={()=>showExplorer(demo?.pieces[0])}/>
           </div>
-          <button className="door-link" onClick={() => enter("live")}>
-            Or try one piece live on my credit, while today's share lasts
-          </button>
         </main>
       )}
 
-      {access && !inWork && !unbarred && (
+      {access && !inWork && !unbarred && !guide && !exploring && (
         <main className="import">
           {listening ? (
             <div className="hearing">
@@ -386,7 +406,7 @@ export function Studio({ initialScore = null, sample = false, initialSetup, samp
         </main>
       )}
 
-      {!inWork && unbarred && (
+      {!inWork && unbarred && !guide && !exploring && (
         <FreeBars
           auto
           fileName={unbarred.fileName}
@@ -401,10 +421,15 @@ export function Studio({ initialScore = null, sample = false, initialSetup, samp
         />
       )}
 
-      {inWork && access === "demo" && demoPiece && <details className="replay-guide"><summary>Recorded walkthrough. No credit is used.</summary><ol>{demoPiece.guide.map((step, index) => <li key={index}>{step}</li>)}</ol><p>Follow these exact choices. Other settings have no recorded answer.</p><a href={demoPiece.midi} download>Download the original MIDI</a></details>}
-      {inWork && <Workspace key={loaded!.fileName} arranged={arranged} loaded={loaded!} busy={thinking} demo={access === "demo"} prepared={demoPiece?.runs ?? []} render={render} sourceNote={sourceNote} onStage={setStage} initialSetup={access === "demo" ? demoPiece?.recipe : initialSetup}/>}
+      {inWork && !guide && !exploring && access === "demo" && demoPiece && <details className="replay-guide"><summary>Recorded walkthrough. No credit is used.</summary><ol>{demoPiece.guide.map((step, index) => <li key={index}>{step}</li>)}</ol><p>Follow these exact choices. Other settings have no recorded answer.</p><a href={demoPiece.midi} download>Download the original MIDI</a></details>}
+      {guide&&<TutorialCoach guide={guide} onBack={tutorial.back} onContinue={tutorial.next} onSkip={()=>showExplorer(guide.piece,false)} onExit={leave}/>}
+      {loaded && !rawGuide && !acceptedGuide && !exploring && <Workspace onExplore={demo?.pieces[0]?()=>showExplorer(demo.pieces[0]):undefined} key={loaded!.fileName} arranged={arranged} loaded={loaded!} busy={thinking} demo={access === "demo"} prepared={demoPiece?.runs ?? []} sourceNote={sourceNote} onStage={setStage} initialSetup={access === "demo" ? demoPiece?.recipe : initialSetup}/>}
+      {(guide||exploring)&&error&&<p className="error" role="alert">{error}</p>}
+      {rawGuide&&guide&&<RawSketch piece={guide.piece} busy={guideOpening} onAccept={()=>void acceptTutorial()}/>}
+      {acceptedGuide&&guide&&loaded&&<AcceptedSketch loaded={loaded} piece={guide.piece} onInspect={()=>guide.mark('tempo-inspected',true,true)} canStudy={!!guide.events['tempo-inspected']} onStudy={()=>guide.mark('study-started',true,true)}/>}
+      {exploring&&demoPiece&&<OutcomeExplorer piece={demoPiece} onExit={leave}/>}
       {sample && <div className="ui-sample-banner">{sampleMessage ?? "Local UI sample. Fixed answers. No model calls."} <a href="http://127.0.0.1:8788/?record">Open live workspace</a></div>}
       <Thinking sample={sample} />
-    </div>
+    </div></TutorialProvider>
   );
 }

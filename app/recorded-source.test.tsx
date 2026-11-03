@@ -13,6 +13,7 @@ import { Studio } from './Studio';
 
 const state = vi.hoisted(() => ({ latest: null as any }));
 vi.mock('./Workspace', () => ({ Workspace: (props: any) => { state.latest = props; return <main>Recorded score workspace</main>; } }));
+vi.mock('./TutorialSketch',()=>({RawSketch:({onAccept}:any)=><button onClick={onAccept}>Open the saved accepted bars</button>,AcceptedSketch:({onInspect,onStudy}:any)=><><button onClick={onInspect}>Inspect tempo</button><button onClick={onStudy}>Study these bars</button></>}));
 vi.mock('./Thinking', () => ({ MuseChip: () => null, Thinking: () => null, resetMuseActivity: () => {} }));
 (globalThis as any).IS_REACT_ACT_ENVIRONMENT = true;
 const xml = readFileSync('public/demo/sample-sketch/sample-sketch.musicxml', 'utf8');
@@ -50,6 +51,7 @@ it('opens the exact XML, prefills the recorded neutral recipe and uses only loca
   const fetched: string[] = [];
   vi.stubGlobal('fetch', async (url: string) => {
     fetched.push(url);
+    if (url === '/api/access') return Response.json({state:'available',resetAt:null});
     if (url === '/demo/index.json') return Response.json({ recorded: '2026-11-04T00:00:00Z', pieces: [piece] });
     if (url === piece.xml) return new Response(xml);
     if (url === '/demo/sample-sketch/shared.json') return Response.json(receipts);
@@ -58,18 +60,18 @@ it('opens the exact XML, prefills the recorded neutral recipe and uses only loca
   });
   const host = document.body.appendChild(document.createElement('div')); root = createRoot(host);
   await act(async () => root!.render(<Studio/>));
-  const door = [...host.querySelectorAll<HTMLButtonElement>('button')].find(b => b.textContent?.includes('Watch it work'))!;
-  await act(async () => door.click());
-  expect(host.querySelectorAll('.piece-card button')).toHaveLength(1);
-  expect(host.querySelector<HTMLAnchorElement>('.piece-card a')?.getAttribute('href')).toBe(piece.midi);
-  const start = [...host.querySelectorAll<HTMLButtonElement>('button')].find(b => b.textContent === 'Start recorded walkthrough')!;
-  await act(async () => start.click());
+  const press=async(text:string)=>{const button=[...host.querySelectorAll<HTMLButtonElement>('button')].find(button=>button.textContent===text)!;expect(button).toBeTruthy();await act(async()=>button.click())};
+  await press('Start hands-on tutorial');
+  await press('Open the saved accepted bars');
+  expect(state.latest).toBeNull();
+  await press('Inspect tempo');
+  await press('Study these bars');
   await act(async () => { await vi.advanceTimersByTimeAsync(15_000); skipReplay(); await vi.advanceTimersByTimeAsync(15_000); });
   expect(state.latest.loaded.fileName).toBe('sample-sketch.musicxml');
   expect(state.latest.initialSetup).toEqual(piece.recipe);
   expect(state.latest.arranged.piece.status).toBe('ready');
   expect(state.latest.arranged.study.status).toBe('ready');
-  expect(host.querySelector('.replay-guide')?.textContent).toContain('Confirm the recorded source tracks.');
+  expect(host.querySelector('.tutorial-coach')?.textContent).toContain('Study the sketch');
   expect(fetched).not.toContain(piece.midi);
-  expect(fetched.some(url => url.startsWith('/api/'))).toBe(false);
+  expect(fetched.filter(url => url.startsWith('/api/')&&url!=='/api/access')).toEqual([]);
 });

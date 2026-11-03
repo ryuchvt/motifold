@@ -30,11 +30,11 @@ const xml = `<score-partwise><part-list><score-part id="P1"><part-name>Newer cel
 const button = (host: HTMLElement, words: string) => [...host.querySelectorAll("button")].find((b) => b.textContent!.includes(words))!;
 
 async function openStudio() {
-  vi.stubGlobal("fetch", async () => new Response("{}", { status: 404 }));
+  vi.stubGlobal("fetch", async (url:string) => url==="/api/access"?Response.json({state:"available",resetAt:null}):new Response("{}", { status: 404 }));
   const host = document.body.appendChild(document.createElement("div"));
   root = createRoot(host);
   await act(async () => root!.render(<Studio />));
-  await act(async () => button(host, "try one piece live").click());
+  await act(async () => button(host, "Open my piece").click());
   return host;
 }
 async function choose(host: HTMLElement, file: File) {
@@ -79,7 +79,7 @@ it("stops listening when the composer leaves, and opens nothing afterwards", asy
   await act(async () => button(host, "Motifold").click());
   expect(signal.aborted).toBe(true);
   await act(async () => finish({ midi: line(24), notes: 24, seconds: 15 }));
-  await act(async () => button(host, "try one piece live").click());
+  await act(async () => button(host, "Open my piece").click());
   expect(host.textContent).toContain("Open your sketch");
   expect(host.textContent).not.toContain("old.mid");
 });
@@ -129,7 +129,7 @@ it("a file still being read when the composer leaves opens nothing", async () =>
   await choose(host, slow);
   await act(async () => button(host, "Motifold").click());
   await act(async () => release());
-  await act(async () => button(host, "try one piece live").click());
+  await act(async () => button(host, "Open my piece").click());
   expect(host.querySelector(".on-page")).toBeNull();
   expect(host.textContent).toContain("Open your sketch");
 });
