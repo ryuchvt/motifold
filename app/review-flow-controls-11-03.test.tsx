@@ -97,7 +97,7 @@ it("can keep an ordinary arrangement and generate another plan from Direction", 
   await press(screen.host, "Generate");
   await choose(screen.host, plans[0].name);
   await press(screen.host, "Next: Export");
-  await press(screen.host, "Make this my score and go again");
+  await press(screen.host, "Build on this arrangement");
   expect(screen.arranged.kept).not.toBeNull();
   expect(screen.host.querySelector('[aria-current="step"]')?.textContent).toBe("Direction");
   await press(screen.host, "Generate");
@@ -125,7 +125,7 @@ it("offers newly generated plans after keeping a recomposition and choosing to g
   await press(screen.host, "Generate");
   await choose(screen.host, composed.name);
   await press(screen.host, "Next: Export");
-  await press(screen.host, "Make this my score and go again");
+  await press(screen.host, "Build on this arrangement");
   expect(screen.host.querySelector('[aria-current="step"]')?.textContent).toBe("Direction");
   // The kept recomposition is the composer's score now, so Direction starts fresh from it (Claude, review F2).
   await press(screen.host, "Generate");

@@ -178,11 +178,13 @@ const FREEDOMS: [string, string][] = [
 
 /** Moods to start from. Words of their own go in the box beside these. */
 const MOODS = ["Sad", "Tender", "Hopeful", "Dreamy", "Pastoral", "Wonder", "Storybook", "Playful", "Heroic", "Epic", "Pulse", "Action", "Tense", "Dark"];
+/** The few shown at first. The rest are one press away. */
+const SUGGESTED_MOODS = ["Hopeful", "Tender", "Sad", "Dreamy", "Heroic", "Tense"];
 
 /** Whether a saved answer happens to be for the instruments the composer picked. */
 const sameChoice = (placed: { instruments: string[]; chosen: string[] }) => [...placed.instruments].sort().join("|") === [...placed.chosen].sort().join("|");
 
-export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onStage, selection = null, attention = [], onPick }: { arranged: Arranged; busy: boolean; demo?: boolean; prepared?: { key: string; mode: "arrange" | "recompose"; mood: string }[]; onStage?: (name: string) => void; selection?: Selection | null; attention?: Attention[]; onPick?: (selection: Selection | null) => void }) {
+export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onStage, selection = null, attention = [], onPick, onMode, chosenPlan = null, onChoosePlan }: { arranged: Arranged; busy: boolean; demo?: boolean; prepared?: { key: string; mode: "arrange" | "recompose"; mood: string }[]; onStage?: (name: string) => void; selection?: Selection | null; attention?: Attention[]; onPick?: (selection: Selection | null) => void; onMode?: (mode: "arrange" | "recompose") => void; chosenPlan?: number | null; onChoosePlan?: (index: number) => void }) {
   const { piece, study, chords, splitting, toggleSplit, splitAll, tracks, setTrack, answered, answer, placed, options, trying, setTrying, off, togglePart, offBars, putBackBars, remaining, allParts, gone, toggleGone, handOrder, setHandOrder, bars, cues, roles, standing, structures, fitting, askFit, kept, askPiece, askPlaced, splitPlaced, askOptions, askNotes, keep, startAgain, download, reachesEnd, wholeScore, selectRange } = arranged;
   /** The step on screen, counted from Study. */
   const [step, setStep] = useState(1);
@@ -191,8 +193,10 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
   /** The plan being written, by its place in the list. */
   const [pick, setPick] = useState<number | null>(null);
   const [skipped, setSkipped] = useState<number[]>([]);
-  const [template, setTemplate] = useState<string | null>(null);
-  const [picked, setPicked] = useState<string[]>([]);
+  // A string orchestra suits most sketches, and the replay was made for a full one.
+  const startWith = TEMPLATES.find((t) => t.name === (demo ? "Full orchestra" : "String orchestra"));
+  const [template, setTemplate] = useState<string | null>(startWith?.name ?? null);
+  const [picked, setPicked] = useState<string[]>(startWith?.instruments ?? []);
   const [ownInstrument, setOwnInstrument] = useState("");
   const [placeWords, setPlaceWords] = useState("");
   const [writeWords, setWriteWords] = useState("");
@@ -210,6 +214,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
   const [moreBars, setMoreBars] = useState(8);
   const [where, setWhere] = useState<ArrangeInput["where"]>("both");
 
+  useEffect(() => onMode?.(mode), [mode]);
   const go = (to: number) => {
     setStep(to);
     setReached((now) => Math.max(now, to));
@@ -224,6 +229,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
   /** Writes the plan that was pressed, from the list it's in, whatever the other mode has left behind (review F1). */
   const write = (index: number, from: "arrange" | "recompose") => {
     setPick(index);
+    onChoosePlan?.(index);
     go(4);
     void (from === "recompose" ? arranged.writeRecomposed(index) : askNotes(index));
   };
@@ -771,12 +777,23 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
           <div className="arrange-moods">
             <p className="spark-note">{demo ? "The moods prepared for this demo. Any other mood, or your own words, runs live with your own key." : "The mood, if you have one. Words of your own go in the box below."}</p>
             <span className="arrange-chips" role="group" aria-label="Mood">
-              {moodsHere.map((m) => (
+              {moodsHere.filter((m) => demo || SUGGESTED_MOODS.includes(m) || m === mood).map((m) => (
                 <button key={m} className={`chip-button${mood === m ? " on" : ""}`} aria-pressed={mood === m} onClick={() => setMood(mood === m ? null : m)}>
                   {m}
                 </button>
               ))}
             </span>
+            {!demo && (
+              <More title="More moods">
+                <span className="arrange-chips" role="group" aria-label="More moods">
+                  {moodsHere.filter((m) => !SUGGESTED_MOODS.includes(m) && m !== mood).map((m) => (
+                    <button key={m} className="chip-button small" onClick={() => setMood(m)}>
+                      {m}
+                    </button>
+                  ))}
+                </span>
+              </More>
+            )}
           </div>
           <More title="Say what you want, or what inspired it">
             <textarea className="arrange-box" rows={2} maxLength={360} aria-label="What you want, or what inspired it" value={writeWords} placeholder="Rain on an empty street. Strings enter at bar 17, and end on E minor." onChange={(e) => setWriteWords(e.target.value)} />
@@ -820,10 +837,11 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
             </button>
           )}
           {(options.status === "unavailable" || arranged.recompose.status === "unavailable") && <p className="arrange-said">{demo ? "That one isn't prepared. It runs live with your own key." : "Muse Spark can't answer right now. Today's shared credit may have run out, and your own key will still work."}</p>}
+          {((mode === "recompose" && arranged.recompose.status === "ready") || (mode === "arrange" && options.status === "ready")) && !arranged.recomposed && <p className="spark-note">Both are laid out on your bars to the left, to compare. Choose one there, change its chords here, and write it.</p>}
           {mode === "recompose" && arranged.recompose.status === "ready" && !arranged.recomposed && (
             <ul className="arrange-list">
               {arranged.recompose.plans.map((plan, index) => (
-                <li key={plan.name}>
+                <li key={plan.name} className={chosenPlan === index ? "on" : undefined}>
                   <strong>{plan.name}</strong>
                   <span className="card-text">{sentences(plan.idea)} {plan.time}, {plan.qpm} a minute.</span>
                   <span className="spark-note">Motif from bars {plan.motif.from} to {plan.motif.to}: {plan.motif.what}</span>
@@ -839,7 +857,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
               {options.plans.map((plan, index) => {
                 const these = options.notes[index];
                 return (
-                  <li key={plan.name}>
+                  <li key={plan.name} className={chosenPlan === index ? "on" : undefined}>
                     <strong>{plan.name}</strong>
                     <span className="card-text">{sentences(plan.idea)}</span>
                     <More title="Why">
@@ -923,7 +941,6 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
           )}
           {notes?.status === "ready" && left && (
             <>
-              {onScore("option", shownAt!)}
               <p className="spark-note">{notes.check.notes && !left.notes ? "All of it is left out." : checkWords(left)[0]}</p>
               {options.status === "ready" &&
                 planGaps(o.why, notes.check, options.input).map((gap) => (
@@ -983,12 +1000,12 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
       {!inspector && current === 5 && (
         <>
           <h2 className="arrange-title">Take it to your DAW</h2>
-          <p className="spark-note">What's on the score, every part on its own track from bar 1, with your moments as markers.</p>
+          <p className="spark-note">A folder with what's on the score: the MIDI, every part on its own track from bar 1 with its levels on the mod wheel, the score in MusicXML, and your moments as markers.</p>
           <button className="button primary arrange-go" onClick={() => download(forPlayers)}>
             Download MIDI
           </button>
           <label className="arrange-check">
-            <input type="checkbox" checked={forPlayers} onChange={(e) => setForPlayers(e.target.checked)} /> Also a score transposed for the players, in MusicXML for Sibelius, Dorico or MuseScore
+            <input type="checkbox" checked={forPlayers} onChange={(e) => setForPlayers(e.target.checked)} /> Also a MusicXML score transposed for the players, for Sibelius, Dorico or MuseScore
           </label>
           {trying?.kind === "option" && (
             <button
@@ -999,7 +1016,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
                 go(3);
               }}
             >
-              Make this my score and go again
+              Build on this arrangement
             </button>
           )}
           {kept && (

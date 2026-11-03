@@ -1001,3 +1001,229 @@ button.door-card:hover {
   font: 15px "Kalam", cursive;
   color: var(--ink);
 }
+
+/* The comparison band: shut until there's something to compare, then the alternatives side by side. */
+.compare {
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: var(--stage);
+}
+.compare-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 40px;
+  padding: 0 14px;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  font-size: 12px;
+  text-align: left;
+  cursor: pointer;
+}
+.compare-head strong {
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 600;
+}
+.compare-caret {
+  width: 12px;
+  color: var(--ink);
+}
+.compare .stage-orders {
+  border-top: 1px solid var(--stage-line);
+}
+.compare-plans {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  padding: 0 12px 12px;
+}
+.plan-card {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  transition: border-color 150ms, background 150ms;
+}
+.plan-card.on {
+  border-color: rgba(91, 155, 255, 0.8);
+  background: rgba(91, 155, 255, 0.05);
+}
+.plan-card header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.plan-card header strong {
+  flex: 1;
+  color: var(--ink);
+  font-size: 14px;
+}
+.plan-tag {
+  padding: 2px 6px;
+  border: 1px solid var(--line2);
+  border-radius: 2px;
+  font: 10px var(--mono);
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+.plan-idea,
+.plan-motif,
+.plan-note {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--ink);
+}
+.plan-motif,
+.plan-note {
+  color: var(--muted);
+  font-size: 12px;
+}
+.plan-lanes {
+  display: grid;
+  gap: 3px;
+}
+.plan-lane {
+  position: relative;
+}
+.plan-sections {
+  height: 18px;
+}
+.plan-section {
+  position: absolute;
+  top: 0;
+  height: 18px;
+  box-sizing: border-box;
+  padding: 0 4px;
+  border-left: 1px solid var(--line2);
+  overflow: hidden;
+  white-space: nowrap;
+  font: 11px "Kalam", cursive;
+  color: var(--muted);
+}
+.plan-melody {
+  height: 30px;
+  border-bottom: 1px solid var(--stage-line);
+}
+.plan-melody span {
+  position: absolute;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--kind-melody, #ff7a33);
+}
+.plan-why {
+  height: 46px;
+}
+.plan-stretch {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  box-sizing: border-box;
+  display: grid;
+  align-content: start;
+  gap: 2px;
+  padding: 3px 5px;
+  overflow: hidden;
+  border: 1px solid rgba(91, 155, 255, 0.35);
+  border-radius: 2px;
+  background: rgba(91, 155, 255, 0.07);
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+}
+.plan-stretch.yours {
+  border-style: dashed;
+}
+.plan-stretch:hover,
+.plan-stretch:focus-visible {
+  background: rgba(91, 155, 255, 0.16);
+}
+.plan-chords {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font: 13px "Kalam", cursive;
+}
+.plan-what {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 10px;
+  color: var(--muted);
+}
+.arrange-list li.on {
+  border-color: rgba(91, 155, 255, 0.8);
+}
+
+/* The bar above the score: what's on it, the pencil's layers, and what's being written. */
+.sheet-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  min-height: 34px;
+  padding: 0 96px 8px 0;
+  color: #5a564e;
+  font-size: 12px;
+}
+.sheet-switch,
+.sheet-layers {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+.sheet-label {
+  margin-right: 6px;
+  font: 10px var(--mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.sheet-switch button,
+.sheet-layers button {
+  min-height: 28px;
+  padding: 0 10px;
+  border: 1px solid #cfc9bf;
+  border-radius: 2px;
+  background: none;
+  color: #5a564e;
+  font: inherit;
+  cursor: pointer;
+}
+.sheet-switch button.on,
+.sheet-layers button.on {
+  border-color: #2f2d2a;
+  background: #2f2d2a;
+  color: #f2efe9;
+}
+.sheet-writing {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #2f6fd6;
+  font: 11px var(--mono);
+  letter-spacing: 0.06em;
+}
+.sheet-writing .signal.on {
+  background: #2f6fd6;
+}
+
+/* Muse Spark's panel sits over the inspector column, so the score is never covered. */
+.studio .thinking {
+  left: auto;
+  right: 10px;
+  bottom: 12px;
+  width: 360px;
+}
+.studio .thinking-lines {
+  height: 150px;
+}
+/* The overview's own readout is for where the pointer is. The transport has where it's playing. */
+.studio .stage:not(:hover) .stage-readout {
+  visibility: hidden;
+}

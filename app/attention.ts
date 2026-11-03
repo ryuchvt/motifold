@@ -56,9 +56,12 @@ export function attentionOf(arranged: Pick<Arranged, "piece" | "answered" | "opt
 /** Each section of the plan on screen as it's written, in the order it's written: queued, writing, written or not finished. */
 export function writingProgress(arranged: Pick<Arranged, "options" | "trying">): { from: string; to: string; state: "queued" | "writing" | "written" | "unfinished" }[] {
   const { options, trying } = arranged;
-  if (options.status !== "ready" || trying?.kind !== "option") return [];
-  const plan = options.plans[trying.index];
-  const notes = options.notes[trying.index];
+  if (options.status !== "ready") return [];
+  // The plan on the score, or the one being written before its first section is back to put there.
+  const busy = Object.entries(options.notes).find(([, n]) => n.status === "asking" || (n.status === "ready" && !!n.writing))?.[0];
+  const index = trying?.kind === "option" ? trying.index : busy !== undefined ? Number(busy) : -1;
+  const plan = options.plans[index];
+  const notes = options.notes[index];
   if (!plan || !notes) return [];
   const bars = [...options.input.written.map((w) => w.bar), ...newBarNumbers(options.input)];
   const windows = writingWindows(plan.why, bars);

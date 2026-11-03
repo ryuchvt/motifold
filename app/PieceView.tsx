@@ -417,11 +417,11 @@ export function PieceView(props: {
 }
 
 /** Each order of the same bars as its own row of blocks, the same colour for the same section, so what moved is seen at once. */
-function Orders({ orders, ordered, onOrder, onKeep }: { orders: OrderRow[]; ordered: number | null; onOrder?: (index: number | null) => void; onKeep?: () => void }) {
+export function Orders({ orders, ordered, onOrder, onKeep, bare = false }: { orders: OrderRow[]; ordered: number | null; onOrder?: (index: number | null) => void; onKeep?: () => void; bare?: boolean }) {
   const longest = Math.max(1, ...orders.map((o) => o.blocks.reduce((n, b) => n + b.beats, 0)));
   return (
     <div className="stage-orders" role="group" aria-label="Orders of your bars">
-      <p className="stage-orders-title">Other orders of your bars. Press one to hear it and see it on the score. None of them adds a note.</p>
+      {!bare && <p className="stage-orders-title">Other orders of your bars. Press one to hear it and see it on the score. None of them adds a note.</p>}
       {orders.map((o) => {
         const on = o.index === ordered;
         return (

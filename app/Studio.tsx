@@ -6,6 +6,7 @@ import { loadDemoIndex, startDemo, stopDemo, type DemoIndex, type DemoPiece } fr
 import { isMidi } from "./midi";
 import { openedScore } from "./opened";
 import { PieceView } from "./PieceView";
+import { Compare } from "./Compare";
 import { ScoreView, type ScoreViewHandle } from "./ScoreView";
 import { AUDIO_FILE, isAudioFile, listenTo } from "./listen";
 import { OWN_KEY } from "../server/pools";
@@ -14,7 +15,8 @@ import { MuseChip, Thinking } from "./Thinking";
 import { playhead, usePlayhead } from "./playhead";
 import { looksFreelyPlayed } from "./timing";
 import { useArrange } from "./useArrange";
-import { attentionOf, writingProgress } from "./attention";
+import { attentionOf, barsWords, writingProgress } from "./attention";
+const barsWordsLower = (from: string, to: string) => barsWords(from, to).toLowerCase();
 import type { Selection } from "./selection";
 
 type Access = "demo" | "live" | "own";
@@ -94,6 +96,18 @@ export function Studio() {
   const attention = useMemo(() => attentionOf(arranged), [arranged.piece, arranged.answered, arranged.options, arranged.trying, arranged.tracks, arranged.tracksConfirmed]);
   const progress = useMemo(() => writingProgress(arranged), [arranged.options, arranged.trying]);
   const forms = arranged.study.status === "ready" ? arranged.study.answer.sections : [];
+  /** Arrange or Recompose, as the panel has it, and which plan is chosen in the comparison. */
+  const [mode, setMode] = useState<"arrange" | "recompose">("arrange");
+  const [chosenPlan, setChosenPlan] = useState<number | null>(null);
+  const plansNow = mode === "recompose" ? (arranged.recompose.status === "ready" && !arranged.recomposed ? arranged.recompose.plans : null) : arranged.options.status === "ready" && !arranged.recomposed ? arranged.options.plans : null;
+  useEffect(() => setChosenPlan(null), [plansNow]);
+  const writtenPlans = arranged.options.status === "ready" && mode === "arrange" ? Object.keys(arranged.options.notes).map(Number) : [];
+  /** The pencil's layers, each of which can be put away. */
+  const [layers, setLayers] = useState({ sections: true, chords: true, marks: true });
+  const marks = arranged.studyMarks && { ...arranged.studyMarks, sections: layers.sections ? arranged.studyMarks.sections : [], chords: layers.chords ? arranged.studyMarks.chords : [], passages: layers.marks ? arranged.studyMarks.passages : [] };
+  const writingNow = progress.find((w) => w.state === "writing");
+  // The plan whose notes can be switched on and off on the score.
+  const switchable = arranged.options.status === "ready" ? (arranged.trying?.kind === "option" ? arranged.trying.index : Object.entries(arranged.options.notes).find(([, n]) => n.status === "ready")?.[0]) : undefined;
   // A picked marker that's been dealt with goes back to the overview.
   useEffect(() => {
     if (picked?.kind === "attention" && !attention.some((a) => a.id === picked.id)) setPicked(null);
@@ -406,7 +420,7 @@ export function Studio() {
                 }}
                 onFocus={arranged.setFocus}
                 onSolo={arranged.toggleSolo}
-                orders={arranged.options.status === "none" && arranged.trying?.kind !== "option" ? arranged.orders : []}
+                orders={[]}
                 ordered={arranged.trying?.kind === "structure" ? arranged.trying.index : null}
                 onOrder={(index) => arranged.setTrying(index === null ? null : { kind: "structure", index })}
                 onKeepOrder={arranged.keep}
@@ -418,8 +432,58 @@ export function Studio() {
               />
             )}
             {render && <p className="note-line">You're hearing my own bounce of Muse Spark's notes through my own instruments, with no note corrected. I chose the sounds and the balance.</p>}
+            {arranged.overview && (
+              <Compare
+                data={arranged.overview}
+                sections={arranged.sections}
+                orders={stage === "Study" && arranged.options.status === "none" && arranged.trying?.kind !== "option" ? arranged.orders : []}
+                ordered={arranged.trying?.kind === "structure" ? arranged.trying.index : null}
+                onOrder={(index) => arranged.setTrying(index === null ? null : { kind: "structure", index })}
+                onKeepOrder={arranged.keep}
+                plans={stage === "Direction" ? plansNow : null}
+                recompose={mode === "recompose"}
+                chosen={chosenPlan}
+                onChoose={(index) => {
+                  setChosenPlan(index);
+                  const notes = arranged.options.status === "ready" ? arranged.options.notes[index] : undefined;
+                  if (mode === "arrange" && notes?.status === "ready") arranged.setTrying({ kind: "option", index });
+                }}
+                written={writtenPlans}
+                onShowBars={(from, to) => {
+                  arranged.selectRange(from, to);
+                  setPicked({ kind: "bars", from, to });
+                }}
+              />
+            )}
             {onPage && (
               <section className="sheet" aria-label="Notation">
+                <div className="sheet-bar">
+                  {switchable !== undefined && (
+                    <span className="sheet-switch" role="group" aria-label="What's on the score">
+                      <button className={!arranged.trying ? "on" : undefined} aria-pressed={!arranged.trying} onClick={() => arranged.setTrying(null)}>
+                        Original
+                      </button>
+                      <button className={arranged.trying?.kind === "option" ? "on" : undefined} aria-pressed={arranged.trying?.kind === "option"} onClick={() => arranged.setTrying({ kind: "option", index: Number(switchable) })}>
+                        With new notes
+                      </button>
+                    </span>
+                  )}
+                  {arranged.studyMarks && (
+                    <span className="sheet-layers" role="group" aria-label="Pencil">
+                      <span className="sheet-label">Pencil</span>
+                      {(["sections", "chords", "marks"] as const).map((layer) => (
+                        <button key={layer} className={layers[layer] ? "on" : undefined} aria-pressed={layers[layer]} onClick={() => setLayers({ ...layers, [layer]: !layers[layer] })}>
+                          {layer[0]!.toUpperCase() + layer.slice(1)}
+                        </button>
+                      ))}
+                    </span>
+                  )}
+                  {writingNow && (
+                    <span className="sheet-writing" role="status">
+                      <span className="signal on" aria-hidden /> Writing {barsWordsLower(writingNow.from, writingNow.to)} · section {progress.indexOf(writingNow) + 1} of {progress.length}
+                    </span>
+                  )}
+                </div>
                 <span className="zoom">
                   <button className="round" aria-label="Smaller" onClick={() => setZoom((z) => Math.max(0.5, z - 0.1))}>
                     −
@@ -428,12 +492,12 @@ export function Studio() {
                     +
                   </button>
                 </span>
-                <ScoreView ref={view} xmlText={onPage.xmlText} noTitle score={onPage.score} zoom={zoom} highlights={[]} noteMarks={NO_MARKS} studyMarks={arranged.studyMarks} onTap={NO_TAP} onDrawn={() => {}} />
+                <ScoreView ref={view} xmlText={onPage.xmlText} noTitle score={onPage.score} zoom={zoom} highlights={[]} noteMarks={NO_MARKS} studyMarks={marks} onTap={NO_TAP} onDrawn={() => {}} />
               </section>
             )}
           </main>
           <aside className="work-side">
-            <ArrangePanel arranged={arranged} busy={thinking} demo={access === "demo"} prepared={demoPiece?.runs ?? []} onStage={setStage} selection={picked} attention={attention} onPick={setPicked} />
+            <ArrangePanel arranged={arranged} busy={thinking} demo={access === "demo"} prepared={demoPiece?.runs ?? []} onStage={setStage} selection={picked} attention={attention} onPick={setPicked} onMode={setMode} chosenPlan={chosenPlan} onChoosePlan={setChosenPlan} />
           </aside>
         </div>
       )}

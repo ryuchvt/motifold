@@ -600,8 +600,6 @@ describe("the panel", () => {
     expect(host.textContent).not.toContain("The code checked each one");
     await press(host, "Write this one");
     expect(host.textContent).toContain("The code checked each one");
-    await press(host, "Take it off");
-    await press(host, "Put it on the score");
     await press(host, "Next: Export");
     expect(host.textContent).toContain("Download MIDI");
     await press(host, "Study");
