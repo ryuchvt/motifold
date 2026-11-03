@@ -1,0 +1,17 @@
+Sample sketch: Answer and Firm Close
+
+Use horn and tuba to answer opening E-B-G leap, contrast repeat, fill low octave, then recap to V-I close in same fanfare character.
+
+Bars 1 to 7. Horn holds chord thirds, tuba doubles bass roots. Leave tune clear, add weight below. Chords: C | F | C | F | G | C | F Level: p steady
+Bars 9 to 11. Trumpet 2 echoes E-B-G leap, horn fills harmony. Vary repeat without covering tune. Chords: C | F | C Level: p growing to mp
+Bars 17 to 23. Tuba doubles bass octave below for depth. Restore low weight, keep tune forward. Chords: C | F | C | F | G | C | C Level: mp steady
+Bars 25 to 32. Trumpet 2 and horn exchange E-B-G leap, tuba walks bass. Build contrast from tune's own leap. Chords: Am | Dm | G | C | Am | Dm | G | G Level: mp growing to mf
+Bars 33 to 40. Trumpets horn trombone tuba recall opening phrase to V-I close. Bring tune back to firm ending. Chords: C | F | C | F | G | C | G | C Level: mf growing to f
+
+All 114 of your notes are on the instruments you chose, at the rhythm you wrote.
+14 were moved by an octave to fit their instrument.
+
+138 new notes. The code checked each one against what's sounding and the range of its instrument.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your notes keep their rhythm and their pitches, apart from any octave moves counted above.

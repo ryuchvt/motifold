@@ -1,0 +1,17 @@
+Sample sketch: Answered Repeat to Low Grounded Close
+
+Warm low support frees high tune, B countertheme inverts falling third, G pedal returns head for quiet C close.
+
+Bars 1 to 10. Harp broken chords and Viola thirds support, Flute 2 breathes in tune gaps. Second repeat needs colour while melody stays foremost. Chords: C|F|C|F|G|C|F|C|C|F Level: pp growing to mp
+Bars 11 to 24. Bassoons, Tuba and Horns hold low roots, Harp arpeggiates, Viola fills tenor. Ground high octave without covering tune's peak. Chords: C|F|G|F|G|C|C|F|C|F|G|C|G|C Level: mp steady
+Bars 25 to 32. Oboe 1 sings inverted E-B-G falling third countertheme, Flute 1 answers, Viola moves opposite. New line grows from old interval in near key. Chords: Am|Dm|F|G|Am|Dm|F|G Level: mp growing to mf
+Bars 33 to 36. Horns and Bassoons hold G pedal, Harp recalls D-B-G rhythm, Timpani stays on G. Hold back motion so return feels earned. Chords: G|G|G|G Level: mf softening to mp
+Bars 37 to 40. Flute 1 and Viola restate E-B-G head, Timpani holds C, Cymbals and Glockenspiel mark close. Familiar shape returns to clear final arrival. Chords: C|F|G|C Level: mp closing to pp
+
+All 114 of your notes are on the instruments you chose, at the rhythm you wrote.
+
+293 new notes. The code checked each one against what's sounding and the range of its instrument.
+9 long notes sit a semitone from something else sounding. That can be a good suspension or a slip, so check by ear: Harp C4 in bar 1, Viola C4 in bar 1, Harp C4 in bar 3, Viola C4 in bar 3 and 5 more.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your notes keep their rhythm and their pitches, apart from any octave moves counted above.

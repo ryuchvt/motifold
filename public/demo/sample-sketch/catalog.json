@@ -19,7 +19,39 @@
       "zip": "/demo/sample-sketch/outcomes/arrange-neutral-string-orchestra-a/arrangement.zip",
       "run": "/demo/sample-sketch/outcomes/arrange-neutral-string-orchestra-a/run.json",
       "xmlSha256": "e66eef5be13a43326da14d763a8d0e247d66be45bc946f341aded65e7514dd54",
-      "midiSha256": "421481752c73f6367613bfb2aad68bd97edc35af9a37841ddf232ec46bab3e3d"
+      "midiSha256": "421481752c73f6367613bfb2aad68bd97edc35af9a37841ddf232ec46bab3e3d",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "7",
+          "chords": "Em | F | Em | F | G | Em | F"
+        },
+        {
+          "from": "8",
+          "to": "8",
+          "chords": "C"
+        },
+        {
+          "from": "9",
+          "to": "11",
+          "chords": "Em | F | Em"
+        },
+        {
+          "from": "12",
+          "to": "16",
+          "chords": "F | G | F | G | C"
+        },
+        {
+          "from": "17",
+          "to": "22",
+          "chords": "C | F | C | F | G | C"
+        },
+        {
+          "from": "23",
+          "to": "24",
+          "chords": "C | C"
+        }
+      ]
     },
     {
       "id": "arrange-neutral-string-orchestra-b",
@@ -37,7 +69,39 @@
       "zip": "/demo/sample-sketch/outcomes/arrange-neutral-string-orchestra-b/arrangement.zip",
       "run": "/demo/sample-sketch/outcomes/arrange-neutral-string-orchestra-b/run.json",
       "xmlSha256": "c35b9dcb8980b245ecb9ea99f8eab0d780aebd180010901b236bf90b9189279f",
-      "midiSha256": "a8933a8cd004af252eaaaf0b34b1dd082bea519107a39d0db7c40f531a393793"
+      "midiSha256": "a8933a8cd004af252eaaaf0b34b1dd082bea519107a39d0db7c40f531a393793",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "7",
+          "chords": "Em | F | Em | F | G | Em | F"
+        },
+        {
+          "from": "8",
+          "to": "8",
+          "chords": "C"
+        },
+        {
+          "from": "9",
+          "to": "11",
+          "chords": "Em | F | Em"
+        },
+        {
+          "from": "12",
+          "to": "16",
+          "chords": "F | G | F | G | C"
+        },
+        {
+          "from": "17",
+          "to": "22",
+          "chords": "C | F | C | F | G | C"
+        },
+        {
+          "from": "23",
+          "to": "24",
+          "chords": "C | C"
+        }
+      ]
     },
     {
       "id": "arrange-neutral-string-quartet-a",
@@ -55,7 +119,49 @@
       "zip": "/demo/sample-sketch/outcomes/arrange-neutral-string-quartet-a/arrangement.zip",
       "run": "/demo/sample-sketch/outcomes/arrange-neutral-string-quartet-a/run.json",
       "xmlSha256": "0503f846c4e59fa2f35d77ff4d32eebee2ff046ac15bee41c7ef7aaaa8fd53d3",
-      "midiSha256": "9927d5527010cc5d13e9d5903af63b1ce2cf7ddf1e8f8cf0d155c0c07fb09685"
+      "midiSha256": "9927d5527010cc5d13e9d5903af63b1ce2cf7ddf1e8f8cf0d155c0c07fb09685",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "7",
+          "chords": "C | F | C | F | G | C | F"
+        },
+        {
+          "from": "8",
+          "to": "8",
+          "chords": "C"
+        },
+        {
+          "from": "9",
+          "to": "11",
+          "chords": "C | F | C"
+        },
+        {
+          "from": "12",
+          "to": "13",
+          "chords": "F | G"
+        },
+        {
+          "from": "14",
+          "to": "16",
+          "chords": "F | G | C"
+        },
+        {
+          "from": "17",
+          "to": "20",
+          "chords": "C | F | C | F"
+        },
+        {
+          "from": "21",
+          "to": "21",
+          "chords": "G"
+        },
+        {
+          "from": "22",
+          "to": "24",
+          "chords": "C | C | C"
+        }
+      ]
     },
     {
       "id": "arrange-neutral-string-quartet-b",
@@ -73,7 +179,49 @@
       "zip": "/demo/sample-sketch/outcomes/arrange-neutral-string-quartet-b/arrangement.zip",
       "run": "/demo/sample-sketch/outcomes/arrange-neutral-string-quartet-b/run.json",
       "xmlSha256": "2f3d5288296df5bef6ccabb4df395559a7ac0f24939a5389395f46f6b1ca9fd0",
-      "midiSha256": "becbb2beda296e53809f4889d415dd870187325239a7e1045876d7ddc8dcf111"
+      "midiSha256": "becbb2beda296e53809f4889d415dd870187325239a7e1045876d7ddc8dcf111",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "7",
+          "chords": "C | F | C | F | G | C | F"
+        },
+        {
+          "from": "8",
+          "to": "8",
+          "chords": "C"
+        },
+        {
+          "from": "9",
+          "to": "11",
+          "chords": "C | F | C"
+        },
+        {
+          "from": "12",
+          "to": "13",
+          "chords": "F | G"
+        },
+        {
+          "from": "14",
+          "to": "16",
+          "chords": "F | G | C"
+        },
+        {
+          "from": "17",
+          "to": "20",
+          "chords": "C | F | C | F"
+        },
+        {
+          "from": "21",
+          "to": "21",
+          "chords": "G"
+        },
+        {
+          "from": "22",
+          "to": "24",
+          "chords": "C | C | C"
+        }
+      ]
     },
     {
       "id": "arrange-neutral-chamber-orchestra-a",
@@ -91,7 +239,44 @@
       "zip": "/demo/sample-sketch/outcomes/arrange-neutral-chamber-orchestra-a/arrangement.zip",
       "run": "/demo/sample-sketch/outcomes/arrange-neutral-chamber-orchestra-a/run.json",
       "xmlSha256": "d44cab17b8cfea425b17acbe8f0a82f18dbc29cd4a0e967e968e8b08b7f6a664",
-      "midiSha256": "2ada5ee1b8e74cf25b242190ba918e37d739b5aed91febabc382e11297d8e136"
+      "midiSha256": "2ada5ee1b8e74cf25b242190ba918e37d739b5aed91febabc382e11297d8e136",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "7",
+          "chords": "C | F | C | F | G | C | F"
+        },
+        {
+          "from": "8",
+          "to": "8",
+          "chords": "C"
+        },
+        {
+          "from": "9",
+          "to": "11",
+          "chords": "C | F | C"
+        },
+        {
+          "from": "12",
+          "to": "13",
+          "chords": "F | G"
+        },
+        {
+          "from": "14",
+          "to": "20",
+          "chords": "F | G | C | C | F | C | F"
+        },
+        {
+          "from": "21",
+          "to": "21",
+          "chords": "G"
+        },
+        {
+          "from": "22",
+          "to": "24",
+          "chords": "C | C | C"
+        }
+      ]
     },
     {
       "id": "arrange-neutral-chamber-orchestra-b",
@@ -109,7 +294,44 @@
       "zip": "/demo/sample-sketch/outcomes/arrange-neutral-chamber-orchestra-b/arrangement.zip",
       "run": "/demo/sample-sketch/outcomes/arrange-neutral-chamber-orchestra-b/run.json",
       "xmlSha256": "f3a80c28bfc99513d213867d64d0cd128d6b3a1680989337b18dd50e7625c58d",
-      "midiSha256": "5a9546c94e36ebf8f32b31144efa537128dc28cc8d17fe3739f6a1b3afc1778d"
+      "midiSha256": "5a9546c94e36ebf8f32b31144efa537128dc28cc8d17fe3739f6a1b3afc1778d",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "7",
+          "chords": "C | F | C | F | G | C | F"
+        },
+        {
+          "from": "8",
+          "to": "8",
+          "chords": "C"
+        },
+        {
+          "from": "9",
+          "to": "11",
+          "chords": "C | F | C"
+        },
+        {
+          "from": "12",
+          "to": "13",
+          "chords": "F | G"
+        },
+        {
+          "from": "14",
+          "to": "20",
+          "chords": "F | G | C | C | F | C | F"
+        },
+        {
+          "from": "21",
+          "to": "21",
+          "chords": "G"
+        },
+        {
+          "from": "22",
+          "to": "24",
+          "chords": "C | C | C"
+        }
+      ]
     },
     {
       "id": "arrange-neutral-full-orchestra-a",
@@ -127,7 +349,34 @@
       "zip": "/demo/sample-sketch/outcomes/arrange-neutral-full-orchestra-a/arrangement.zip",
       "run": "/demo/sample-sketch/outcomes/arrange-neutral-full-orchestra-a/run.json",
       "xmlSha256": "ba179e3655c716fdd5fc62d655faaa2531c7ddbaa962e5836af39a00a752d5d0",
-      "midiSha256": "d7d5f4efb2f7d09124fbec72e17bf5964d7fb62d892db61b2541876851f5523a"
+      "midiSha256": "d7d5f4efb2f7d09124fbec72e17bf5964d7fb62d892db61b2541876851f5523a",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "7",
+          "chords": "C | F | C | F | G | C | F"
+        },
+        {
+          "from": "8",
+          "to": "11",
+          "chords": "C | C | F | C"
+        },
+        {
+          "from": "12",
+          "to": "16",
+          "chords": "F | G | F | G | C"
+        },
+        {
+          "from": "17",
+          "to": "22",
+          "chords": "C | F | C | F | G | C"
+        },
+        {
+          "from": "23",
+          "to": "24",
+          "chords": "C | C"
+        }
+      ]
     },
     {
       "id": "arrange-neutral-full-orchestra-b",
@@ -145,7 +394,34 @@
       "zip": "/demo/sample-sketch/outcomes/arrange-neutral-full-orchestra-b/arrangement.zip",
       "run": "/demo/sample-sketch/outcomes/arrange-neutral-full-orchestra-b/run.json",
       "xmlSha256": "43c957f0dbe726562bd7caa33e980b10d0ecfbc5acf03576d854173f9a49ee59",
-      "midiSha256": "8b48530405881428483f865c5b815fd2f74ff93377140495eb89d9f4d7a19f6e"
+      "midiSha256": "8b48530405881428483f865c5b815fd2f74ff93377140495eb89d9f4d7a19f6e",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "7",
+          "chords": "C | F | C | F | G | C | F"
+        },
+        {
+          "from": "8",
+          "to": "11",
+          "chords": "C | C | F | C"
+        },
+        {
+          "from": "12",
+          "to": "16",
+          "chords": "F | G | F | G | C"
+        },
+        {
+          "from": "17",
+          "to": "22",
+          "chords": "C | F | C | F | G | C"
+        },
+        {
+          "from": "23",
+          "to": "24",
+          "chords": "C | C"
+        }
+      ]
     },
     {
       "id": "arrange-neutral-woodwind-quintet-a",
@@ -163,7 +439,54 @@
       "zip": "/demo/sample-sketch/outcomes/arrange-neutral-woodwind-quintet-a/arrangement.zip",
       "run": "/demo/sample-sketch/outcomes/arrange-neutral-woodwind-quintet-a/run.json",
       "xmlSha256": "3470ceee9f3be0f08c59363964d349d7381775bfbc5ace2a1f3fb984252c05a4",
-      "midiSha256": "a6aa35203a0ac0f3ed5ac20f519800a91a24ae077fe2e8680b1f52a28033e5e3"
+      "midiSha256": "a6aa35203a0ac0f3ed5ac20f519800a91a24ae077fe2e8680b1f52a28033e5e3",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "7",
+          "chords": "C | F | C | F | G | C | F"
+        },
+        {
+          "from": "8",
+          "to": "8",
+          "chords": "C"
+        },
+        {
+          "from": "9",
+          "to": "11",
+          "chords": "C | F | C"
+        },
+        {
+          "from": "12",
+          "to": "13",
+          "chords": "F | G"
+        },
+        {
+          "from": "14",
+          "to": "16",
+          "chords": "F | G | C"
+        },
+        {
+          "from": "17",
+          "to": "20",
+          "chords": "C | F | C | F"
+        },
+        {
+          "from": "21",
+          "to": "21",
+          "chords": "G"
+        },
+        {
+          "from": "22",
+          "to": "22",
+          "chords": "C"
+        },
+        {
+          "from": "23",
+          "to": "24",
+          "chords": "C G | C"
+        }
+      ]
     },
     {
       "id": "arrange-neutral-woodwind-quintet-b",
@@ -181,7 +504,54 @@
       "zip": "/demo/sample-sketch/outcomes/arrange-neutral-woodwind-quintet-b/arrangement.zip",
       "run": "/demo/sample-sketch/outcomes/arrange-neutral-woodwind-quintet-b/run.json",
       "xmlSha256": "ae35c719a9013ba2ba29c8d007f4eb040b8e7802145da4e4e20652c8e374ba83",
-      "midiSha256": "8357f6cf4000f33ce0e117d580ab08ebdc717493166289cb71d058cf70286936"
+      "midiSha256": "8357f6cf4000f33ce0e117d580ab08ebdc717493166289cb71d058cf70286936",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "7",
+          "chords": "C | F | C | F | G | C | F"
+        },
+        {
+          "from": "8",
+          "to": "8",
+          "chords": "C"
+        },
+        {
+          "from": "9",
+          "to": "11",
+          "chords": "C | F | C"
+        },
+        {
+          "from": "12",
+          "to": "13",
+          "chords": "F | G"
+        },
+        {
+          "from": "14",
+          "to": "16",
+          "chords": "F | G | C"
+        },
+        {
+          "from": "17",
+          "to": "20",
+          "chords": "C | F | C | F"
+        },
+        {
+          "from": "21",
+          "to": "21",
+          "chords": "G"
+        },
+        {
+          "from": "22",
+          "to": "22",
+          "chords": "C"
+        },
+        {
+          "from": "23",
+          "to": "24",
+          "chords": "C G | C"
+        }
+      ]
     },
     {
       "id": "arrange-neutral-brass-quintet-a",
@@ -199,7 +569,34 @@
       "zip": "/demo/sample-sketch/outcomes/arrange-neutral-brass-quintet-a/arrangement.zip",
       "run": "/demo/sample-sketch/outcomes/arrange-neutral-brass-quintet-a/run.json",
       "xmlSha256": "84f26b0488b08613f7ff9968e0ac9335b56e79818fdbca508acf3557518d2908",
-      "midiSha256": "ba686ac7118676b0c255e0d571889d1f12662ca9712d573dcb21323e562533f3"
+      "midiSha256": "ba686ac7118676b0c255e0d571889d1f12662ca9712d573dcb21323e562533f3",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "7",
+          "chords": "C | F | C | F | G | C | F"
+        },
+        {
+          "from": "8",
+          "to": "11",
+          "chords": "C | C | F | C"
+        },
+        {
+          "from": "12",
+          "to": "16",
+          "chords": "F | G | F | G | C"
+        },
+        {
+          "from": "17",
+          "to": "22",
+          "chords": "C | F | C | F | G | C"
+        },
+        {
+          "from": "23",
+          "to": "24",
+          "chords": "C | C"
+        }
+      ]
     },
     {
       "id": "arrange-neutral-brass-quintet-b",
@@ -217,7 +614,29 @@
       "zip": "/demo/sample-sketch/outcomes/arrange-neutral-brass-quintet-b/arrangement.zip",
       "run": "/demo/sample-sketch/outcomes/arrange-neutral-brass-quintet-b/run.json",
       "xmlSha256": "bb370d94c79eb80c1d73d46950d41604378d9f98bc99503c8729bc6861f75f22",
-      "midiSha256": "572ad2258e2011b4ea39ebee3bf4b1ca1da0e0dd549715fe3707f9d6af554ebf"
+      "midiSha256": "572ad2258e2011b4ea39ebee3bf4b1ca1da0e0dd549715fe3707f9d6af554ebf",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "8",
+          "chords": "C | F | C | F | G | C | F | C"
+        },
+        {
+          "from": "9",
+          "to": "16",
+          "chords": "C | F | C | F | G | F | G | C"
+        },
+        {
+          "from": "17",
+          "to": "20",
+          "chords": "C | F | C | F"
+        },
+        {
+          "from": "21",
+          "to": "24",
+          "chords": "G | C | C | C"
+        }
+      ]
     },
     {
       "id": "expand-neutral-string-orchestra-a",
@@ -235,7 +654,39 @@
       "zip": "/demo/sample-sketch/outcomes/expand-neutral-string-orchestra-a/arrangement.zip",
       "run": "/demo/sample-sketch/outcomes/expand-neutral-string-orchestra-a/run.json",
       "xmlSha256": "b27787f15d623e3d34a35bdaa4317cb1aa594f046b6e86bc0bd848ac4e92b473",
-      "midiSha256": "83937d6e5f456886eb1e62ba23e559c26adf6db94d62e5664da9fb0a3b1f7213"
+      "midiSha256": "83937d6e5f456886eb1e62ba23e559c26adf6db94d62e5664da9fb0a3b1f7213",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "8",
+          "chords": "C|F|C|F|G|C|F|C"
+        },
+        {
+          "from": "9",
+          "to": "16",
+          "chords": "C|F|C|F|G|F|G|C"
+        },
+        {
+          "from": "17",
+          "to": "24",
+          "chords": "C|F|C|F|G|C|G|C"
+        },
+        {
+          "from": "25",
+          "to": "32",
+          "chords": "F|C|F|G|Am|Dm|G|G"
+        },
+        {
+          "from": "33",
+          "to": "36",
+          "chords": "C|F|G|C"
+        },
+        {
+          "from": "37",
+          "to": "40",
+          "chords": "F|G|C|C"
+        }
+      ]
     },
     {
       "id": "expand-neutral-string-orchestra-b",
@@ -253,7 +704,39 @@
       "zip": "/demo/sample-sketch/outcomes/expand-neutral-string-orchestra-b/arrangement.zip",
       "run": "/demo/sample-sketch/outcomes/expand-neutral-string-orchestra-b/run.json",
       "xmlSha256": "31fa25df5fdce7a902e9268de382fe836f481cd0ea14e0b3aa91f0f1377c6e30",
-      "midiSha256": "4a2383b1e47bef0c90a9626fd826ba5a6c730b7e6216ea020c341da8afc3021b"
+      "midiSha256": "4a2383b1e47bef0c90a9626fd826ba5a6c730b7e6216ea020c341da8afc3021b",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "8",
+          "chords": "C|F|C|F|G|C|F|C"
+        },
+        {
+          "from": "9",
+          "to": "16",
+          "chords": "C|F|C|F|G|F|G|C"
+        },
+        {
+          "from": "17",
+          "to": "24",
+          "chords": "C|F|C|F|G|C|G|C"
+        },
+        {
+          "from": "25",
+          "to": "32",
+          "chords": "F|C|F|G|Am|Dm|G|G"
+        },
+        {
+          "from": "33",
+          "to": "36",
+          "chords": "C|F|G|C"
+        },
+        {
+          "from": "37",
+          "to": "40",
+          "chords": "F|G|C|C"
+        }
+      ]
     },
     {
       "id": "expand-neutral-string-quartet-a",
@@ -271,7 +754,39 @@
       "zip": "/demo/sample-sketch/outcomes/expand-neutral-string-quartet-a/arrangement.zip",
       "run": "/demo/sample-sketch/outcomes/expand-neutral-string-quartet-a/run.json",
       "xmlSha256": "80e5b7da5478e221f4515ad4b9a3d20a458d0269b333093901d7ba189297cb31",
-      "midiSha256": "b20ff398aa038b72350d3b7b5b4c17ddf6ca6fd222db502bad9508f217d03522"
+      "midiSha256": "b20ff398aa038b72350d3b7b5b4c17ddf6ca6fd222db502bad9508f217d03522",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "7",
+          "chords": "C|F|C|F|G|C|F"
+        },
+        {
+          "from": "8",
+          "to": "11",
+          "chords": "C|C|F|C"
+        },
+        {
+          "from": "12",
+          "to": "16",
+          "chords": "F|G|F|G|C"
+        },
+        {
+          "from": "17",
+          "to": "24",
+          "chords": "C|F|C|F|G|C|C|C"
+        },
+        {
+          "from": "25",
+          "to": "32",
+          "chords": "Am|Dm|G|C|F|Dm|G|G"
+        },
+        {
+          "from": "33",
+          "to": "40",
+          "chords": "F|C|G|C|F|G|C|C"
+        }
+      ]
     },
     {
       "id": "expand-neutral-string-quartet-b",
@@ -289,7 +804,39 @@
       "zip": "/demo/sample-sketch/outcomes/expand-neutral-string-quartet-b/arrangement.zip",
       "run": "/demo/sample-sketch/outcomes/expand-neutral-string-quartet-b/run.json",
       "xmlSha256": "7e934bbdb7a4161923b3db41315a710d6e25a94e74e16ec5012ebdb9895d83e1",
-      "midiSha256": "ba05c7032f45b0aedb726bf219d232e844c123c6bdd5f21e4f63a6071f4e53b6"
+      "midiSha256": "ba05c7032f45b0aedb726bf219d232e844c123c6bdd5f21e4f63a6071f4e53b6",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "7",
+          "chords": "C|F|C|F|G|C|F"
+        },
+        {
+          "from": "8",
+          "to": "11",
+          "chords": "C|C|F|C"
+        },
+        {
+          "from": "12",
+          "to": "16",
+          "chords": "F|G|F|G|C"
+        },
+        {
+          "from": "17",
+          "to": "24",
+          "chords": "C|F|C|F|G|C|C|C"
+        },
+        {
+          "from": "25",
+          "to": "32",
+          "chords": "Am|Em|G|C|Am|Dm|G|G"
+        },
+        {
+          "from": "33",
+          "to": "40",
+          "chords": "F|Dm|G|C|F|G|C|C"
+        }
+      ]
     },
     {
       "id": "expand-neutral-chamber-orchestra-a",
@@ -307,7 +854,39 @@
       "zip": "/demo/sample-sketch/outcomes/expand-neutral-chamber-orchestra-a/arrangement.zip",
       "run": "/demo/sample-sketch/outcomes/expand-neutral-chamber-orchestra-a/run.json",
       "xmlSha256": "754686c662a391204ea854ac3774584b1ed8f9dc2a0a8634d7d7b5a2f838b0d8",
-      "midiSha256": "b2db2f9d66d1f54e493bec67fdae2ce4d1b07f3cc52deefc06309d723ef38b24"
+      "midiSha256": "b2db2f9d66d1f54e493bec67fdae2ce4d1b07f3cc52deefc06309d723ef38b24",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "8",
+          "chords": "C | F | C | F | G | C | F | C"
+        },
+        {
+          "from": "9",
+          "to": "16",
+          "chords": "C | F | C | F | G | F | G | C"
+        },
+        {
+          "from": "17",
+          "to": "24",
+          "chords": "C | F | C | F | G | C | C | C"
+        },
+        {
+          "from": "25",
+          "to": "32",
+          "chords": "Am | Dm | F | G | Am | F | Dm | G"
+        },
+        {
+          "from": "33",
+          "to": "36",
+          "chords": "F | Dm | G | G"
+        },
+        {
+          "from": "37",
+          "to": "40",
+          "chords": "C | F | G | C"
+        }
+      ]
     },
     {
       "id": "expand-neutral-chamber-orchestra-b",
@@ -325,7 +904,34 @@
       "zip": "/demo/sample-sketch/outcomes/expand-neutral-chamber-orchestra-b/arrangement.zip",
       "run": "/demo/sample-sketch/outcomes/expand-neutral-chamber-orchestra-b/run.json",
       "xmlSha256": "a38a5cecb8d81145c457a44a2845f37484826d8d75f07c1a3b77b1bb3a43b467",
-      "midiSha256": "548f45f3f509cf5d3fe8b3626c2a733f41c6dc1f54813dd845c0aea31486a6a9"
+      "midiSha256": "548f45f3f509cf5d3fe8b3626c2a733f41c6dc1f54813dd845c0aea31486a6a9",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "11",
+          "chords": "C | F | C | F | G | C | F | C | C | F | C"
+        },
+        {
+          "from": "12",
+          "to": "24",
+          "chords": "F | G | F | G | C | C | F | C | F | G | C | C | C"
+        },
+        {
+          "from": "25",
+          "to": "30",
+          "chords": "F | C | Dm | Am | F | G"
+        },
+        {
+          "from": "31",
+          "to": "35",
+          "chords": "Em | Am | Dm | G | G"
+        },
+        {
+          "from": "36",
+          "to": "40",
+          "chords": "C | F | Dm | G | C"
+        }
+      ]
     },
     {
       "id": "expand-neutral-full-orchestra-a",
@@ -334,11 +940,43 @@
       "ensemble": "Full orchestra",
       "mood": "Neutral",
       "option": 0,
-      "name": "Full orchestra A",
+      "name": "Answered Repeat to Low Grounded Close",
       "bars": 40,
       "sourceBars": 24,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/expand-neutral-full-orchestra-a/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/expand-neutral-full-orchestra-a/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/expand-neutral-full-orchestra-a/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/expand-neutral-full-orchestra-a/run.json",
+      "xmlSha256": "ff046e50da3067f5c39949ee60416047cc47084c040cb531c76b684efdb98821",
+      "midiSha256": "45873b6442f73635cc110bfa797fed0349b8823fa1f95e5d4dadbae9a7b4df4c",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "10",
+          "chords": "C|F|C|F|G|C|F|C|C|F"
+        },
+        {
+          "from": "11",
+          "to": "24",
+          "chords": "C|F|G|F|G|C|C|F|C|F|G|C|G|C"
+        },
+        {
+          "from": "25",
+          "to": "32",
+          "chords": "Am|Dm|F|G|Am|Dm|F|G"
+        },
+        {
+          "from": "33",
+          "to": "36",
+          "chords": "G|G|G|G"
+        },
+        {
+          "from": "37",
+          "to": "40",
+          "chords": "C|F|G|C"
+        }
+      ]
     },
     {
       "id": "expand-neutral-full-orchestra-b",
@@ -347,11 +985,43 @@
       "ensemble": "Full orchestra",
       "mood": "Neutral",
       "option": 1,
-      "name": "Full orchestra B",
+      "name": "Sequenced Ascent to Expanded Final Phrase",
       "bars": 40,
       "sourceBars": 24,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/expand-neutral-full-orchestra-b/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/expand-neutral-full-orchestra-b/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/expand-neutral-full-orchestra-b/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/expand-neutral-full-orchestra-b/run.json",
+      "xmlSha256": "7004728c17f39c3af5430eebbeb50ce04613b426154ceaa28c290c289966f0d7",
+      "midiSha256": "a1e6a5243fc6bc5502981b7c37886de70011bcf77c185753cab1d24d35bf2998",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "10",
+          "chords": "C|F|C|F|G|C|F|C|C|F"
+        },
+        {
+          "from": "11",
+          "to": "24",
+          "chords": "C|F|G|F|G|C|C|F|C|F|G|C|G|C"
+        },
+        {
+          "from": "25",
+          "to": "31",
+          "chords": "Am|Dm|G|C|F|Dm|G"
+        },
+        {
+          "from": "32",
+          "to": "36",
+          "chords": "C|F|C|G|G"
+        },
+        {
+          "from": "37",
+          "to": "40",
+          "chords": "F|C|G|C"
+        }
+      ]
     },
     {
       "id": "expand-neutral-woodwind-quintet-a",
@@ -360,11 +1030,63 @@
       "ensemble": "Woodwind quintet",
       "mood": "Neutral",
       "option": 0,
-      "name": "Woodwind quintet A",
+      "name": "Inverted Fifth Answer with Oboe Recap",
       "bars": 40,
       "sourceBars": 24,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/expand-neutral-woodwind-quintet-a/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/expand-neutral-woodwind-quintet-a/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/expand-neutral-woodwind-quintet-a/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/expand-neutral-woodwind-quintet-a/run.json",
+      "xmlSha256": "d74737b037d6d89f630808e47970242f6fa45cb691771face0a70238754cf56b",
+      "midiSha256": "de0542f07c7b1c4e185c7ab18bcbcb680f4c07f841463e9253dd96ff30357493",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "8",
+          "chords": "C|F|C|F|G|C|F|C"
+        },
+        {
+          "from": "9",
+          "to": "11",
+          "chords": "C|F|C"
+        },
+        {
+          "from": "12",
+          "to": "13",
+          "chords": "F|G"
+        },
+        {
+          "from": "14",
+          "to": "16",
+          "chords": "F|G|C"
+        },
+        {
+          "from": "17",
+          "to": "24",
+          "chords": "C|F|C|F|G|C|C|C"
+        },
+        {
+          "from": "25",
+          "to": "28",
+          "chords": "Am|Dm|G|C"
+        },
+        {
+          "from": "29",
+          "to": "32",
+          "chords": "F|Dm|G|G"
+        },
+        {
+          "from": "33",
+          "to": "36",
+          "chords": "C|F|C|F"
+        },
+        {
+          "from": "37",
+          "to": "40",
+          "chords": "G|C|F|C"
+        }
+      ]
     },
     {
       "id": "expand-neutral-woodwind-quintet-b",
@@ -373,11 +1095,63 @@
       "ensemble": "Woodwind quintet",
       "mood": "Neutral",
       "option": 1,
-      "name": "Woodwind quintet B",
+      "name": "Step Bass Dialogue with Flute Recap",
       "bars": 40,
       "sourceBars": 24,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/expand-neutral-woodwind-quintet-b/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/expand-neutral-woodwind-quintet-b/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/expand-neutral-woodwind-quintet-b/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/expand-neutral-woodwind-quintet-b/run.json",
+      "xmlSha256": "f3cf864e322e69684d5454cd7dc9e171e93cb6cbba6204fdbd0931f6e81eb209",
+      "midiSha256": "f4e3ae3e9b0507554a5b1126fb90edf5c404e4ac4b9a44a7398aa588b720836a",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "8",
+          "chords": "C|F|C|F|G|C|F|C"
+        },
+        {
+          "from": "9",
+          "to": "11",
+          "chords": "C|F|C"
+        },
+        {
+          "from": "12",
+          "to": "13",
+          "chords": "F|G"
+        },
+        {
+          "from": "14",
+          "to": "16",
+          "chords": "F|G|C"
+        },
+        {
+          "from": "17",
+          "to": "24",
+          "chords": "C|F|C|F|G|C|C|C"
+        },
+        {
+          "from": "25",
+          "to": "28",
+          "chords": "Am|Dm|G|C"
+        },
+        {
+          "from": "29",
+          "to": "32",
+          "chords": "F|Dm|G|G"
+        },
+        {
+          "from": "33",
+          "to": "36",
+          "chords": "C|F|C|F"
+        },
+        {
+          "from": "37",
+          "to": "40",
+          "chords": "G|C|F|C"
+        }
+      ]
     },
     {
       "id": "expand-neutral-brass-quintet-a",
@@ -386,11 +1160,43 @@
       "ensemble": "Brass quintet",
       "mood": "Neutral",
       "option": 0,
-      "name": "Brass quintet A",
+      "name": "Answer and Firm Close",
       "bars": 40,
       "sourceBars": 24,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/expand-neutral-brass-quintet-a/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/expand-neutral-brass-quintet-a/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/expand-neutral-brass-quintet-a/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/expand-neutral-brass-quintet-a/run.json",
+      "xmlSha256": "f288576695a3a2d8772b90229ce1b3baf470ea680c348594db39c8a06bdf6ef2",
+      "midiSha256": "aa0d236e37ec313ebdb5bbc1a0b628f1213c0906a22394d762d511cb4e1a4ef6",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "7",
+          "chords": "C | F | C | F | G | C | F"
+        },
+        {
+          "from": "9",
+          "to": "11",
+          "chords": "C | F | C"
+        },
+        {
+          "from": "17",
+          "to": "23",
+          "chords": "C | F | C | F | G | C | C"
+        },
+        {
+          "from": "25",
+          "to": "32",
+          "chords": "Am | Dm | G | C | Am | Dm | G | G"
+        },
+        {
+          "from": "33",
+          "to": "40",
+          "chords": "C | F | C | F | G | C | G | C"
+        }
+      ]
     },
     {
       "id": "expand-neutral-brass-quintet-b",
@@ -399,11 +1205,48 @@
       "ensemble": "Brass quintet",
       "mood": "Neutral",
       "option": 1,
-      "name": "Brass quintet B",
+      "name": "Canon Pedal and Broad Close",
       "bars": 40,
       "sourceBars": 24,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/expand-neutral-brass-quintet-b/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/expand-neutral-brass-quintet-b/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/expand-neutral-brass-quintet-b/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/expand-neutral-brass-quintet-b/run.json",
+      "xmlSha256": "febad20c2a5da06b651135fca1a4b342952d8df2934f9f44176e03ea1f5837eb",
+      "midiSha256": "5fe8ba98d057f2c6029c2a5a0ead0035f8085f4f36c6495719e09620626bdbab",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "7",
+          "chords": "C | F | C | F | G | C | F"
+        },
+        {
+          "from": "12",
+          "to": "16",
+          "chords": "F | G | F | G | C"
+        },
+        {
+          "from": "17",
+          "to": "23",
+          "chords": "C | F | C | F | G | C | C"
+        },
+        {
+          "from": "25",
+          "to": "30",
+          "chords": "Am | Dm | Em | F | G | G"
+        },
+        {
+          "from": "31",
+          "to": "36",
+          "chords": "C | F | Dm | G | C | G"
+        },
+        {
+          "from": "37",
+          "to": "40",
+          "chords": "C | G | C | C"
+        }
+      ]
     },
     {
       "id": "recompose-neutral-string-orchestra-a",
@@ -1672,12 +2515,39 @@
       "ensemble": "Full orchestra",
       "mood": "Neutral",
       "option": 0,
-      "name": "Full orchestra A",
+      "name": "Pastoral Answer in C",
       "bars": 32,
       "sourceBars": 24,
       "freedom": 2,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/recompose-neutral-full-orchestra-a/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/recompose-neutral-full-orchestra-a/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/recompose-neutral-full-orchestra-a/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/recompose-neutral-full-orchestra-a/run.json",
+      "xmlSha256": "0c6d4579c8ba2760821dfa98c118990298da07433bda7fe5bb04a88038fb5a3d",
+      "midiSha256": "5b577bd1491d50a33ed28bf1db18efdaf2e3f3bd5e9166046c42ef3755e83e3c",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "8",
+          "chords": "Am7 | Fadd9 | Am7 | Dm9 | Em7 | Dm | Em7 G/B | Am"
+        },
+        {
+          "from": "9",
+          "to": "16",
+          "chords": "G7sus4 G | Fmaj9 | Em7 | Fmaj7 | Em7 | Dm7 | Em7 | Dm"
+        },
+        {
+          "from": "17",
+          "to": "24",
+          "chords": "Cmaj7 | Am7 | Cadd9 | Fmaj9 | C | Fmaj7 | Em7 | Am7"
+        },
+        {
+          "from": "25",
+          "to": "32",
+          "chords": "C | C | Fmaj7 | Em7 | Dm7 | G7 | Cadd9 | C"
+        }
+      ]
     },
     {
       "id": "recompose-neutral-full-orchestra-b",
@@ -1686,12 +2556,39 @@
       "ensemble": "Full orchestra",
       "mood": "Neutral",
       "option": 1,
-      "name": "Full orchestra B",
+      "name": "Low Lament in A minor",
       "bars": 32,
       "sourceBars": 24,
       "freedom": 2,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/recompose-neutral-full-orchestra-b/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/recompose-neutral-full-orchestra-b/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/recompose-neutral-full-orchestra-b/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/recompose-neutral-full-orchestra-b/run.json",
+      "xmlSha256": "5b06a7640757d280145b4895d76c31fcd1b6f8f5064ff0e5fb7922dc3b1899f9",
+      "midiSha256": "0becb79fa12095af3eed4819026238c46833b1c1d0b6bea90dbb35e2532c862b",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "8",
+          "chords": "Am | F | C | Dm | G | Am | G | Fadd9"
+        },
+        {
+          "from": "9",
+          "to": "16",
+          "chords": "Am | F | C | Dm7 | G | Dm | Em7 | F"
+        },
+        {
+          "from": "17",
+          "to": "24",
+          "chords": "Am7 | Dm | Am7 | F | Cmaj7 | Am7 | C | Am"
+        },
+        {
+          "from": "25",
+          "to": "32",
+          "chords": "F | Dm | Bm7b5 | E7 | Am | F E7 | Am | Am"
+        }
+      ]
     },
     {
       "id": "recompose-sad-full-orchestra-a",
@@ -1700,12 +2597,39 @@
       "ensemble": "Full orchestra",
       "mood": "Sad",
       "option": 0,
-      "name": "Full orchestra A",
+      "name": "Falling Lament",
       "bars": 32,
       "sourceBars": 24,
       "freedom": 2,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/recompose-sad-full-orchestra-a/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/recompose-sad-full-orchestra-a/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/recompose-sad-full-orchestra-a/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/recompose-sad-full-orchestra-a/run.json",
+      "xmlSha256": "673732d54f4f887cc0047981c02ec3ca02a2276a96fd423ba177dd739e0e7946",
+      "midiSha256": "aa258543f617f5d75c86ce647069e7a8a597ec87d0fdeb3df3842324b9e07304",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "8",
+          "chords": "Am | Am/G | F | Em | Am | Dm | Am | Fmaj7"
+        },
+        {
+          "from": "9",
+          "to": "16",
+          "chords": "Em | Am | Dm | Em | Am | Dm | Am | F"
+        },
+        {
+          "from": "17",
+          "to": "24",
+          "chords": "Em | Dm | Am/G | F | Am | Dm | Am | F"
+        },
+        {
+          "from": "25",
+          "to": "32",
+          "chords": "Em | F | Em | Am | F | Em | Dm Em | Am"
+        }
+      ]
     },
     {
       "id": "recompose-sad-full-orchestra-b",
@@ -1714,12 +2638,39 @@
       "ensemble": "Full orchestra",
       "mood": "Sad",
       "option": 1,
-      "name": "Full orchestra B",
+      "name": "Hollow Lullaby",
       "bars": 32,
       "sourceBars": 24,
       "freedom": 2,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/recompose-sad-full-orchestra-b/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/recompose-sad-full-orchestra-b/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/recompose-sad-full-orchestra-b/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/recompose-sad-full-orchestra-b/run.json",
+      "xmlSha256": "6b47c7190abbd74ad9f127a557594423734aad19d63fe0fad219b6c6d534b6ae",
+      "midiSha256": "921e6b424dc652a04bbdc848cfe98af7e063b53cdede68f594f8e79ad8a7305c",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "8",
+          "chords": "Fmaj7 | Em7 | Em | F | Dm | Dm7 | C | C"
+        },
+        {
+          "from": "9",
+          "to": "16",
+          "chords": "Gsus4 | G | Em | Dm | C | F | G | Em"
+        },
+        {
+          "from": "17",
+          "to": "24",
+          "chords": "C | Am | C | Dm | C | F | C | Am"
+        },
+        {
+          "from": "25",
+          "to": "32",
+          "chords": "Am | Dm | Dm | Em | F | Dm G | F Em | Am"
+        }
+      ]
     },
     {
       "id": "recompose-tender-full-orchestra-a",
@@ -1728,12 +2679,44 @@
       "ensemble": "Full orchestra",
       "mood": "Tender",
       "option": 0,
-      "name": "Full orchestra A",
+      "name": "Harp Lullaby Keepsake",
       "bars": 32,
       "sourceBars": 24,
       "freedom": 2,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/recompose-tender-full-orchestra-a/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/recompose-tender-full-orchestra-a/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/recompose-tender-full-orchestra-a/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/recompose-tender-full-orchestra-a/run.json",
+      "xmlSha256": "e59a0ebe3558bf33efb186dce2a1e102bf7d11256c990158b5de32d6dba94c5f",
+      "midiSha256": "ed083d5bf526808a80d88bbf19fb58737af6ca97fc1ff5ec46d61114de678cc0",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "4",
+          "chords": "Em7 | Cadd9 | Am9 | D7sus4 G"
+        },
+        {
+          "from": "5",
+          "to": "12",
+          "chords": "Em7 | Dm9 | Am7 | Dm7 | Em7 | Cadd9 | Fmaj7 G6 | C"
+        },
+        {
+          "from": "13",
+          "to": "20",
+          "chords": "Am9 | Bbmaj7 | C/E | Fmaj9 | Em7 | F6 | C/G G7sus4 | C"
+        },
+        {
+          "from": "21",
+          "to": "28",
+          "chords": "Am7 | Dm9 | Fmaj7 | Fadd9 | Em7 | Am9 | Fmaj7 | F C"
+        },
+        {
+          "from": "29",
+          "to": "32",
+          "chords": "C | Fadd9 | C/G Gsus4 | C"
+        }
+      ]
     },
     {
       "id": "recompose-tender-full-orchestra-b",
@@ -1742,12 +2725,39 @@
       "ensemble": "Full orchestra",
       "mood": "Tender",
       "option": 1,
-      "name": "Full orchestra B",
+      "name": "Bedside Song Fragment",
       "bars": 32,
       "sourceBars": 24,
       "freedom": 2,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/recompose-tender-full-orchestra-b/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/recompose-tender-full-orchestra-b/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/recompose-tender-full-orchestra-b/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/recompose-tender-full-orchestra-b/run.json",
+      "xmlSha256": "d06e615228b8c3a50678814d7e9f3c599bf29d42cb72d876def2ea2dba64db71",
+      "midiSha256": "dc62300d989a586ce51c5ee711ac66c420e628e4e1d1261c329efb102ce14459",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "8",
+          "chords": "Am7 | Fmaj7 | C/E | Bm7b5 | Cmaj7/G | Am | Bb Gsus4 | C"
+        },
+        {
+          "from": "9",
+          "to": "16",
+          "chords": "Fmaj7 | Dm7 | Em7/B | Bbmaj7 | G6 | F6 | Em | C"
+        },
+        {
+          "from": "17",
+          "to": "24",
+          "chords": "C | Dm11 | Am/E | Dm | G/D | F/G | Em | C"
+        },
+        {
+          "from": "25",
+          "to": "32",
+          "chords": "Am | Fmaj9 | C/G | Gsus4 | Am | F | C/G G7 | C"
+        }
+      ]
     },
     {
       "id": "recompose-hopeful-full-orchestra-a",
@@ -1756,12 +2766,39 @@
       "ensemble": "Full orchestra",
       "mood": "Hopeful",
       "option": 0,
-      "name": "Full orchestra A",
+      "name": "Dawn Ascent",
       "bars": 32,
       "sourceBars": 24,
       "freedom": 2,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/recompose-hopeful-full-orchestra-a/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/recompose-hopeful-full-orchestra-a/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/recompose-hopeful-full-orchestra-a/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/recompose-hopeful-full-orchestra-a/run.json",
+      "xmlSha256": "fd327321c85a1e923fd88d41f7ab773cdb735b2d7ec038ba0f002f409c957a2c",
+      "midiSha256": "200ca4f5695fe04c684721a75ea1cfefddc9902495996d80c52be05aedb0e397",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "8",
+          "chords": "Am7 | Fmaj7 | C/E | G | Am7 | Dm7 | Em | Dm"
+        },
+        {
+          "from": "9",
+          "to": "16",
+          "chords": "Em7 | Am | C | G | C | Bb | C/E | F"
+        },
+        {
+          "from": "17",
+          "to": "24",
+          "chords": "G | Dm | Em7 | C | Am7 | Dm7 | Fmaj9 | F"
+        },
+        {
+          "from": "25",
+          "to": "32",
+          "chords": "G | Am7 | C | C | F | G | C | C"
+        }
+      ]
     },
     {
       "id": "recompose-hopeful-full-orchestra-b",
@@ -1770,12 +2807,39 @@
       "ensemble": "Full orchestra",
       "mood": "Hopeful",
       "option": 1,
-      "name": "Full orchestra B",
+      "name": "Rising Light",
       "bars": 32,
       "sourceBars": 24,
       "freedom": 2,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/recompose-hopeful-full-orchestra-b/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/recompose-hopeful-full-orchestra-b/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/recompose-hopeful-full-orchestra-b/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/recompose-hopeful-full-orchestra-b/run.json",
+      "xmlSha256": "7267d6aa717cb14688041b1e1d93c57b6f6327a607b27d2ae5e688f42caf6a82",
+      "midiSha256": "10d352368a454817dca07398964ef15d597f1a5d0d20c65da5b59b5ccc493208",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "8",
+          "chords": "Am | Am/B | C | D | C | Gsus | Em | F"
+        },
+        {
+          "from": "9",
+          "to": "16",
+          "chords": "G | C | G7 | C | A7 | Dm | G | F C/E"
+        },
+        {
+          "from": "17",
+          "to": "24",
+          "chords": "G | Dm G | C | G C | Fmaj7 | G | C | Dm"
+        },
+        {
+          "from": "25",
+          "to": "32",
+          "chords": "G | Am7 | F G | C | F | G | Am G | C"
+        }
+      ]
     },
     {
       "id": "recompose-dreamy-full-orchestra-a",
@@ -1784,12 +2848,44 @@
       "ensemble": "Full orchestra",
       "mood": "Dreamy",
       "option": 0,
-      "name": "Full orchestra A",
+      "name": "Floating Thirds",
       "bars": 32,
       "sourceBars": 24,
       "freedom": 2,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/recompose-dreamy-full-orchestra-a/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/recompose-dreamy-full-orchestra-a/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/recompose-dreamy-full-orchestra-a/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/recompose-dreamy-full-orchestra-a/run.json",
+      "xmlSha256": "e1fde909ceeeade762118a7128893554ffbdca0230ef0e4870888537208ca387",
+      "midiSha256": "9a71df863628e652514fc0039524166bfaa55835ef67e5e1b76c90bb18c4d1fe",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "4",
+          "chords": "Am9 | Fmaj9 | Em7 | Dm9 G9sus"
+        },
+        {
+          "from": "5",
+          "to": "12",
+          "chords": "Em7 | Dm9 | Am9 | Dm7 | Em7 | Am7 | G9sus | Cmaj9"
+        },
+        {
+          "from": "13",
+          "to": "20",
+          "chords": "Am9 | Dm9 | Em7 | Fmaj9 | Cmaj7/G | Dm9 | G6/9 | Cmaj9"
+        },
+        {
+          "from": "21",
+          "to": "28",
+          "chords": "Fmaj9 | Bbmaj9 | Cmaj9 | Fmaj9/A | Em11 | Am11 | Cmaj9/G | Cmaj9"
+        },
+        {
+          "from": "29",
+          "to": "32",
+          "chords": "Fmaj9 | Em7 | Dm9 G9sus | Cmaj9"
+        }
+      ]
     },
     {
       "id": "recompose-dreamy-full-orchestra-b",
@@ -1798,12 +2894,44 @@
       "ensemble": "Full orchestra",
       "mood": "Dreamy",
       "option": 1,
-      "name": "Full orchestra B",
+      "name": "Lydian Dream",
       "bars": 32,
       "sourceBars": 24,
       "freedom": 2,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/recompose-dreamy-full-orchestra-b/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/recompose-dreamy-full-orchestra-b/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/recompose-dreamy-full-orchestra-b/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/recompose-dreamy-full-orchestra-b/run.json",
+      "xmlSha256": "087e279ea39f2148029b2e9109e36ca163d8cdb14f884747d70837903ba7f75e",
+      "midiSha256": "44f78578269331b82760c6d400df3f6a1511ebb93271dc8c5c43df07eebf22f5",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "3",
+          "chords": "Fmaj9 | Cmaj9/D | Am9"
+        },
+        {
+          "from": "4",
+          "to": "11",
+          "chords": "Fmaj7#11 | Bbmaj7 | Cmaj9/E | F/A | Cmaj7/G | Fmaj7 | G13 | Am7"
+        },
+        {
+          "from": "12",
+          "to": "19",
+          "chords": "Em7 | Bbmaj9 | Am9 | Dm11 | Em7/D | F6 | C/D | Am9"
+        },
+        {
+          "from": "20",
+          "to": "27",
+          "chords": "Cmaj9/E | Dm9 | Em7 | Fmaj7#11 | G9sus | Fmaj9 | Em7 | Cmaj9"
+        },
+        {
+          "from": "28",
+          "to": "32",
+          "chords": "Fmaj9 | Bbmaj7 | Am9 Em7 | Dm9 G9sus | Cmaj9"
+        }
+      ]
     },
     {
       "id": "recompose-pastoral-full-orchestra-a",

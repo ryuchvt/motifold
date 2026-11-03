@@ -1,0 +1,14 @@
+Bedside Song Fragment: Bedside Song Fragment
+
+Intimate cradle song states tune at once over pedals and plagal sighs, answering winds softly.
+
+Bars 1 to 8. Clarinet 1 sings, Bassoons hold, Harp rocks. Low winds cushion fragile opening tune. Chords: Am7 | Fmaj7 | C/E | Bm7b5 | Cmaj7/G | Am | Bb Gsus4 | C Level: pp staying soft
+Bars 9 to 16. Oboe 2 sings, Flutes echo, Violas flow. Echo answers keep lullaby breathing. Chords: Fmaj7 | Dm7 | Em7/B | Bbmaj7 | G6 | F6 | Em | C Level: p growing to mp
+Bars 17 to 24. Violin I sings high, Horns warm, Harp arpeggiates. Pedal bass lifts high verse tenderly. Chords: C | Dm11 | Am/E | Dm | G/D | F/G | Em | C Level: mp swelling to mf
+Bars 25 to 32. Flute and Viola trade tail, Cellos soften, Glockenspiel glints. Thinning texture rocks song asleep. Chords: Am | Fmaj9 | C/G | Gsus4 | Am | F | C/G G7 | C Level: p fading to pp
+
+344 new notes. The code checked each one against what's sounding and the range of its instrument.
+16 long notes sit a semitone from something else sounding. That can be a good suspension or a slip, so check by ear: Bassoon 2 C4 in bar 5, Harp B3 in bar 5, Oboe 2 B4 in bar 9, Oboe 2 A4 in bar 12 and 12 more.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your own notes are as you wrote them.

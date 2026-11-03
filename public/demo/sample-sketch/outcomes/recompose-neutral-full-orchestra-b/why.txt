@@ -1,0 +1,14 @@
+Low Lament in A minor: Low Lament in A minor
+
+Same tune heard as A-minor lament, low strings and bassoons drive to single late climax.
+
+Bars 1 to 8. Violas cellos carry tune, bassoons pedal, harp still. Low register with transparent accompaniment. Chords: Am | F | C | Dm | G | Am | G | Fadd9 Level: p steady to mp
+Bars 9 to 16. Cello tune, violins ostinato, horns answer softly. Moving figure stays below singing line. Chords: Am | F | C | Dm7 | G | Dm | Em7 | F Level: mp growing to mf
+Bars 17 to 24. Violins high tune, trombones pedal, timpani roots. Add weight outward for late climax. Chords: Am7 | Dm | Am7 | F | Cmaj7 | Am7 | C | Am Level: mf growing to f
+Bars 25 to 32. Bassoons sing tail varied, cellos close below. Lament bass falls, strongest cadence last. Chords: F | Dm | Bm7b5 | E7 | Am | F E7 | Am | Am Level: f falling to pp
+
+427 new notes. The code checked each one against what's sounding and the range of its instrument.
+6 long notes sit a semitone from something else sounding. That can be a good suspension or a slip, so check by ear: Horn 1 B3 in bar 10, Horn 1 E3 in bar 12, Violin II F4 in bar 12, Horn 2 B3 in bar 10 and 2 more.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your own notes are as you wrote them.

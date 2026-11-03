@@ -1,0 +1,15 @@
+Floating Thirds: Floating Thirds
+
+Whole lullaby over slow pedal and ninth chords, flute and strings floating to one late high glow.
+
+Bars 1 to 4. Harp arps, violas hold C pedal, horns sustain ninths, no tune yet. Pedal suspends time, ninths soften pulse. Chords: Am9 | Fmaj9 | Em7 | Dm9 G9sus Level: pp still, breathing gently
+Bars 5 to 12. Flute 1 tune, violin II rocking figure, cello bass sings, harp sparkles. Tune high, movement below, bass contrary. Chords: Em7 | Dm9 | Am9 | Dm7 | Em7 | Am7 | G9sus | Cmaj9 Level: pp growing to mp
+Bars 13 to 20. Oboe 1 tune, viola counterline, bassoon bass steps, glockenspiel echoes. Counterline fills gaps, holds meet movement. Chords: Am9 | Dm9 | Em7 | Fmaj9 | Cmaj7/G | Dm9 | G6/9 | Cmaj9 Level: mp floating to mf
+Bars 21 to 28. Violin I tune high, horns warm, harp sweeps, timpani roots. Widen register, add weight before climax. Chords: Fmaj9 | Bbmaj9 | Cmaj9 | Fmaj9/A | Em11 | Am11 | Cmaj9/G | Cmaj9 Level: mf swelling to f
+Bars 29 to 32. Flutes echo tail, strings hold, harp harmonics fade, triangle lights. Thin texture lets ending breathe. Chords: Fmaj9 | Em7 | Dm9 G9sus | Cmaj9 Level: f fading to pp
+
+479 new notes. The code checked each one against what's sounding and the range of its instrument.
+30 long notes sit a semitone from something else sounding. That can be a good suspension or a slip, so check by ear: Viola C5 in bar 1, Horn 1 C4 in bar 1, Horn 4 B3 in bar 1, Viola C5 in bar 3 and 26 more.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your own notes are as you wrote them.

@@ -1,0 +1,17 @@
+Sample sketch: Sequenced Ascent to Expanded Final Phrase
+
+Sequence rising fifth motif through related chords, thin to solo Harp, then broaden head into plagal-authentic C ending.
+
+Bars 1 to 10. Clarinets and Horns pad in gaps, Harp outlines roots, Viola still beneath. Keep first statement thin so repeat can bloom. Chords: C|F|C|F|G|C|F|C|C|F Level: pp steady
+Bars 11 to 24. Bass Trombone, Tuba and Bassoon 2 give low C-G roots, Viola and Horns add tenths. Fill empty low octave leaving tune clear. Chords: C|F|G|F|G|C|C|F|C|F|G|C|G|C Level: pp growing to mf
+Bars 25 to 31. Oboe 2 and Trumpet 1 sequence E-B-G fifth leap upward, Flutes echo, Harp drives. Lift old leap through near keys for motion. Chords: Am|Dm|G|C|F|Dm|G Level: mf steady
+Bars 32 to 36. Harp alone recalls held F shape, Horns sustain softly, Viola pauses. Thin texture so final phrase enters alone. Chords: C|F|C|G|G Level: mf softening to pp
+Bars 37 to 40. Flute 1, Oboe 1 and Viola broaden E-C-G head, Timpani holds C, Cymbals close last bar. Stretch familiar cadence to final arrival. Chords: F|C|G|C Level: pp growing to f
+
+All 114 of your notes are on the instruments you chose, at the rhythm you wrote.
+
+318 new notes. The code checked each one against what's sounding and the range of its instrument.
+6 long notes sit a semitone from something else sounding. That can be a good suspension or a slip, so check by ear: Clarinet 2 C4 in bar 1, Clarinet 2 C4 in bar 3, Clarinet 2 C4 in bar 6, Clarinet 2 C4 in bar 9 and 2 more.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your notes keep their rhythm and their pitches, apart from any octave moves counted above.

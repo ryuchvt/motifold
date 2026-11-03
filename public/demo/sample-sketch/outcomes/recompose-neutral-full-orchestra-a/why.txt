@@ -1,0 +1,14 @@
+Pastoral Answer in C: Pastoral Answer in C
+
+C-major pastoral reshaping keeps full tune, answers with winds, harp rocking under strings, one late climax.
+
+Bars 1 to 8. Flutes carry tune, harp rocks, cellos sing bass. Separate layers by register rhythm colour. Chords: Am7 | Fadd9 | Am7 | Dm9 | Em7 | Dm | Em7 G/B | Am Level: pp growing to mp
+Bars 9 to 16. Oboes take tune, violins answer, violas pulse. Tune travels, accompaniment stays below tune. Chords: G7sus4 G | Fmaj9 | Em7 | Fmaj7 | Em7 | Dm7 | Em7 | Dm Level: mp swelling to mf
+Bars 17 to 24. Violins carry high tune, horns sustain, harp arpeggiates. Long lines swell, busy figure stays soft. Chords: Cmaj7 | Am7 | Cadd9 | Fmaj9 | C | Fmaj7 | Em7 | Am7 Level: mf growing to f
+Bars 25 to 32. Flute decorates tail, strings swell then hush. Save strongest cadence for last arrival. Chords: C | C | Fmaj7 | Em7 | Dm7 | G7 | Cadd9 | C Level: f falling to pp
+
+418 new notes. The code checked each one against what's sounding and the range of its instrument.
+22 long notes sit a semitone from something else sounding. That can be a good suspension or a slip, so check by ear: Flute 1 F4 in bar 4, Flute 1 F4 in bar 7, Viola C4 in bar 7, Cello B2 in bar 3 and 18 more.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your own notes are as you wrote them.

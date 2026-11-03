@@ -1,0 +1,14 @@
+Rising Light: Rising Light
+
+Full tune in order over climbing bass A to C, Lydian lift, brass answers strings.
+
+Bars 1 to 8. Double Bass rises, Bassoon sustains, Viola states tune. Rising bass pulls minor toward major brightness. Chords: Am | Am/B | C | D | C | Gsus | Em | F Level: pp growing to mp
+Bars 9 to 16. Cello sings tune, Clarinet 1 echoes, Harp ripples. Pass phrase winds to strings for travelling colour. Chords: G | C | G7 | C | A7 | Dm | G | F C/E Level: mp growing to mf
+Bars 17 to 24. Horn 1 leads tune, Violins answer, Timpani anchors. Contrary bass sings, faster changes drive cadence. Chords: G | Dm G | C | G C | Fmaj7 | G | C | Dm Level: mf growing to f
+Bars 25 to 32. Trumpet 2 shines, Violin I soars, Double Bass grounds. Save strongest close for final hopeful arrival. Chords: G | Am7 | F G | C | F | G | Am G | C Level: f dying to pp
+
+468 new notes. The code checked each one against what's sounding and the range of its instrument.
+28 long notes sit a semitone from something else sounding. That can be a good suspension or a slip, so check by ear: Double Bass B2 in bar 2, Bassoon 1 C4 in bar 2, Cello F4 in bar 10, Clarinet 1 E4 in bar 10 and 24 more.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your own notes are as you wrote them.

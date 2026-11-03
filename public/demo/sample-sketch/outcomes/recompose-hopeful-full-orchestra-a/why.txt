@@ -1,0 +1,14 @@
+Dawn Ascent: Dawn Ascent
+
+Full tune kept in order, rising bass from Am to C, pastoral strings winds harp, late climax.
+
+Bars 1 to 8. Harp arpeggiates, Viola holds, Violin I states tune. Thin opening lets tune enter clearly over rising bass. Chords: Am7 | Fmaj7 | C/E | G | Am7 | Dm7 | Em | Dm Level: pp growing to mp
+Bars 9 to 16. Flute 1 takes tune, Oboe 1 answers, Cellos walk. New colours travel phrase, bass moves contrary to tune. Chords: Em7 | Am | C | G | C | Bb | C/E | F Level: mp swelling to mf
+Bars 17 to 24. Violin II carries tune high, Horn 1 counters, Harp flows. Peak nears, active figure stays soft under tune. Chords: G | Dm | Em7 | C | Am7 | Dm7 | Fmaj9 | F Level: mf growing to f
+Bars 25 to 32. Trumpet 1 crowns, Trombone 1 holds, Glockenspiel lights. One late climax, then hush settles after end. Chords: G | Am7 | C | C | F | G | C | C Level: f easing to pp
+
+370 new notes. The code checked each one against what's sounding and the range of its instrument.
+12 long notes sit a semitone from something else sounding. That can be a good suspension or a slip, so check by ear: Violin I F4 in bar 2, Viola E4 in bar 2, Harp E3 in bar 2, Violin I F4 in bar 7 and 8 more.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your own notes are as you wrote them.

@@ -1,0 +1,20 @@
+Sample sketch: Step Bass Dialogue with Flute Recap
+
+Keep first tune thin, support low octave, build B from stepwise bass, return flute tune and settle to C.
+
+Bars 1 to 8. Oboe and Bassoon alone without added support. Leave opening phrase exposed and light. Chords: C|F|C|F|G|C|F|C Level: p soft, steady
+Bars 9 to 11. Flute echoes tune gaps, Horn holds low roots. Give repeat colour without thickening tune. Chords: C|F|C Level: p growing to mp
+Bars 12 to 13. Horn sustains roots beneath paired melody. Anchor octave shift with quiet bass. Chords: F|G Level: mp steady
+Bars 14 to 16. Flute links phrases, Horn keeps low roots. Connect phrases while keeping tune clear. Chords: F|G|C Level: mp steady
+Bars 17 to 24. Horn supplies low roots below high flute. Restore bass register the sketch leaves empty. Chords: C|F|C|F|G|C|C|C Level: mf softening to p
+Bars 25 to 28. Horn states step-bass motif, Oboe links above. Build B section from bass C-B-A descent. Chords: Am|Dm|G|C Level: mp growing to mf
+Bars 29 to 32. Clarinet and Flute trade falling thirds softly. Let answers overlap to gather momentum. Chords: F|Dm|G|G Level: mf steady
+Bars 33 to 36. Flute recalls main tune, Oboe answers gaps. Return tune high to join prior build. Chords: C|F|C|F Level: mf softening to mp
+Bars 37 to 40. Oboe joins Flute for close, Bassoon grounds C. Guide stepwise bass home for final cadence. Chords: G|C|F|C Level: mp fading to pp
+
+All 114 of your notes are on the instruments you chose, at the rhythm you wrote.
+
+102 new notes. The code checked each one against what's sounding and the range of its instrument.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your notes keep their rhythm and their pitches, apart from any octave moves counted above.

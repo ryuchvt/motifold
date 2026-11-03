@@ -1,0 +1,14 @@
+Hollow Lullaby: Hollow Lullaby
+
+Whole tune in order in oboe over pedal bass, sad modal light shifts, brief intro and fading coda frame.
+
+Bars 1 to 8. Bassoon and cello pedal, oboe takes tune, viola sustains, flute echoes. Pedal suspends tune, soft colour keeps voice exposed. Chords: Fmaj7 | Em7 | Em | F | Dm | Dm7 | C | C Level: pp staying soft
+Bars 9 to 16. Oboe continues tune, clarinet counters, violins pad, bass steps down. Counterline moves when tune holds, answering softly. Chords: Gsus4 | G | Em | Dm | C | F | G | Em Level: pp growing to mp
+Bars 17 to 24. Violin doubles oboe octave, horn fills, harp arpeggiates, bass pedals. Widening register lifts peak before withholding climax. Chords: C | Am | C | Dm | C | F | C | Am Level: mp rising to mf
+Bars 25 to 32. Clarinet takes tail, strings thin, double bass falls, harp stills. Falling bass and minor close seal sadness. Chords: Am | Dm | Dm | Em | F | Dm G | F Em | Am Level: mf fading to ppp
+
+330 new notes. The code checked each one against what's sounding and the range of its instrument.
+12 long notes sit a semitone from something else sounding. That can be a good suspension or a slip, so check by ear: Viola E4 in bar 4, Oboe 1 F4 in bar 4, Oboe 1 F4 in bar 16, Clarinet 1 E4 in bar 14 and 8 more.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your own notes are as you wrote them.

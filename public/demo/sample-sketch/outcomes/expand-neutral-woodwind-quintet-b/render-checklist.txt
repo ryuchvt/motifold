@@ -1,0 +1,4 @@
+No rendered audio is included.
+Import all-parts.mid into your DAW at bar 1. Keep its tempo and metre map.
+Load licensed instruments for each part. Check the advisory clashes by ear.
+Render audio/render.wav and verify that it follows this exact score.

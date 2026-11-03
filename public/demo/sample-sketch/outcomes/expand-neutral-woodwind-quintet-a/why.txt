@@ -1,0 +1,20 @@
+Sample sketch: Inverted Fifth Answer with Oboe Recap
+
+Shade repeat lightly, fill low octave, grow B from rising fifth, recap oboe tune and close quietly in C.
+
+Bars 1 to 8. Oboe tune and Bassoon bass alone, no added voices. Keep first statement clear and thin. Chords: C|F|C|F|G|C|F|C Level: p soft, steady
+Bars 9 to 11. Clarinet answers tune gaps, Horn holds low roots. Shade repeat without covering tune. Chords: C|F|C Level: p growing to mp
+Bars 12 to 13. Horn holds low fifths under paired tune. Support octave doubling without adding weight. Chords: F|G Level: mp steady
+Bars 14 to 16. Clarinet counters gaps, Horn keeps low roots. Fill thin bars, leave melody forward. Chords: F|G|C Level: mp steady
+Bars 17 to 24. Horn adds low octave roots under high tune. Fill empty low octave quietly. Chords: C|F|C|F|G|C|C|C Level: mf softening to p
+Bars 25 to 28. Clarinet sings inverted fifth motif, Bassoon walks, Horn pedals. Grow B theme from tune's fifth-fall shape. Chords: Am|Dm|G|C Level: mp growing to mf
+Bars 29 to 32. Flute answers Clarinet, Oboe holds, Horn drives. Answer before idea ends to lift intensity. Chords: F|Dm|G|G Level: mf steady
+Bars 33 to 36. Oboe recalls main tune, Clarinet fills gaps. Bring tune back to join B smoothly. Chords: C|F|C|F Level: mf softening to mp
+Bars 37 to 40. Flute lifts final phrase, Horn Bassoon close on C. Settle stepwise bass to clear final cadence. Chords: G|C|F|C Level: mp fading to pp
+
+All 114 of your notes are on the instruments you chose, at the rhythm you wrote.
+
+130 new notes. The code checked each one against what's sounding and the range of its instrument.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your notes keep their rhythm and their pitches, apart from any octave moves counted above.

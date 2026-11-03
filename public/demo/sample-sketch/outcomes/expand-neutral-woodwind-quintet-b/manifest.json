@@ -1,0 +1,66 @@
+{
+  "id": "expand-neutral-woodwind-quintet-b",
+  "recipe": {
+    "id": "expand-neutral-woodwind-quintet",
+    "intent": "expand",
+    "ensemble": "Woodwind quintet",
+    "instruments": [
+      "Flute",
+      "Oboe",
+      "Clarinet",
+      "Horn",
+      "Bassoon"
+    ],
+    "mood": "Neutral",
+    "bars": 40,
+    "moreBars": 16,
+    "where": "both",
+    "tuneOnly": false,
+    "freedom": 2
+  },
+  "option": 1,
+  "plan": "Step Bass Dialogue with Flute Recap",
+  "status": "complete",
+  "verified": {
+    "sha256": "743e98d94b182be5f710165528854d1a0e1a28edb831c61f3423d99b2ff7d0fe",
+    "files": 9,
+    "parts": [
+      {
+        "name": "Flute",
+        "bars": 40
+      },
+      {
+        "name": "Oboe",
+        "bars": 40
+      },
+      {
+        "name": "Clarinet",
+        "bars": 40
+      },
+      {
+        "name": "Horn",
+        "bars": 40
+      },
+      {
+        "name": "Bassoon",
+        "bars": 40
+      }
+    ],
+    "tracks": 5,
+    "notes": 217,
+    "ppq": 480,
+    "scoreAndMidiAgree": true
+  },
+  "placement": {
+    "acceptedSourceNotes": 114,
+    "placed": 114,
+    "rangeOctaveMoves": 0,
+    "sourceLayoutNotes": 115
+  },
+  "advisoryClashes": [],
+  "audio": {
+    "status": "not-rendered",
+    "expectedFile": "audio/render.wav"
+  },
+  "provenance": "Actual successful Meta calls. The recorded stages may include cold retries. No uninterrupted live session is claimed."
+}

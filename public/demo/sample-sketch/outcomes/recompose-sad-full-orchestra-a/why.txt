@@ -1,0 +1,14 @@
+Falling Lament: Falling Lament
+
+Whole 24-bar tune in order in viola and cello over lament bass, sad Aeolian reharmonisation, intro and coda frame.
+
+Bars 1 to 8. Cello intro sighs, viola takes tune, harp ripples, bassoon holds bass. Falling bass darkens major tune early. Chords: Am | Am/G | F | Em | Am | Dm | Am | Fmaj7 Level: pp growing to mp
+Bars 9 to 16. Viola continues tune, oboe answers gaps, strings pad, bass walks down. Answer fills rests, contrary bass pulls onward. Chords: Em | Am | Dm | Em | Am | Dm | Am | F Level: mp swelling to mf
+Bars 17 to 24. Cello joins viola octave, horn sustains, harp quickens, timpani roots. Octave doubling broadens climax without covering tune. Chords: Em | Dm | Am/G | F | Am | Dm | Am | F Level: mf holding back then swelling
+Bars 25 to 32. Violin answers tune tail, viola fades, harp thins, bass rests on tonic. Deceptive then modal close leaves sad rest. Chords: Em | F | Em | Am | F | Em | Dm Em | Am Level: mf dying to pp
+
+342 new notes. The code checked each one against what's sounding and the range of its instrument.
+24 long notes sit a semitone from something else sounding. That can be a good suspension or a slip, so check by ear: Viola F4 in bar 5, Viola F4 in bar 8, Bassoon 1 E3 in bar 5, Cello E4 in bar 5 and 20 more.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your own notes are as you wrote them.

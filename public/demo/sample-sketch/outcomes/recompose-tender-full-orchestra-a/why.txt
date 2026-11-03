@@ -1,0 +1,15 @@
+Harp Lullaby Keepsake: Harp Lullaby Keepsake
+
+Gentle lullaby keeps full tune in order over warm relative-minor shadows to soft plagal rest.
+
+Bars 1 to 4. Harp rocking, Violas hold, Horns breathe softly. Soft rocking sets tender sleep before tune enters. Chords: Em7 | Cadd9 | Am9 | D7sus4 G Level: pp growing to p
+Bars 5 to 12. Flute 1 sings tune, Violins answer, Harp flows. Long tune floats over stepping bass line. Chords: Em7 | Dm9 | Am7 | Dm7 | Em7 | Cadd9 | Fmaj7 G6 | C Level: p swelling to mf
+Bars 13 to 20. Oboe 1 takes tune, Clarinets cushion, Cellos sing bass. Flat-side colour darkens repeat without losing tenderness. Chords: Am9 | Bbmaj7 | C/E | Fmaj9 | Em7 | F6 | C/G G7sus4 | C Level: mp easing to p
+Bars 21 to 28. Violins sing high tune, Horns swell, Harp sweeps. Rising register and faster changes build climax. Chords: Am7 | Dm9 | Fmaj7 | Fadd9 | Em7 | Am9 | Fmaj7 | F C Level: mf growing to f
+Bars 29 to 32. Flute whispers tail, Strings hold, Harp stills. Plagal rocking settles song to sleep. Chords: C | Fadd9 | C/G Gsus4 | C Level: p fading to pp
+
+482 new notes. The code checked each one against what's sounding and the range of its instrument.
+11 long notes sit a semitone from something else sounding. That can be a good suspension or a slip, so check by ear: Violin I E5 in bar 6, Violin II C4 in bar 11, Viola B3 in bar 11, Clarinet 2 Bb3 in bar 14 and 7 more.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your own notes are as you wrote them.
