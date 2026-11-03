@@ -1222,18 +1222,17 @@ export function rolesAfter(plan: DistributeAnswer["plan"], roles: PieceReading["
 }
 
 /**
- * What each role looks like on the page. Colour is kept for meaning (Ryu, 11-03: easy to read, not everything coloured): orange is the
- * composer's melody, the one line to follow, and everything that supports it is a grey, darker the more it matters. New notes are the one
- * other colour.
+ * What each role looks like on the page. Two colours, each with one meaning (Ryu's brief, 11-03): orange is everything the composer wrote,
+ * the melody brightest and what supports it paler, and blue is everything Muse Spark adds.
  */
 export const ROLE_COLOURS: Record<PieceReading["roles"][number]["role"], string> = {
   melody: "#e8672c",
-  countermelody: "#2f2d2a",
-  bass: "#5f5a53",
-  harmony: "#9b968d",
-  rhythm: "#9b968d",
-  pedal: "#9b968d",
-  doubling: "#bdb8ae",
+  countermelody: "#c9582a",
+  bass: "#b9714a",
+  harmony: "#d4a084",
+  rhythm: "#d4a084",
+  pedal: "#d4a084",
+  doubling: "#e2bfa9",
 };
 
 /** Rests, and whatever isn't being looked at, so the eye can leave it alone. */

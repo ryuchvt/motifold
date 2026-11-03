@@ -101,7 +101,8 @@ export function Studio() {
   const [chosenPlan, setChosenPlan] = useState<number | null>(null);
   const plansNow = mode === "recompose" ? (arranged.recompose.status === "ready" && !arranged.recomposed ? arranged.recompose.plans : null) : arranged.options.status === "ready" && !arranged.recomposed ? arranged.options.plans : null;
   useEffect(() => setChosenPlan(null), [plansNow]);
-  const writtenPlans = arranged.options.status === "ready" && mode === "arrange" ? Object.keys(arranged.options.notes).map(Number) : [];
+  // Only notes that have come back count as written. One still being asked for isn't.
+  const writtenPlans = arranged.options.status === "ready" && mode === "arrange" ? Object.entries(arranged.options.notes).flatMap(([k, n]) => (n.status === "ready" ? [Number(k)] : [])) : [];
   /** The pencil's layers, each of which can be put away. */
   const [layers, setLayers] = useState({ sections: true, chords: true, marks: true });
   const marks = arranged.studyMarks && { ...arranged.studyMarks, sections: layers.sections ? arranged.studyMarks.sections : [], chords: layers.chords ? arranged.studyMarks.chords : [], passages: layers.marks ? arranged.studyMarks.passages : [] };
@@ -449,7 +450,7 @@ export function Studio() {
                 ordered={arranged.trying?.kind === "structure" ? arranged.trying.index : null}
                 onOrder={(index) => arranged.setTrying(index === null ? null : { kind: "structure", index })}
                 onKeepOrder={arranged.keep}
-                plans={stage === "Direction" ? plansNow : null}
+                plans={stage === "Pick" ? plansNow : null}
                 recompose={mode === "recompose"}
                 chosen={chosenPlan}
                 onChoose={(index) => {

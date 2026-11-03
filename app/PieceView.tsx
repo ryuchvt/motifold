@@ -389,7 +389,7 @@ export function PieceView(props: {
                   <line className="stage-rule" x1="0" x2={totalBeats * UNITS} y1={h} y2={h} vectorEffect="non-scaling-stroke" />
                   {contour && <path className={`contour${dim("melody") ? " dim" : ""}`} d={contour} vectorEffect="non-scaling-stroke" />}
                   {[...byKind].map(([kind, parts]) => (
-                    <path key={String(kind)} className={`note kind-${kind ?? "plain"}${kind === "melody" || kind === "countermelody" ? " accent" : fresh.has(kind) ? ` support fam-${family}` : ""}${dim(kind) ? " dim" : ""}`} d={parts.join("")} vectorEffect="non-scaling-stroke" />
+                    <path key={String(kind)} className={`note kind-${kind ?? "plain"}${fresh.has(kind) ? ` support fam-${family}` : kind === "melody" || kind === "countermelody" ? " accent" : ""}${dim(kind) ? " dim" : ""}`} d={parts.join("")} vectorEffect="non-scaling-stroke" />
                   ))}
                 </g>
               );

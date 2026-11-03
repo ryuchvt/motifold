@@ -29,7 +29,8 @@ function setup(partial = false) {
     const shape = url.split("/").pop()!;
     const input = JSON.parse(init.body as string).input;
     calls.push({ shape, input });
-    if (partial && shape === "arrange" && !failed && calls.filter(c => c.shape === "arrange").length === 2) {
+    // The third arrange call: after both first-section previews, the first of the chosen plan's rest (Claude, Create previews both).
+    if (partial && shape === "arrange" && !failed && calls.filter(c => c.shape === "arrange").length === 3) {
       failed = true;
       return new Response(JSON.stringify({ status: "fallback", reason: "timeout" }));
     }
@@ -55,8 +56,20 @@ async function direction(host: Element) {
   await press(host, "Read my score");
   await press(host, "Confirm tracks");
   for (let i = 0; i < 12 && [...host.querySelectorAll("button")].some(b => b.textContent?.trim() === "Skip this"); i++) await press(host, "Skip this");
-  await press(host, "Next: Players");
-  await press(host, "Keep my tracks as they are");
+  await press(host, "Next: Setup");
+  // Setup holds the players too now. Keeping the tracks as they are is its checkbox (Claude, Create).
+  const keep = [...host.querySelectorAll<HTMLInputElement>(".arrange-check input")].find(i => i.parentElement?.textContent?.includes("Keep my own tracks"))!;
+  if (!keep.checked) await act(async () => keep.click());
+}
+/** Create, and wait for everything it runs by itself: plans, and the first section of each. */
+async function create(screen: { host: Element; arranged: Arranged }) {
+  await press(screen.host, "Create");
+  await vi.waitFor(async () => {
+    await act(async () => {});
+    const o = screen.arranged.options;
+    const r = screen.arranged.recompose;
+    expect(o.status === "asking" || r.status === "asking" || (o.status === "ready" && Object.values(o.notes).some(n => n.status === "asking"))).toBe(false);
+  });
 }
 async function mode(host: Element, name: "Arrange" | "Recompose") {
   const button = [...host.querySelectorAll("button")].find(b => b.querySelector("strong")?.textContent === name)!;
@@ -65,17 +78,21 @@ async function mode(host: Element, name: "Arrange" | "Recompose") {
 async function choose(host: Element, name: string) {
   const item = [...host.querySelectorAll(".arrange-list > li")].find(li => li.querySelector("strong")?.textContent === name)!;
   if (!item) throw Error(`Missing plan ${name}`);
-  const button = [...item.querySelectorAll("button")].find(b => b.textContent?.trim() === "Write this one")!;
+  const button = [...item.querySelectorAll("button")].find(b => ["Write this one", "Write the rest of this one"].includes(b.textContent?.trim() ?? ""))!;
   await act(async () => button.click());
 }
 
-it("generates plans without writing and writes the second selected arrangement", async () => {
+it("creates plans with only a first-section preview of each, and writes the rest of the second selected arrangement", async () => {
   const screen = setup();
   await direction(screen.host);
-  await press(screen.host, "Generate");
-  expect(screen.calls.some(c => c.shape === "arrange" || c.shape === "write_theme")).toBe(false);
+  await create(screen);
+  // One first section per plan, and nothing more until one is chosen (Claude: Create previews both, Ryu 11-03).
+  const previews = screen.calls.filter(c => c.shape === "arrange");
+  expect(previews.map(c => c.input.chosen.name).sort()).toEqual([plans[0].name, plans[1].name].sort());
+  expect(new Set(previews.map(c => c.input.window?.from)).size).toBe(1);
+  const before = screen.calls.length;
   await choose(screen.host, plans[1].name);
-  expect(screen.calls.filter(c => c.shape === "arrange").every(c => c.input.chosen.name === plans[1].name)).toBe(true);
+  expect(screen.calls.slice(before).filter(c => c.shape === "arrange").every(c => c.input.chosen.name === plans[1].name)).toBe(true);
   expect(screen.host.querySelector('[aria-current="step"]')?.textContent).toBe("Write");
   expect(screen.host.textContent).not.toContain("Download MIDI");
   const disclosure = [...screen.host.querySelectorAll("summary")].find(s => s.textContent?.startsWith("Fix bars"))!;
@@ -91,26 +108,28 @@ it("generates plans without writing and writes the second selected arrangement",
   expect(screen.host.textContent).toContain("Download MIDI");
 });
 
-it("can keep an ordinary arrangement and generate another plan from Direction", async () => {
+it("can keep an ordinary arrangement and generate another plan from Setup", async () => {
   const screen = setup();
   await direction(screen.host);
-  await press(screen.host, "Generate");
+  await create(screen);
   await choose(screen.host, plans[0].name);
   await press(screen.host, "Next: Export");
   await press(screen.host, "Build on this arrangement");
   expect(screen.arranged.kept).not.toBeNull();
-  expect(screen.host.querySelector('[aria-current="step"]')?.textContent).toBe("Direction");
-  await press(screen.host, "Generate");
-  expect([...screen.host.querySelectorAll("button")].some(b => b.textContent?.trim() === "Write this one")).toBe(true);
+  expect(screen.host.querySelector('[aria-current="step"]')?.textContent).toBe("Setup");
+  await create(screen);
+  expect([...screen.host.querySelectorAll("button")].some(b => ["Write this one", "Write the rest of this one", "See what's written"].includes(b.textContent?.trim() ?? ""))).toBe(true);
 });
 
 it("writes the selected arrangement after the composer first explored Recompose plans", async () => {
   const screen = setup();
   await direction(screen.host);
   await mode(screen.host, "Recompose");
-  await press(screen.host, "Generate");
+  await create(screen);
+  // The mode is chosen on Setup.
+  await press(screen.host, "Setup");
   await mode(screen.host, "Arrange");
-  await press(screen.host, "Think of two more");
+  await create(screen);
   const before = screen.calls.length;
   await choose(screen.host, plans[1].name);
   const writes = screen.calls.slice(before).filter(c => c.shape === "arrange" || c.shape === "write_theme");
@@ -122,26 +141,26 @@ it("offers newly generated plans after keeping a recomposition and choosing to g
   const screen = setup();
   await direction(screen.host);
   await mode(screen.host, "Recompose");
-  await press(screen.host, "Generate");
+  await create(screen);
   await choose(screen.host, composed.name);
   await press(screen.host, "Next: Export");
   await press(screen.host, "Build on this arrangement");
-  expect(screen.host.querySelector('[aria-current="step"]')?.textContent).toBe("Direction");
-  // The kept recomposition is the composer's score now, so Direction starts fresh from it (Claude, review F2).
-  await press(screen.host, "Generate");
+  expect(screen.host.querySelector('[aria-current="step"]')?.textContent).toBe("Setup");
+  // The kept recomposition is the composer's score now, so Setup starts fresh from it (Claude, review F2).
+  await create(screen);
   expect(screen.arranged.recompose.status).toBe("ready");
   expect([...screen.host.querySelectorAll("button")].some(b => b.textContent?.trim() === "Write this one")).toBe(true);
 });
 
-it("carryforward M4: Direction's rewrite-with-chords rewrites the changed completed stretch too", async () => {
+it("carryforward M4: Pick's rewrite-with-chords rewrites the changed completed stretch too", async () => {
   const screen = setup(true);
   await direction(screen.host);
-  await press(screen.host, "Generate");
+  await create(screen);
   await choose(screen.host, plans[0].name);
   const held = screen.arranged.options;
   if (held.status !== "ready" || held.notes[0]?.status !== "ready") throw Error("No partial result");
   expect(held.notes[0].missing?.length).toBeGreaterThan(0);
-  await press(screen.host, "Direction");
+  await press(screen.host, "Pick");
   const chord = screen.host.querySelector<HTMLInputElement>(".arrange-chord-edit input")!;
   const changedBar = plans[0].why[0].from;
   await act(async () => {

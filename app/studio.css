@@ -1280,3 +1280,75 @@ button.door-card:hover {
   height: auto;
   box-sizing: border-box;
 }
+
+/* Setup's second half, and what Create is doing, step by step, from the real state of each call. */
+.setup-head {
+  margin: 18px 0 8px;
+  font: 10px var(--mono);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.create-steps {
+  display: grid;
+  gap: 6px;
+  margin: 4px 0 12px;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+  color: var(--muted);
+}
+.create-steps li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.create-steps li::before {
+  content: "";
+  width: 9px;
+  height: 9px;
+  border: 1px solid var(--line2);
+  border-radius: 50%;
+}
+.create-steps li.done {
+  color: var(--ink);
+}
+.create-steps li.done::before {
+  background: var(--ink);
+  border-color: var(--ink);
+}
+.create-steps li.now {
+  color: var(--ink);
+}
+.create-steps li.now::before {
+  border-color: var(--ink);
+  animation: signal 1s ease-in-out infinite;
+}
+.create-steps li.failed::before {
+  content: "×";
+  border: 0;
+  width: auto;
+  height: auto;
+  line-height: 1;
+}
+.arrange-quiet.inline {
+  display: inline;
+  padding: 0;
+  margin: 0;
+}
+
+/* Everything the composer wrote is orange, the melody brightest. Everything Muse Spark adds is blue (the fam-* rules above). */
+.studio,
+.studio .stage {
+  --kind-countermelody: #ffa06b;
+  --kind-bass: #d98a5c;
+  --kind-support: rgba(255, 140, 80, 0.5);
+  --kind-faint: rgba(255, 140, 80, 0.3);
+}
+.studio .note.kind-countermelody.accent {
+  stroke: var(--kind-countermelody);
+  color: var(--kind-countermelody);
+}
+.studio .note.kind-plain {
+  stroke: rgba(255, 140, 80, 0.6);
+}

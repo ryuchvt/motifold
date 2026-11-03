@@ -87,6 +87,12 @@ function setUp(file: string | null = null) {
   return { get arranged() { return now.arranged!; }, host };
 }
 
+/** Create runs its stages by itself, one after another, so a test waits for them to be done. */
+const settled = () => vi.waitFor(async () => {
+  await act(async () => {});
+  const busy = [...document.querySelectorAll(".create-steps li.now")].length;
+  expect(busy).toBe(0);
+});
 const press = (host: Element, name: string, last = false) => {
   const all = [...host.querySelectorAll("button")].filter((b) => b.textContent?.trim() === name);
   const button = last ? all[all.length - 1] : all[0];
@@ -586,19 +592,19 @@ describe("the panel", () => {
     await press(host, "Yes, a countermelody");
     expect(host.textContent).toContain("The tune is in Inst 1.");
     expect(host.textContent).toContain("No ending.");
-    await press(host, "Next: Players");
+    await press(host, "Next: Setup");
+    expect(host.textContent).toContain("How should it go?");
+    expect(host.textContent).not.toContain("Download MIDI");
     await press(host, "String quartet");
-    await press(host, "Put my notes on these");
+    await press(host, "Create");
+    await settled();
+    // Create lays the notes out, plans two ways and writes the first section of both, then stops for the choice.
     expect(host.textContent).toContain("Violins sing and the cello holds.");
     expect(host.textContent).toContain("All 4 of your notes are on the instruments you chose");
-    await press(host, "Next: Direction");
-    expect(host.textContent).toContain("Where should it go?");
-    expect(host.textContent).not.toContain("Download MIDI");
-    await press(host, "Generate");
     expect(host.textContent).toContain("Add a viola and a cello.");
-    // Two plans to choose from, and nothing written until one is chosen.
     expect(host.textContent).not.toContain("The code checked each one");
-    await press(host, "Write this one");
+    // A two-bar sketch is one section, so its preview is the whole of it.
+    await press(host, "See what's written");
     expect(host.textContent).toContain("The code checked each one");
     await press(host, "Next: Export");
     expect(host.textContent).toContain("Download MIDI");
@@ -668,10 +674,10 @@ describe("the panel", () => {
     await press(host, "Read my score");
     await press(host, "Confirm tracks");
     await press(host, "Skip this");
-    await press(host, "Next: Players");
-    await press(host, "Keep my tracks as they are");
-    expect(host.textContent).toContain("Where should it go?");
+    await press(host, "Next: Setup");
+    expect(host.textContent).toContain("How should it go?");
     expect(host.textContent).toContain("Timing, for picture");
+    expect(host.textContent).toContain("Keep my own tracks as they are");
   });
 
   it("shows where a moment falls and what tempo would put it on the bar", async () => {
@@ -680,8 +686,7 @@ describe("the panel", () => {
     await press(host, "Read my score");
     await press(host, "Confirm tracks");
     await press(host, "Skip this");
-    await press(host, "Next: Players");
-    await press(host, "Keep my tracks as they are");
+    await press(host, "Next: Setup");
     await press(host, "Add a moment");
     const time = host.querySelector<HTMLInputElement>('input[aria-label="Moment 1, time"]')!;
     await act(async () => {
@@ -698,9 +703,12 @@ describe("the panel", () => {
     await press(host, "Read my score");
     await press(host, "Confirm tracks");
     await press(host, "Skip this");
-    await press(host, "Next: Players");
-    await press(host, "Keep my tracks as they are");
-    await press(host, "Generate");
+    await press(host, "Next: Setup");
+    const keep = [...host.querySelectorAll<HTMLInputElement>(".arrange-check input")].find((i) => i.parentElement?.textContent?.includes("Keep my own tracks"))!;
+    await act(async () => keep.click());
+    await press(host, "Create");
+    await settled();
+    // Both first sections ran out of room, so each plan offers to be written again.
     await press(host, "Write this one");
     expect(host.textContent).toContain("It didn't finish this one.");
     expect([...host.querySelectorAll("button")].filter((b) => b.textContent === "Try again")).toHaveLength(1);
@@ -737,7 +745,7 @@ describe("the composer's own chords", () => {
     const screen = setUp();
     await act(() => screen.arranged.askPiece());
     await act(() => screen.arranged.askOptions("", 0, "inside"));
-    await press(screen.host, "Direction");
+    await press(screen.host, "Pick");
     const box = screen.host.querySelector<HTMLInputElement>('input[aria-label="Chords for bars 1 to 2"]')!;
     expect(box.value).toBe("C | G");
     await type(box, "Am | F");
@@ -751,7 +759,7 @@ describe("the composer's own chords", () => {
     await act(() => screen.arranged.askPiece());
     await act(() => screen.arranged.askOptions("", 0, "inside"));
     await act(() => screen.arranged.askNotes(0));
-    await press(screen.host, "Direction");
+    await press(screen.host, "Pick");
     expect(asked[0]).toMatchObject({ chosen: { why: [{ chords: "C | G" }] } });
     expect(asked[0]!.chosen).not.toMatchObject({ why: [{ yours: true }] });
     expect(screen.host.textContent).not.toContain("Write again with these chords");
@@ -778,7 +786,7 @@ describe("the composer's own chords", () => {
     unmount = () => root.unmount();
     await act(() => now.arranged!.askPiece());
     await act(() => now.arranged!.askOptions("", 0, "inside"));
-    await press(host, "Direction");
+    await press(host, "Pick");
     expect(host.textContent).toContain("Strings");
     expect(host.querySelector(".arrange-chord-edit")).toBeNull();
   });

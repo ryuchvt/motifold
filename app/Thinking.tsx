@@ -14,7 +14,8 @@ const STAGES: Record<string, { what: string; chip: string; usually: string }> = 
   fit_form: { what: "Fitting your bars to the moments", chip: "FITTING TO PICTURE", usually: "about a minute" },
 };
 
-const clock = (ms: number) => `${Math.floor(ms / 60000)}:${String(Math.floor(ms / 1000) % 60).padStart(2, "0")}`;
+// The clock ticks twice a second, so a call that started since the last tick reads 0:00, never less.
+const clock = (ms: number) => `${Math.floor(Math.max(0, ms) / 60000)}:${String(Math.floor(Math.max(0, ms) / 1000) % 60).padStart(2, "0")}`;
 
 interface Running {
   shape: string;
