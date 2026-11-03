@@ -1,0 +1,33 @@
+.shared-access .shared-access-status {
+  margin: 0.35rem 0 0;
+  color: var(--ink);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+.shared-access .shared-access-reset {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+.shared-access-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.6rem;
+}
+.shared-access-actions .door-link,
+.shared-access .shared-access-explore {
+  margin: 0;
+}
+.shared-access .shared-access-explore {
+  align-self: flex-start;
+}
+.failure-reason {
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+.failure-reason p { margin: 0.35rem 0; }
+.failure-reason .door-link { margin-top: 0.15rem; }
