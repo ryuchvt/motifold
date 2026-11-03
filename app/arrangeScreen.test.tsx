@@ -133,7 +133,7 @@ describe("the arranger's two steps", () => {
     await act(() => screen.arranged.askNotes(0));
     act(() => screen.arranged.selectRange("1", "1"));
     expect(screen.host.textContent).toContain("Bars 1 to 1");
-    await press(screen.host, "Direction");
+    await press(screen.host, "Write");
     const violas = () => screen.arranged.shown!.score.parts.find((p) => p.name === "Viola")!.notes.filter((n) => !n.rest).length;
     expect(violas()).toBe(2);
     await press(screen.host, "Leave out what's new here");
@@ -157,7 +157,7 @@ describe("the arranger's two steps", () => {
     await act(() => screen.arranged.askNotes(0));
     expect(screen.arranged.shown!.score.parts[0]!.measures.map((m) => m.number)).toEqual(["1", "2", "3"]);
     act(() => screen.arranged.selectRange("3", "3"));
-    await press(screen.host, "Direction");
+    await press(screen.host, "Write");
     await press(screen.host, "Leave out what's new here");
     expect(screen.arranged.shown!.score.parts[0]!.measures.map((m) => m.number)).toEqual(["1", "2"]);
     expect(screen.arranged.view).toEqual({ from: "1", to: "2" });
@@ -527,21 +527,26 @@ describe("the panel", () => {
     await press(host, "Yes, a countermelody");
     expect(host.textContent).toContain("The tune is in Inst 1.");
     expect(host.textContent).toContain("No ending.");
-    await press(host, "Who plays it?");
+    await press(host, "Next: Players");
     await press(host, "String quartet");
     await press(host, "Put my notes on these");
     expect(host.textContent).toContain("Violins sing and the cello holds.");
     expect(host.textContent).toContain("All 4 of your notes are on the instruments you chose");
-    await press(host, "Next");
+    await press(host, "Next: Direction");
     expect(host.textContent).toContain("Where should it go?");
+    expect(host.textContent).not.toContain("Download MIDI");
     await press(host, "Generate");
     expect(host.textContent).toContain("Add a viola and a cello.");
+    // Two plans to choose from, and nothing written until one is chosen.
+    expect(host.textContent).not.toContain("The code checked each one");
+    await press(host, "Write this one");
     expect(host.textContent).toContain("The code checked each one");
     await press(host, "Take it off");
     await press(host, "Put it on the score");
-    await press(host, "Take it off");
-    await press(host, "Skip to the form");
-    expect(host.textContent).toContain("Change the order?");
+    await press(host, "Next: Export");
+    expect(host.textContent).toContain("Download MIDI");
+    await press(host, "Study");
+    expect(host.textContent).toContain("Change the order of my bars");
     expect(host.textContent).toContain("Bar 2, then bar 1.");
     await press(host, "Add a stretch");
     expect(host.querySelector('input[aria-label="Stretch 1 from bar"]')).toBeTruthy();
@@ -607,7 +612,7 @@ describe("the panel", () => {
     await press(host, "Read my score");
     await press(host, "Looks right");
     await press(host, "Skip this");
-    await press(host, "Who plays it?");
+    await press(host, "Next: Players");
     await press(host, "Keep my tracks as they are");
     expect(host.textContent).toContain("Where should it go?");
     expect(host.textContent).toContain("Timing, for picture");
@@ -619,7 +624,7 @@ describe("the panel", () => {
     await press(host, "Read my score");
     await press(host, "Looks right");
     await press(host, "Skip this");
-    await press(host, "Who plays it?");
+    await press(host, "Next: Players");
     await press(host, "Keep my tracks as they are");
     await press(host, "Add a moment");
     const time = host.querySelector<HTMLInputElement>('input[aria-label="Moment 1, time"]')!;
@@ -637,11 +642,12 @@ describe("the panel", () => {
     await press(host, "Read my score");
     await press(host, "Looks right");
     await press(host, "Skip this");
-    await press(host, "Who plays it?");
+    await press(host, "Next: Players");
     await press(host, "Keep my tracks as they are");
     await press(host, "Generate");
+    await press(host, "Write this one");
     expect(host.textContent).toContain("It didn't finish this one.");
-    expect([...host.querySelectorAll("button")].filter((b) => b.textContent === "Write this one")).toHaveLength(2);
+    expect([...host.querySelectorAll("button")].filter((b) => b.textContent === "Try again")).toHaveLength(1);
   });
 
   it("says plainly when it can't answer", async () => {

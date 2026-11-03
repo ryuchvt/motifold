@@ -490,6 +490,21 @@ button.door-card:hover {
   color: var(--ink);
   border-color: var(--ink);
 }
+/* Done steps can be gone back to. Later ones are named, so what's next is known, but locked. */
+.studio .arrange-steps .done {
+  color: var(--ink);
+}
+.studio .arrange-steps span.done {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0 6px;
+  font-size: 0.78rem;
+}
+.studio .arrange-steps button:disabled {
+  color: var(--dim);
+  cursor: default;
+}
 .studio .stage {
   background: var(--stage);
   border: 1px solid var(--line);
