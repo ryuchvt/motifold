@@ -1,0 +1,137 @@
+// @vitest-environment jsdom
+// Real hook and real download packaging. Only the model replies and collector are local fakes.
+import { readFileSync } from 'node:fs';
+import { webcrypto } from 'node:crypto';
+import { act, createElement } from 'react';
+import { createRoot, type Root } from 'react-dom/client';
+import { afterEach, expect, it, vi } from 'vitest';
+import { unzipSync, strFromU8 } from 'fflate';
+import { parseScore } from '../score';
+import { useArrange, type Arranged } from '../app/useArrange';
+import { setTransport } from '../app/spark';
+import { TEMPLATES } from '../app/orchestra';
+import { emptyScore, packageFiles, scoreTracks } from '../app/arrange';
+import { captureHookDownload, runNightRecipe, type NightIO } from './night-capture-client';
+import { NIGHT_RECIPES } from './night-capture-matrix';
+
+(globalThis as any).IS_REACT_ACT_ENVIRONMENT = true;
+const xmlText = readFileSync('public/demo/sample-sketch/sample-sketch.musicxml', 'utf8');
+const score = parseScore(xmlText), loaded = { xmlText, score, fileName: 'sample-sketch.musicxml' };
+const shared = JSON.parse(readFileSync('public/demo/sample-sketch/shared.json', 'utf8'));
+const saved = JSON.parse(readFileSync('public/demo/sample-sketch/arrange-neutral.json', 'utf8'));
+let root: Root | null = null;
+afterEach(() => { act(() => root?.unmount()); root = null; setTransport(null); vi.restoreAllMocks(); vi.unstubAllGlobals(); document.body.replaceChildren(); });
+
+it('enumerates102 unique recipes and204 outcomes in the approved priority order', () => {
+  expect(NIGHT_RECIPES).toHaveLength(102);
+  expect(new Set(NIGHT_RECIPES.map(item => item.id)).size).toBe(102);
+  expect(NIGHT_RECIPES.slice(0, 6).map(item => item.ensemble)).toEqual(TEMPLATES.map(item => item.name));
+  expect(NIGHT_RECIPES.slice(6, 12).every(item => item.intent === 'expand' && item.bars === 40 && item.moreBars === 16 && item.where === 'both' && item.mood === 'Neutral' && !item.tuneOnly)).toBe(true);
+  expect(NIGHT_RECIPES.slice(12, 27).every(item => item.intent === 'recompose' && item.ensemble === 'Full orchestra' && item.bars === 32 && item.freedom === 2)).toBe(true);
+  expect(NIGHT_RECIPES.filter(item => item.intent === 'recompose')).toHaveLength(90);
+});
+
+async function setup(failure?: 'notes' | 'theme' | 'zero-adds') {
+  vi.stubGlobal('crypto', webcrypto);
+  vi.stubGlobal('fetch', vi.fn(() => { throw Error('No real network is allowed'); }));
+  const requests: { shape: string; input: any }[] = [];
+  const recordedPlan = saved.find((call: any) => call.shape === 'plan_options').reply.answer.options[0];
+  const plans = (recompose: boolean, expand: boolean) => ['A', 'B'].map(name => ({ ...recordedPlan, name: `Synthetic ${name}`, ...(recompose ? { motif: { from: '1', to: '2', what: 'A rising gesture' }, fifths: 0, time: '3/4', qpm: 80 } : {}), why: recompose ? [1, 9, 17, 25].map(from => ({ from: String(from), to: String(from + 7), what: 'A line', principle: 'Continue', chords: 'C', variation: 'Keep the gesture' })) : [...recordedPlan.why, ...(expand ? [{ from: '25', to: '32', what: 'Continue', principle: 'Connect', chords: 'C' }, { from: '33', to: '40', what: 'Finish', principle: 'Return', chords: 'C' }] : [])] }));
+  setTransport(async (shape, input) => {
+    const asked = input as any; requests.push({ shape, input });
+    if (shape === 'read_piece' || shape === 'study_score') return structuredClone(shared.find((call: any) => call.shape === shape).reply);
+    if (shape === 'distribute') return structuredClone(saved.find((call: any) => call.shape === shape).reply);
+    if (shape === 'plan_options') return { status: 'ok', cached: false, answer: { options: plans(false, asked.moreBars > 0) } };
+    if (shape === 'plan_recompose') return { status: 'ok', cached: false, answer: { options: plans(true, false) } };
+    if (shape === 'write_theme') return failure === 'theme' ? { status: 'fallback', reason: 'failed' } : { status: 'ok', cached: false, answer: { lines: Array.from({ length: 32 }, (_, index) => ({ role: 'tune', bar: String(index + 1), events: 'C5@0+3' })) } };
+    if (shape === 'arrange') {
+      if (failure === 'notes') return { status: 'fallback', reason: 'budget' };
+      if (failure === 'zero-adds') return { status: 'ok', cached: false, answer: { adds: [], doubles: [] } };
+      const from = Number(asked.window?.from ?? '1'), to = Number(asked.window?.to ?? '24');
+      if (asked.seed || from > 24) return { status: 'ok', cached: false, answer: { adds: Array.from({ length: to - from + 1 }, (_, index) => ({ part: 'Violin I', bar: String(from + index), events: `${asked.chosen.name === 'Synthetic B' ? 'D5' : 'C5'}@0+3`, dyn: 'mp', role: 'melody', art: '' })), doubles: [] } };
+      const receipt = saved.find((call: any) => call.shape === 'arrange' && call.input.chosen.name === recordedPlan.name && call.input.window.from === String(from));
+      if (!receipt) throw Error(`No local fixture window ${from}`);
+      return structuredClone(receipt.reply);
+    }
+    throw Error(`Unexpected shape ${shape}`);
+  });
+  let current!: Arranged;
+  function Host() { current = useArrange(loaded, score.parts[0]!, { from: 0, to: 23 }, null); return null; }
+  root = createRoot(document.body.appendChild(document.createElement('div')));
+  await act(async () => root!.render(createElement(Host)));
+  const files = new Map<string, Uint8Array>(), phases: string[] = [];
+  const io: NightIO = {
+    invoke: async action => { await act(async () => { await action(); }); },
+    settle: async () => { await act(async () => { await Promise.resolve(); }); },
+    capture: captureHookDownload, phase: (_caseId, phase) => { phases.push(phase); },
+    save: async (_caseId, file, data) => { files.set(file, data); },
+  };
+  return { current: () => current, io, files, phases, requests };
+}
+
+it.each(['arrange', 'expand'] as const)('captures actual-hook %s A and B ZIPs after previews, with no real network', async intent => {
+  const { current, io, files, phases, requests } = await setup();
+  const recipe = NIGHT_RECIPES.find(item => item.intent === intent && item.ensemble === 'String orchestra')!;
+  const result = await runNightRecipe(recipe, current, io, `${intent}-local-smoke`);
+  expect(result.status, result.error).toBe('complete'); expect(result.outcomes).toHaveLength(2);
+  expect(phases).toEqual(['reset', 'read-study', 'confirm-piano-skip-questions', 'layout', 'plan', 'a-preview', 'b-preview', 'a-full', 'b-full', 'complete']);
+  for (const label of ['a', 'b']) {
+    const zip = unzipSync(files.get(`${label}.zip`)!);
+    expect(Object.keys(zip).some(name => name.startsWith('parts/'))).toBe(true);
+    expect(files.has(`${label}-parts-01-Violin-I.mid`)).toBe(true);
+    expect(parseScore(strFromU8(zip['score.musicxml']!)).parts.every(part => part.measures.length === recipe.bars)).toBe(true);
+    const summary = JSON.parse(strFromU8(files.get(`${label}-summary.json`)!));
+    expect(summary).toMatchObject({ status: 'complete', label: label.toUpperCase(), selected: label === 'a' ? 0 : 1, recipe: { intent, tuneOnly: false }, missing: [] });
+    expect(summary.zip.sha256).toMatch(/^[0-9a-f]{64}$/);
+  }
+  expect(requests.find(call => call.shape === 'distribute')!.input).toMatchObject({ intent, answers: [], tracks: [{ line: 'Piano upper', instrument: 'Piano' }, { line: 'Piano lower', instrument: 'Piano' }] });
+  expect(requests.filter(call => call.shape === 'arrange').some(call => call.input.chosen.name === 'Synthetic B' && call.input.window.from !== '1')).toBe(true);
+  expect(fetch).not.toHaveBeenCalled();
+});
+
+it('captures two real-hook recompositions from their own plans at active option zero', async () => {
+  const { current, io, files, requests } = await setup();
+  const recipe = NIGHT_RECIPES.find(item => item.intent === 'recompose' && item.ensemble === 'String orchestra' && item.mood === 'Neutral')!;
+  const result = await runNightRecipe(recipe, current, io, 'recompose-local-smoke');
+  expect(result.status, result.error).toBe('complete');
+  const summaries = ['a', 'b'].map(label => JSON.parse(strFromU8(files.get(`${label}-summary.json`)!)));
+  expect(summaries.map(summary => [summary.chosen, summary.selected, summary.plan.name])).toEqual([[0, 0, 'Synthetic A'], [1, 0, 'Synthetic B']]);
+  expect(requests.find(call => call.shape === 'plan_recompose')!.input).toMatchObject({ moreBars: 32, freedom: 2, answers: [], ask: null });
+  expect(requests.filter(call => call.shape === 'write_theme').map(call => call.input.chosen.name)).toEqual(['Synthetic A', 'Synthetic B']);
+  expect(requests.filter(call => call.shape === 'arrange').every(call => call.input.seed.theme.includes('tune: C5@0+3'))).toBe(true);
+  expect(files.get('a-score.musicxml')).not.toEqual(files.get('b-score.musicxml'));
+});
+
+it.each(['notes', 'theme'] as const)('retains diagnostic failure and rejects a bad %s outcome without exporting it', async failure => {
+  const { current, io, files } = await setup(failure);
+  const recipe = NIGHT_RECIPES.find(item => item.intent === (failure === 'theme' ? 'recompose' : 'arrange') && item.ensemble === 'String orchestra')!;
+  const result = await runNightRecipe(recipe, current, io, `failed-${failure}`);
+  expect(result.status).toBe('failed'); expect(files.has('failure.json')).toBe(true); expect(files.has('a-summary.json')).toBe(false);
+});
+
+it('exports a valid zero-addition faithful arrangement with all114 original source events retained', async () => {
+  const { current, io, files } = await setup('zero-adds');
+  const recipe = NIGHT_RECIPES.find(item => item.intent === 'arrange' && item.ensemble === 'String orchestra')!;
+  const result = await runNightRecipe(recipe, current, io, 'source-only-local-smoke');
+  expect(result.status, result.error).toBe('complete');
+  const eventKeys = (xml: string) => scoreTracks(parseScore(xml)).flatMap(track => track.notes.map(note => JSON.stringify([note.height, note.start, note.length, note.velocity])));
+  const original = eventKeys(xmlText);
+  expect(original).toHaveLength(114);
+  for (const label of ['a', 'b']) {
+    const summary = JSON.parse(strFromU8(files.get(`${label}-summary.json`)!));
+    expect(summary.check.notes).toBe(0);
+    const available = eventKeys(strFromU8(files.get(`${label}-score.musicxml`)!));
+    for (const event of original) { const at = available.indexOf(event); expect(at, event).toBeGreaterThanOrEqual(0); available.splice(at, 1); }
+    expect(summary.notes).toBeGreaterThanOrEqual(114);
+  }
+});
+
+it('still rejects a genuinely all-rest full exported score', async () => {
+  const { current, io, files } = await setup('zero-adds');
+  const recipe = NIGHT_RECIPES.find(item => item.intent === 'arrange' && item.ensemble === 'String orchestra')!;
+  const empty = emptyScore('Empty export', recipe.instruments, { fifths: 0, time: '3/4', qpm: 80, bars: 24 });
+  io.capture = async () => packageFiles(empty, null, 'An empty full-score export must not pass.');
+  const result = await runNightRecipe(recipe, current, io, 'empty-full-score');
+  expect(result.status).toBe('failed'); expect(result.error).toBe('All-rest exported score');
+  expect(files.has('a-summary.json')).toBe(false); expect(files.has('failure.json')).toBe(true);
+});

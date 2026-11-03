@@ -1,0 +1,5 @@
+{
+  "extends": "../tsconfig.json",
+  "include": ["night-capture-client.ts", "night-capture-matrix.ts", "night-capture.test.tsx"],
+  "exclude": ["../server/worker.ts"]
+}
