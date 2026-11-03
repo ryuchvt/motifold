@@ -198,7 +198,20 @@ export function PieceView(props: {
   startNow.current = start;
   const stopNow = useRef(stop);
   stopNow.current = stop;
-  useEffect(() => playhead.register({ play: () => startNow.current(fromNow.current), pause: () => stopNow.current(), stop: () => stopNow.current(true) }), []);
+  const seekNow = useRef((beat: number) => {});
+  seekNow.current = (beat: number) => {
+    fromNow.current = beat;
+    heard.current = beat;
+    setFrom(beat);
+    moveHead(beat);
+    if (playing) startNow.current(beat);
+  };
+  useEffect(() => playhead.register({ play: () => startNow.current(fromNow.current), pause: () => stopNow.current(), stop: () => stopNow.current(true), seek: (beat) => seekNow.current(beat) }), []);
+  // A passage can be selected from notation or a plan, without a pointer gesture on this overview.
+  useEffect(() => {
+    const target = bars.find((bar) => bar.number === selected.from)?.start;
+    if (target !== undefined) seekNow.current(target);
+  }, [selected.from]);
   useEffect(() => playhead.set({ playing }), [playing]);
   const beatAt = (e: ReactPointerEvent<HTMLElement>) => {
     const box = e.currentTarget.getBoundingClientRect();

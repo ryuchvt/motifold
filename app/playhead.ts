@@ -9,7 +9,7 @@ export interface PlayheadState {
 
 let state: PlayheadState = { playing: false, words: "Bar 1, 0:00.0" };
 const listeners = new Set<() => void>();
-let controls: { play: () => void; pause: () => void; stop: () => void } | null = null;
+let controls: { play: () => void; pause: () => void; stop: () => void; seek?: (beat: number) => void } | null = null;
 
 export const playhead = {
   get: () => state,
@@ -32,6 +32,7 @@ export const playhead = {
   play: () => controls?.play(),
   pause: () => controls?.pause(),
   stop: () => controls?.stop(),
+  seek: (beat: number) => controls?.seek?.(Math.max(0, beat)),
   get ready() {
     return !!controls;
   },

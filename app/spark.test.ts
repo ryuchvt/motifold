@@ -16,7 +16,7 @@ describe("asking Muse Spark", () => {
     off();
     expect(reply).toEqual({ status: "ok", answer: { a: 1 }, cached: false });
     expect(seen.filter((e) => e.kind === "thinking").map((e) => (e as { text: string }).text)).toEqual(["Reading the bass first.", "Then the tune.", "And the end"]);
-    expect(seen.at(-1)).toEqual({ kind: "end", shape: "read_piece", ok: true });
+    expect(seen.at(-1)).toEqual({ kind: "end", callId: seen[0]!.callId, shape: "read_piece", ok: true });
   });
 
   it("tries a dropped connection once more, and nothing else", async () => {

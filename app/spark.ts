@@ -3,9 +3,11 @@
 export type SparkReply = { status: "ok"; answer: unknown; cached: boolean } | { status: "fallback"; reason: string };
 
 /** What's happening on a call, for whoever is showing it. */
-export type SparkEvent = { kind: "start"; shape: string; input: unknown } | { kind: "thinking"; shape: string; text: string } | { kind: "end"; shape: string; ok: boolean };
+export type SparkEvent = { callId: string } & ({ kind: "start"; shape: string; input: unknown } | { kind: "thinking"; shape: string; text: string } | { kind: "end"; shape: string; ok: boolean });
 type Listener = (event: SparkEvent) => void;
 const listeners = new Set<Listener>();
+// Activity belongs to this browser page. The server keeps its separate attempt UUID and accounting.
+let nextCall = 0;
 export function onSpark(listener: Listener): () => void {
   listeners.add(listener);
   return () => void listeners.delete(listener);
@@ -68,12 +70,13 @@ export async function askSpark(shape: string, input: unknown, signal?: AbortSign
 }
 
 async function askOnce(shape: string, input: unknown, signal?: AbortSignal): Promise<SparkReply> {
-  emit({ kind: "start", shape, input });
+  const callId = `spark-${++nextCall}`;
+  emit({ kind: "start", callId, shape, input });
   const started = Date.now();
   const thinking: RecordedCall["thinking"] = [];
   const think = (text: string) => {
     thinking.push({ at: Date.now() - started, text });
-    emit({ kind: "thinking", shape, text });
+    emit({ kind: "thinking", callId, shape, text });
   };
   let reply: SparkReply;
   let meta: Partial<RecordedCall> = {};
@@ -95,7 +98,7 @@ async function askOnce(shape: string, input: unknown, signal?: AbortSignal): Pro
     reply = { status: "fallback", reason: signal?.aborted ? "stale" : "unreachable" };
   }
   if (recordingOn()) recording.push({ shape, input, reply, ms: Date.now() - started, thinking, ...meta });
-  emit({ kind: "end", shape, ok: reply.status === "ok" });
+  emit({ kind: "end", callId, shape, ok: reply.status === "ok" });
   return reply;
 }
 

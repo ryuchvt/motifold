@@ -84,7 +84,14 @@ export function Studio() {
   const view = useRef<ScoreViewHandle>(null);
 
   useEffect(() => void loadDemoIndex().then(setDemo), []);
-  useEffect(() => onSpark((event) => setThinking(event.kind === "start" ? true : event.kind === "end" ? false : (was) => was)), []);
+  useEffect(() => {
+    const running = new Set<string>();
+    return onSpark((event) => {
+      if (event.kind === "start") running.add(event.callId);
+      if (event.kind === "end") running.delete(event.callId);
+      setThinking(running.size > 0);
+    });
+  }, []);
 
   const part = loaded?.score.parts[0] ?? null;
   const range = useMemo(() => ({ from: 0, to: part ? part.measures.length - 1 : 0 }), [part]);
@@ -176,12 +183,14 @@ export function Studio() {
 
   /** A line sung, hummed or played into the microphone, heard just as a file is when it stops. */
   const record = async () => {
+    let acquired: MediaStream | null = null;
     const mine = ++opening.current;
     stopListening();
     setError(null);
     try {
       // Speech processing ruins an instrument or a voice singing, so it's all off.
       const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false, channelCount: 1 } });
+      acquired = stream;
       if (opening.current !== mine) return stream.getTracks().forEach((t) => t.stop());
       const recorder = new MediaRecorder(stream);
       const chunks: Blob[] = [];
@@ -196,6 +205,8 @@ export function Studio() {
       recorder.start();
       setListening({ fileName: "Your microphone", recording: true });
     } catch {
+      acquired?.getTracks().forEach((track) => track.stop());
+      microphone.current = null;
       if (opening.current !== mine) return;
       setListening(null);
       setError("The microphone isn't available here. Allow it in the browser, or open a recording instead.");
@@ -214,6 +225,7 @@ export function Studio() {
   };
 
   const enter = (way: Access) => {
+    if (way !== "own") setOwnKey(null);
     setAccess(way);
     if (way === "demo" && demo) startDemo(demo.pieces[0]!, demo.recorded);
     else stopDemo();

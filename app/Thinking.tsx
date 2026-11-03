@@ -18,6 +18,7 @@ const STAGES: Record<string, { what: string; chip: string; usually: string }> = 
 const clock = (ms: number) => `${Math.floor(Math.max(0, ms) / 60000)}:${String(Math.floor(Math.max(0, ms) / 1000) % 60).padStart(2, "0")}`;
 
 interface Running {
+  callId: string;
   shape: string;
   label: string;
   bars: string | null;
@@ -26,6 +27,7 @@ interface Running {
   lines: string[];
 }
 interface Finished {
+  callId: string;
   label: string;
   ok: boolean;
   ms: number;
@@ -49,34 +51,36 @@ function watch() {
   watching = true;
   onSpark((event: SparkEvent) => {
     if (event.kind === "start") {
-      const window = (event.input as { window?: { from: string; to: string } }).window;
+      const input = event.input as { window?: { from: string; to: string }; chosen?: { name?: string } } | null;
+      const window = input?.window;
+      const name = input?.chosen?.name;
+      const plan = typeof name === "string" ? name : null;
       const stage = STAGES[event.shape];
       const bars = window ? (window.from === window.to ? `bar ${window.from}` : `bars ${window.from} to ${window.to}`) : null;
-      running = [...running, { shape: event.shape, label: `${stage?.what ?? "Thinking"}${bars ? `: ${bars}` : ""}`, bars, started: Date.now(), updated: Date.now(), lines: [] }];
+      const now = Date.now();
+      running = [...running, { callId: event.callId, shape: event.shape, label: [stage?.what ?? "Thinking", plan, bars].filter(Boolean).join(" · "), bars, started: now, updated: now, lines: [] }];
     } else if (event.kind === "thinking") {
-      const at = running.map((r) => r.shape).lastIndexOf(event.shape);
+      const at = running.findIndex((r) => r.callId === event.callId);
       if (at < 0) return;
       running = running.map((r, k) => (k === at ? { ...r, updated: Date.now(), lines: [...r.lines.slice(-24), event.text] } : r));
     } else {
-      const at = running.findIndex((r) => r.shape === event.shape);
+      const at = running.findIndex((r) => r.callId === event.callId);
       if (at < 0) return;
       const ended = running[at]!;
-      finished = [...finished.slice(-7), { label: ended.label, ok: event.ok, ms: Date.now() - ended.started }];
+      finished = [...finished.slice(-7), { callId: ended.callId, label: ended.label, ok: event.ok, ms: Date.now() - ended.started }];
       running = running.filter((_, k) => k !== at);
     }
     changed();
   });
 }
+const subscribeMuse = (listener: () => void) => {
+  listeners.add(listener);
+  return () => void listeners.delete(listener);
+};
+const getMuse = () => snapshot;
 function useMuse() {
   watch();
-  return useSyncExternalStore(
-    (l) => {
-      listeners.add(l);
-      return () => void listeners.delete(l);
-    },
-    () => snapshot,
-    () => snapshot,
-  );
+  return useSyncExternalStore(subscribeMuse, getMuse, getMuse);
 }
 function useNow(on: boolean) {
   const [now, setNow] = useState(Date.now());
@@ -92,22 +96,20 @@ function useNow(on: boolean) {
 let shut = false;
 let opened = false;
 const panelListeners = new Set<() => void>();
-const panel = { shut, opened };
+let panel = { shut, opened };
 const setPanel = (next: { shut?: boolean; opened?: boolean }) => {
   shut = next.shut ?? shut;
   opened = next.opened ?? opened;
-  panel.shut = shut;
-  panel.opened = opened;
+  panel = { shut, opened };
   for (const l of panelListeners) l();
 };
+const subscribePanel = (listener: () => void) => {
+  panelListeners.add(listener);
+  return () => void panelListeners.delete(listener);
+};
+const getPanel = () => panel;
 function usePanel() {
-  const [, tick] = useState(0);
-  useEffect(() => {
-    const l = () => tick((n) => n + 1);
-    panelListeners.add(l);
-    return () => void panelListeners.delete(l);
-  }, []);
-  return panel;
+  return useSyncExternalStore(subscribePanel, getPanel, getPanel);
 }
 
 /** The status in the top bar, always there: READY, or what it's doing and for how long. Pressing it opens or shuts the panel. */
@@ -130,7 +132,7 @@ export function MuseChip() {
 }
 
 /** The wait, shown for what it is: which stage this is, the model's own thinking as it comes, what's finished, and how long it's taken. On a replay it says it's a replay. */
-export function Thinking() {
+export function Thinking({ sample = false }: { sample?: boolean }) {
   const { running: now, finished: done } = useMuse();
   const state = usePanel();
   const [reasoning, setReasoning] = useState(true);
@@ -139,12 +141,12 @@ export function Thinking() {
   const current = now[now.length - 1] ?? null;
   useEffect(() => {
     list.current?.scrollTo({ top: list.current.scrollHeight });
-  }, [current?.lines.length]);
+  }, [current?.callId, current?.lines.length]);
   // A new call opens it again, unless the composer shut it during this one.
-  const started = current?.started;
+  const callId = current?.callId;
   useEffect(() => {
-    if (started) setPanel({ shut: false });
-  }, [started]);
+    if (callId) setPanel({ shut: false });
+  }, [callId]);
 
   const showing = current ? !state.shut : state.opened;
   if (!showing) return null;
@@ -162,7 +164,7 @@ export function Thinking() {
       {now.length > 1 && (
         <ol className="thinking-also">
           {now.slice(0, -1).map((r) => (
-            <li key={`${r.shape}-${r.started}`}>
+            <li key={r.callId}>
               Also working: {r.label} · {clock(clockNow - r.started)}
             </li>
           ))}
@@ -170,8 +172,8 @@ export function Thinking() {
       )}
       {done.length > 0 && (
         <ol className="thinking-done">
-          {done.map((d, k) => (
-            <li key={`${d.label}-${k}`} className={d.ok ? undefined : "failed"}>
+          {done.map((d) => (
+            <li key={d.callId} className={d.ok ? undefined : "failed"}>
               {d.label} · {clock(d.ms)}
               {d.ok ? "" : " · didn't come back"}
             </li>
@@ -195,7 +197,9 @@ export function Thinking() {
         </>
       )}
       <footer>
-        {replay.active ? (
+        {sample ? (
+          <span>Local sample answers. No model call.</span>
+        ) : replay.active ? (
           <>
             <span>A replay of the real run, recorded {replay.recorded}. This step took {clock(replay.realMs)} live.</span>
             <button className="thinking-skip" onClick={skipReplay}>
