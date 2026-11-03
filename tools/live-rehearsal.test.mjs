@@ -1,10 +1,11 @@
 import { createServer, request } from 'node:http';
 import { randomUUID } from 'node:crypto';
+import { EventEmitter } from 'node:events';
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, expect, it } from 'vitest';
-import { approvedRun, attemptExposure, budgetDecision, createGuard, localOrigin } from './live-rehearsal.mjs';
+import { approvedRun, attemptExposure, budgetDecision, createGuard, localOrigin, ownedWorker, recordedCall } from './live-rehearsal.mjs';
 
 const servers = [];
 afterEach(async () => { await Promise.all(servers.splice(0).map((server) => new Promise((done) => { server.closeAllConnections(); server.close(done); }))); });
@@ -136,4 +137,87 @@ it('never lets an absolute or authority-form request override the validated loca
     expect(status).toBe(400);
   }
   expect(sent).toBe(0);
+});
+
+it('isolates a fresh settled success before queued API calls or ledger polling, without restarting cache hits', async () => {
+  const rows = new Map(), events = [], receipts = [];
+  let releaseRestart, sent = 0;
+  const restarted = new Promise((done) => { releaseRestart = done; });
+  const upstream = await listen(createServer(async (request, response) => {
+    if (request.url === '/api/ledger') { events.push('ledger'); response.end('{}'); return; }
+    const chunks = []; for await (const chunk of request) chunks.push(chunk);
+    const { attemptId } = JSON.parse(Buffer.concat(chunks));
+    sent++; events.push(`call-${sent}`);
+    const cached = sent !== 1;
+    if (!cached) rows.set(attemptId, { state: 'settled', reserved_micros: 1_480_720, charged_micros: 1000 });
+    response.end(JSON.stringify({ status: 'ok', cached, answer: {} }));
+  }));
+  const guard = createGuard({ upstream, ledger: { balance: () => base, attempt: (id) => rows.get(id) }, shapes: { arrange: { maxOutputTokens: 40_000 } }, reserve: () => 1_480_720, armed: true, record: (entry) => receipts.push(entry), afterSettled: async () => { events.push('restart-start'); await restarted; events.push('restart-ready'); } });
+  const origin = await listen(guard.server);
+  expect(await (await post(origin)).json()).toMatchObject({ status: 'ok', cached: false });
+  const next = post(origin), balance = fetch(`${origin}/api/ledger`);
+  await new Promise((done) => setTimeout(done, 30));
+  expect(events).toEqual(['call-1', 'restart-start']);
+  releaseRestart();
+  expect(await (await next).json()).toMatchObject({ status: 'ok', cached: true });
+  await (await balance).text();
+  expect(events.indexOf('call-2')).toBeGreaterThan(events.indexOf('restart-ready'));
+  expect(events.indexOf('ledger')).toBeGreaterThan(events.indexOf('restart-ready'));
+  expect(events.filter((event) => event === 'restart-start')).toHaveLength(1);
+  expect(guard.exposure()).toBe(1000);
+  expect(receipts.filter((entry) => entry.kind === 'worker-isolation').map((entry) => entry.phase)).toEqual(['starting', 'ready']);
+  const calls = receipts.map(recordedCall).filter(Boolean);
+  expect(calls).toHaveLength(2);
+  expect(calls.map((call) => call.reply.status)).toEqual(['ok', 'ok']);
+  expect(calls.every((call) => call.input?.piece === 'Only a local mock')).toBe(true);
+});
+
+it.each(['unknown', 'missing-settlement', 'restart-fails'])('blocks the next request after %s without retrying the previous attempt', async (condition) => {
+  let sent = 0, restarts = 0;
+  const row = { state: 'settled', reserved_micros: 1_480_720, charged_micros: 1000 };
+  const upstream = await listen(createServer((_request, response) => { sent++; response.end(JSON.stringify(condition === 'unknown' ? { status: 'fallback', reason: 'network' } : { status: 'ok', cached: false, answer: {} })); }));
+  const guard = createGuard({ upstream, ledger: { balance: () => base, attempt: () => condition === 'restart-fails' && sent > 0 ? row : null }, shapes: { arrange: { maxOutputTokens: 40_000 } }, reserve: () => 1_480_720, armed: true, afterSettled: async () => { restarts++; throw Error('Local restart failed'); } });
+  const origin = await listen(guard.server);
+  await (await post(origin)).text();
+  expect(await (await post(origin)).json()).toMatchObject({ reason: 'rehearsal-stopped' });
+  expect(sent).toBe(1);
+  expect(restarts).toBe(condition === 'restart-fails' ? 1 : 0);
+  expect(guard.exposure()).toBe(condition === 'restart-fails' ? 1000 : 1_480_720);
+});
+
+it('waits for the owned child exit and ledger readiness before resuming, and stops on unexpected exit', async () => {
+  const events = [], children = [];
+  let unexpected = 0, finishExit, readiness = true, down = true, onKill = () => {};
+  const runtime = ownedWorker({ ready: async () => readiness, isDown: async () => down, readyDelayMs: 1, readyTries: 100, onUnexpectedExit: () => unexpected++, launch: () => {
+    const child = new EventEmitter(); child.exitCode = child.signalCode = null;
+    child.kill = (signal) => { events.push(signal); finishExit = () => { child.signalCode = signal; child.emit('exit'); }; onKill(); return true; };
+    children.push(child); events.push('launch'); return child;
+  } });
+  await runtime.start();
+  down = false;
+  const restart = runtime.restart();
+  expect(events).toEqual(['launch', 'SIGTERM']);
+  expect(children).toHaveLength(1);
+  finishExit();
+  await new Promise((done) => setTimeout(done, 10));
+  expect(children).toHaveLength(1); // The old workerd can outlive its Wrangler parent.
+  down = true; await restart;
+  expect(children).toHaveLength(2);
+  expect(unexpected).toBe(0);
+  children[1].exitCode = 1; children[1].emit('exit');
+  expect(unexpected).toBe(1);
+  readiness = false;
+  const killed = new Promise((done) => { onKill = done; });
+  const failed = runtime.restart();
+  await killed;
+  expect(events.at(-1)).toBe('SIGTERM');
+  finishExit();
+  await expect(failed).rejects.toThrow('did not become ready');
+});
+
+it('refuses to launch or adopt an existing runtime on the Worker port', async () => {
+  let launches = 0;
+  const runtime = ownedWorker({ launch: () => { launches++; }, ready: async () => true, isDown: async () => false, onUnexpectedExit: () => {} });
+  await expect(runtime.start()).rejects.toThrow('already occupied');
+  expect(launches).toBe(0);
 });

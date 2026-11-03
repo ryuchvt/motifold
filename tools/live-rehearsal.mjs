@@ -5,6 +5,7 @@ import { mkdirSync, readFileSync, writeFileSync, appendFileSync, existsSync, rea
 import { resolve, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { spawn } from 'node:child_process';
+import { createConnection } from 'node:net';
 
 export function localOrigin(value) {
   const url = new URL(value);
@@ -35,6 +36,13 @@ export function resultOf(text) {
   return null;
 }
 
+/** Maintenance receipts are not model calls and must never enter the recorded answer bundle. */
+export function recordedCall(entry) {
+  if (typeof entry.sent !== 'boolean' || !entry.shape) return null;
+  const { version, model, ...reply } = entry.reply ?? { status: 'fallback', reason: 'unreachable' };
+  return { shape: entry.shape, input: entry.input, reply, ms: entry.ms ?? 0, thinking: entry.thinking ?? [], version, model, usage: entry.receipt?.usage };
+}
+
 /** One approved rehearsal retains its ceiling and attempt identities across operator restarts. */
 export function approvedRun(file, balance) {
   const saved = existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : { version: 1, run: 'sample-sketch-faithful-2026-11-04', ceilingMicros: 5_000_000, started: new Date().toISOString(), initialBalance: balance, attempts: [] };
@@ -47,7 +55,7 @@ export function approvedRun(file, balance) {
 }
 
 /** Serial release means each next request sees the previous request's actual settlement or retained reservation. */
-export function createGuard({ upstream, ledger, shapes, reserve, ceilingMicros = 5_000_000, armed = false, record = () => {}, owned = new Map(), persist = () => {} }) {
+export function createGuard({ upstream, ledger, shapes, reserve, ceilingMicros = 5_000_000, armed = false, record = () => {}, owned = new Map(), persist = () => {}, afterSettled }) {
   upstream = localOrigin(upstream);
   let chain = Promise.resolve();
   let stopped = false;
@@ -60,6 +68,7 @@ export function createGuard({ upstream, ledger, shapes, reserve, ceilingMicros =
   };
   const forward = (request, response, body, entry) => new Promise((done) => {
     const started = Date.now();
+    let finishing = false;
     const headers = { ...request.headers, host: new URL(upstream).host };
     const incoming = new URL(request.url, 'http://127.0.0.1');
     const targetUrl = new URL(upstream);
@@ -81,7 +90,10 @@ export function createGuard({ upstream, ledger, shapes, reserve, ceilingMicros =
         }
         response.write(chunk);
       });
-      const finish = () => {
+      const finish = async () => {
+        if (finishing) return;
+        finishing = true;
+        let isolation;
         if (entry) {
           const text = Buffer.concat(chunks).toString('utf8');
           const reply = resultOf(text);
@@ -92,13 +104,29 @@ export function createGuard({ upstream, ledger, shapes, reserve, ceilingMicros =
           if (!row && (cached || refused)) { owned.get(entry.attemptId).noCharge = true; persist(); }
           record({ ...entry, sent: true, ms: Date.now() - started, httpStatus: source.statusCode, reply, thinking, response: text, receipt: row, sessionExposureMicros: exposure(), balance: ledger.balance() });
           if (!reply || (reply.status === 'fallback' && !['bad-input', 'disabled', 'busy', 'empty', 'daily', 'visitor'].includes(reply.reason))) stopped = true;
+          if (afterSettled && !stopped && reply?.status === 'ok' && !cached) {
+            if (reply.cached !== false || row?.state !== 'settled') {
+              stopped = true;
+              record({ kind: 'worker-isolation', phase: 'blocked-missing-settlement', attemptId: entry.attemptId });
+            } else isolation = { attemptId: entry.attemptId, shape: entry.shape };
+          }
         }
-        response.end(); done();
+        // The result and settled receipt are complete before maintenance begins. The serial chain
+        // keeps the next browser call (including ledger polling) out of the retiring runtime.
+        response.end();
+        if (isolation) {
+          record({ kind: 'worker-isolation', phase: 'starting', ...isolation });
+          try { await afterSettled(isolation); record({ kind: 'worker-isolation', phase: 'ready', ...isolation }); }
+          catch { stopped = true; record({ kind: 'worker-isolation', phase: 'failed', ...isolation }); }
+        }
+        done();
       };
-      source.once('end', finish);
-      source.once('error', () => { stopped = true; if (entry) record({ ...entry, sent: true, reply: null, transportError: true, receipt: ledger.attempt(entry.attemptId), sessionExposureMicros: exposure() }); response.destroy(); done(); });
+      source.once('end', () => { void finish().catch(() => { stopped = true; response.end(); done(); }); });
+      source.once('error', () => { if (finishing) return; finishing = true; stopped = true; if (entry) record({ ...entry, sent: true, reply: null, transportError: true, receipt: ledger.attempt(entry.attemptId), sessionExposureMicros: exposure() }); response.destroy(); done(); });
     });
     target.once('error', () => {
+      if (finishing) return;
+      finishing = true;
       stopped = true;
       if (entry) record({ ...entry, sent: true, reply: null, transportError: true, receipt: ledger.attempt(entry.attemptId), sessionExposureMicros: exposure() });
       if (!response.headersSent) response.writeHead(502);
@@ -114,7 +142,8 @@ export function createGuard({ upstream, ledger, shapes, reserve, ceilingMicros =
     const route = /^\/api\/spark\/([a-z_]+)$/.exec(url.pathname);
     if (!route) {
       if (url.pathname.startsWith('/api/') && !(url.pathname === '/api/ledger' && request.method === 'GET')) return block(response, {}, 'unknown-route');
-      return forward(request, response);
+      chain = chain.then(() => forward(request, response));
+      return chain;
     }
     const chunks = []; let size = 0;
     for await (const chunk of request) { size += chunk.length; if (size > 64 * 1024) { response.writeHead(413); response.end(); return; } chunks.push(chunk); }
@@ -165,16 +194,57 @@ export function sqliteLedger(file) {
   });
 }
 
+/** Only manages the child this rehearsal started; it never retries an API request. */
+export function ownedWorker({ launch, ready, isDown, onUnexpectedExit, exitTimeoutMs = 10_000, readyTries = 100, readyDelayMs = 250 }) {
+  let child;
+  const expected = new WeakSet();
+  const waitDown = async () => {
+    for (let n = 0; n < readyTries; n++) {
+      if (await isDown()) return;
+      await new Promise((done) => setTimeout(done, readyDelayMs));
+    }
+    throw Error('The old Worker port is still listening; no successor was started');
+  };
+  const stop = async () => {
+    const previous = child;
+    child = undefined;
+    if (!previous || previous.exitCode !== null || previous.signalCode !== null) return;
+    expected.add(previous);
+    await new Promise((done, reject) => {
+      const timer = setTimeout(() => { previous.kill('SIGKILL'); reject(Error('The owned Worker did not exit cleanly')); }, exitTimeoutMs);
+      previous.once('exit', () => { clearTimeout(timer); done(); });
+      previous.kill('SIGTERM');
+    });
+    await waitDown();
+  };
+  const start = async () => {
+    if (child) throw Error('The owned Worker is already running');
+    if (!(await isDown())) throw Error('The Worker port is already occupied; refusing an unowned runtime');
+    const next = child = launch();
+    next.once('exit', () => { if (!expected.has(next)) onUnexpectedExit(); });
+    next.once('error', () => { onUnexpectedExit(); });
+    for (let n = 0; n < readyTries && next.exitCode === null && next.signalCode === null; n++) {
+      try { if (await ready()) return; } catch {}
+      await new Promise((done) => setTimeout(done, readyDelayMs));
+    }
+    await stop();
+    throw Error('The owned Worker did not become ready on the existing ledger');
+  };
+  return { start, stop, kill: () => { if (child) { expected.add(child); child.kill(); } }, restart: async () => { await stop(); await start(); } };
+}
+
 async function main() {
   const args = process.argv.slice(2);
   if (args.includes('--help')) {
-    console.log('After the coordinated go-ahead and a fresh production build:\nnode tools/live-rehearsal.mjs --repo <repo> --start-worker --armed [--out <local receipts directory>]\nOpen http://127.0.0.1:8788/?record and use one browser flow. The proxy starts no model call itself.\nWithout --armed, all model requests are refused. The existing ledger and its $26 cap are never reset or raised.');
+    console.log('After the coordinated go-ahead and a fresh production build:\nnode tools/live-rehearsal.mjs --repo <repo> --start-worker --armed [--isolate-settled] [--out <local receipts directory>]\nOpen http://127.0.0.1:8788/?record and use one browser flow. The proxy starts no model call itself.\n--isolate-settled restarts only its owned Worker after each fresh, confirmed settled success. It requires --start-worker, never retries a request, and skips cache hits.\nWithout --armed, all model requests are refused. The existing ledger and its $26 cap are never reset or raised.');
     return;
   }
   const value = (name, fallback) => { const at = args.indexOf(name); return at < 0 ? fallback : args[at + 1]; };
   const repo = resolve(value('--repo', process.cwd()));
   const output = resolve(value('--out', join(repo, 'output/live-rehearsal', new Date().toISOString().replaceAll(':', '-'))));
   const upstream = localOrigin(value('--upstream', 'http://127.0.0.1:8790'));
+  const isolate = args.includes('--isolate-settled');
+  if (isolate && !args.includes('--start-worker')) throw Error('--isolate-settled requires the guard-owned --start-worker');
   const port = Number(value('--port', '8788'));
   if (!Number.isInteger(port) || port < 1024 || port > 65535 || port === Number(new URL(upstream).port)) throw Error('Invalid guard port');
   const shared = resolve(process.env.HOME, '.config/phasecraft/motifold-dev-ledger');
@@ -195,39 +265,45 @@ async function main() {
   const lockPath = join(shared, 'live-rehearsal.lock');
   const lock = openSync(lockPath, 'wx', 0o600);
   writeFileSync(lock, JSON.stringify({ pid: process.pid, started: new Date().toISOString(), output }));
-  let child;
-  process.once('exit', () => { child?.kill(); closeSync(lock); unlinkSync(lockPath); });
+  let worker;
+  process.once('exit', () => { worker?.kill(); closeSync(lock); unlinkSync(lockPath); });
   const run = approvedRun(join(shared, 'live-rehearsal-approved-run.json'), baseline);
   const baselineFile = join(output, 'baseline.json');
   if (!existsSync(baselineFile)) writeFileSync(baselineFile, JSON.stringify({ at: new Date().toISOString(), repo, upstream, port, ceilingMicros: 5_000_000, armed: args.includes('--armed'), balance: baseline, approvedRun: run.snapshot() }, null, 2));
   const calls = [];
-  const guard = createGuard({ upstream, ledger, shapes: SHAPES, reserve: reservationMicros, owned: run.owned, persist: run.persist, armed: args.includes('--armed'), record(entry) {
+  const guard = createGuard({ upstream, ledger, shapes: SHAPES, reserve: reservationMicros, owned: run.owned, persist: run.persist, armed: args.includes('--armed'), afterSettled: isolate ? () => worker.restart() : undefined, record(entry) {
     appendFileSync(join(output, 'receipts.jsonl'), JSON.stringify(entry) + '\n');
-    if (entry.sent !== 'releasing' && entry.shape) {
-      const { version, model, ...reply } = entry.reply ?? { status: 'fallback', reason: 'unreachable' };
-      calls.push({ shape: entry.shape, input: entry.input, reply, ms: entry.ms ?? 0, thinking: entry.thinking ?? [], version, model, usage: entry.receipt?.usage });
+    const call = recordedCall(entry);
+    if (call) {
+      calls.push(call);
       writeFileSync(join(output, `calls-${process.pid}.json`), JSON.stringify(calls, null, 2));
       console.log(JSON.stringify({ shape: entry.shape, sent: entry.sent, status: entry.reply?.status, reason: entry.blocked ?? entry.reply?.reason, state: entry.receipt?.state, chargedMicros: entry.receipt?.charged_micros, sessionExposureMicros: entry.sessionExposureMicros }));
     }
   } });
+  const ready = async () => {
+    const response = await fetch(`${upstream}/api/ledger`, { signal: AbortSignal.timeout(1000) });
+    const balance = await response.json();
+    return response.ok && balance.capMicros === baseline.capMicros && balance.committedMicros === ledger.balance().committedMicros;
+  };
+  const isDown = () => new Promise((done) => {
+    const socket = createConnection({ host: '127.0.0.1', port: new URL(upstream).port });
+    const finish = (down) => { socket.destroy(); done(down); };
+    socket.once('connect', () => finish(false));
+    socket.once('error', (error) => finish(error.code === 'ECONNREFUSED'));
+    socket.setTimeout(1000, () => finish(false));
+  });
   if (args.includes('--start-worker')) {
     if (!existsSync(join(repo, 'dist/index.html')) || !existsSync(join(repo, '.dev.vars'))) throw Error('Build production assets and provide the existing ignored .dev.vars first');
-    child = spawn(join(repo, 'node_modules/.bin/wrangler'), ['dev', '--local', '--var', 'MODE:dev', '--ip', '127.0.0.1', '--port', new URL(upstream).port, '--persist-to', shared, '--log-level', 'warn'], { cwd: repo, stdio: 'inherit', env: { ...process.env, WRANGLER_SEND_METRICS: 'false' } });
-    child.on('exit', () => { guard.stop(); });
-    child.on('error', () => { guard.stop(); });
-  }
-  let ready = false;
-  for (let tries = 0; tries < 100; tries++) {
-    try { const response = await fetch(`${upstream}/api/ledger`); const balance = await response.json(); if (balance.capMicros === baseline.capMicros && balance.committedMicros === ledger.balance().committedMicros) { ready = true; break; } } catch {}
-    await new Promise((done) => setTimeout(done, 250));
+    worker = ownedWorker({ ready, isDown, onUnexpectedExit: guard.stop, launch: () => spawn(join(repo, 'node_modules/.bin/wrangler'), ['dev', '--local', '--var', 'MODE:dev', '--ip', '127.0.0.1', '--port', new URL(upstream).port, '--persist-to', shared, '--log-level', 'warn'], { cwd: repo, stdio: 'inherit', env: { ...process.env, WRANGLER_SEND_METRICS: 'false' } }) });
   }
   try {
-    if (!ready) throw Error('The local dev Worker is not ready on the expected existing ledger');
+    if (worker) await worker.start();
+    else if (!(await ready())) throw Error('The local dev Worker is not ready on the expected existing ledger');
     await new Promise((done, reject) => { guard.server.once('error', reject); guard.server.listen(port, '127.0.0.1', done); });
-  } catch (error) { child?.kill(); ledger.close(); throw error; }
+  } catch (error) { worker?.kill(); ledger.close(); throw error; }
   console.log(`Local ${args.includes('--armed') ? 'ARMED' : 'UNARMED'} rehearsal: http://127.0.0.1:${port}/?record`);
   console.log(`Receipts: ${output}. New exposure ceiling $5. Existing ledger cap unchanged.`);
-  const finish = () => { guard.stop(); guard.server.close(); child?.kill(); ledger.close(); process.exit(0); };
+  const finish = () => { guard.stop(); guard.server.close(); worker?.kill(); ledger.close(); process.exit(0); };
   process.once('SIGINT', finish); process.once('SIGTERM', finish);
 }
 
