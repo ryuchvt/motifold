@@ -44,6 +44,8 @@ export function Studio() {
   const [zoom, setZoom] = useState(0.8);
   const [audioNote, setAudioNote] = useState<string | null>(null);
   const input = useRef<HTMLInputElement>(null);
+  // Only the last thing opened may change the page. Listening takes a while, and the composer can leave or open something else meanwhile.
+  const opening = useRef(0);
   const view = useRef<ScoreViewHandle>(null);
 
   useEffect(() => void loadDemoIndex().then(setDemo), []);
@@ -59,21 +61,32 @@ export function Studio() {
     if (loaded && arranged.piece.status === "none" && !arranged.kept) void arranged.askPiece();
   }, [loaded]);
 
+  /** Listens to a recording for whichever open asked. If that's no longer the latest, the throw from its progress stops the listening. */
+  const hear = (file: File, mine: number) =>
+    transcribeFile(file, (done) => {
+      if (opening.current !== mine) throw new Error("Something newer was opened.");
+      setHearing({ fileName: file.name, done });
+    });
+
   const open = async (file: File, keepBars = false) => {
+    const mine = ++opening.current;
     setError(null);
     setFreePiece(null);
+    setHearing(null);
     try {
       if (!/\.(mid|midi|xml|musicxml|mxl)$/i.test(file.name) && isAudioFile(file)) {
         setLoaded(null);
         setUnbarred(null);
         setHearing({ fileName: file.name, done: 0 });
-        const heard = await transcribeFile(file, (done) => setHearing({ fileName: file.name, done }));
+        const heard = await hear(file, mine);
+        if (opening.current !== mine) return;
         setHearing(null);
         if (heard.notes < 8) throw new Error("It couldn't hear enough notes in that recording. A piano or one instrument works best.");
         setAudioNote(`Heard ${heard.notes} notes in ${Math.round(heard.seconds)} seconds of audio, here in your browser.`);
         return await open(new File([heard.midi as BlobPart], file.name.replace(AUDIO_FILE, ".mid")));
       }
       const bytes = new Uint8Array(await file.arrayBuffer());
+      if (opening.current !== mine) return;
       if (!keepBars && isMidi(bytes) && looksFreelyPlayed(bytes)) {
         setLoaded(null);
         setUnbarred({ fileName: file.name, bytes });
@@ -83,6 +96,7 @@ export function Studio() {
       const { xmlText, score } = openedScore(bytes, file.name);
       setLoaded({ fileName: file.name, xmlText, score });
     } catch (e) {
+      if (opening.current !== mine) return;
       setHearing(null);
       setLoaded(null);
       setError(e instanceof Error ? e.message : String(e));
@@ -90,23 +104,29 @@ export function Studio() {
   };
 
   const openDemo = async (piece: DemoPiece, kind: "midi" | "xml" | "audio") => {
+    const mine = ++opening.current;
     setDemoPiece(piece);
     if (kind === "audio") {
       // Listening is real and free, so it really runs. The prepared answers were made from the MIDI, so that's what carries on.
       const res = await fetch(piece.audio);
       const file = new File([await res.arrayBuffer()], piece.audio.split("/").pop()!);
+      if (opening.current !== mine) return;
       setHearing({ fileName: file.name, done: 0 });
       try {
-        const heard = await transcribeFile(file, (done) => setHearing({ fileName: file.name, done }));
+        const heard = await hear(file, mine);
+        if (opening.current !== mine) return;
         setAudioNote(`Heard ${heard.notes} notes in ${Math.round(heard.seconds)} seconds of audio, here in your browser. This prepared run carries on from my own MIDI, because that's what it was made from.`);
       } catch {
+        if (opening.current !== mine) return;
         setAudioNote("This browser couldn't listen to the recording. This prepared run carries on from my own MIDI.");
       }
       setHearing(null);
     } else if (kind === "xml") setAudioNote("The MusicXML holds the same notes, and this prepared run was made from the MIDI, so that's what carries on.");
     else setAudioNote(null);
     const res = await fetch(piece.midi);
-    await open(new File([await res.arrayBuffer()], piece.midi.split("/").pop()!));
+    const midi = await res.arrayBuffer();
+    if (opening.current !== mine) return;
+    await open(new File([midi], piece.midi.split("/").pop()!));
   };
 
   const enter = (way: Access) => {
@@ -116,6 +136,8 @@ export function Studio() {
   };
   const choosePiece = (piece: DemoPiece) => demo && startDemo(piece, demo.recorded);
   const leave = () => {
+    opening.current++;
+    setHearing(null);
     stopDemo();
     setAccess(null);
     setLoaded(null);
@@ -125,6 +147,8 @@ export function Studio() {
     setAudioNote(null);
   };
   const another = () => {
+    opening.current++;
+    setHearing(null);
     setLoaded(null);
     setUnbarred(null);
     setFreePiece(null);
@@ -248,7 +272,16 @@ export function Studio() {
                   </div>
                 ))}
               {access !== "demo" && (
-                <button className="drop" onClick={() => input.current?.click()}>
+                <button
+                  className="drop"
+                  onClick={() => input.current?.click()}
+                  onDragOver={(e) => e.preventDefault()}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    const file = e.dataTransfer.files[0];
+                    if (file) void open(file);
+                  }}
+                >
                   <span className="drop-title">Open your sketch</span>
                   <span className="drop-sub">A MIDI, MusicXML or audio file. Drop it here, or tap to choose one.</span>
                 </button>
