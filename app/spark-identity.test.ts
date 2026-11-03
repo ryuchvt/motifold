@@ -4,7 +4,7 @@ import { startDemo, stopDemo } from "./demo";
 
 afterEach(() => { stopDemo(); setTransport(null); vi.unstubAllGlobals(); vi.useRealTimers(); });
 
-it("keeps one activity identity per network attempt while retaining the existing retry and request contract", async () => {
+it("keeps one activity identity and one request UUID per explicit call, including an explicit retry", async () => {
   const seen: SparkEvent[] = [];
   const sent: { attemptId: string; input: unknown }[] = [];
   vi.stubGlobal("fetch", vi.fn(async (_url: string, init: RequestInit) => {
@@ -13,7 +13,11 @@ it("keeps one activity identity per network attempt while retaining the existing
   }));
   const off = onSpark(event => seen.push(event));
   try {
-    expect(await askSpark("arrange", { window: { from: "1", to: "8" } })).toMatchObject({ status: "ok" });
+    const input = { window: { from: "1", to: "8" } };
+    expect(await askSpark("arrange", input)).toEqual({ status: "fallback", reason: "network" });
+    expect(sent).toHaveLength(1);
+    expect(seen.map(event => event.kind)).toEqual(["start", "end"]);
+    expect(await askSpark("arrange", input)).toMatchObject({ status: "ok" });
     const starts = seen.filter(event => event.kind === "start");
     const ends = seen.filter(event => event.kind === "end");
     expect(starts).toHaveLength(2);

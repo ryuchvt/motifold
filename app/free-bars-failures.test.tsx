@@ -74,7 +74,7 @@ it.each([
   expect(screen.host.textContent).toContain("There is no accepted bar reading yet");
   await screen.press("Keep the file's own bars");
   expect(screen.onKeep).toHaveBeenCalledOnce();
-  expect(screen.request).toHaveBeenCalledTimes(reason === "network" ? 2 : 1);
+  expect(screen.request).toHaveBeenCalledOnce();
   expect(screen.request.mock.calls[0]![0]).toBe("read_bars");
   expect(fetch).not.toHaveBeenCalled();
 });

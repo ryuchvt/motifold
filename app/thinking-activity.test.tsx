@@ -155,7 +155,7 @@ it("clears a previous piece and ignores its late thinking and completion without
   await act(async () => { jobs.get("New piece")!.finish(reply); await next; });
 });
 
-it("does not attach an old network retry to the new piece's activity run", async () => {
+it("does not retry a late network fallback or attach it to the new piece's activity run", async () => {
   const { host } = setup();
   setTransport(null);
   let release!: (response: Response) => void;
@@ -171,8 +171,8 @@ it("does not attach an old network retry to the new piece's activity run", async
   act(() => resetMuseActivity());
   await act(async () => { await askSpark("study_score", { chosen: { name: "New network piece" } }); });
   await act(async () => { release(Response.json({ status: "fallback", reason: "network" })); await old; });
-  expect(attempts.map(x => x.input.chosen.name)).toEqual(["Old network piece", "New network piece", "Old network piece"]);
-  expect(new Set(attempts.map(x => x.attemptId)).size).toBe(3);
+  expect(attempts.map(x => x.input.chosen.name)).toEqual(["Old network piece", "New network piece"]);
+  expect(new Set(attempts.map(x => x.attemptId)).size).toBe(2);
   expect(host.querySelector(".thinking-done")?.textContent).toContain("Studying the form");
   expect(host.querySelector(".thinking-done")?.textContent).not.toContain("Reading who has the tune");
   expect(host.querySelector('[role="status"]')).toBeNull();

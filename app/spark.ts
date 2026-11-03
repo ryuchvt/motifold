@@ -10,7 +10,7 @@ const listeners = new Set<Listener>();
 // Activity belongs to this browser page. The server keeps its separate attempt UUID and accounting.
 let nextCall = 0;
 let activityRun = 0;
-/** Only activity changes owner here. In-flight request, retry and accounting contracts stay unchanged. */
+/** Only activity changes owner here. In-flight requests and accounting retain their original run. */
 export const resetSparkActivity = () => { activityRun++; };
 export function onSpark(listener: Listener): () => void {
   listeners.add(listener);
@@ -68,10 +68,8 @@ function headers(): Record<string, string> {
 }
 
 export async function askSpark(shape: string, input: unknown, signal?: AbortSignal): Promise<SparkReply> {
-  const run = activityRun;
-  const reply = await askOnce(shape, input, signal, run);
-  // A connection dropped halfway is worth one more go, and anything else isn't.
-  return reply.status === "fallback" && reply.reason === "network" && !signal?.aborted ? askOnce(shape, input, signal, run) : reply;
+  // A failed connection can still have incurred a charge. Only another explicit call may dispatch again.
+  return askOnce(shape, input, signal, activityRun);
 }
 
 async function askOnce(shape: string, input: unknown, signal: AbortSignal | undefined, run: number): Promise<SparkReply> {

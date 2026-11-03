@@ -19,11 +19,11 @@ describe("asking Muse Spark", () => {
     expect(seen.at(-1)).toEqual({ kind: "end", callId: seen[0]!.callId, shape: "read_piece", ok: true });
   });
 
-  it("tries a dropped connection once more, and nothing else", async () => {
+  it("returns a dropped connection without automatically dispatching another attempt", async () => {
     const fetchNow = vi.fn(async () => Response.json({ status: "fallback", reason: "network" }));
     vi.stubGlobal("fetch", fetchNow);
     expect(await askSpark("arrange", {})).toEqual({ status: "fallback", reason: "network" });
-    expect(fetchNow).toHaveBeenCalledTimes(2);
+    expect(fetchNow).toHaveBeenCalledOnce();
     const refused = vi.fn(async () => Response.json({ status: "fallback", reason: "cap" }));
     vi.stubGlobal("fetch", refused);
     await askSpark("arrange", {});
