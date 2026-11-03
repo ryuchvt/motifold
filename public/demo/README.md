@@ -4,6 +4,8 @@ There is no public replay index until the actual successful calls are complete. 
 
 The first package covers one source and one exact direction. Use `Sample_sketch.mid`, verified against SHA-256 `782c244e9d31572a3c3225c6af170a75ea94224b7e92ea1e1a6d6183ddb70d54`, and its exact 24-bar, 3/4 MusicXML reading. The direction is Arrange, String orchestra, neutral, zero added bars, inside the existing piece, keeping all notes and harmony. No mood, melody-only replacement or recomposition is prepared.
 
+The original MIDI has 117 notes. The accepted notation reading has 114 notes. The existing import threshold leaves three very soft notes out of that notation, at velocities 1, 5 and 4. They remain in the original MIDI. The source notation and its MIDI export agree on all 114 accepted notes. This is a distinction between the original performance and its accepted score reading, not a loss introduced by arranging it.
+
 After the real run completes, place its files in one `sample-sketch` directory here.
 
 - `Sample_sketch.mid` is the exact input.

@@ -13,6 +13,7 @@ import { MuseChip, Thinking } from "./Thinking";
 import { playhead, usePlayhead } from "./playhead";
 import { looksFreelyPlayed } from "./timing";
 import { useArrange } from "./useArrange";
+import "./replay-workspace.css";
 
 type Access = "demo" | "live" | "own";
 
@@ -173,15 +174,22 @@ export function Studio({ initialScore = null, sample = false, initialSetup, samp
     }
   };
 
-  const openDemo = async (piece: DemoPiece, kind: "midi" | "xml") => {
+  const openDemo = async (piece: DemoPiece) => {
     const mine = ++opening.current;
-    setDemoPiece(piece);
-    if (kind === "xml") setSourceNote("The MusicXML holds the same notes, and this prepared run was made from the MIDI, so that's what carries on.");
-    else setSourceNote(null);
-    const res = await fetch(piece.midi);
-    const midi = await res.arrayBuffer();
-    if (opening.current !== mine) return;
-    await open(new File([midi], piece.midi.split("/").pop()!));
+    setError(null);
+    try {
+      const res = await fetch(piece.xml);
+      if (!res.ok) throw new Error("The recorded source score could not be opened.");
+      const xml = await res.arrayBuffer();
+      if (opening.current !== mine) return;
+      choosePiece(piece);
+      setDemoPiece(piece);
+      setSourceNote("The exact score used in this recorded run. The original MIDI is available before you start.");
+      await open(new File([xml], piece.xml.split("/").pop()!));
+    } catch (failure) {
+      if (opening.current !== mine) return;
+      setError(failure instanceof Error ? failure.message : "The recorded walkthrough could not be opened.");
+    }
   };
 
   const enter = (way: Access) => {
@@ -328,25 +336,10 @@ export function Studio({ initialScore = null, sample = false, initialSetup, samp
                       <p>{piece.words}</p>
                     </div>
                     <span className="arrange-chips">
-                      <button
-                        className="button primary"
-                        onClick={() => {
-                          choosePiece(piece);
-                          void openDemo(piece, "midi");
-                        }}
-                      >
-                        MIDI
-                      </button>
-                      <button
-                        className="button"
-                        onClick={() => {
-                          choosePiece(piece);
-                          void openDemo(piece, "xml");
-                        }}
-                      >
-                        MusicXML
-                      </button>
+                      <button className="button primary" onClick={() => void openDemo(piece)}>Start recorded walkthrough</button>
+                      <a className="button" href={piece.midi} download>Original MIDI</a>
                     </span>
+                    <p className="spark-note">Recorded steps. No credit is used. Other choices are not prepared.</p>
                   </div>
                 ))}
               {access !== "demo" && (
@@ -401,7 +394,8 @@ export function Studio({ initialScore = null, sample = false, initialSetup, samp
         />
       )}
 
-      {inWork && <Workspace key={loaded!.fileName} arranged={arranged} loaded={loaded!} busy={thinking} demo={access === "demo"} prepared={demoPiece?.runs ?? []} render={render} sourceNote={sourceNote} onStage={setStage} initialSetup={initialSetup}/>}
+      {inWork && access === "demo" && demoPiece && <details className="replay-guide"><summary>Recorded walkthrough. No credit is used.</summary><ol>{demoPiece.guide.map((step, index) => <li key={index}>{step}</li>)}</ol><p>Follow these exact choices. Other settings have no recorded answer.</p><a href={demoPiece.midi} download>Download the original MIDI</a></details>}
+      {inWork && <Workspace key={loaded!.fileName} arranged={arranged} loaded={loaded!} busy={thinking} demo={access === "demo"} prepared={demoPiece?.runs ?? []} render={render} sourceNote={sourceNote} onStage={setStage} initialSetup={access === "demo" ? demoPiece?.recipe : initialSetup}/>}
       {sample && <div className="ui-sample-banner">{sampleMessage ?? "Local UI sample. Fixed answers. No model calls."} <a href="http://127.0.0.1:8788/?record">Open live workspace</a></div>}
       <Thinking sample={sample} />
     </div>

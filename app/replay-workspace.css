@@ -1,0 +1,6 @@
+/* The recorded guide stays in the page flow, clear of score actions. */
+.replay-guide { flex:none; max-height:min(35vh,220px); overflow:auto; padding:8px 18px; border-bottom:1px solid var(--line); background:#111923; color:#c4d0df; font:12px/1.5 var(--sans,system-ui,sans-serif); }
+.replay-guide summary { color:#e2eaf4; cursor:pointer; }
+.replay-guide ol { padding-left:20px; margin:8px 0; }
+.replay-guide p { margin:6px 0; }
+.replay-guide a { color:#d6e4f6; }

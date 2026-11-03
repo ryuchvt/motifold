@@ -9,6 +9,7 @@ import { checkOption, pieceInput, placeNotes, scoreOfParts, type ArrangeOption }
 import { parseScore } from '../score';
 import type { ArrangeInput, DistributeAnswer } from '../server/shapes';
 import preview from '../test-fixtures/sample-sketch-preview.json';
+import study from '../test-fixtures/sample-sketch-study.json';
 
 const bytes = new Uint8Array(readFileSync(`test-fixtures/${SAMPLE_FILE}`));
 it('opens the exact selected piano performance using its saved 24-bar reading', async () => {
@@ -26,6 +27,16 @@ it('rejects a different MIDI instead of applying this performance’s saved answ
   const changed = bytes.slice();
   changed[changed.length - 1] = changed[changed.length - 1]! ^ 1;
   await expect(sketchPreview(changed)).rejects.toThrow('does not match its saved answers');
+});
+it('shows the real recorded chords for this exact source in the local preview', async () => {
+  const source = await sketchPreview(bytes);
+  const input = pieceInput(source.score, source.score.parts[0]!, 0, 23);
+  expect(input.written).toEqual(study.input.written);
+  expect(study.reply.cached).toBe(false);
+  expect(study.model).toBe('muse-spark-1.3');
+  expect(study.reply.answer.harmony).toHaveLength(24);
+  expect(await previewTransport('study_score', input, () => {})).toEqual({ status: 'ok', cached: true, answer: study.reply.answer });
+  expect(await previewTransport('study_score', { ...input, written: input.written.slice(1) }, () => {})).toEqual({ status: 'fallback', reason: 'not-prepared' });
 });
 it('uses the same piano theme’s saved arrangement names without a provider request', async () => {
   const reply = await previewTransport('plan_options', {}, () => {});

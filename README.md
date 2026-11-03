@@ -2,7 +2,7 @@
 
 Motifold turns a musical sketch into an orchestral score you can read, change and take into your DAW. You bring a melody or a piano part, as MIDI or MusicXML, or one line you sing, hum or play into a recording. It works out what you played, reads it, asks what it can't tell, and writes the rest as notes.
 
-You choose how free it gets. **Arrange** keeps your melody exactly as it is and builds around it. **Recompose** takes your melody as a motif and writes a new piece from it, with its own key, metre and form.
+You choose the job. **Arrange** is neutral. It keeps your notes, harmony, key, metre, timing, character and section order, and adds no bars. It can voice your music for different instruments and add a supporting counterline within your theme. **Expand** develops the same piece with related new material or sections. Your written notes stay, and a mood is optional. **Recompose** writes a new piece within the freedom you choose, from keeping the whole tune to drawing on a small idea from it.
 
 I write to picture, so I often play an idea in with no click. A file like that has no bars that mean anything, and anything that reads notation needs bars. Most tools stop there. Motifold starts there.
 
@@ -10,32 +10,39 @@ I write to picture, so I often play an idea in with no click. A file like that h
 
 Give it your own Meta Model API key to try your own piece. The key stays in that browser tab, goes with each call and is never stored. The hosted site also lets anyone try one piece on my credit, with a limit per visitor and a limit a day, until that runs out.
 
-The free **Watch it work** door is waiting for the final recorded runs. It stays disabled until those files are present in `public/demo/`. A prepared replay uses the same screens and says when it was recorded and how long it took live.
+The free **Watch it work** door is waiting for the complete recorded walkthrough. It stays disabled until that path is verified and its index is published in `public/demo/`. A replay uses the same screens, spends no credit and keeps the real model, prompt version and elapsed time in each saved call. It follows one exact prepared direction. Changes without a recorded answer stop there and never become a paid call.
+
+The source and its reading and harmony analysis are recorded. They use my exact `Sample_sketch.mid`, read as 24 bars of 3/4. The original MIDI has 117 notes. Its accepted notation reading has 114, because the existing import threshold excludes three very soft notes at velocities 1, 5 and 4. Those notes remain in the original MIDI download. The recorded walkthrough opens the exact accepted MusicXML directly, so it does not make a new bar-reading call. The recording checklist is in [DEMO.md](DEMO.md).
 
 ## What Muse Spark does
 
-Muse Spark 1.3 makes every musical decision, through strict JSON schemas on the Responses API. Six calls run in a chain, and each is fixed on the server.
+Muse Spark 1.3 makes the musical decisions through strict JSON schemas on the Responses API. Each stage has a fixed contract on the server. The selected job determines which stages run.
 
 | Call | What it decides |
 | --- | --- |
 | `read_bars` | The metre and the bars of a piece played with no click, from the notes alone |
 | `read_piece` | Who has the tune, what each track is, the sections, what's missing, and what to ask you |
+| `study_score` | Harmony, formal sections and musical moments addressed to the supplied notes |
 | `distribute` | Who plays each of your lines, for the instruments you chose |
-| `plan_options` | Two whole arrangements in words, with chords and levels bar by bar, before a note exists |
-| `plan_recompose` | Two new pieces from your motif, each with its own key, metre, tempo and form |
+| `plan_options` | Two faithful arrangements or expansions, according to the selected intent |
+| `plan_recompose` | Two new pieces within the selected freedom |
+| `write_theme` | The tune, counterline and bass of a recomposition before orchestration |
 | `arrange` | The notes, one section at a time, with each real line written once |
+| `fit_form` | Suggested section orders for confirmed timed moments |
 
 What it's told about music is in `server/brain.ts`, in my own words: harmony on a fixed tune, film harmony, variation, form, orchestration, dynamics and scoring to picture. A plan names its chords bar by bar, so you can read the harmony and reject it before anything is written.
+
+Faithful Arrange keeps the source harmony and character. Mood and freer development belong in Expand or Recompose. A theme is a recognisable musical statement. A motif is a smaller distinctive gesture within it. Inspiration is a broader influence and does not promise that the original theme will be recognisable. The chosen freedom states what must remain. My source-backed reasoning is in [the intent research note](docs/research/2026-11-04-arrangement-intents.md).
 
 ## What the code does
 
 The code measures and checks, and never makes a musical decision. It reads a free performance into a tempo map, beat by beat, so the score and the MIDI keep your timing. It moves your notes onto instruments without adding any and counts them. It checks every new note against what's sounding and the instrument's range. It copies doublings exactly, so a full orchestra stays within what one call can write. It carries levels through to the page, to MIDI velocity and to a mod wheel curve. On a recomposition it measures how often the motif's shape really comes back, as written, upside down or backwards. It says all of this on screen, and it doesn't tell you the music is good. That's your ear.
 
-Muse Spark 1.3 is the only AI model Motifold uses. Every call goes from the server to Meta's Model API, on my key or on yours.
+Muse Spark 1.3 is the only AI model Motifold uses. Live calls go from the server to Meta's Model API, on my key or on yours. A recorded replay reads local saved replies and never contacts the provider.
 
 A recording becomes notes in your browser with no model at all. YIN finds the pitch every 10 ms, and the code turns that into notes where the pitch holds, where it changes and where the level jumps on the same pitch. Nothing is uploaded. It hears one line at a time, so chords need MIDI or MusicXML. On my own recorded piano melody it found 44 of the 52 notes I played and added 6 that I didn't. That's one recording, so it says nothing yet about yours.
 
-Every call goes through a ledger that reserves the worst case first and stops at a cap, so no one can spend more than I've allowed.
+Calls on my shared credit go through a ledger that reserves the worst case first and stops at a cap. Calls on your own key bill your Meta account.
 
 ## Run it
 
@@ -54,7 +61,7 @@ To explore the interface with no model calls, run `npm run dev:ui` and open http
 
 ## What it can't do yet
 
-It writes notes and levels, and no marks like pizzicato or mutes. No choir. Audio is one line at a time, and very soft high notes can go missing. I've tested it on short orchestral sketches of mine, so I'm not claiming it does this for everyone's music. A live mood takes several minutes, because it thinks about every section. It sounds like a good notation program in the browser, and it's your own instruments that say how it really sounds.
+It writes notes, dynamics and plucked string parts, but not a general set of articulations or mutes. No choir. Audio is one line at a time, and very soft high notes can go missing. I've tested it on short orchestral sketches of mine, so I'm not claiming it does this for everyone's music. Live planning and writing can take several minutes. It sounds like a notation program in the browser, and it's your own instruments that say how it really sounds.
 
 ## Made before the event
 

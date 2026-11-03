@@ -2,8 +2,9 @@
 import midiUrl from '../test-fixtures/Sample_sketch.mid?url';
 import saved from '../test-fixtures/sample-sketch-preview.json';
 import savedBars from '../test-fixtures/sample-sketch-bars.json';
+import study from '../test-fixtures/sample-sketch-study.json';
 import { sketchPreview } from './sampleSketch';
-import { newBarNumbers, type ArrangeInput, type StudyScoreAnswer, type WriteInput } from '../server/shapes';
+import { newBarNumbers, type ArrangeInput, type WriteInput } from '../server/shapes';
 import { setTransport, type SparkReply, type Transport } from './spark';
 
 export const initialSetup = { ensemble: 'Full orchestra', mood: 'Hopeful', moreBars: 16, intent: 'expand' as const, useMelodyOnly: true };
@@ -24,12 +25,9 @@ export const previewTransport: Transport = async (shape, unknownInput, think) =>
   if (shape === 'distribute') return ok(saved.distribute.answer);
   if (shape === 'plan_options') return ok(saved.plan.answer);
   if (shape === 'study_score') {
-    const answer: StudyScoreAnswer = {
-      overview: 'A local sample for exploring the score workspace. The answers here are fixed.',
-      sections: saved.read.answer.sections.map((s, index) => ({ ...s, form: String.fromCharCode(65 + index), mood: '', what: 'A section of the supplied sketch.' })),
-      harmony: [], moments: [],
-    };
-    return ok(answer);
+    return JSON.stringify(input.written) === JSON.stringify(study.input.written)
+      ? ok(study.reply.answer)
+      : { status: 'fallback', reason: 'not-prepared' };
   }
   if (shape === 'plan_recompose' || shape === 'write_theme') return { status: 'fallback', reason: 'not-prepared' };
   if (shape === 'arrange') {
