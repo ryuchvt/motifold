@@ -12,6 +12,7 @@ import { setTransport } from '../app/spark';
 import { TEMPLATES } from '../app/orchestra';
 import { emptyScore, packageFiles, scoreTracks } from '../app/arrange';
 import { distribute } from '../server/shapes';
+import { fixCurrent } from '../app/fixContext';
 import { captureHookDownload, claimRegisterRepair, runNightRecipe, type NightIO } from './night-capture-client';
 import { NIGHT_RECIPES } from './night-capture-matrix';
 
@@ -32,7 +33,8 @@ it('enumerates102 unique recipes and204 outcomes in the approved priority order'
   expect(NIGHT_RECIPES.filter(item => item.intent === 'recompose')).toHaveLength(90);
 });
 
-async function setup(failure?: 'notes' | 'theme' | 'zero-adds' | 'grouped-theme' | 'range-fixed' | 'range-repeat' | 'range-fallback' | 'range-other-flags' | 'layout-fallback' | 'b-empty-theme' | 'b-invalid-theme') {
+type NewRepair = 'new-fixed' | 'new-repeat' | 'new-fallback' | 'new-drop' | 'new-add' | 'new-rhythm' | 'new-dyn' | 'new-role' | 'new-art' | 'new-unrelated' | 'new-three-bars';
+async function setup(failure?: 'notes' | 'theme' | 'zero-adds' | 'grouped-theme' | 'range-fixed' | 'range-repeat' | 'range-fallback' | 'range-other-flags' | 'layout-fallback' | 'b-empty-theme' | 'b-invalid-theme' | NewRepair) {
   vi.stubGlobal('crypto', webcrypto);
   vi.stubGlobal('fetch', vi.fn(() => { throw Error('No real network is allowed'); }));
   const requests: { shape: string; input: any }[] = [];
@@ -61,6 +63,25 @@ async function setup(failure?: 'notes' | 'theme' | 'zero-adds' | 'grouped-theme'
       if (failure === 'notes') return { status: 'fallback', reason: 'budget' };
       if (failure === 'zero-adds') return { status: 'ok', cached: false, answer: { adds: [], doubles: [] } };
       const from = Number(asked.window?.from ?? '1'), to = Number(asked.window?.to ?? '24');
+      if (failure?.startsWith('new-') && asked.seed) {
+        if (asked.fix && failure === 'new-fallback') return { status: 'fallback', reason: 'unknown-charge' };
+        const adds = Array.from({ length: to - from + 1 }, (_, index) => {
+          const bar = String(from + index), bad = bar === '10' || (failure === 'new-three-bars' && bar === '11');
+          return [{ part: 'Violin I', bar, events: bad ? 'A3@0+1 G3@1+1 F3@2+1' : `${asked.chosen.name === 'Synthetic B' ? 'D5' : 'C5'}@0+3`, dyn: bad ? 'p<mf' : 'mp', role: bad ? 'countermelody' : 'melody', art: bad ? 'pizz' : '' }, { part: 'Cello', bar, events: 'C3@0+3', dyn: 'p', role: 'bass', art: '' }, ...(bar === '30' ? [{ part: 'Flute 1', bar, events: 'B3@0+1.5 C4@1.5+1.5', dyn: 'mp', role: 'melody', art: '' }] : [])];
+        }).flat();
+        const doubles = from <= 10 && to >= 10 ? [{ from: '10', to: '10', of: 'Violin I', part: 'Violin II', octave: 0 }] : [];
+        if (asked.fix && failure !== 'new-repeat') {
+          for (const add of adds) add.events = add.events.replaceAll('F3', 'F4').replaceAll('B3', 'B4');
+          if (failure === 'new-drop') adds.splice(adds.findIndex(add => add.part === 'Cello'), 1);
+          if (failure === 'new-add') adds.push({ part: 'Cello', bar: String(from), events: 'G2@0+3', dyn: 'p', role: 'bass', art: '' });
+          if (failure === 'new-rhythm') adds[0]!.events = adds[0]!.events.replace('@0+', '@0.01+');
+          if (failure === 'new-dyn') adds[0]!.dyn = 'ff';
+          if (failure === 'new-role') adds[0]!.role = 'harmony';
+          if (failure === 'new-art') adds[0]!.art = '';
+          if (failure === 'new-unrelated') adds.find(add => add.part === 'Cello')!.events = 'C4@0+3';
+        }
+        return { status: 'ok', cached: false, answer: { adds, doubles } };
+      }
       if (asked.seed && failure === 'grouped-theme') return { status: 'ok', cached: false, answer: { adds: ['Violin I', 'Violin II'].flatMap(part => Array.from({ length: to - from + 1 }, (_, index) => ({ part, bar: String(from + index), events: 'C5@0+3', dyn: 'mp', role: 'melody', art: '' }))), doubles: [] } };
       if (asked.seed || from > 24) return { status: 'ok', cached: false, answer: { adds: Array.from({ length: to - from + 1 }, (_, index) => ({ part: 'Violin I', bar: String(from + index), events: `${asked.chosen.name === 'Synthetic B' ? 'D5' : 'C5'}@0+3`, dyn: 'mp', role: 'melody', art: '' })), doubles: [] } };
       const receipt = saved.find((call: any) => call.shape === 'arrange' && call.input.chosen.name === recordedPlan.name && call.input.window.from === String(from));
@@ -100,6 +121,47 @@ it.each(['arrange', 'expand'] as const)('captures actual-hook %s A and B ZIPs af
   }
   expect(requests.find(call => call.shape === 'distribute')!.input).toMatchObject({ intent, answers: [], tracks: [{ line: 'Piano upper', instrument: 'Piano' }, { line: 'Piano lower', instrument: 'Piano' }] });
   expect(requests.filter(call => call.shape === 'arrange').some(call => call.input.chosen.name === 'Synthetic B' && call.input.window.from !== '1')).toBe(true);
+  expect(fetch).not.toHaveBeenCalled();
+});
+
+it('repairs at most two bad new-note bars through real askFix, preserves both identities and exports both actual ZIPs', async () => {
+  const { current, io, files, phases, requests } = await setup('new-fixed');
+  const recipe = NIGHT_RECIPES.find(item => item.intent === 'recompose' && item.ensemble === 'Full orchestra' && item.mood === 'Neutral')!;
+  const result = await runNightRecipe(recipe, current, io, 'new-note-repair');
+  expect(result.status, result.error).toBe('complete');
+  const fixes = requests.filter(call => call.input.fix);
+  expect(fixes.map(call => [call.input.chosen.name, call.input.window.from, call.input.window.to])).toEqual([['Synthetic A', '10', '10'], ['Synthetic A', '30', '30'], ['Synthetic B', '10', '10'], ['Synthetic B', '30', '30']]);
+  expect(fixes.every(call => call.input.fix.ask.length <= 400 && call.input.seed.theme.includes(`Bar ${call.input.window.from} tune:`))).toBe(true);
+  expect(fixes[0]!.input.fix.current).toContain(JSON.stringify({ dyn: 'p<mf', role: 'countermelody', art: 'pizz' }));
+  expect(phases.filter(phase => phase.includes('note-range-repair'))).toEqual(['a-note-range-repair-1', 'a-note-range-repair-2', 'b-note-range-repair-1', 'b-note-range-repair-2']);
+  for (const label of ['a', 'b']) {
+    const summary = JSON.parse(strFromU8(files.get(`${label}-summary.json`)!));
+    const proof = JSON.parse(strFromU8(files.get(`${label}-note-range-repair.json`)!));
+    expect(summary).toMatchObject({ chosen: label === 'a' ? 0 : 1, selected: 0, plan: { name: `Synthetic ${label.toUpperCase()}` }, check: { outOfRange: [], unreadable: 0, overBars: 0, pastBarEnd: 0 } });
+    expect(proof.status).toBe('complete'); expect(proof.repairs).toHaveLength(2);
+    expect(fixes.find(call => call.input.chosen.name === summary.plan.name)!.input.fix.current).toBe(fixCurrent(proof.repairs[0].before, ['10']));
+    const parsed = parseScore(strFromU8(unzipSync(files.get(`${label}.zip`)!)['score.musicxml']!));
+    expect(parsed.parts).toHaveLength(recipe.instruments.length); expect(parsed.parts.every(part => part.measures.length === 32)).toBe(true);
+  }
+  expect(files.get('a-score.musicxml')).not.toEqual(files.get('b-score.musicxml'));
+  expect(fetch).not.toHaveBeenCalled();
+});
+
+it('claims each physical new-note repair phase once and rejects an extra ordinal or another shape', () => {
+  const claimed = new Set<string>(), phase = 'local-a-note-range-repair-1';
+  expect(() => claimRegisterRepair(phase, 'distribute', claimed)).toThrow(); expect(claimed.size).toBe(0);
+  claimRegisterRepair(phase, 'arrange', claimed);
+  expect(() => claimRegisterRepair(phase, 'arrange', claimed)).toThrow('already attempted');
+  expect(() => claimRegisterRepair('local-a-note-range-repair-3', 'arrange', claimed)).toThrow('bounded allowance');
+});
+
+it.each(['new-repeat', 'new-fallback', 'new-drop', 'new-add', 'new-rhythm', 'new-dyn', 'new-role', 'new-art', 'new-unrelated', 'new-three-bars'] as const)('rejects %s without another repair, B theme or export', async failure => {
+  const { current, io, files, requests } = await setup(failure);
+  const recipe = NIGHT_RECIPES.find(item => item.intent === 'recompose' && item.ensemble === 'Full orchestra' && item.mood === 'Neutral')!;
+  const result = await runNightRecipe(recipe, current, io, failure);
+  expect(result.status).toBe('failed'); expect(requests.filter(call => call.input.fix)).toHaveLength(failure === 'new-three-bars' ? 0 : 1);
+  expect(requests.filter(call => call.shape === 'write_theme')).toHaveLength(1);
+  expect(files.has('a.zip')).toBe(false); expect(files.has('b.zip')).toBe(false); expect(files.has('failure.json')).toBe(true);
   expect(fetch).not.toHaveBeenCalled();
 });
 

@@ -10,9 +10,11 @@ import { readMidi } from '../app/midi.ts';
 import * as timing from '../app/timing.ts';
 import { newBarNumbers } from '../server/shapes.ts';
 import { TEMPLATES } from '../app/orchestra.ts';
+import { fixCurrent } from '../app/fixContext.ts';
+import { assertNewNoteRangeRepair, newNoteRangeRepairs } from './new-note-range-repair.ts';
 import { buildCatalog, canonicalCalls, expectedRecipes, exposureReport, validateOutcome } from './build-night-catalog.mjs';
 
-const readers = { parseScore, ...arrange, ...timing, readMidi, newBarNumbers };
+const readers = { parseScore, ...arrange, ...timing, readMidi, newBarNumbers, fixCurrent, assertNewNoteRangeRepair, newNoteRangeRepairs };
 const sourceXml = readFileSync('public/demo/sample-sketch/sample-sketch.musicxml', 'utf8');
 const source = parseScore(sourceXml), recipe = expectedRecipes(TEMPLATES)[0];
 const publicCalls = [...JSON.parse(readFileSync('public/demo/sample-sketch/shared.json', 'utf8')), ...JSON.parse(readFileSync('public/demo/sample-sketch/arrange-neutral.json', 'utf8'))];
@@ -92,6 +94,111 @@ function sourceOnly(x, moveOctave = false) {
   x.summary.zip.sha256 = hash(exported);
   return exported;
 }
+
+function repairedFixture() {
+  const x = fixture(), layout = x.receipts.find(row => row.shape === 'distribute');
+  const placed = arrange.placeNotes(source, layout.input, layout.reply.answer, recipe.instruments, false), baseXml = arrange.scoreOfParts(source, layout.input, placed.parts), base = parseScore(baseXml);
+  const writes = x.receipts.filter(row => row.shape === 'arrange' && row.input.chosen.name === x.summary.plan.name), input = writes[0].input, bars = input.written.map(bar => bar.bar);
+  const bad = writes.flatMap(row => row.reply.answer.adds).find(add => add.part === 'Viola' && add.bar === '9');
+  bad.events = 'G2@0+3';
+  const before = writes.flatMap(row => arrange.withDoubles(row.reply.answer, bars)).sort((a, b) => bars.indexOf(a.bar) - bars.indexOf(b.bar));
+  const initialCheck = arrange.checkOption({ ...x.summary.plan, adds: before }, base, input), repairs = newNoteRangeRepairs(initialCheck);
+  expect(repairs).toHaveLength(1);
+  const { window, earlier, seed, ...sameInput } = input;
+  const fix = { ...structuredClone(writes[0]), attemptId: 'local-new-note-fix', captureCase: `${x.caseId}-a-note-range-repair-1`, input: { ...sameInput, window: { from: '9', to: '9' }, fix: { ask: repairs[0].ask, current: fixCurrent(before, ['9']) } }, reply: { ...writes[0].reply, answer: { adds: before.filter(add => add.bar === '9').map(add => add.part === 'Viola' ? { ...add, events: 'G3@0+3' } : { ...add }), doubles: [] } } };
+  x.receipts.push(fix); x.summary.noteRangeRepairs = repairs;
+  const rebuild = () => {
+    const adds = [...before.filter(add => add.bar !== '9'), ...arrange.withDoubles(fix.reply.answer, bars)];
+    const check = arrange.checkOption({ ...x.summary.plan, adds }, base, input), xml = arrange.withOption(baseXml, base, check);
+    const bytes = arrange.packageFiles(xml, check, 'Local authenticated bar replacement');
+    x.summary.check = check; x.summary.notes = arrange.scoreTracks(parseScore(xml)).flatMap(track => track.notes).length; x.summary.zip.sha256 = hash(bytes);
+    x.summary.requests = x.receipts.map(row => ({ shape: row.shape, input: row.input, caseId: row.captureCase, attemptId: row.attemptId, status: 'ok' }));
+    return bytes;
+  };
+  return { ...x, fix, before, rebuild };
+}
+
+it('authenticates a genuine new-note fix as complete bar replacement while retaining the original reply and source gates', () => {
+  const x = repairedFixture(), bytes = x.rebuild();
+  const result = validateOutcome(x.summary, bytes, { recipe, readers, receipts: x.receipts, sourceXml });
+  expect(result.inspection.notes).toBe(211); expect(result.placement.acceptedSourceNotes).toBe(114);
+  expect(result.calls.filter(call => call.shape === 'arrange')).toHaveLength(5);
+  expect(result.calls.some(call => call.shape === 'arrange' && call.reply.answer.adds.some(add => add.events === 'G2@0+3'))).toBe(true);
+  expect(result.calls.some(call => call.input.fix?.current === fixCurrent(x.before, ['9']))).toBe(true);
+  expect(x.summary.check.outOfRange).toEqual([]);
+});
+
+it.each(['dropped', 'added', 'pitch-class', 'raw-rhythm', 'dyn', 'role', 'art', 'context', 'seed', 'wrong-plan', 'wrong-phase', 'retry', 'unsettled'] )('rejects an authenticated but invalid new-note repair: %s', fault => {
+  const x = repairedFixture(), add = x.fix.reply.answer.adds.find(add => add.part === 'Viola');
+  if (fault === 'dropped') x.fix.reply.answer.adds = x.fix.reply.answer.adds.filter(item => item !== add);
+  if (fault === 'added') x.fix.reply.answer.adds.push({ ...add, events: 'A3@1+1' });
+  if (fault === 'pitch-class') add.events = 'G#3@0+3';
+  if (fault === 'raw-rhythm') add.events = 'G3@0.01+2.99';
+  if (fault === 'dyn') add.dyn = 'ff';
+  if (fault === 'role') add.role = 'bass';
+  if (fault === 'art') add.art = 'pizz';
+  if (fault === 'context') x.fix.input.fix.current += ' edited';
+  if (fault === 'seed') x.fix.input.seed = { tune: 'A different source', motif: 'A different motif' };
+  if (fault === 'wrong-plan') x.fix.input.chosen = x.receipts.find(row => row.shape === 'plan_options').reply.answer.options[1];
+  if (fault === 'wrong-phase') x.fix.captureCase = `${x.caseId}-b-note-range-repair-1`;
+  if (fault === 'retry') x.receipts.push({ ...structuredClone(x.fix), attemptId: 'local-second-physical-fix' });
+  if (fault === 'unsettled') x.fix.receipt = { state: 'uncertain', reserved_micros: 1_480_720, charged_micros: null };
+  const bytes = x.rebuild();
+  expect(() => validateOutcome(x.summary, bytes, { recipe, readers, receipts: x.receipts, sourceXml })).toThrow();
+});
+
+function recomposeRepairPair(repairB, identicalPlans = false) {
+  const x = fixture(), target = expectedRecipes(TEMPLATES).find(item => item.intent === 'recompose' && item.ensemble === 'String orchestra' && item.mood === 'Neutral');
+  const receipts = x.receipts.slice(0, 2), outcomes = [];
+  const plans = ['A', 'B'].map(name => ({ name: `Local repaired ${name}`, idea: 'A local fixture', fifths: 0, time: '3/4', qpm: 90, motif: { from: '1', to: '2', what: 'Opening rise' }, why: [{ from: '1', to: '32', what: 'Complete', principle: 'Develop' }] }));
+  if (identicalPlans) plans[1] = structuredClone(plans[0]);
+  const asked = arrange.arrangeInput(source, source.parts[0], 0, 23, '', 32, null, { instruments: target.instruments, where: 'after', freedom: 2 });
+  const make = (shape, input, answer, phase) => ({ ...structuredClone(x.receipts[0]), shape, input, attemptId: `local-pair-${receipts.length}-${phase}`, captureCase: `${x.caseId}-${phase}`, reply: { status: 'ok', cached: false, answer, sources: [], model: 'muse-spark-1.3', version: `${shape}-local-fixture` } });
+  receipts.push(make('plan_recompose', asked, { options: plans }, 'plan'));
+  for (const [index, label] of ['a', 'b'].entries()) {
+    const plan = plans[index], repair = index === 0 || repairB;
+    const baseXml = arrange.emptyScore(plan.name, target.instruments, { fifths: 0, time: '3/4', qpm: 90, bars: 32 }), base = parseScore(baseXml);
+    const input = arrange.arrangeInput(base, base.parts[0], 0, 31, '', 0, null, { instruments: target.instruments, where: 'inside', freedom: 2 }), bars = input.written.map(bar => bar.bar);
+    const pitch = index && !identicalPlans ? 'D5' : 'C5';
+    const lines = bars.map(bar => ({ bar, role: 'tune', events: `${pitch}@0+3` })), originalSeed = { tune: 'An original local fixture tune', motif: 'Opening rise from bars1 to2' };
+    receipts.push(make('write_theme', { ...asked, chosen: plan }, { lines }, `${label}-full`));
+    let adds = [];
+    for (let from = 1; from <= 32; from += 8) {
+      const these = bars.slice(from - 1, from + 7), written = these.map(bar => ({ part: 'Violin I', bar, events: repair && bar === '10' ? 'F3@0+3' : `${pitch}@0+3`, dyn: 'p<mf', role: 'melody', art: 'pizz' }));
+      const theme = lines.filter(line => these.includes(line.bar)).map(line => `Bar ${line.bar} ${line.role}: ${line.events}`).join(' / ');
+      receipts.push(make('arrange', { ...input, chosen: plan, window: { from: String(from), to: String(from + 7) }, seed: { ...originalSeed, theme } }, { adds: written, doubles: [] }, `${label}-full`));
+      adds.push(...written);
+    }
+    let fix, repairs;
+    if (repair) {
+      repairs = newNoteRangeRepairs(arrange.checkOption({ ...plan, adds }, base, input));
+      const replacement = [{ ...adds.find(add => add.bar === '10'), events: 'F4@0+3' }];
+      fix = make('arrange', { ...input, chosen: plan, window: { from: '10', to: '10' }, fix: { ask: repairs[0].ask, current: fixCurrent(adds, ['10']) }, seed: { ...originalSeed, theme: `Bar 10 tune: ${pitch}@0+3` } }, { adds: replacement, doubles: [] }, `${label}-note-range-repair-1`);
+      receipts.push(fix); adds = [...adds.filter(add => add.bar !== '10'), ...replacement];
+    }
+    const check = arrange.checkOption({ ...plan, adds }, base, input), bytes = arrange.packageFiles(arrange.withOption(baseXml, base, check), check, 'Local pair with exact bar repair');
+    const summary = { ...x.summary, recipe: target, label: label.toUpperCase(), chosen: index, selected: 0, plan, bars: 32, notes: 32, check, sourceLayout: null, theme: { plan, tuneBars: 32, bars: 32 }, ...(repairs ? { noteRangeRepairs: repairs } : {}), requests: receipts.map(row => ({ shape: row.shape, input: row.input, caseId: row.captureCase, attemptId: row.attemptId, status: 'ok' })), zip: { sha256: hash(bytes) } };
+    outcomes.push({ summary, bytes, fix });
+  }
+  return { recipe: target, receipts, outcomes };
+}
+
+it.each([[false, false], [true, false], [true, true]])('keeps A repair history separate from B when B repair=%s and identical plans=%s', (repairB, identicalPlans) => {
+  const x = recomposeRepairPair(repairB, identicalPlans);
+  for (const outcome of x.outcomes) {
+    const verified = validateOutcome(outcome.summary, outcome.bytes, { recipe: x.recipe, readers, receipts: x.receipts, sourceXml });
+    expect(verified.inspection.notes).toBe(32); expect(verified.placement).toBeNull();
+    expect(verified.calls.filter(call => call.input.fix)).toHaveLength(outcome.fix ? 1 : 0);
+    expect(verified.calls.filter(call => call.shape === 'arrange' && !call.input.fix)).toHaveLength(4);
+  }
+  expect(x.outcomes[1].summary.requests.filter(call => call.input.fix)).toHaveLength(repairB ? 2 : 1);
+});
+
+it.each(['tune', 'motif', 'theme'])('refuses a genuine fix whose selected recomposition %s context changed', field => {
+  const x = recomposeRepairPair(true), outcome = x.outcomes[1];
+  outcome.fix.input.seed[field] += ' changed';
+  expect(() => validateOutcome(outcome.summary, outcome.bytes, { recipe: x.recipe, readers, receipts: x.receipts, sourceXml })).toThrow('theme seed');
+});
 
 it('accepts genuine source-only orchestration and recorded range-fitting octaves without requiring the original absolute pitches', () => {
   for (const moveOctave of [false, true]) {

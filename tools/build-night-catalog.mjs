@@ -22,6 +22,7 @@ const write = (file, bytes) => { mkdirSync(dirname(file), { recursive: true }); 
 const answerOf = reply => { const { cached, model, version, ...answer } = reply; return answer; };
 const identity = call => stable({ shape: call.shape, input: call.input, version: call.version, model: call.model });
 const PHASES = { 'read-study': ['read_piece', 'study_score'], layout: ['distribute'], 'layout-range-repair': ['distribute'], plan: ['plan_options', 'plan_recompose'], 'a-preview': ['arrange'], 'b-preview': ['arrange'], 'a-full': ['arrange', 'write_theme'], 'b-full': ['arrange', 'write_theme'] };
+for (const label of ['a', 'b']) for (const ordinal of [1, 2]) PHASES[`${label}-note-range-repair-${ordinal}`] = ['arrange'];
 
 export function expectedRecipes(templates) {
   const recipe = (intent, ensemble, mood = 'Neutral') => ({ id: `${intent}-${slug(mood)}-${slug(ensemble.name)}`, intent, ensemble: ensemble.name, instruments: [...ensemble.instruments], mood, bars: intent === 'arrange' ? 24 : intent === 'expand' ? 40 : 32, moreBars: intent === 'expand' ? 16 : intent === 'recompose' ? 32 : 0, where: intent === 'expand' ? 'both' : intent === 'recompose' ? 'after' : 'inside', tuneOnly: false, freedom: 2 });
@@ -93,14 +94,18 @@ export function validateOutcome(summary, archive, { recipe, readers, receipts, s
   demand(stems.length === readers.scoreTracks(score).length && stems.length > 0, 'Missing individual part MIDI files');
   const stemNotes = stems.flatMap(([, bytes]) => { const part = readers.readMidi(bytes); demand(part.ppq === all.ppq, 'Part MIDI timing grid mismatch'); return midiNotes(part); }).sort((a, b) => stable(a).localeCompare(stable(b)));
   demand(equal(stemNotes, midiNotes(all)), 'Part MIDI notes disagree with complete MIDI');
-  const requests = summary.requests?.filter(call => !['arrange', 'write_theme'].includes(call.shape) || equal(call.input?.chosen, summary.plan));
+  const label = summary.label.toLowerCase();
+  const selectedPhase = call => summary.caseId === null ? equal(call.input?.chosen, summary.plan) : [`${summary.caseId}-${label}-preview`, `${summary.caseId}-${label}-full`, `${summary.caseId}-${label}-note-range-repair-1`, `${summary.caseId}-${label}-note-range-repair-2`].includes(call.caseId);
+  const requests = summary.requests?.filter(call => !['arrange', 'write_theme'].includes(call.shape) || selectedPhase(call));
+  demand(requests?.filter(call => ['arrange', 'write_theme'].includes(call.shape)).every(call => equal(call.input?.chosen, summary.plan)), 'Selected outcome phase uses another plan');
   const calls = canonicalCalls(requests, receipts, summary.caseId);
   const original = readers.parseScore(sourceXml);
   const frozenInput = readers.pieceInput(original, original.parts[0], 0, original.parts[0].measures.length - 1);
   demand(calls.filter(call => ['read_piece', 'study_score'].includes(call.shape)).every(call => equal(call.input, frozenInput)), 'Reading or Study does not belong to the frozen source');
-  const writes = calls.filter(call => call.shape === 'arrange' && equal(call.input.chosen, summary.plan));
+  const allWrites = calls.filter(call => call.shape === 'arrange' && equal(call.input.chosen, summary.plan));
+  const writes = allWrites.filter(call => !call.input.fix), fixes = allWrites.filter(call => call.input.fix);
   demand(writes.length > 0, 'No authentic writing for selected plan');
-  demand(writes.every(call => !call.input.fix && equal(call.input.instruments, recipe.instruments)), 'Writing does not match the captured recipe');
+  demand(allWrites.every(call => equal(call.input.instruments, recipe.instruments)), 'Writing does not match the captured recipe');
   const plans = calls.filter(call => call.shape === (recipe.intent === 'recompose' ? 'plan_recompose' : 'plan_options') && call.reply.answer.options?.some(plan => equal(plan, summary.plan)));
   demand(plans.length === 1, 'Selected plan has no unique authentic planning receipt');
   demand(equal(plans[0].reply.answer.options[summary.chosen], summary.plan), 'A/B label does not match its actual plan');
@@ -151,13 +156,43 @@ export function validateOutcome(summary, archive, { recipe, readers, receipts, s
     for (const bar of bars.slice(from, to + 1)) coverage.set(bar, coverage.get(bar) + 1);
   }
   demand([...coverage.values()].every(count => count === 1), 'Missing or overlapping authenticated writing windows');
-  const adds = writes.flatMap(call => readers.withDoubles(call.reply.answer, bars));
+  let adds = writes.flatMap(call => readers.withDoubles(call.reply.answer, bars));
   // Only a preview followed by further windows takes useArrange's unfinished/resume branch.
   // A one-call preview is reused as-is; a fresh recomposition also retains raw reply order.
   const preview = `${summary.caseId}-${summary.label.toLowerCase()}-preview`;
   const resumed = writes.length > 1 && recipe.intent !== 'recompose' && (summary.caseId === null || requests.some(call => call.shape === 'arrange' && call.caseId === preview && call.status === 'ok'));
   if (resumed) adds.sort((a, b) => bars.indexOf(a.bar) - bars.indexOf(b.bar));
-  const base = readers.parseScore(baseXml), check = readers.checkOption({ ...summary.plan, adds }, base, input);
+  const base = readers.parseScore(baseXml);
+  let check = readers.checkOption({ ...summary.plan, adds }, base, input);
+  const fixRequests = requests.filter(call => call.shape === 'arrange' && equal(call.input?.chosen, summary.plan) && call.input?.fix);
+  if (fixes.length || fixRequests.length || summary.noteRangeRepairs?.length) {
+    const proposed = readers.newNoteRangeRepairs(check);
+    demand(proposed && fixes.length === proposed.length && fixRequests.length === fixes.length, 'Invalid bounded new-note repair count');
+    demand(equal(summary.noteRangeRepairs, proposed), 'Range-repair metadata differs from the authentic failure');
+    for (const [ordinal, repair] of proposed.entries()) {
+      const fix = fixes[ordinal], observed = fixRequests[ordinal];
+      demand(observed.status === 'ok' && observed.caseId === `${summary.caseId}-${summary.label.toLowerCase()}-note-range-repair-${ordinal + 1}` && equal(observed.input, fix.input), 'Range repair was retried, mislabeled or did not succeed');
+      const context = readers.fixCurrent(adds, [repair.bar]);
+      demand(context.length < 8000 && equal(fix.input.fix, { ask: repair.ask, current: context }) && equal(fix.input.window, { from: repair.bar, to: repair.bar }), 'Range repair has the wrong pre-repair context or bar');
+      const stripped = value => { const { window, earlier, seed, fix, ...rest } = value; return rest; };
+      demand(equal(stripped(fix.input), stripped(input)) && fix.input.earlier === undefined, 'Range repair changed the writing input or plan');
+      let seed;
+      if (input.seed) {
+        const { theme, ...originalSeed } = input.seed;
+        const themes = calls.filter(call => call.shape === 'write_theme' && equal(call.input.chosen, summary.plan));
+        demand(themes.length === 1, 'Range repair has no unique selected theme');
+        const text = themes[0].reply.answer.lines.filter(line => line.bar === repair.bar).map(line => `Bar ${line.bar} ${line.role}: ${line.events}`).join(' / ').slice(0, 8000);
+        seed = { ...originalSeed, ...(text ? { theme: text } : {}) };
+      }
+      demand(equal(fix.input.seed, seed), 'Range repair lost or changed the selected theme seed');
+      const replacement = readers.withDoubles(fix.reply.answer, bars);
+      demand(replacement.every(add => add.bar === repair.bar), 'Range repair returned an unrelated bar');
+      const next = [...adds.filter(add => add.bar !== repair.bar), ...replacement];
+      readers.assertNewNoteRangeRepair(adds, next, repair);
+      adds = next; check = readers.checkOption({ ...summary.plan, adds }, base, input);
+      demand(!check.overBars && !check.unreadable && !check.pastBarEnd && !check.outOfRange.some(note => note.bar === repair.bar), 'Range repair did not clear its bar safely');
+    }
+  }
   demand(equal(check, summary.check), 'Capture checks disagree with the actual written answers');
   const rebuiltXml = readers.withOption(baseXml, base, check);
   demand(rebuiltXml === strFromU8(files['score.musicxml']), 'Export does not reproduce the authenticated writing');
@@ -332,7 +367,7 @@ async function main() {
   const { createServer } = await import('vite');
   const modules = await createServer({ root: repo, configFile: false, server: { middlewareMode: true }, appType: 'custom' });
   try {
-    const readers = { ...(await modules.ssrLoadModule('/score/index.ts')), ...(await modules.ssrLoadModule('/app/arrange.ts')), ...(await modules.ssrLoadModule('/app/midi.ts')), ...(await modules.ssrLoadModule('/app/timing.ts')), newBarNumbers: (await modules.ssrLoadModule('/server/shapes.ts')).newBarNumbers };
+    const readers = { ...(await modules.ssrLoadModule('/score/index.ts')), ...(await modules.ssrLoadModule('/app/arrange.ts')), ...(await modules.ssrLoadModule('/app/midi.ts')), ...(await modules.ssrLoadModule('/app/timing.ts')), ...(await modules.ssrLoadModule('/app/fixContext.ts')), ...(await modules.ssrLoadModule('/tools/new-note-range-repair.ts')), newBarNumbers: (await modules.ssrLoadModule('/server/shapes.ts')).newBarNumbers };
     const { TEMPLATES } = await modules.ssrLoadModule('/app/orchestra.ts');
     const { report } = buildCatalog({ repo, input, output, receipts, readers, templates: TEMPLATES, publish: args.includes('--publish') });
     console.log(JSON.stringify({ complete: report.complete, completePairs: report.completePairs, unavailable: report.unavailable, budget: report.budget, renderPack: report.renderPack }, null, 2));

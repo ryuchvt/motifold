@@ -4,6 +4,8 @@ import { unzipSync, strFromU8 } from 'fflate';
 import { parseScore } from '../score';
 import { scoreTracks, type PlacedCheck } from '../app/arrange';
 import { placementRangeWords } from '../app/placementRepair';
+import { fixCurrent } from '../app/fixContext';
+import { assertNewNoteRangeRepair, newNoteRangeRepairs, type NoteRangeRepair } from './new-note-range-repair';
 import { useArrange, type Arranged } from '../app/useArrange';
 import { setOwnKey, setTransport } from '../app/spark';
 import { NIGHT_RECIPES, NIGHT_SOURCE, type NightRecipe } from './night-capture-matrix';
@@ -23,8 +25,10 @@ function fail(condition: unknown, message: string): asserts condition { if (!con
 
 /** Defend each register-repair phase against repeated physical dispatch. */
 export function claimRegisterRepair(context: string, shape: string, claimed: Set<string>): void {
-  if (!context.endsWith('-layout-range-repair')) return;
-  fail(shape === 'distribute', 'Register repair permits only distribute');
+  const layout = context.endsWith('-layout-range-repair'), notes = /-[ab]-note-range-repair-[12]$/.test(context);
+  fail(!context.includes('-note-range-repair-') || notes, 'New-note repair phase exceeds the bounded allowance');
+  if (!layout && !notes) return;
+  fail(shape === (layout ? 'distribute' : 'arrange'), 'Repair phase does not permit this request');
   fail(!claimed.has(context), 'Register repair was already attempted');
   claimed.add(context);
 }
@@ -36,12 +40,12 @@ export function registerRepairWords(check: PlacedCheck): string | null {
 }
 const digest = async (data: Uint8Array) => [...new Uint8Array(await crypto.subtle.digest('SHA-256', new Uint8Array(data).buffer))].map(byte => byte.toString(16).padStart(2, '0')).join('');
 function options(now: Arranged) { fail(now.options.status === 'ready', `Options ${now.options.status}`); return now.options; }
-function notes(now: Arranged, index: number, full: boolean) {
+function notes(now: Arranged, index: number, full: boolean, allowRange = false) {
   const value = options(now).notes[index];
   fail(value?.status === 'ready', `Notes ${index} ${value?.status ?? 'absent'}`);
   fail(!value.writing, 'Writing has not settled');
   if (full) fail(!value.preview && !value.missing?.length, 'Unfinished writing windows');
-  fail(!value.check.overBars && !value.check.unreadable && !value.check.pastBarEnd && !value.check.outOfRange.length, 'New-note range, occupied-bar, unreadable or overflow failure');
+  fail(!value.check.overBars && !value.check.unreadable && !value.check.pastBarEnd && (allowRange || !value.check.outOfRange.length), 'New-note range, occupied-bar, unreadable or overflow failure');
   return value;
 }
 const diagnostic = (now: Arranged) => ({
@@ -66,7 +70,29 @@ export async function runNightRecipe(recipe: NightRecipe, current: () => Arrange
     while (!ready()) { fail(Date.now() < deadline, `Timed out waiting for ${label}`); fail(!io.stopped?.(), 'Capture stopped'); await io.settle(); }
   };
   const exportOutcome = async (label: 'a' | 'b', index: number) => {
-    const held = notes(current(), index, true);
+    let held = notes(current(), index, true, true);
+    fail(current().trying?.kind === 'option' && current().trying?.index === index, 'Export selection does not own this outcome');
+    const repairs: NoteRangeRepair[] = [];
+    if (held.check.outOfRange.length) {
+      const proposed = newNoteRangeRepairs(held.check);
+      fail(proposed, 'New-note range failure is not eligible for bounded repair');
+      const input = options(current()).input, plan = options(current()).plans[index];
+      const proof: unknown[] = [];
+      for (const [ordinal, repair] of proposed.entries()) {
+        const before = structuredClone(held.adds);
+        fail(fixCurrent(before, [repair.bar]).length < 8000, 'Range-repair bar context would be truncated');
+        await save(`${label}-note-range-repair.json`, { status: 'asking', repairs: proof, repair, before });
+        await step(`${label}-note-range-repair-${ordinal + 1}`, () => current().askFix(index, repair.bar, repair.bar, repair.ask));
+        const after = notes(current(), index, true, true);
+        await save(`${label}-note-range-repair.json`, { status: current().fixing, repairs: proof, repair, before, after: after.adds });
+        fail(current().fixing === 'none' && !current().fixingReason, 'New-note range repair unavailable');
+        fail(options(current()).input === input && options(current()).plans[index] === plan, 'Range repair changed selected plan ownership');
+        assertNewNoteRangeRepair(before, after.adds, repair);
+        proof.push({ repair, before, after: after.adds }); repairs.push(repair); held = after;
+      }
+      await save(`${label}-note-range-repair.json`, { status: 'complete', repairs: proof });
+    }
+    held = notes(current(), index, true);
     fail(current().trying?.kind === 'option' && current().trying?.index === index, 'Export selection does not own this outcome');
     const observed = await io.observations?.() ?? [];
     if (recipe.intent === 'recompose') {
@@ -87,7 +113,7 @@ export async function runNightRecipe(recipe: NightRecipe, current: () => Arrange
       fail(/^(?:parts\/)?[a-zA-Z0-9][a-zA-Z0-9_.-]{0,100}\.(?:musicxml|mid|txt)$/.test(name) && !name.includes('..'), 'Unsafe package filename');
       await io.save(caseId, `${label}-${name.replace('/', '-')}`, data);
     }
-    const outcome = { caseId, recipe, status: 'complete', label: label.toUpperCase(), chosen: label === 'a' ? 0 : 1, selected: index, plan: options(current()).plans[index], bars: recipe.bars, parts: score.parts.map(part => part.name), notes: noteCount, check: held.check, missing: held.missing ?? [], source: NIGHT_SOURCE, sourceLayout: current().placed.status === 'ready' ? current().placed : null, theme: current().recomposed, zip: { file: `${caseId}/${label}.zip`, sha256: await digest(zip) }, requests: observed };
+    const outcome = { caseId, recipe, status: 'complete', label: label.toUpperCase(), chosen: label === 'a' ? 0 : 1, selected: index, plan: options(current()).plans[index], bars: recipe.bars, parts: score.parts.map(part => part.name), notes: noteCount, check: held.check, missing: held.missing ?? [], source: NIGHT_SOURCE, sourceLayout: current().placed.status === 'ready' ? current().placed : null, theme: current().recomposed, ...(repairs.length ? { noteRangeRepairs: repairs } : {}), zip: { file: `${caseId}/${label}.zip`, sha256: await digest(zip) }, requests: observed };
     result.outcomes.push(outcome); await save(`${label}-summary.json`, outcome); await save('progress.json', result);
   };
   try {
