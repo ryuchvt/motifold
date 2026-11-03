@@ -106,6 +106,14 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
   const [answered, setAnswered] = useState<Record<number, string>>({});
   const [placed, setPlaced] = useState<PlacedState>({ status: "none" });
   const [options, setOptions] = useState<OptionsState>({ status: "none" });
+  const optionsNow = useRef(options);
+  optionsNow.current = options;
+  /** Each plan owns its latest write or fix, while choosing what to hear is independent of background previews. */
+  const writingTurns = useRef(new Map<number, number>());
+  const previews = useRef(new Map<number, { input: ArrangeInput; promise: Promise<OptionNotes | undefined> }>());
+  const choiceTurn = useRef(0);
+  const displayTurn = useRef(0);
+  const keepViewOnChoice = useRef(false);
   const [trying, setTryingNow] = useState<Trying>(null);
   /** New parts the composer has taken off what's being tried. */
   const [off, setOff] = useState<string[]>([]);
@@ -194,10 +202,15 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     }
   };
 
-  const setTrying = (next: Trying) => {
+  const showTrying = (next: Trying, preserveView = false) => {
+    keepViewOnChoice.current = preserveView;
     setOff([]);
     setOffBars([]);
     setTryingNow(next);
+  };
+  const setTrying = (next: Trying, preserveView = false) => {
+    displayTurn.current++;
+    showTrying(next, preserveView);
   };
   const togglePart = (name: string) => setOff((now) => (now.includes(name) ? now.filter((p) => p !== name) : [...now, name]));
   /** The score under them has changed, so nothing still on its way may land on it. */
@@ -370,34 +383,74 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
   const setChords = (index: number, stretch: number, chords: string) =>
     setOptions((state) => {
       if (state.status !== "ready") return state;
-      const plans = state.plans.map((plan, k) => (k === index ? { ...plan, why: plan.why.map((w, j) => (j === stretch ? { ...w, chords, yours: true } : w)) } : plan));
       const notes = state.notes[index];
+      if (notes?.status === "asking" || (notes?.status === "ready" && notes.writing)) return state;
+      const plans = state.plans.map((plan, k) => (k === index ? { ...plan, why: plan.why.map((w, j) => (j === stretch ? { ...w, chords, yours: true } : w)) } : plan));
       return { ...state, plans, notes: notes?.status === "ready" ? { ...state.notes, [index]: { ...notes, changed: true } } : state.notes };
     });
 
   /** The notes of the option the composer chose, which go straight on the score. */
   const askNotes = async (index: number) => {
     if (!base || options.status !== "ready") return;
-    const held = options.notes[index];
+    const now = turn.current;
+    const chosen = ++choiceTurn.current;
+    const viewed = ++displayTurn.current;
+    const input = options.input;
+    let held = options.notes[index];
+    showTrying({ kind: "option", index });
+    // Choosing an opening that is still being written uses that result, rather than paying for it a second time.
+    const pending = previews.current.get(index);
+    if (pending?.input === input) {
+      held = await pending.promise;
+      if (turn.current !== now || choiceTurn.current !== chosen) return;
+    }
+    const state = optionsNow.current;
+    if (state.status !== "ready" || state.input !== input) return;
+    const plan = state.plans[index];
+    if (!plan) return;
+    if (held?.status === "ready" && !held.changed && !held.missing?.length) {
+      // A one-section opening may already be the whole plan.
+      setOptions((current) => current.status === "ready" && current.input === input ? { ...current, notes: { ...current.notes, [index]: { ...held, preview: false } } } : current);
+      return;
+    }
     // Changed chords are written again everywhere, finished sections too, or bars written from the old chords would stay under the new ones (review M4).
     const unfinished = held && "missing" in held && held.missing?.length && !(held.status === "ready" && held.changed) ? { adds: held.status === "ready" ? held.adds : [], missing: held.missing } : null;
     const again = held && "again" in held ? held.again : undefined;
-    await writeNotes(base, options.input, options.plans[index]!, index, options.saved, again?.seed ?? null, again?.theme ?? [], unfinished);
+    await writeNotes(base, input, plan, index, state.saved, again?.seed ?? null, again?.theme ?? [], unfinished, false, chosen, viewed);
   };
 
   /** The first section of a plan, to hear before choosing it. Choosing it writes the rest from there. */
   const askPreview = async (index: number) => {
-    if (!base || options.status !== "ready" || options.notes[index]) return;
-    await writeNotes(base, options.input, options.plans[index]!, index, options.saved, null, [], null, true);
+    if (!base || options.status !== "ready") return;
+    const pending = previews.current.get(index);
+    if (pending?.input === options.input) return await pending.promise;
+    if (options.notes[index] || !options.plans[index]) return;
+    const job = { input: options.input, promise: writeNotes(base, options.input, options.plans[index]!, index, options.saved, null, [], null, true) };
+    previews.current.set(index, job);
+    try {
+      return await job.promise;
+    } finally {
+      if (previews.current.get(index) === job) previews.current.delete(index);
+    }
   };
 
   /** Writes a plan a section at a time, so a failure loses only that section, and what's written shows up as it's written. Coming back for what's unfinished asks only for those sections, and whatever is on the score stays. */
-  const writeNotes = async (page: Page, input: ArrangeInput, plan: OptionPlan, index: number, isSaved: boolean, seed: WriteInput["seed"] | null, theme: ThemeAnswer["lines"] = [], unfinished: { adds: WriteAnswer["adds"]; missing: { from: string; to: string }[] } | null = null, onlyFirst = false) => {
+  const writeNotes = async (page: Page, input: ArrangeInput, plan: OptionPlan, index: number, isSaved: boolean, seed: WriteInput["seed"] | null, theme: ThemeAnswer["lines"] = [], unfinished: { adds: WriteAnswer["adds"]; missing: { from: string; to: string }[] } | null = null, onlyFirst = false, chosen: number | null = null, viewed: number | null = null): Promise<OptionNotes | undefined> => {
     const now = turn.current;
-    const setNotes = (notes: OptionNotes) => setOptions((state) => (state.status === "ready" && state.input === input ? { ...state, notes: { ...state.notes, [index]: notes } } : state));
+    const operation = (writingTurns.current.get(index) ?? 0) + 1;
+    writingTurns.current.set(index, operation);
+    const current = () => turn.current === now && writingTurns.current.get(index) === operation;
+    const selected = () => chosen === null || choiceTurn.current === chosen;
+    const displayed = () => viewed === null || displayTurn.current === viewed;
+    const setNotes = (notes: OptionNotes): OptionNotes | undefined => {
+      if (!current()) return;
+      setOptions((state) => state.status === "ready" && state.input === input && state.plans[index] === plan ? { ...state, notes: { ...state.notes, [index]: notes } } : state);
+      return notes;
+    };
     const written = (adds: WriteAnswer["adds"], progress: Pick<Extract<OptionNotes, { status: "ready" }>, "writing" | "missing" | "again"> = {}) => {
-      setNotes({ status: "ready", adds, check: checkOption({ ...plan, adds }, page.score, input), ...progress });
-      setTrying({ kind: "option", index });
+      const notes = setNotes({ status: "ready", adds, check: checkOption({ ...plan, adds }, page.score, input), ...progress });
+      if (notes && !onlyFirst && selected() && displayed()) showTrying({ kind: "option", index });
+      return notes;
     };
     if (!unfinished) setNotes({ status: "asking" });
     const bars = [...input.written.map((w) => w.bar), ...newBarNumbers(input)];
@@ -424,31 +477,35 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
       const composed = theme.filter((l) => these.includes(l.bar)).map((l) => `Bar ${l.bar} ${l.role}: ${l.events}`).join(" / ").slice(0, 8000);
       const asked: WriteInput = { ...input, chosen: plan, ...(window ? { window } : {}), ...(earlier ? { earlier: earlier.slice(0, 8000) } : {}), ...(seed ? { seed: { ...seed, ...(composed ? { theme: composed } : {}) } } : {}) };
       const reply = await askSpark("arrange", asked);
-      if (turn.current !== now) return;
+      if (!current()) return;
       if (reply.status === "ok") {
         completed++;
         adds = [...adds, ...withDoubles(reply.answer as WriteAnswer, bars).filter((a) => !finished.has(a.bar))];
+        if (!selected()) {
+          rest.push(...windows.slice(k + 1).flatMap((w) => w ? [w] : []));
+          break;
+        }
         continue;
       }
       last = reply;
       if (window) missing.push(window);
       // No money or no way to ask won't change for the next section, so the sections after it are unfinished too.
-      if (reply.reason !== "failed" && reply.reason !== "timeout" && reply.reason !== "network" && reply.reason !== "rejected") {
+      if (!selected() || (reply.reason !== "failed" && reply.reason !== "timeout" && reply.reason !== "network" && reply.reason !== "rejected")) {
         missing.push(...windows.slice(k + 1).flatMap((w) => (w ? [w] : [])));
         break;
       }
     }
     if (unfinished) adds = [...adds].sort((a, b) => bars.indexOf(a.bar) - bars.indexOf(b.bar));
     if (adds.length || completed) {
-      if (rest.length) return setNotes({ status: "ready", adds, check: checkOption({ ...plan, adds }, page.score, input), missing: [...missing, ...rest], again: { seed, theme }, preview: true });
+      if (rest.length || onlyFirst) return setNotes({ status: "ready", adds, check: checkOption({ ...plan, adds }, page.score, input), ...(missing.length || rest.length ? { missing: [...missing, ...rest] } : {}), again: { seed, theme }, ...(onlyFirst && (missing.length || rest.length) ? { preview: true } : {}) });
       return written(adds, { ...(missing.length ? { missing } : {}), ...(seed || theme.length || missing.length ? { again: { seed, theme } } : {}) });
     }
     const saved = isSaved ? await savedOf() : null;
-    if (turn.current !== now) return;
+    if (!current()) return;
     const kept = saved?.notes?.[index];
-    if (kept) return written(kept.adds);
+    if (kept) return onlyFirst ? setNotes({ status: "ready", adds: kept.adds, check: checkOption({ ...plan, adds: kept.adds }, page.score, input), preview: true }) : written(kept.adds);
     // It ran out of room or time, which is different from having no way to ask.
-    setNotes({ status: last && last.reason !== "failed" && last.reason !== "timeout" && last.reason !== "network" && last.reason !== "rejected" ? "unavailable" : "unfinished", ...(missing.length ? { missing } : {}), again: { seed, theme } });
+    return setNotes({ status: last && last.reason !== "failed" && last.reason !== "timeout" && last.reason !== "network" && last.reason !== "rejected" ? "unavailable" : "unfinished", ...(missing.length ? { missing } : {}), again: { seed, theme } });
   };
 
   /** Two new pieces in words, from the composer's tune taken as a main motif (Ryu, 11-02). */
@@ -477,6 +534,8 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     const xmlText = emptyScore(plan.name, instruments, { fifths: plan.fifths, time: plan.time, qpm, bars: length });
     const page: Page = { xmlText, score: parseScore(xmlText) };
     const now = ++turn.current;
+    const chosen = ++choiceTurn.current;
+    const viewed = ++displayTurn.current;
     const heights = motifHeights(asked, plan.motif.from, plan.motif.to);
     const opening = motifHeights(asked, asked.written[0]!.bar, asked.written[Math.min(1, asked.written.length - 1)]!.bar).slice(0, 3);
     setKept(page);
@@ -491,14 +550,14 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     const lines = composed.status === "ok" ? (composed.answer as ThemeAnswer).lines : [];
     setRecomposed({ plan, heights, opening, tuneBars: new Set(lines.filter((l) => l.role === "tune").map((l) => l.bar)).size, bars: length });
     const tune = sourceText(asked).slice(0, 16000);
-    await writeNotes(page, input, plan, 0, false, { tune, motif: `${plan.motif.what} From bars ${plan.motif.from} to ${plan.motif.to}.` }, lines);
+    await writeNotes(page, input, plan, 0, false, { tune, motif: `${plan.motif.what} From bars ${plan.motif.from} to ${plan.motif.to}.` }, lines, null, false, chosen, viewed);
   };
 
   /** Rewrites only these bars of what's been written, from what the composer says. Everything else stays. */
   const askFix = async (index: number, from: string, to: string, words: string) => {
     if (!base || options.status !== "ready") return;
     const held = options.notes[index];
-    if (held?.status !== "ready") return;
+    if (held?.status !== "ready" || held.writing) return;
     const { input } = options;
     const plan = options.plans[index]!;
     const bars = [...input.written.map((w) => w.bar), ...newBarNumbers(input)];
@@ -506,10 +565,12 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     if (first < 0 || last < first) return;
     const these = bars.slice(first, last + 1);
     const now = turn.current;
+    const operation = (writingTurns.current.get(index) ?? 0) + 1;
+    writingTurns.current.set(index, operation);
     setFixing("asking");
     const current = held.adds.filter((a) => these.includes(a.bar)).map((a) => `${a.part}, bar ${a.bar}: ${a.events}`).join(" / ").slice(0, 8000);
     const reply = await askSpark("arrange", { ...input, chosen: plan, window: { from, to }, fix: { ask: words, current: current || "nothing yet" } } satisfies WriteInput);
-    if (turn.current !== now) return;
+    if (turn.current !== now || writingTurns.current.get(index) !== operation) return;
     setFixing(reply.status === "ok" ? "none" : "unavailable");
     if (reply.status !== "ok") return;
     const adds = [...held.adds.filter((a) => !these.includes(a.bar)), ...withDoubles(reply.answer as WriteAnswer, bars)];
@@ -520,7 +581,7 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
       if (last < a || first > b) return [m];
       return [...(a < first ? [{ from: bars[a]!, to: bars[first - 1]! }] : []), ...(b > last ? [{ from: bars[last + 1]!, to: bars[b]! }] : [])];
     });
-    setOptions((state) => (state.status === "ready" && state.input === input ? { ...state, notes: { ...state.notes, [index]: { status: "ready", adds, check: checkOption({ ...plan, adds }, base.score, input), ...(missing?.length ? { missing, ...(held.preview ? { preview: true } : {}) } : {}), ...(held.again ? { again: held.again } : {}) } } } : state));
+    setOptions((state) => (state.status === "ready" && state.input === input && state.plans[index] === plan ? { ...state, notes: { ...state.notes, [index]: { status: "ready", adds, check: checkOption({ ...plan, adds }, base.score, input), ...(missing?.length ? { missing, ...(held.preview ? { preview: true } : {}) } : {}), ...(held.again ? { again: held.again } : {}) } } } : state));
   };
 
   /** Orders of the composer's own bars that put the right music on their moments. */
@@ -655,6 +716,10 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
 
   // What's just gone on the score is what the composer wants to read.
   useEffect(() => {
+    if (keepViewOnChoice.current) {
+      keepViewOnChoice.current = false;
+      return;
+    }
     if (trying?.kind !== "option" || options.status !== "ready") return;
     const notes = options.notes[trying.index];
     if (notes?.status !== "ready") return;
