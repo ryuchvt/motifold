@@ -141,6 +141,6 @@ describe('the selected musical job controls the prompt', () => {
     expect(request.input).toContain('The composer says: Neutral');
   });
   it('changes cache versions for every affected musical request', () => {
-    expect([distribute.version, planOptions.version, arrange.version, planRecompose.version, writeTheme.version]).toEqual(['distribute-6', 'plan-options-10', 'arrange-15', 'plan-recompose-5', 'write-theme-4']);
+    expect([distribute.version, planOptions.version, arrange.version, planRecompose.version, writeTheme.version]).toEqual(['distribute-6', 'plan-options-10', 'arrange-15', 'plan-recompose-5', 'write-theme-5']);
   });
 });

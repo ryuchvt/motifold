@@ -817,8 +817,9 @@ export interface ThemeAnswer {
  */
 export const writeTheme: Shape<ThemeInput> = {
   name: "write_theme",
-  version: "write-theme-4",
-  effort: "high",
+  version: "write-theme-5",
+  // High effort reached the four-minute deadline before producing any theme output.
+  effort: "medium",
   // Reasoning counts here too.
   maxOutputTokens: 40000,
   deadlineMs: 240_000,
@@ -1054,8 +1055,8 @@ export interface ReadBarsAnswer {
 }
 
 /**
- * Finding the bars in a piece played freely into a DAW, from the notes and the code's measurements. What it's told comes from the papers in `ventures/
- * meta-hackathon-2026/TIMING-BRAIN.md`, in our own words. The code then writes the tempo map, so this only decides where the bars are.
+ * Finding bars in a freely played DAW sketch from its measured attacks, durations and rhythmic patterns.
+ * The model chooses bar boundaries; the code writes the corresponding tempo map.
  */
 export const readBars: Shape<ReadBarsInput> = {
   name: "read_bars",
