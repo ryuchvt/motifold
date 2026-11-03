@@ -35,7 +35,8 @@ export type PlacedState =
   | { status: "ready"; answer: DistributeAnswer; check: PlacedCheck; instruments: string[]; chosen: string[]; saved: boolean };
 
 /** The notes of one option, written only once the composer has chosen it. */
-export type OptionNotes = { status: "asking" } | { status: "unfinished" } | { status: "unavailable" } | { status: "ready"; writing?: { from: string; to: string; done: number; of: number }; missing?: { from: string; to: string }[]; again?: { seed: WriteInput["seed"] | null; theme: ThemeAnswer["lines"] }; adds: WriteAnswer["adds"]; check: OptionCheck; changed?: boolean; preview?: boolean };
+type WritingSource = { seed: WriteInput["seed"] | null; theme: ThemeAnswer["lines"] };
+export type OptionNotes = { status: "asking" } | { status: "unfinished" | "unavailable"; missing?: Stretch[]; again?: WritingSource } | { status: "ready"; writing?: { from: string; to: string; done: number; of: number }; missing?: Stretch[]; again?: WritingSource; adds: WriteAnswer["adds"]; check: OptionCheck; changed?: boolean; preview?: boolean };
 
 export type OptionsState =
   | { status: "none" }
@@ -379,8 +380,8 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     if (!base || options.status !== "ready") return;
     const held = options.notes[index];
     // Changed chords are written again everywhere, finished sections too, or bars written from the old chords would stay under the new ones (review M4).
-    const unfinished = held?.status === "ready" && held.missing?.length && !held.changed ? { adds: held.adds, missing: held.missing } : null;
-    const again = held?.status === "ready" ? held.again : undefined;
+    const unfinished = held && "missing" in held && held.missing?.length && !(held.status === "ready" && held.changed) ? { adds: held.status === "ready" ? held.adds : [], missing: held.missing } : null;
+    const again = held && "again" in held ? held.again : undefined;
     await writeNotes(base, options.input, options.plans[index]!, index, options.saved, again?.seed ?? null, again?.theme ?? [], unfinished);
   };
 
@@ -408,6 +409,7 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     let adds: WriteAnswer["adds"] = unfinished?.adds ?? [];
     const missing: { from: string; to: string }[] = [];
     let last: { status: "fallback"; reason: string } | null = null;
+    let completed = 0;
     // A preview stops after the first section, and the rest is left to write when the composer chooses it.
     const rest: { from: string; to: string }[] = [];
     for (const [k, window] of windows.entries()) {
@@ -424,6 +426,7 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
       const reply = await askSpark("arrange", asked);
       if (turn.current !== now) return;
       if (reply.status === "ok") {
+        completed++;
         adds = [...adds, ...withDoubles(reply.answer as WriteAnswer, bars).filter((a) => !finished.has(a.bar))];
         continue;
       }
@@ -436,16 +439,16 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
       }
     }
     if (unfinished) adds = [...adds].sort((a, b) => bars.indexOf(a.bar) - bars.indexOf(b.bar));
-    if (adds.length) {
+    if (adds.length || completed) {
       if (rest.length) return setNotes({ status: "ready", adds, check: checkOption({ ...plan, adds }, page.score, input), missing: [...missing, ...rest], again: { seed, theme }, preview: true });
-      return written(adds, missing.length ? { missing, again: { seed, theme } } : {});
+      return written(adds, { ...(missing.length ? { missing } : {}), ...(seed || theme.length || missing.length ? { again: { seed, theme } } : {}) });
     }
     const saved = isSaved ? await savedOf() : null;
     if (turn.current !== now) return;
     const kept = saved?.notes?.[index];
     if (kept) return written(kept.adds);
     // It ran out of room or time, which is different from having no way to ask.
-    setNotes({ status: last && last.reason !== "failed" && last.reason !== "timeout" && last.reason !== "network" && last.reason !== "rejected" ? "unavailable" : "unfinished" });
+    setNotes({ status: last && last.reason !== "failed" && last.reason !== "timeout" && last.reason !== "network" && last.reason !== "rejected" ? "unavailable" : "unfinished", ...(missing.length ? { missing } : {}), again: { seed, theme } });
   };
 
   /** Two new pieces in words, from the composer's tune taken as a main motif (Ryu, 11-02). */
@@ -499,7 +502,9 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     const { input } = options;
     const plan = options.plans[index]!;
     const bars = [...input.written.map((w) => w.bar), ...newBarNumbers(input)];
-    const these = bars.slice(bars.indexOf(from), bars.indexOf(to) + 1);
+    const [first, last] = [bars.indexOf(from), bars.indexOf(to)];
+    if (first < 0 || last < first) return;
+    const these = bars.slice(first, last + 1);
     const now = turn.current;
     setFixing("asking");
     const current = held.adds.filter((a) => these.includes(a.bar)).map((a) => `${a.part}, bar ${a.bar}: ${a.events}`).join(" / ").slice(0, 8000);
@@ -508,9 +513,14 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     setFixing(reply.status === "ok" ? "none" : "unavailable");
     if (reply.status !== "ok") return;
     const adds = [...held.adds.filter((a) => !these.includes(a.bar)), ...withDoubles(reply.answer as WriteAnswer, bars)];
-    // A section this fix wrote all of isn't missing any more. Any other unfinished section still is.
-    const missing = held.missing?.filter((m) => !(these.includes(m.from) && these.includes(m.to)));
-    setOptions((state) => (state.status === "ready" && state.input === input ? { ...state, notes: { ...state.notes, [index]: { status: "ready", adds, check: checkOption({ ...plan, adds }, base.score, input), ...(missing?.length ? { missing, ...(held.again ? { again: held.again } : {}) } : {}) } } } : state));
+    // A successful fix owns all its bars, including silence. Subtract even a partial overlap from each unfinished section.
+    const missing = held.missing?.flatMap((m) => {
+      const [a, b] = [bars.indexOf(m.from), bars.indexOf(m.to)];
+      if (a < 0 || b < a) return [];
+      if (last < a || first > b) return [m];
+      return [...(a < first ? [{ from: bars[a]!, to: bars[first - 1]! }] : []), ...(b > last ? [{ from: bars[last + 1]!, to: bars[b]! }] : [])];
+    });
+    setOptions((state) => (state.status === "ready" && state.input === input ? { ...state, notes: { ...state.notes, [index]: { status: "ready", adds, check: checkOption({ ...plan, adds }, base.score, input), ...(missing?.length ? { missing, ...(held.preview ? { preview: true } : {}) } : {}), ...(held.again ? { again: held.again } : {}) } } } : state));
   };
 
   /** Orders of the composer's own bars that put the right music on their moments. */
