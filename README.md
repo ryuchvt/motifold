@@ -1,6 +1,6 @@
 # Motifold
 
-Motifold turns a musical sketch into an orchestral score you can read, change and take into your DAW. You bring a melody or a piano part, as MIDI or MusicXML. It works out what you played, reads it, asks what it can't tell, and writes the rest as notes.
+Motifold turns a musical sketch into an orchestral score you can read, change and take into your DAW. You bring a melody or a piano part, as MIDI or MusicXML, or one line you sing, hum or play into a recording. It works out what you played, reads it, asks what it can't tell, and writes the rest as notes.
 
 You choose how free it gets. **Arrange** keeps your melody exactly as it is and builds around it. **Recompose** takes your melody as a motif and writes a new piece from it, with its own key, metre and form.
 
@@ -33,6 +33,8 @@ The code measures and checks, and never makes a musical decision. It reads a fre
 
 Muse Spark 1.3 is the only AI model Motifold uses. Every call goes from the server to Meta's Model API, on my key or on yours.
 
+A recording becomes notes in your browser with no model at all. YIN finds the pitch every 10 ms, and the code turns that into notes where the pitch holds, where it changes and where the level jumps on the same pitch. Nothing is uploaded. It hears one line at a time, so chords need MIDI or MusicXML. On my own recorded piano melody it found 44 of the 52 notes I played and added 6 that I didn't. That's one recording, so it says nothing yet about yours.
+
 Every call goes through a ledger that reserves the worst case first and stops at a cap, so no one can spend more than I've allowed.
 
 ## Run it
@@ -50,7 +52,7 @@ Open the address it prints and press **Watch it work**. No key is needed for tha
 
 ## What it can't do yet
 
-It writes notes and levels, and no marks like pizzicato or mutes. No choir. It doesn't read audio, so a recording has to become MIDI first. I've tested it on short orchestral sketches of mine, so I'm not claiming it does this for everyone's music. A live mood takes several minutes, because it thinks about every section. It sounds like a good notation program in the browser, and it's your own instruments that say how it really sounds.
+It writes notes and levels, and no marks like pizzicato or mutes. No choir. Audio is one line at a time, and very soft high notes can go missing. I've tested it on short orchestral sketches of mine, so I'm not claiming it does this for everyone's music. A live mood takes several minutes, because it thinks about every section. It sounds like a good notation program in the browser, and it's your own instruments that say how it really sounds.
 
 ## Made before the event
 

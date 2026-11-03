@@ -8,6 +8,7 @@ import { openedScore } from "./opened";
 import { PieceView } from "./PieceView";
 import { PlayedChart } from "./PlayedView";
 import { ScoreView, type ScoreViewHandle } from "./ScoreView";
+import { AUDIO_FILE, isAudioFile, listenTo } from "./listen";
 import { hasOwnKey, onSpark, setOwnKey } from "./spark";
 import { Thinking } from "./Thinking";
 import { looksFreelyPlayed } from "./timing";
@@ -41,7 +42,11 @@ export function Studio() {
   const [thinking, setThinking] = useState(false);
   const [zoom, setZoom] = useState(0.8);
   const [sourceNote, setSourceNote] = useState<string | null>(null);
+  const [listening, setListening] = useState<{ fileName: string; recording: boolean } | null>(null);
   const input = useRef<HTMLInputElement>(null);
+  // What's listening or recording now, so leaving or opening something else can stop it.
+  const hearing = useRef<AbortController | null>(null);
+  const microphone = useRef<MediaRecorder | null>(null);
   // Only the last thing opened may change the page, because the composer can leave or open something else while a file is still being read.
   const opening = useRef(0);
   const view = useRef<ScoreViewHandle>(null);
@@ -59,11 +64,34 @@ export function Studio() {
     if (loaded && arranged.piece.status === "none" && !arranged.kept) void arranged.askPiece();
   }, [loaded]);
 
+  const stopListening = () => {
+    hearing.current?.abort();
+    hearing.current = null;
+    if (microphone.current?.state === "recording") microphone.current.stop();
+    microphone.current = null;
+    setListening(null);
+  };
+
   const open = async (file: File, keepBars = false) => {
     const mine = ++opening.current;
+    stopListening();
     setError(null);
     setFreePiece(null);
     try {
+      if (isAudioFile(file)) {
+        setLoaded(null);
+        setUnbarred(null);
+        const stop = new AbortController();
+        hearing.current = stop;
+        setListening({ fileName: file.name, recording: false });
+        const heard = await listenTo(file, stop.signal);
+        if (opening.current !== mine) return;
+        hearing.current = null;
+        setListening(null);
+        if (heard.notes < 8) throw new Error("It couldn't hear enough notes. It hears one line at a time, so a sung, hummed or played melody works and chords don't.");
+        setSourceNote(`Heard ${heard.notes} notes in ${Math.round(heard.seconds)} seconds, here in your browser. It hears one line, so check them on the score.`);
+        return await open(new File([heard.midi as BlobPart], file.name.replace(AUDIO_FILE, ".mid")));
+      }
       const bytes = new Uint8Array(await file.arrayBuffer());
       if (opening.current !== mine) return;
       if (!keepBars && isMidi(bytes) && looksFreelyPlayed(bytes)) {
@@ -76,8 +104,38 @@ export function Studio() {
       setLoaded({ fileName: file.name, xmlText, score });
     } catch (e) {
       if (opening.current !== mine) return;
+      hearing.current = null;
+      setListening(null);
       setLoaded(null);
       setError(e instanceof Error ? e.message : String(e));
+    }
+  };
+
+  /** A line sung, hummed or played into the microphone, heard just as a file is when it stops. */
+  const record = async () => {
+    const mine = ++opening.current;
+    stopListening();
+    setError(null);
+    try {
+      // Speech processing ruins an instrument or a voice singing, so it's all off.
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false, channelCount: 1 } });
+      if (opening.current !== mine) return stream.getTracks().forEach((t) => t.stop());
+      const recorder = new MediaRecorder(stream);
+      const chunks: Blob[] = [];
+      recorder.ondataavailable = (e) => chunks.push(e.data);
+      recorder.onstop = () => {
+        stream.getTracks().forEach((t) => t.stop());
+        if (opening.current !== mine) return;
+        const type = recorder.mimeType || "audio/webm";
+        void open(new File(chunks, `recording.${/ogg/.test(type) ? "ogg" : /mp4/.test(type) ? "m4a" : "webm"}`, { type }));
+      };
+      microphone.current = recorder;
+      recorder.start();
+      setListening({ fileName: "Your microphone", recording: true });
+    } catch {
+      if (opening.current !== mine) return;
+      setListening(null);
+      setError("The microphone isn't available here. Allow it in the browser, or open a recording instead.");
     }
   };
 
@@ -100,6 +158,7 @@ export function Studio() {
   const choosePiece = (piece: DemoPiece) => demo && startDemo(piece, demo.recorded);
   const leave = () => {
     opening.current++;
+    stopListening();
     stopDemo();
     setAccess(null);
     setLoaded(null);
@@ -110,6 +169,7 @@ export function Studio() {
   };
   const another = () => {
     opening.current++;
+    stopListening();
     setLoaded(null);
     setUnbarred(null);
     setFreePiece(null);
@@ -184,6 +244,25 @@ export function Studio() {
 
       {access && !inWork && !unbarred && (
         <main className="import">
+          {listening ? (
+            <div className="hearing">
+              <p className="hud-label">{listening.recording ? "RECORDING" : "LISTENING"}</p>
+              <h2>{listening.fileName}</h2>
+              {listening.recording ? (
+                <>
+                  <p>Sing, hum or play one line. Press Stop when it's done.</p>
+                  <button className="button primary" onClick={() => microphone.current?.stop()}>
+                    Stop
+                  </button>
+                </>
+              ) : (
+                <>
+                  <progress aria-label="Listening" />
+                  <p>Finding the notes here in your browser. Nothing is uploaded and no AI model hears it. It hears one line at a time.</p>
+                </>
+              )}
+            </div>
+          ) : (
             <>
               <p className="hud-label">01 —— IMPORT</p>
               {access === "demo" &&
@@ -227,7 +306,12 @@ export function Studio() {
                   }}
                 >
                   <span className="drop-title">Open your sketch</span>
-                  <span className="drop-sub">A MIDI or MusicXML file. Drop it here, or tap to choose one.</span>
+                  <span className="drop-sub">A MIDI or MusicXML file, or a recording of one line, sung, hummed or played. Drop it here, or tap to choose one.</span>
+                </button>
+              )}
+              {access !== "demo" && (
+                <button className="door-link" onClick={() => void record()}>
+                  Or sing, hum or play it in now
                 </button>
               )}
               {error && <p className="error">{error}</p>}
@@ -235,7 +319,7 @@ export function Studio() {
                 ref={input}
                 type="file"
                 hidden
-                accept=".musicxml,.xml,.mxl,.mid,.midi"
+                accept=".musicxml,.xml,.mxl,.mid,.midi,.wav,.mp3,.m4a,.aac,.flac,.aif,.aiff,.ogg,.opus,.webm"
                 onChange={(e) => {
                   const file = e.target.files?.[0];
                   if (file) void open(file);
@@ -243,6 +327,7 @@ export function Studio() {
                 }}
               />
             </>
+          )}
         </main>
       )}
 

@@ -524,3 +524,13 @@ button.door-card:hover {
     display: none;
   }
 }
+
+.hearing progress {
+  width: 100%;
+  height: 4px;
+  accent-color: var(--ink);
+}
+
+.hearing p:last-child {
+  color: var(--muted);
+}
