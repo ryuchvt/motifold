@@ -75,6 +75,23 @@ it('serializes parallel browser requests and checks the next full reservation ag
   expect(receipts.at(-1)).toMatchObject({ sent: false, blocked: 'session-ceiling' });
 });
 
+it('releases only an explicit cached success when its claim row is not visible, retaining fresh and older unknown holds', async () => {
+  let sent = 0;
+  const owned = new Map([[randomUUID(), { reservation: 500_000, noCharge: false }]]);
+  const receipts = [];
+  const upstream = await listen(createServer((_request, response) => { sent++; response.setHeader('Content-Type', 'application/json'); response.end(JSON.stringify({ status: 'ok', cached: sent === 1, answer: {} })); }));
+  const guard = createGuard({ upstream, ledger: { balance: () => base, attempt: () => null }, shapes: { arrange: { maxOutputTokens: 40_000 } }, reserve: () => 1_480_720, ceilingMicros: 2_000_000, armed: true, owned, record: (entry) => receipts.push(entry) });
+  const origin = await listen(guard.server);
+  expect(await (await post(origin)).json()).toMatchObject({ status: 'ok', cached: true });
+  expect(guard.exposure()).toBe(500_000);
+  expect([...owned.values()].filter((entry) => entry.noCharge)).toHaveLength(1);
+  expect(await (await post(origin)).json()).toMatchObject({ status: 'ok', cached: false });
+  expect(guard.exposure()).toBe(1_980_720);
+  expect(await (await post(origin)).json()).toMatchObject({ status: 'fallback', reason: 'budget' });
+  expect(sent).toBe(2);
+  expect(receipts.at(-1)).toMatchObject({ sent: false, blocked: 'session-ceiling' });
+});
+
 it('streams real chunks without waiting for completion and records reasoning arrival times and ledger charges', async () => {
   const rows = new Map(), receipts = []; let finish;
   const upstream = await listen(createServer(async (request, response) => {

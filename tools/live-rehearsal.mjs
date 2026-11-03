@@ -86,8 +86,10 @@ export function createGuard({ upstream, ledger, shapes, reserve, ceilingMicros =
           const text = Buffer.concat(chunks).toString('utf8');
           const reply = resultOf(text);
           const row = ledger.attempt(entry.attemptId);
-          // A received local validation/refusal response with no ledger attempt never reached Meta.
-          if (!row && reply?.status === 'fallback' && ['bad-input', 'disabled', 'busy', 'empty', 'today', 'quota', 'closed', 'conflict', 'duplicate', 'stopped'].includes(reply.reason)) { owned.get(entry.attemptId).noCharge = true; persist(); }
+          // The trusted Worker explicitly identifies cache hits. Neither they nor local refusals dispatched Meta.
+          const cached = reply?.status === 'ok' && reply.cached === true;
+          const refused = reply?.status === 'fallback' && ['bad-input', 'disabled', 'busy', 'empty', 'today', 'quota', 'closed', 'conflict', 'duplicate', 'stopped'].includes(reply.reason);
+          if (!row && (cached || refused)) { owned.get(entry.attemptId).noCharge = true; persist(); }
           record({ ...entry, sent: true, ms: Date.now() - started, httpStatus: source.statusCode, reply, thinking, response: text, receipt: row, sessionExposureMicros: exposure(), balance: ledger.balance() });
           if (!reply || (reply.status === 'fallback' && !['bad-input', 'disabled', 'busy', 'empty', 'daily', 'visitor'].includes(reply.reason))) stopped = true;
         }
