@@ -48,7 +48,7 @@ npm run server
 
 Open the address it prints. For live calls, copy `.dev.vars.example` to `.dev.vars` and put your key in it. Or paste your key on the first page.
 
-To explore the interface with no model calls, run `npm run dev:ui` and open http://127.0.0.1:5199. It opens a supplied score with fixed local answers. Every screen labels it as a sample. The preview server refuses API calls, and the sample answers are excluded from the production build. This sample is for checking the interface, not for filming a live demonstration.
+To explore the interface with no model calls, run `npm run dev:ui` and open http://127.0.0.1:5199. It opens my `Sample_sketch.mid` piano performance with its saved bar reading and two separately saved Hopeful and Dark arrangements. Every screen labels it as a sample. The preview server refuses API calls, and the sample answers are excluded from the production build. This sample is for checking the interface, not for filming a live demonstration.
 
 `npm test` runs the tests.
 
@@ -68,7 +68,7 @@ Rimsky-Korsakov's Principles of Orchestration and Goetschius, both public domain
 
 ## Sounds and data
 
-The instrument sounds in `public/samples/` are from Versilian Studios' [VSCO 2 Community Edition](https://versilian-studios.com/vsco-community/), which is CC0. `scripts/build-samples.py` builds them. No model makes any sound. The test fixtures include Bach's Arioso BWV 1056, arranged by Sam Franko, typeset by Hermógenes Hebert Pereira Oliveira for the [Mutopia Project](https://www.mutopiaproject.org/cgibin/piece-info.cgi?id=1902), [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/).
+The instrument sounds in `public/samples/` are from Versilian Studios' [VSCO 2 Community Edition](https://versilian-studios.com/vsco-community/), which is CC0. `scripts/build-samples.py` builds them. No model makes any sound. The selected example and video input is my own piano performance, `test-fixtures/Sample_sketch.mid`.
 
 ## Libraries
 

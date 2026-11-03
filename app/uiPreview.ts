@@ -1,16 +1,25 @@
 // Only loaded in Vite's ui mode. These fixed answers are for interface exploration, not a live demonstration.
-import xmlText from '../test-fixtures/arioso.musicxml?raw';
-import saved from '../test-fixtures/arioso-arrangement.json';
-import { parseScore } from '../score';
-import { newBarNumbers, type ArrangeInput, type RecomposePlan, type StudyScoreAnswer, type WriteInput } from '../server/shapes';
+import midiUrl from '../test-fixtures/Sample_sketch.mid?url';
+import saved from '../test-fixtures/sample-sketch-preview.json';
+import savedBars from '../test-fixtures/sample-sketch-bars.json';
+import { sketchPreview } from './sampleSketch';
+import { newBarNumbers, type ArrangeInput, type StudyScoreAnswer, type WriteInput } from '../server/shapes';
 import { setTransport, type SparkReply, type Transport } from './spark';
 
-export const previewScore = { fileName: 'Arioso.musicxml', xmlText, score: parseScore(xmlText) };
+export const initialSetup = { ensemble: 'Full orchestra', mood: 'Hopeful', moreBars: 16 };
+export const previewMessage = 'Saved Hopeful and Dark arrangements for Sample_sketch.mid. No model calls.';
+
+export async function loadUiPreview() {
+  const response = await fetch(midiUrl);
+  if (!response.ok) throw new Error('The local sample MIDI could not be opened.');
+  return sketchPreview(new Uint8Array(await response.arrayBuffer()));
+}
 const ok = (answer: unknown): SparkReply => ({ status: 'ok', answer, cached: true });
 export const previewTransport: Transport = async (shape, unknownInput, think) => {
   const input = unknownInput as ArrangeInput & Partial<WriteInput>;
   think('Using a fixed local sample answer. No request is sent to a model.');
   await new Promise<void>((resolve) => setTimeout(resolve, 300));
+  if (shape === 'read_bars') return ok(savedBars.answer);
   if (shape === 'read_piece') return ok(saved.read.answer);
   if (shape === 'distribute') return ok(saved.distribute.answer);
   if (shape === 'plan_options') return ok(saved.plan.answer);
@@ -22,15 +31,7 @@ export const previewTransport: Transport = async (shape, unknownInput, think) =>
     };
     return ok(answer);
   }
-  if (shape === 'plan_recompose') {
-    const options: RecomposePlan[] = saved.plan.answer.options.map((plan, index) => ({ ...plan,
-      name: `Sample recomposition ${index + 1}`, motif: { from: input.written[0]!.bar, to: input.written[1]?.bar ?? input.written[0]!.bar, what: 'The opening of the sample sketch' },
-      fifths: input.fifths ?? 0, time: input.time ?? '4/4', qpm: 90,
-      why: [{ from: '1', to: String(input.moreBars), what: 'A fixed sample plan', principle: 'UI sample', variation: 'Explore the controls' }],
-    }));
-    return ok({ options });
-  }
-  if (shape === 'write_theme') return ok({ lines: [] });
+  if (shape === 'plan_recompose' || shape === 'write_theme') return { status: 'fallback', reason: 'not-prepared' };
   if (shape === 'arrange') {
     const name = input.chosen?.name;
     const index = name === saved.plan.answer.options[1]!.name || name?.endsWith('2') ? 1 : 0;

@@ -185,7 +185,9 @@ const SUGGESTED_MOODS = ["Hopeful", "Tender", "Sad", "Dreamy", "Heroic", "Tense"
 /** Whether a saved answer happens to be for the instruments the composer picked. */
 const sameChoice = (placed: { instruments: string[]; chosen: string[] }) => [...placed.instruments].sort().join("|") === [...placed.chosen].sort().join("|");
 
-export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onStage, selection = null, attention = [], onPick, onMode, chosenPlan = null, onChoosePlan, navigationHost, actionHost, comparisonHosted = false, onNavigate }: { arranged: Arranged; busy: boolean; demo?: boolean; prepared?: { key: string; mode: "arrange" | "recompose"; mood: string }[]; onStage?: (name: string) => void; selection?: Selection | null; attention?: Attention[]; onPick?: (selection: Selection | null) => void; onMode?: (mode: "arrange" | "recompose") => void; chosenPlan?: number | null; onChoosePlan?: (index: number) => void; navigationHost?: HTMLElement | null; actionHost?: HTMLElement | null; comparisonHosted?: boolean; onNavigate?: () => void }) {
+export interface InitialSetup { ensemble?: string; mood?: string; moreBars?: number }
+
+export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onStage, selection = null, attention = [], onPick, onMode, chosenPlan = null, onChoosePlan, navigationHost, actionHost, comparisonHosted = false, onNavigate, initialSetup }: { arranged: Arranged; busy: boolean; demo?: boolean; prepared?: { key: string; mode: "arrange" | "recompose"; mood: string }[]; onStage?: (name: string) => void; selection?: Selection | null; attention?: Attention[]; onPick?: (selection: Selection | null) => void; onMode?: (mode: "arrange" | "recompose") => void; chosenPlan?: number | null; onChoosePlan?: (index: number) => void; navigationHost?: HTMLElement | null; actionHost?: HTMLElement | null; comparisonHosted?: boolean; onNavigate?: () => void; initialSetup?: InitialSetup }) {
   const { piece, study, chords, splitting, toggleSplit, splitAll, tracks, setTrack, answered, answer, placed, options, trying, setTrying, off, togglePart, offBars, putBackBars, remaining, allParts, gone, toggleGone, handOrder, setHandOrder, bars, cues, roles, standing, structures, fitting, askFit, kept, askPiece, askPlaced, splitPlaced, askOptions, askNotes, keep, startAgain, download, reachesEnd, wholeScore, selectRange } = arranged;
   const action = (node: ReactNode) => actionHost ? createPortal(node, actionHost) : node;
   /** The step on screen, counted from Study. */
@@ -196,13 +198,13 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
   const [pick, setPick] = useState<number | null>(null);
   const [skipped, setSkipped] = useState<number[]>([]);
   // A string orchestra suits most sketches, and the replay was made for a full one.
-  const startWith = TEMPLATES.find((t) => t.name === (demo ? "Full orchestra" : "String orchestra"));
+  const startWith = TEMPLATES.find((t) => t.name === (initialSetup?.ensemble ?? (demo ? "Full orchestra" : "String orchestra")));
   const [template, setTemplate] = useState<string | null>(startWith?.name ?? null);
   const [picked, setPicked] = useState<string[]>(startWith?.instruments ?? []);
   const [ownInstrument, setOwnInstrument] = useState("");
   const [placeWords, setPlaceWords] = useState("");
   const [writeWords, setWriteWords] = useState("");
-  const [mood, setMood] = useState<string | null>(null);
+  const [mood, setMood] = useState<string | null>(initialSetup?.mood ?? null);
   /** Stay with the composer's melody, or take it as a motif (Ryu, 11-02). */
   const [mode, setMode] = useState<"arrange" | "recompose">("arrange");
   const [length, setLength] = useState(32);
@@ -213,7 +215,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
   const [forPlayers, setForPlayers] = useState(false);
   const [fixWords, setFixWords] = useState("");
   const [fitWords, setFitWords] = useState("");
-  const [moreBars, setMoreBars] = useState(8);
+  const [moreBars, setMoreBars] = useState(initialSetup?.moreBars ?? 8);
   const [where, setWhere] = useState<ArrangeInput["where"]>("both");
 
   /** Keep the composer's tracks as they are and only add new parts, with no layout first. */

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { parseScore, type Score } from "../score";
+import type { InitialSetup } from "./ArrangePanel";
 import { Workspace } from "./Workspace";
 import { FreeBars } from "./FreeBars";
 import { loadDemoIndex, startDemo, stopDemo, type DemoIndex, type DemoPiece } from "./demo";
@@ -53,10 +54,10 @@ function Clock() {
 }
 
 export interface LoadedSketch { fileName: string; xmlText: string; score: Score }
-interface StudioProps { initialScore?: LoadedSketch | null; sample?: boolean }
+interface StudioProps { initialScore?: LoadedSketch | null; sample?: boolean; initialSetup?: InitialSetup; sampleMessage?: string }
 
 /** The whole site: choose how to try it, bring a piece, see it read, say where it should go, and take the score away. */
-export function Studio({ initialScore = null, sample = false }: StudioProps) {
+export function Studio({ initialScore = null, sample = false, initialSetup, sampleMessage }: StudioProps) {
   const [access, setAccess] = useState<Access | null>(initialScore ? "live" : null);
   const [demo, setDemo] = useState<DemoIndex | null>(null);
   const [demoPiece, setDemoPiece] = useState<DemoPiece | null>(null);
@@ -225,7 +226,7 @@ export function Studio({ initialScore = null, sample = false }: StudioProps) {
         {inWork && <Transport />}
         {inWork && <span className="hud-stage">{stage.toUpperCase()}</span>}
         <MuseChip />
-        <span className="hud-mode">{access === "demo" ? "REPLAY" : access === "own" ? "YOUR KEY" : access === "live" ? "SHARED CREDIT" : "MUSE SPARK 1.3"}</span>
+        <span className="hud-mode">{sample ? "SAVED EXAMPLES" : access === "demo" ? "REPLAY" : access === "own" ? "YOUR KEY" : access === "live" ? "SHARED CREDIT" : "MUSE SPARK 1.3"}</span>
         <img className="phasecraft-wordmark" src="/brand/wordmark-white.png" alt="Phasecraft Audio"/>
         <span className="hud-clock">
           <Clock />
@@ -384,8 +385,8 @@ export function Studio({ initialScore = null, sample = false }: StudioProps) {
         />
       )}
 
-      {inWork && <Workspace key={loaded!.fileName} arranged={arranged} loaded={loaded!} busy={thinking} demo={access === "demo"} prepared={demoPiece?.runs ?? []} render={render} sourceNote={sourceNote} onStage={setStage}/>}
-      {sample && <div className="ui-sample-banner">Local UI sample. Fixed answers. No model calls.</div>}
+      {inWork && <Workspace key={loaded!.fileName} arranged={arranged} loaded={loaded!} busy={thinking} demo={access === "demo"} prepared={demoPiece?.runs ?? []} render={render} sourceNote={sourceNote} onStage={setStage} initialSetup={initialSetup}/>}
+      {sample && <div className="ui-sample-banner">{sampleMessage ?? "Local UI sample. Fixed answers. No model calls."}</div>}
       <Thinking sample={sample} />
     </div>
   );

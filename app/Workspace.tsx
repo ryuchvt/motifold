@@ -4,7 +4,7 @@ import type { LoadedSketch } from './Studio';
 import type { Arranged } from './useArrange';
 import type { DemoPiece } from './demo';
 import type { Selection } from './selection';
-import { ArrangePanel } from './ArrangePanel';
+import { ArrangePanel, type InitialSetup } from './ArrangePanel';
 import { Compare } from './Compare';
 import { PieceView } from './PieceView';
 import { ScoreView, type ScoreViewHandle, type Tap } from './ScoreView';
@@ -56,7 +56,7 @@ function SectionRail({ arranged, onTrial }: { arranged: Arranged; onTrial: () =>
   </div>;
 }
 
-export function Workspace({ arranged, loaded, busy, demo, prepared, render, sourceNote, onStage }: { arranged: Arranged; loaded: LoadedSketch; busy: boolean; demo: boolean; prepared: DemoPiece['runs']; render?: string; sourceNote: string | null; onStage: (stage: string) => void }) {
+export function Workspace({ arranged, loaded, busy, demo, prepared, render, sourceNote, onStage, initialSetup }: { arranged: Arranged; loaded: LoadedSketch; busy: boolean; demo: boolean; prepared: DemoPiece['runs']; render?: string; sourceNote: string | null; onStage: (stage: string) => void; initialSetup?: InitialSetup }) {
   const [picked, setPicked] = useState<Selection | null>(null);
   const [mode, setMode] = useState<'arrange' | 'recompose'>('arrange');
   const [chosen, setChosen] = useState<number | null>(null);
@@ -187,7 +187,7 @@ export function Workspace({ arranged, loaded, busy, demo, prepared, render, sour
           <div className="score-status" role="status"><span>{writing ? `Writing bars ${writing.from} to ${writing.to}` : sourceNote || (render ? 'Playing the saved instrument bounce' : 'Select a passage to explore or change it')}</span><span>{picked?.kind === 'bars' ? `Selected bar ${picked.from}${picked.to !== picked.from ? ` to ${picked.to}` : ''}` : 'Space to play / Escape to close'}</span></div>
         </section>
       </main>
-      <aside className="composer-inspector" aria-label="Composition controls"><div className="inspector-topline"><span>{picked ? 'Your selection' : stage === 'Setup' ? 'Your direction' : stage === 'Pick' ? 'Your choice' : stage === 'Export' ? 'Your score' : 'Composition'}</span><button className="icon-control" aria-label="Hide controls" onClick={() => setInspectorOpen(false)}><PanelRightClose size={16}/></button></div><div className="inspector-scroll"><ArrangePanel arranged={arranged} busy={busy} demo={demo} prepared={prepared} onStage={changeStage} selection={picked} attention={attention} onPick={pick} onMode={(next) => { if (next !== mode) { clearAudition(); setMode(next); if (!arranged.recomposed) arranged.setTrying(null, true); } }} chosenPlan={chosen} onChoosePlan={(index) => { clearAudition(); setChosen(index); }} navigationHost={navigationHost} actionHost={actionHost} comparisonHosted onNavigate={() => { clearAudition(); setPicked(null); setInspectorOpen(true); if (window.matchMedia?.("(max-width: 760px)").matches) requestAnimationFrame(() => document.querySelector(".composer-inspector")?.scrollIntoView({ behavior: "smooth", block: "start" })); }}/></div><div className="inspector-action" ref={setActionHost}/></aside>
+      <aside className="composer-inspector" aria-label="Composition controls"><div className="inspector-topline"><span>{picked ? 'Your selection' : stage === 'Setup' ? 'Your direction' : stage === 'Pick' ? 'Your choice' : stage === 'Export' ? 'Your score' : 'Composition'}</span><button className="icon-control" aria-label="Hide controls" onClick={() => setInspectorOpen(false)}><PanelRightClose size={16}/></button></div><div className="inspector-scroll"><ArrangePanel initialSetup={initialSetup} arranged={arranged} busy={busy} demo={demo} prepared={prepared} onStage={changeStage} selection={picked} attention={attention} onPick={pick} onMode={(next) => { if (next !== mode) { clearAudition(); setMode(next); if (!arranged.recomposed) arranged.setTrying(null, true); } }} chosenPlan={chosen} onChoosePlan={(index) => { clearAudition(); setChosen(index); }} navigationHost={navigationHost} actionHost={actionHost} comparisonHosted onNavigate={() => { clearAudition(); setPicked(null); setInspectorOpen(true); if (window.matchMedia?.("(max-width: 760px)").matches) requestAnimationFrame(() => document.querySelector(".composer-inspector")?.scrollIntoView({ behavior: "smooth", block: "start" })); }}/></div><div className="inspector-action" ref={setActionHost}/></aside>
     </div>
   </div>;
 }

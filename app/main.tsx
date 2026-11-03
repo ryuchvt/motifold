@@ -12,9 +12,10 @@ if (location.search.includes("record")) (window as unknown as { __recording: unk
 
 async function start() {
   const sample = import.meta.env.MODE === "ui" ? await import("./uiPreview") : null;
+  const preview = sample ? await sample.loadUiPreview() : null;
   sample?.installUiPreview();
   createRoot(document.getElementById("root")!).render(
-    <StrictMode><Studio initialScore={sample?.previewScore} sample={!!sample} /></StrictMode>,
+    <StrictMode><Studio initialScore={preview} sample={!!sample} initialSetup={sample?.initialSetup} sampleMessage={sample?.previewMessage} /></StrictMode>,
   );
 }
 void start();
