@@ -9,6 +9,7 @@ import { familyOf, notesToHear, type NoteKind, type PieceData, type PieceRow } f
 import { playhead } from "./playhead";
 import { barsWords, type Attention } from "./attention";
 import type { Selection } from "./selection";
+import { TempoLane } from "./TempoLane";
 
 const ROLE_NAMES: Record<(typeof ROLES)[number], string> = {
   melody: "Melody",
@@ -154,6 +155,7 @@ export function PieceView(props: {
   const bounce = useRef<HTMLAudioElement | null>(null);
   const heard = useRef(0);
   const active = useRef(false);
+  const tempoFrame = useRef<number | null>(null);
   const onBeatNow = useRef(props.onBeat);
   onBeatNow.current = props.onBeat;
   const head = useRef<HTMLDivElement>(null);
@@ -176,12 +178,14 @@ export function PieceView(props: {
     moveHead(active.current ? heard.current : from);
   }, [from, totalBeats]);
   useEffect(() => () => {
+    if (tempoFrame.current !== null) cancelAnimationFrame(tempoFrame.current);
     active.current = false;
     sound.current?.stop();
     bounce.current?.pause();
     onBeatNow.current?.(null);
     playhead.set({ playing: false });
   }, []);
+  useEffect(() => { if (tempoFrame.current !== null) cancelAnimationFrame(tempoFrame.current); }, [data]);
   useEffect(() => {
     if (bounce.current) {
       active.current = false;
@@ -283,13 +287,6 @@ export function PieceView(props: {
 
   const drawn = useMemo(() => rows.map((row) => ({ row, ...rowPaths(row) })), [rows]);
   const tall = drawn.reduce((sum, d) => sum + d.h, 0);
-  const most = Math.max(1, ...data.fullness.yours.map((v, k) => v + (data.fullness.added[k] ?? 0)));
-  const shape = (values: number[], under: number[] = []) => {
-    const y = (k: number, v: number) => (40 - ((v + (under[k] ?? 0)) / most) * 38).toFixed(1);
-    const top = values.map((v, k) => `L${k} ${y(k, v)}`).join("");
-    const bottom = values.map((_, k) => `L${values.length - 1 - k} ${y(values.length - 1 - k, 0)}`).join("");
-    return `M0 ${y(0, 0)}${top}${bottom}Z`;
-  };
   const dim = (kind: NoteKind) => !!focus && focus !== kind;
   const present = ROLES.filter((role) => rows.some((r) => r.notes.some((n) => n.kind === role)));
   const beatOfBar = (number: string) => bars.find((b) => b.number === number)?.start ?? 0;
@@ -319,11 +316,12 @@ export function PieceView(props: {
         )}
       </div>
       <div className="stage-grid">
-        <span className="stage-label stage-label-quiet">How full</span>
-        <svg className="stage-shape" viewBox={`0 0 ${Math.max(data.fullness.yours.length - 1, 1)} 40`} preserveAspectRatio="none" aria-hidden>
-          <path className="shape-yours" d={shape(data.fullness.yours)} />
-          <path className="shape-added" d={shape(data.fullness.added, data.fullness.yours)} />
-        </svg>
+        <TempoLane tempos={data.tempos} bars={bars} total={totalBeats} onInspect={(beat,bar)=>{
+          if (tempoFrame.current !== null) cancelAnimationFrame(tempoFrame.current);
+          onSelect(bar);
+          // Passage selection also seeks to its barline. The exact inspected beat follows that commit.
+          tempoFrame.current=requestAnimationFrame(()=>{tempoFrame.current=null;playhead.seek(beat)});
+        }}/>
 
         <span className="stage-label stage-label-quiet" />
         <div className="stage-sections">

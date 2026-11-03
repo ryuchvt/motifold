@@ -1,0 +1,11 @@
+.tempo-label { display:flex; flex-direction:column; gap:2px; }
+.tempo-label output { color:#b9c5d5; font-size:10px; }
+.stage-tempo-lane { position:relative; min-width:0; height:32px; margin-bottom:5px; }
+.stage-tempo-lane svg { display:block; width:100%; height:32px; overflow:visible; }
+.stage-tempo-lane path { fill:none; stroke:#a6b8d1; stroke-width:1.8; vector-effect:non-scaling-stroke; }
+.stage-tempo-lane line { stroke:#e9eff7; stroke-width:1; vector-effect:non-scaling-stroke; opacity:.6; }
+.studio .stage-tempo-lane input { position:absolute; inset:0; width:100%; height:100%; padding:0; margin:0; opacity:0; cursor:crosshair; }
+.stage-tempo-lane:focus-within { outline:2px solid #becbdf; outline-offset:3px; border-radius:2px; }
+.tempo-inspection { position:absolute; top:100%; right:0; z-index:3; pointer-events:none; color:#e9eff7; background:#17212e; border:1px solid #ffffff28; border-radius:4px; padding:3px 7px; font:10px/1.4 var(--sans); opacity:0; }
+.stage-tempo-lane:hover .tempo-inspection,.stage-tempo-lane:focus-within .tempo-inspection { opacity:1; }
+@media(max-width:760px) { .stage-tempo-lane { height:27px; } .stage-tempo-lane svg { height:27px; } .tempo-label output { font-size:9px; } }
