@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent } from "react";
+import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent } from "react";
+import { createPortal } from "react-dom";
 import { ROLES, type PieceReading } from "../server/shapes";
 import type { RoleFocus } from "./arrange";
 import { createPreview, beatClock } from "./audio/preview";
@@ -94,16 +95,57 @@ export function PieceView(props: {
 }) {
   const { data, sections, moments, selected, focus, solo, instrumentOf, hasNew, render, onSelect, onSelectRange, onFocus, onSolo, orders = [], ordered = null, onOrder, onKeepOrder, attention = [], forms = [], progress = [], picked = null, onPick } = props;
   /** A light preview over the overview, which never moves anything else. */
-  const [hover, setHover] = useState<{ x: number; y: number; title: string; lines: string[] } | null>(null);
+  const [hover, setHover] = useState<{ anchor: Element; key: string; title: string; lines: string[] } | null>(null);
+  const [hoverPosition, setHoverPosition] = useState<{ left: number; top: number } | null>(null);
+  const tooltip = useRef<HTMLDivElement>(null);
+  const tooltipId = useId();
+  const hoveredAnchor = useRef<Element | null>(null);
+  const overTooltip = useRef(false);
+  const hideTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const stageBox = useRef<HTMLElement>(null);
-  const preview = (title: string, lines: (string | null | undefined)[]) => {
-    const show = (e: { currentTarget: Element }) => {
-      const box = e.currentTarget.getBoundingClientRect();
-      const stage = stageBox.current?.getBoundingClientRect();
-      if (!stage) return;
-      setHover({ x: Math.max(8, Math.min(box.left - stage.left, stage.width - 288)), y: box.bottom - stage.top + 6, title, lines: lines.filter((l): l is string => !!l) });
+  const holdPreview = () => clearTimeout(hideTimer.current);
+  const leavePreview = (anchor: Element) => {
+    holdPreview();
+    hideTimer.current = setTimeout(() => {
+      if (document.activeElement !== anchor && hoveredAnchor.current !== anchor && !overTooltip.current) setHover((now) => now?.anchor === anchor ? null : now);
+    }, 120);
+  };
+  useEffect(() => () => clearTimeout(hideTimer.current), []);
+  useEffect(() => { setHover(null); }, [data, sections, props.forms, props.attention]);
+  useLayoutEffect(() => {
+    if (!hover) return;
+    const place = () => {
+      if (!hover.anchor.isConnected || !tooltip.current) return setHover(null);
+      const anchor = hover.anchor.getBoundingClientRect();
+      const box = tooltip.current.getBoundingClientRect();
+      const margin = 12;
+      const top = anchor.bottom + 8 + box.height <= window.innerHeight - margin ? anchor.bottom + 8 : anchor.top - box.height - 8;
+      setHoverPosition({ left: Math.max(margin, Math.min(anchor.left, window.innerWidth - box.width - margin)), top: Math.max(margin, Math.min(top, window.innerHeight - box.height - margin)) });
     };
-    return { onMouseEnter: show, onFocus: show, onMouseLeave: () => setHover(null), onBlur: () => setHover(null) };
+    const scroll = (event: Event) => { if (!(event.target instanceof Node) || !tooltip.current?.contains(event.target)) setHover(null); };
+    const key = (event: KeyboardEvent) => { if (event.key === "Escape") setHover(null); };
+    place();
+    window.addEventListener("resize", place);
+    window.addEventListener("scroll", scroll, true);
+    window.addEventListener("keydown", key);
+    return () => { window.removeEventListener("resize", place); window.removeEventListener("scroll", scroll, true); window.removeEventListener("keydown", key); };
+  }, [hover]);
+  const preview = (title: string, lines: (string | null | undefined)[]) => {
+    const shownLines = lines.filter((line): line is string => !!line);
+    const key = [title, ...shownLines].join("\n");
+    const show = (e: { currentTarget: Element }) => {
+      holdPreview();
+      overTooltip.current = false;
+      setHoverPosition(null);
+      setHover({ anchor: e.currentTarget, key, title, lines: shownLines });
+    };
+    return {
+      "aria-describedby": hover?.key === key ? tooltipId : undefined,
+      onMouseEnter: (e: { currentTarget: Element }) => { hoveredAnchor.current = e.currentTarget; show(e); },
+      onFocus: show,
+      onMouseLeave: (e: { currentTarget: Element }) => { hoveredAnchor.current = null; leavePreview(e.currentTarget); },
+      onBlur: (e: { currentTarget: Element }) => leavePreview(e.currentTarget),
+    };
   };
   const { rows, bars, totalBeats } = data;
   const [playing, setPlaying] = useState(false);
@@ -288,6 +330,7 @@ export function PieceView(props: {
           {sections.length > 0
             ? sections.map((s) => {
                 const left = beatOfBar(s.from);
+                const form = formAt(s.from);
                 return (
                   <button
                     key={`${s.from}-${s.to}`}
@@ -295,7 +338,7 @@ export function PieceView(props: {
                     style={{ left: along(left, totalBeats), width: along(endOfBar(s.to) - left, totalBeats) }}
                     data-form={formAt(s.from)?.form}
                     aria-label={[formAt(s.from)?.form, s.name, barsWords(s.from, s.to)].filter(Boolean).join(", ")}
-                    {...preview(`${s.name || barsWords(s.from, s.to)}`, [barsWords(s.from, s.to), formAt(s.from) ? `${formAt(s.from)!.form}, ${formAt(s.from)!.mood}` : null, formAt(s.from)?.what])}
+                    {...preview(`${s.name || barsWords(s.from, s.to)}`, [barsWords(s.from, s.to), form ? [form.form, form.mood].filter(Boolean).join(", ") : null, form?.what])}
                     onClick={() => {
                       onSelect(s.from);
                       setFrom(left);
@@ -437,13 +480,13 @@ export function PieceView(props: {
           <div className="stage-head" ref={head} />
         </div>
       </div>
-      {hover && (
-        <div className="stage-hover" style={{ left: hover.x, top: hover.y }} role="tooltip">
+      {hover && createPortal(
+        <div ref={tooltip} id={tooltipId} className="stage-tooltip" style={{ ...hoverPosition, visibility: hoverPosition ? "visible" : "hidden" }} role="tooltip" onMouseEnter={() => { overTooltip.current = true; holdPreview(); }} onMouseLeave={() => { overTooltip.current = false; leavePreview(hover.anchor); }}>
           <strong>{hover.title}</strong>
           {hover.lines.map((line) => (
             <span key={line}>{line}</span>
           ))}
-        </div>
+        </div>, document.body,
       )}
       {orders.length > 1 && <Orders orders={orders} ordered={ordered} onOrder={onOrder} onKeep={onKeepOrder} />}
     </section>

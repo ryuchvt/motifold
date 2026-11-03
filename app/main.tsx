@@ -5,6 +5,7 @@ import { recording, rememberOwnKey } from "./spark";
 import "./app.css";
 import "./studio.css";
 import "./workspace.css";
+import "./study-workspace.css";
 
 rememberOwnKey();
 // For building a prepared demo out of a real run.

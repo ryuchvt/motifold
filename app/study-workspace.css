@@ -1,0 +1,44 @@
+/* Musical analysis gets colour. The workspace chrome and source/new-note colours keep their existing meaning. */
+.stage-tooltip {
+  position:fixed; z-index:1000; box-sizing:border-box; width:min(292px,calc(100vw - 24px)); max-height:calc(100vh - 24px); overflow:auto;
+  display:grid; gap:5px; padding:12px 14px; border:1px solid #63738a; border-radius:7px; background:#1b2432; color:#c4cfdf;
+  box-shadow:0 8px 25px #0007; font:12px/1.5 system-ui,sans-serif;
+}
+.stage-tooltip strong { color:#f1f5fb; font-size:13px; font-weight:600; }
+.studio .study-map { --study-home:#9acbb3; --study-leading:#c5b1db; --study-dominant:#dfcc8d; --study-bridge:#a8b5c8; --study-other:#929eaf; padding:12px 0 16px; background:transparent; }
+.studio .study-map figcaption { gap:10px; margin-bottom:12px; }
+.studio .study-map figcaption>strong { font-size:14px; color:#e2e9f2; }
+.studio .study-map .study-legend { font:11px/1.4 var(--sans); gap:6px 12px; }
+.studio .study-map .study-swatch { background:var(--role); border-radius:2px; }
+.studio .study-map .study-swatch.range { background:#bbc2ce; }
+.studio .study-map .tonic { --role:var(--study-home); }
+.studio .study-map .predominant { --role:var(--study-leading); }
+.studio .study-map .dominant { --role:var(--study-dominant); }
+.studio .study-map .bridge { --role:var(--study-bridge); }
+.studio .study-map .other { --role:var(--study-other); }
+.studio .study-map .study-section-tint-0 { --section:#9acbb3; }
+.studio .study-map .study-section-tint-1 { --section:#c5b1db; }
+.studio .study-map .study-section-tint-2 { --section:#dfcc8d; }
+.studio .study-map .study-section-tint-3 { --section:#d5a8b5; }
+.studio .study-map .study-section-tint-4 { --section:#a5c7cc; }
+.studio .study-map .study-section-tint-5 { --section:#c3c2a5; }
+.studio .study-map .form-arc { border-color:var(--section); }
+.studio .study-map .form-letter { background:var(--section); color:#18212b; border-color:transparent; }
+.studio .study-map .form-words { color:#dce5ef; font:12px/1.5 var(--sans); }
+.studio .study-map .form-mood { color:#aab7c8; font:11px/1.4 var(--sans); }
+.studio .study-map .form-count,.studio .study-map .form-numbers { font:10px/1.4 var(--mono); color:#9baabd; }
+.studio .study-map .form-count { background:#17202c; }
+.studio .study-map .form-range path { fill:#a7b6cb18; stroke:#a8b6c8; }
+.studio .study-map .form-bar { height:9px; border-radius:1px; background:var(--role); }
+.studio .study-map .form-bar.other { opacity:.45; }
+.studio .study-map .study-form-key { margin:9px 0 14px; color:#95a4b9; font:11px/1.4 var(--sans); }
+.studio .study-harmony { border-top:1px solid #ffffff16; padding-top:12px; }
+.studio .study-harmony-title { font:500 12px/1.4 var(--sans); color:#d8e2ef; }
+.studio .study-chords { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:6px; padding:0; margin:8px 0 0; list-style:none; }
+.studio .study-chord { display:grid; grid-template-columns:1fr auto; align-items:baseline; gap:2px 6px; width:100%; padding:7px 9px; text-align:left; border:1px solid #ffffff16; border-left:3px solid var(--role); border-radius:4px; background:#ffffff03; color:#d8e2ee; cursor:pointer; }
+.studio .study-chord:hover { background:#ffffff09; border-color:#ffffff32; border-left-color:var(--role); }
+.studio .study-chord:focus-visible,.studio .study-map .form-section:focus-visible,.studio .study-map .form-bar:focus-visible { outline:2px solid #e7eef8; outline-offset:2px; }
+.studio .study-chord-bars { grid-column:1 / -1; font:10px/1.4 var(--mono); color:#9aaabe; }
+.studio .study-chord strong { font:600 14px/1.4 var(--sans); color:var(--role); }
+.studio .study-chord-numeral { font:12px/1.4 var(--sans); color:#b7c4d5; }
+.studio .study-chord-check,.studio .study-harmony-empty { margin:8px 0 0; color:#a8b6c8; font:11px/1.5 var(--sans); }

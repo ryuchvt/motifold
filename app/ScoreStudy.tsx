@@ -197,12 +197,15 @@ export function StudyMap({ answer, written, onBar }: { answer: StudyScoreAnswer;
   const chords = chordsByBar(answer, written);
   const order = written.map((w) => w.bar);
   const shape = rangeShape(written);
+  const harmony = checkedChords(answer, written);
+  const roles = [...new Set([...chords.values()].flatMap((here) => here.map((entry) => entry.role)))];
   return (
     <figure className="study-map" style={{ "--bars": order.length } as CSSProperties}>
       <figcaption>
         <strong>{ideasWords(answer, written)}</strong>
         <span className="study-legend">
-          {(Object.keys(ROLE_WORDS) as Role[]).map((role) => (
+          {roles.length > 0 && <span className="study-legend-label">Harmony</span>}
+          {roles.map((role) => (
             <span key={role} className="study-key">
               <span className={`study-swatch ${role}`} aria-hidden /> {ROLE_WORDS[role]}
             </span>
@@ -226,7 +229,7 @@ export function StudyMap({ answer, written, onBar }: { answer: StudyScoreAnswer;
           const from = order.indexOf(s.from);
           const span = order.indexOf(s.to) - from + 1;
           return (
-            <li key={`${s.from}-${s.name}`} style={{ gridColumn: `${from + 1} / span ${span}` }}>
+            <li key={`${s.from}-${s.name}`} className={`study-section-tint-${tintOf(formOf(s, i))}`} style={{ gridColumn: `${from + 1} / span ${span}` }}>
               <button className="form-section" title={s.what} onClick={() => onBar(s.from)}>
                 <span className="form-arc" aria-hidden />
                 <span className="form-count">({span})</span>
@@ -258,6 +261,19 @@ export function StudyMap({ answer, written, onBar }: { answer: StudyScoreAnswer;
           </li>
         ))}
       </ol>
+      <p className="study-form-key">Same letter and colour, the same musical idea.</p>
+      <div className="study-harmony" aria-label="Chord progression">
+        <strong className="study-harmony-title">Chord progression</strong>
+        {harmony.length ? <ol className="study-chords">
+          {harmony.map(({ h, fits }, index) => {
+            const role = h.chord === "pass" ? "bridge" : harmonicRole(h.numeral);
+            const chord = h.chord === "pass" ? "Passing" : h.chord === "?" ? "Unclear" : chordWords(h.chord, fits);
+            const label = `${barsWords(h.from, h.to)}${(h.note ?? 1) > 1 ? `, note ${h.note}` : ""}, ${chord}${h.numeral && h.numeral !== "pass" && h.numeral !== "?" ? `, ${h.numeral}` : ""}, ${ROLE_WORDS[role]}`;
+            return <li key={`${h.from}-${h.note ?? 1}-${index}`}><button className={`study-chord ${role}`} aria-label={label} title={label} onClick={() => onBar(h.from)}><span className="study-chord-bars">{h.from === h.to ? h.from : `${h.from}–${h.to}`}{(h.note ?? 1) > 1 ? `, note ${h.note}` : ""}</span><strong>{chord}</strong><span className="study-chord-numeral">{h.numeral === "pass" || h.numeral === "?" ? "" : h.numeral}</span></button></li>;
+          })}
+        </ol> : <p className="study-harmony-empty">This reading has no chord labels.</p>}
+        {harmony.some(({ fits }) => fits === false) && <p className="study-chord-check">? Check this chord against the notes.</p>}
+      </div>
     </figure>
   );
 }
