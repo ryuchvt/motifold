@@ -4,9 +4,10 @@ import { PlayedChart } from "./PlayedView";
 import { askSpark } from "./spark";
 import { attacksOf, barsInput, barsOf, mappedMidi, playedFromMidi, readWithinBars, type Attack, type Played, type Reading } from "./timing";
 import { scoreOfReading } from "./timingScore";
+import { FailureReason } from "./failureReason";
 
-type Ready = { status: "ready"; answer: ReadBarsAnswer; reading: Reading; saved: boolean; /** Reading it again didn't work, so this is still the last answer. */ stale?: boolean };
-type State = { status: "none" } | { status: "asking" } | { status: "unavailable" } | Ready;
+type Ready = { status: "ready"; answer: ReadBarsAnswer; reading: Reading; saved: boolean; /** A fresh call failed; this remains the last usable or saved reading. */ staleReason?: string };
+type State = { status: "none" } | { status: "asking" } | { status: "unavailable"; reason: string } | Ready;
 
 /** What the app keeps of a piece once its bars are settled, for the timing view. */
 export interface FreePiece {
@@ -25,9 +26,13 @@ function settled(answer: ReadBarsAnswer, attacks: Attack[]): Reading | null {
   return reading.place.every(Number.isFinite) ? reading : null;
 }
 
+function ReadingFailure({ reason }: { reason: string }) {
+  return <><FailureReason reason={reason}/>{["badkey", "bad-key", "invalid-key"].includes(reason) && <p className="spark-note">The Meta key was rejected. Check it before trying again.</p>}{["no-key", "missing-key"].includes(reason) && <p className="spark-note">A Meta key is not available for this call.</p>}</>;
+}
+
 /**
  * A file played without a click has notes and no bars that mean anything. This finds them before there's a score to read: Muse Spark says where they are from
- * what the code measured, and the composer decides. No note moves, in the score or in the MIDI that goes back.
+ * what the code measured, and the composer decides. The mapped MIDI retains the performance timing; the score is an interpreted notation reading.
  */
 export function FreeBars(props: { auto?: boolean; fileName: string; bytes: Uint8Array; title: string; savedFile: string | null; onUse: (xmlText: string, piece: FreePiece) => void; onKeep: () => void }) {
   const { fileName, bytes, title, savedFile, onUse, onKeep } = props;
@@ -59,12 +64,15 @@ export function FreeBars(props: { auto?: boolean; fileName: string; bytes: Uint8
     const asked = { ...input, ask: said };
     const reply = await askSpark("read_bars", asked);
     if (turn.current !== now) return;
-    const ready = (answer: ReadBarsAnswer, saved: boolean): boolean => {
+    const ready = (answer: ReadBarsAnswer, saved: boolean, staleReason?: string): boolean => {
       const reading = settled(answer, attacks);
-      if (reading) setState({ status: "ready", answer, reading, saved });
+      if (reading) setState({ status: "ready", answer, reading, saved, ...(staleReason ? { staleReason } : {}) });
       return !!reading;
     };
     if (reply.status === "ok" && ready(reply.answer as ReadBarsAnswer, false)) return;
+    const reason = reply.status === "fallback" ? reply.reason || "failed" : "rejected";
+    // A failed reread keeps the composer's last usable answer, ahead of any older saved fallback.
+    if (before) return setState({ ...before, staleReason: reason });
     let saved: { input?: Pick<ReadBarsInput, "attacks">; answer?: ReadBarsAnswer } | null = null;
     if (savedFile && reply.status !== "ok") {
       try {
@@ -76,9 +84,8 @@ export function FreeBars(props: { auto?: boolean; fileName: string; bytes: Uint8
       if (turn.current !== now) return;
     }
     // Only for the very notes it was made from.
-    if (saved?.answer && JSON.stringify(saved.input?.attacks) === JSON.stringify(input.attacks) && ready(saved.answer, true)) return;
-    // A failed second read doesn't take away the bars they already had.
-    setState(before ? { ...before, stale: true } : { status: "unavailable" });
+    if (saved?.answer && JSON.stringify(saved.input?.attacks) === JSON.stringify(input.attacks) && ready(saved.answer, true, reason)) return;
+    setState({ status: "unavailable", reason });
   };
 
   const download = (reading: Reading) => {
@@ -112,7 +119,8 @@ export function FreeBars(props: { auto?: boolean; fileName: string; bytes: Uint8
       {state.status === "asking" && <p className="spark-note">Muse Spark is finding the bars from the notes. This takes about a minute.</p>}
       {state.status === "unavailable" && (
         <>
-          <p className="spark-note">Muse Spark can't answer here, so there are no bars to offer.</p>
+          <ReadingFailure reason={state.reason}/>
+          <p className="spark-note">There is no accepted bar reading yet. You can retry or keep the file's own bars.</p>
           <button className="button primary" onClick={() => void ask(null)}>
             Try again
           </button>
@@ -120,7 +128,7 @@ export function FreeBars(props: { auto?: boolean; fileName: string; bytes: Uint8
       )}
       {state.status === "ready" && answer && (
         <>
-          {state.stale && <p className="spark-note">Muse Spark couldn't read it again just now, so this is still its last answer.</p>}
+          {state.staleReason && <><p className="spark-note">{state.saved ? "The fresh reading did not finish. Showing the saved answer for this playing." : "Muse Spark couldn't read it again just now, so this is still its last answer."}</p><ReadingFailure reason={state.staleReason}/></>}
           <p className="free-found">
             Muse Spark hears {answer.meter.beats}/{answer.meter.beatType}, {barsOf(attacks, state.reading).length} bars.
           </p>
@@ -177,7 +185,7 @@ export function FreeBars(props: { auto?: boolean; fileName: string; bytes: Uint8
               Download the MIDI on these bars
             </button>
           </div>
-          <p className="spark-note">{state.saved ? "A saved answer from Muse Spark, made for this playing." : "A draft from Muse Spark."} The MIDI on these bars keeps every note where you struck it. The score keeps the beats, and writes what's between them on the nearest place notation can show. Check the bars by ear.</p>
+          <p className="spark-note">{state.saved ? "A saved answer from Muse Spark, made for this playing." : "A draft from Muse Spark."} Your original file is unchanged. The MIDI on these bars preserves played onsets, note-offs and velocities within MIDI rounding, with the DAW lead-in removed. The score groups nearby attacks and interprets note releases for notation. Check the bars by ear.</p>
         </>
       )}
       <button className="button small" onClick={onKeep}>
