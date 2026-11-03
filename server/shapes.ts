@@ -835,7 +835,7 @@ export const writeTheme: Shape<ThemeInput> = {
   effort: "medium",
   // Reasoning counts here too.
   maxOutputTokens: 40000,
-  deadlineMs: 240_000,
+  deadlineMs: 600_000,
   parse(raw) {
     const asked = parseAsked(raw);
     const chosen = (raw as Partial<ThemeInput> | null)?.chosen;
@@ -893,7 +893,7 @@ export const arrange: Shape<WriteInput> = {
   effort: "medium",
   // Reasoning counts here too. One section at a time, so this is plenty.
   maxOutputTokens: 40000,
-  deadlineMs: 240_000,
+  deadlineMs: 600_000,
   parse(raw) {
     const asked = parseAsked(raw);
     const r = raw as Partial<WriteInput> | null;

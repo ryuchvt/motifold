@@ -79,7 +79,7 @@ function setup() {
 
 it.each([
   { shape: distribute, input: layout(), old: "distribute-6", next: "distribute-7", deadline: 300_000, answer: { idea: "Keep the source", plan: [{ line: "Piano", from: "1", to: "1", voice: "all", part: "Violin I", octave: 0, why: "Carry the line" }] } },
-  { shape: arrange, input: write(), old: "arrange-15", next: "arrange-16", deadline: 240_000, answer: { adds: [{ part: "Flute 1", bar: "1", events: "G4@0+1", dyn: "mf", role: "melody", art: "" }], doubles: [] } },
+  { shape: arrange, input: write(), old: "arrange-15", next: "arrange-16", deadline: 600_000, answer: { adds: [{ part: "Flute 1", bar: "1", events: "G4@0+1", dyn: "mf", role: "melody", art: "" }], doubles: [] } },
 ])("sends $next with range facts under its own cache identity and unchanged reservation", async ({ shape, input, old, next, deadline, answer }) => {
   const { db, ledger, answers, port } = setup();
   try {

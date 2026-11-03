@@ -58,7 +58,7 @@ it("sends medium theme reasoning once under a new cache version while retaining 
     expect(ledger.attempt("earlier-unknown")).toEqual(retained);
     expect(ledger.balance("dev")).toMatchObject({ capMicros: 44_048_076, committedMicros: reserveMicros + 78 });
     expect(ledger.balance("public")).toMatchObject({ capMicros: 100_000_000, committedMicros: 0 });
-    expect(writeTheme.deadlineMs).toBe(240_000);
+    expect(writeTheme.deadlineMs).toBe(600_000);
   } finally { db.close(); }
 });
 
@@ -75,7 +75,7 @@ it("retains the whole reservation if a medium theme stream times out after summa
         init!.signal!.addEventListener("abort", () => controller.error(new DOMException("Local deadline", "AbortError")), { once: true });
       } }), { headers: { "Content-Type": "text/event-stream" } });
     }) as typeof fetch;
-    // A short local deadline exercises the same unknown-charge path without waiting four minutes.
+    // A short local deadline exercises the same unknown-charge path without waiting the full production deadline.
     expect(await runCall({ ...writeTheme, deadlineMs: 20 }, input, context("unfinished-medium-theme", fetchImpl))).toEqual({ status: "fallback", reason: "timeout" });
     expect(posts).toBe(1);
     expect(ledger.attempt("unfinished-medium-theme")).toMatchObject({ state: "uncertain", reserved_micros: reservationMicros(40_000), charged_micros: null });
