@@ -1,0 +1,32 @@
+/** Sounding ranges in MIDI, comfortable and not extreme. Shared by the prompts and score checks. */
+const RANGES: [RegExp, number, number][] = [
+  [/piccolo/i, 74, 108],
+  [/alto flute/i, 55, 91],
+  [/flute/i, 60, 96],
+  [/english horn|cor anglais/i, 52, 84],
+  [/oboe/i, 58, 91],
+  [/bass clarinet/i, 38, 77],
+  [/clarinet/i, 50, 94],
+  [/contrabassoon/i, 22, 53],
+  [/bassoon/i, 34, 75],
+  [/horn/i, 34, 77],
+  [/trumpet/i, 55, 82],
+  [/bass trombone/i, 28, 67],
+  [/trombone/i, 40, 72],
+  [/tuba/i, 28, 58],
+  [/timpani/i, 40, 57],
+  [/glockenspiel/i, 79, 108],
+  [/xylophone/i, 65, 108],
+  [/vibraphone/i, 53, 89],
+  [/marimba/i, 45, 96],
+  [/tubular bells/i, 60, 77],
+  [/harp/i, 24, 103],
+  [/celesta/i, 60, 108],
+  [/violin/i, 55, 103],
+  [/viola/i, 48, 91],
+  [/cello/i, 36, 84],
+  [/double bass|contrabass/i, 28, 67],
+  [/piano/i, 21, 108],
+];
+
+export const rangeOf = (name: string) => RANGES.find(([word]) => word.test(name));

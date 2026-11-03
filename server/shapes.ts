@@ -5,6 +5,8 @@ import type { Effort } from "./spark";
 import { EXPANDING, EXPANSION_FORM, EXPANSION_HARMONY, EXPANSION_WRITING, FAITHFUL_ARRANGEMENT, FAITHFUL_HARMONY, FAITHFUL_LAYOUT, FAITHFUL_TEXTURE, FAITHFUL_WRITING, MATERIAL_IDENTITY } from "./brain";
 
 import { lineFacts } from "./lineFacts";
+import { rangeOf } from "../shared/instrumentRanges";
+import { noteName } from "../app/notes";
 
 export interface Shape<I> {
   name: string;
@@ -305,6 +307,15 @@ function sketchLines(input: StudyScoreInput): string[] {
 
 const HOW_BARS_READ = "Each bar gives each track's notes as number:name@start+length, or number:name with a rhythm, in crotchet beats from the start of the bar. Notes with the same start sound together, a gap is a rest, and a ~ after a name means it's held over. The code has also measured each track's stretches: how many notes it plays, how often they're chords, how far it moves, its range, and which other tracks sound the same pitches. Those are facts, so use them, but what they mean is your judgement as a musician.";
 
+/** Exact destination bounds from the same table used by placement and new-note checks. */
+function soundingRangeLines(players: string[] | null): string[] {
+  const facts = [...new Set(players ?? [])].flatMap(name => {
+    const range = rangeOf(name);
+    return range ? [`${name}: ${noteName(range[1])}..${noteName(range[2])} inclusive (MIDI ${range[1]}..${range[2]}).`] : [];
+  });
+  return facts.length ? ["", "Sounding-pitch bounds checked by code (C4 = MIDI 60):", ...facts] : [];
+}
+
 /**
  * The arranger's first step (Ryu, 11-01): no composer sits and checks every track, so read the score and say who has the tune, what's
  * missing and what other orders are worth trying. The composer checks this before any notes are written.
@@ -509,7 +520,7 @@ function settledLines(s: Settled): string[] {
  */
 export const distribute: Shape<DistributeInput> = {
   name: "distribute",
-  version: "distribute-6",
+  version: "distribute-7",
   effort: "high",
   // Reasoning counts here too.
   maxOutputTokens: 40000,
@@ -537,6 +548,7 @@ export const distribute: Shape<DistributeInput> = {
         HOW_BARS_READ,
         "You also get what each track is, who is doing what, and what the composer answered. Trust those.",
         "In `plan`, each entry takes bars `from` to `to` of one `line` and gives them to one `part`. Set `voice` to all for every note the track plays, or to 1 for the top note of each chord, 2 for the next one down, and so on, or bottom for the lowest. A chord track going to instruments that play one note at a time has to be split into voices, one entry each. Set `octave` to how many octaves to move it, usually 0.",
+        "Use the supplied inclusive sounding-pitch bounds for each destination. Apply the plan's `octave` shift to the source sounding pitches, then check every resulting pitch against the destination part's bounds. These are sounding pitches, not written transposition ranges.",
         ...(faithful ? [FAITHFUL_LAYOUT] : [PIANO_TO_ORCHESTRA]),
         "Every note the composer wrote has to go somewhere, so every line in every bar it plays needs an entry. Two tracks that only double each other can go to the same instrument, where they'll merge, or become a real doubling on two instruments, like a flute an octave above the violins.",
         ...(faithful ? [FAITHFUL_TEXTURE] : ["Work like an orchestrator. Give the tune to who will sing it, and pass it on as the piece goes when that helps it grow. Hold instruments back early so the texture can build, and keep the full weight for late. Space wide at the bottom and close at the top. Keep every instrument in its comfortable range, using `octave` where it has to move, and write what it does well: strings sustain and move, woodwinds colour and answer, brass adds weight, and a double bass sits under the cellos. An instrument can stay empty if nothing of theirs belongs on it, because the composer can write for it next.", ORCHESTRA]),
@@ -550,6 +562,7 @@ export const distribute: Shape<DistributeInput> = {
         ...(input.roles.length ? ["", "Who is doing what:", ...input.roles.map((r) => `${r.line}, bars ${r.from} to ${r.to}: ${r.role}${r.of ? ` of ${r.of}` : ""}`)] : []),
         "",
         `The instruments, in score order: ${input.instruments.join(", ")}.`,
+        ...soundingRangeLines(input.instruments),
         input.ask ? `The composer says: ${input.ask}` : "The composer hasn't said more, so lay it out from the music.",
       ].join("\n"),
       schema: {
@@ -876,7 +889,7 @@ export const writeTheme: Shape<ThemeInput> = {
  */
 export const arrange: Shape<WriteInput> = {
   name: "arrange",
-  version: "arrange-15",
+  version: "arrange-16",
   effort: "medium",
   // Reasoning counts here too. One section at a time, so this is plenty.
   maxOutputTokens: 40000,
@@ -919,6 +932,7 @@ export const arrange: Shape<WriteInput> = {
         "Write the plan you're given, every stretch of it, from the first bar it touches to the last. A stretch the plan calls bare, thin or held back still has the notes it names, because a held low fifth is what makes it bare. Leave a stretch empty only if the plan says nothing plays there. Have the notes ready in your mind as you go and don't draft them twice, because there's a lot to write.",
         "If new bars are asked for, write all of them, with every part that plays in them, including the composer's own tracks if the plan has them carry on.",
         `${WHERE_YOU_CAN_WRITE(input)} Write all instruments at sounding pitch.`,
+        "Use the supplied inclusive sounding-pitch bounds for every `adds` pitch and every doubled pitch after applying `octave`. Check the destination `part`'s bounds, not only the source `of`'s range. Written transposition does not change a sounding-pitch bound.",
         ...(faithful ? [FAITHFUL_HARMONY, FAITHFUL_WRITING, FAITHFUL_TEXTURE] : input.seed ? [WRITING_THE_CHORDS, ...(input.source ? [FROM_THE_SOURCE] : []), TEXTURE, ORNAMENT] : [EXPANSION_HARMONY, EXPANSION_FORM, EXPANSION_WRITING, FAITHFUL_TEXTURE]),
         ...(faithful ? [] : [REAL_LINES]),
         ...(faithful ? [] : [COUNTERLINES]),
@@ -933,6 +947,7 @@ export const arrange: Shape<WriteInput> = {
       ].join("\n"),
       input: [
         ...askedLines(input),
+        ...soundingRangeLines(input.instruments),
         "",
         `The plan to write: ${input.chosen.name}. ${input.chosen.idea}`,
         ...input.chosen.why.map((w) => `Bars ${w.from} to ${w.to}: ${w.what}. ${w.principle}${w.chords ? ` Chords${w.yours ? ", which the composer set themselves, so they're fixed" : ""}: ${w.chords}` : ""}${w.dynamics ? ` Level: ${w.dynamics}` : ""}`),
