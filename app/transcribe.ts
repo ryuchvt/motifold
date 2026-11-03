@@ -29,8 +29,17 @@ export function notesAsMidi(notes: HeardNote[]): Uint8Array {
   );
 }
 
-/** Hears a file, saying how far along it is from 0 to 1. A model of under a megabyte, so the only wait is the listening. */
-export async function transcribeFile(file: File, onProgress: (fraction: number) => void): Promise<{ midi: Uint8Array; notes: number; seconds: number }> {
+let listening: Promise<unknown> = Promise.resolve();
+
+/** Hears a file, saying how far along it is from 0 to 1. One at a time, because what a listen holds in memory is let go of all together when it ends. A progress callback that throws stops it. */
+export function transcribeFile(file: File, onProgress: (fraction: number) => void): Promise<{ midi: Uint8Array; notes: number; seconds: number }> {
+  const heard = listening.then(() => hear(file, onProgress));
+  listening = heard.catch(() => {});
+  return heard;
+}
+
+/** A model of under a megabyte, so the only wait is the listening. */
+async function hear(file: File, onProgress: (fraction: number) => void): Promise<{ midi: Uint8Array; notes: number; seconds: number }> {
   const RATE = 22050;
   const audio = await new OfflineAudioContext(1, 1, RATE).decodeAudioData(await file.arrayBuffer());
   const mono = new Float32Array(audio.length);
@@ -43,15 +52,23 @@ export async function transcribeFile(file: File, onProgress: (fraction: number) 
   const frames: number[][] = [];
   const onsets: number[][] = [];
   const contours: number[][] = [];
-  await new BasicPitch(tf.loadGraphModel("/transcribe/model.json")).evaluateModel(
-    mono,
-    (f, o, c) => {
-      frames.push(...f);
-      onsets.push(...o);
-      contours.push(...c);
-    },
-    onProgress,
-  );
+  const model = await tf.loadGraphModel("/transcribe/model.json");
+  // Basic Pitch leaves its tensors for the caller, so everything it makes goes when this scope ends, whichever way the listen ends.
+  tf.engine().startScope();
+  try {
+    await new BasicPitch(Promise.resolve(model)).evaluateModel(
+      mono,
+      (f, o, c) => {
+        frames.push(...f);
+        onsets.push(...o);
+        contours.push(...c);
+      },
+      onProgress,
+    );
+  } finally {
+    tf.engine().endScope();
+    model.dispose();
+  }
   const heard = noteFramesToTime(outputToNotesPoly(frames, onsets, 0.65, 0.4, 11, true, null, null, false)).map((n) => ({ start: n.startTimeSeconds, length: n.durationSeconds, pitch: n.pitchMidi, amp: n.amplitude }));
   const notes = dropOvertones(heard).sort((a, b) => a.start - b.start);
   return { midi: notesAsMidi(notes), notes: notes.length, seconds: audio.duration };
