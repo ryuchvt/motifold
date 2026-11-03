@@ -197,9 +197,9 @@ it('takes a coherent readonly SQLite snapshot and never changes any existing att
   const db = new DatabaseSync(file);
   let ledger;
   try {
-    db.exec('CREATE TABLE pools(id TEXT,cap_micros INTEGER,daily_micros INTEGER); CREATE TABLE attempts(id TEXT,shape TEXT,pool TEXT,state TEXT,reserved_micros INTEGER,charged_micros INTEGER,detail TEXT,day INTEGER)');
+    db.exec('CREATE TABLE pools(id TEXT,cap_micros INTEGER,daily_micros INTEGER); CREATE TABLE attempts(id TEXT,shape TEXT,pool TEXT,state TEXT,reserved_micros INTEGER,charged_micros INTEGER,detail TEXT,day INTEGER,lease_until INTEGER)');
     db.prepare('INSERT INTO pools VALUES(?,?,?)').run('dev', base.capMicros, null);
-    db.prepare('INSERT INTO attempts VALUES(?,?,?,?,?,?,?,?)').run('held', 'arrange', 'dev', 'uncertain', reservation, null, '{}', Math.floor(Date.now() / 86400000));
+    db.prepare('INSERT INTO attempts VALUES(?,?,?,?,?,?,?,?,?)').run('held', 'arrange', 'dev', 'uncertain', reservation, null, '{}', Math.floor(Date.now() / 86400000), null);
     const before = JSON.stringify(db.prepare('SELECT * FROM attempts').all()), changes = db.prepare('SELECT total_changes() AS n').get();
     ledger = await sqliteLedger(file);
     const snapshot = ledger.snapshot(['held', 'not-yet-visible']);

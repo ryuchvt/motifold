@@ -66,6 +66,39 @@ export function approvedRun(file, balance, profile = RECORDING_PROFILES.rehearsa
   return { owned, persist, snapshot: () => saved };
 }
 
+/** Startup-only operator review. It validates retained holds without changing financial state. */
+export function reviewRetainedNightHolds(run, ledger, audit = null) {
+  const saved = run.snapshot(), profile = RECORDING_PROFILES['night-204'];
+  const iso = (value) => typeof value === 'string' && Number.isFinite(Date.parse(value)) && new Date(value).toISOString() === value;
+  if (saved.run !== profile.run || saved.ceilingMicros !== profile.ceilingMicros || !iso(saved.started)) throw Error('The retained night run identity changed; review before running');
+  const snapshot = ledger.snapshot([...run.owned.keys()]);
+  if (!(snapshot?.attempts instanceof Map) || !Array.isArray(snapshot.pendingAttempts)) throw Error('A complete readonly startup ledger snapshot is required');
+  if (snapshot.pendingAttempts.length) throw Error('Pending ledger attempts must finish before a night restart');
+  const uncertain = [];
+  for (const [id, entry] of run.owned) {
+    const row = snapshot.attempts.get(id);
+    if (!row) {
+      if (!entry.noCharge) throw Error('A provisional owned attempt prevents a night restart');
+      continue;
+    }
+    if (row.state === 'uncertain') {
+      if (row.pool !== 'dev' || row.id !== id || !Number.isSafeInteger(row.reserved_micros) || row.reserved_micros <= 0 || row.reserved_micros !== entry.reservation || row.charged_micros != null) throw Error('The retained uncertain reservation does not match its owned attempt');
+      uncertain.push({ attemptId: id, reservationMicros: row.reserved_micros });
+    } else if (!['settled', 'released'].includes(row.state)) throw Error('An unfinished owned attempt prevents a night restart');
+  }
+  if (!uncertain.length && audit === null) return null;
+  if (!audit) throw Error('Retained uncertain holds require an explicit --review-uncertain operator audit');
+  const keys = (value, expected) => value && typeof value === 'object' && !Array.isArray(value) && Object.keys(value).sort().join('|') === [...expected].sort().join('|');
+  if (!keys(audit, ['version', 'run', 'started', 'ceilingMicros', 'reviewedAt', 'uncertain', 'noPendingAttempts', 'noProvisionalAttempts', 'preserveEveryHold']) || audit.version !== 1 || audit.run !== saved.run || audit.started !== saved.started || audit.ceilingMicros !== saved.ceilingMicros || !iso(audit.reviewedAt) || Date.parse(audit.reviewedAt) < Date.parse(saved.started) || Date.parse(audit.reviewedAt) > Date.now() + 60_000 || audit.noPendingAttempts !== true || audit.noProvisionalAttempts !== true || audit.preserveEveryHold !== true || !Array.isArray(audit.uncertain)) throw Error('The operator audit must match this retained run and preserve every hold');
+  const reviewed = new Map();
+  for (const hold of audit.uncertain) {
+    if (!keys(hold, ['attemptId', 'reservationMicros']) || typeof hold.attemptId !== 'string' || !/^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i.test(hold.attemptId) || !Number.isSafeInteger(hold.reservationMicros) || hold.reservationMicros <= 0 || reviewed.has(hold.attemptId)) throw Error('Invalid or duplicate uncertain hold in the operator audit');
+    reviewed.set(hold.attemptId, hold.reservationMicros);
+  }
+  if (!uncertain.length || reviewed.size !== uncertain.length || uncertain.some(hold => reviewed.get(hold.attemptId) !== hold.reservationMicros)) throw Error('The operator audit must name every exact retained uncertain UUID and reservation');
+  return { ...audit, uncertain: uncertain.sort((a, b) => a.attemptId.localeCompare(b.attemptId)) };
+}
+
 /** Every admission accounts for actual settlements and all retained or provisional reservations. */
 export function createGuard({ upstream, ledger, shapes, reserve, ceilingMicros = 5_000_000, armed = false, record = () => {}, owned = new Map(), persist = () => {}, afterSettled, continueSettledFailures = false, requireCaptureCase = false, waveWidth = 1 }) {
   upstream = localOrigin(upstream);
@@ -322,7 +355,13 @@ export function sqliteLedger(file) {
         // BEGIN establishes one readonly SQLite view for both aggregates and per-attempt rows.
         // No financial state, quota, lease or hold is changed by this transaction.
         db.exec('BEGIN');
-        try { const result = { balance: balance(), attempts: new Map(ids.map(id => [id, attempt(id)])) }; db.exec('COMMIT'); return result; }
+        try {
+          // Expired unowned holds no longer prove active work. Their full reservation
+          // still remains in balance(); the startup gate separately checks every owned row.
+          const pendingAttempts = db.prepare("SELECT id FROM attempts WHERE pool=? AND state IN ('reserved','dispatched') AND (lease_until IS NULL OR lease_until > ?)").all('dev', Date.now()).map(row => row.id);
+          const result = { balance: balance(), attempts: new Map(ids.map(id => [id, attempt(id)])), pendingAttempts };
+          db.exec('COMMIT'); return result;
+        }
         catch (error) { db.exec('ROLLBACK'); throw error; }
       },
     };
@@ -372,11 +411,14 @@ async function main() {
   const args = process.argv.slice(2);
   if (args.includes('--help')) {
     console.log('After a fresh production build:\nnode tools/live-rehearsal.mjs --repo <repo> --start-worker --armed --isolate-settled [--profile rehearsal|night-204] [--wave-width 1|2|4] [--out <receipts directory>]\nProfiles are explicit approvals, not fresh allowances on restart. rehearsal retains its $5 ceiling. night-204 retains the separately approved $23 batch ceiling and $44.048076 cumulative dev cap. Existing holds, the $100 public pool and the $1 personal reserve are preserved.\nThe night profile may proceed after a charged, settled rejection; it never retries a request. Unknown charges stop the guard.\nWave width defaults to 1. Widths 2 and 4 are optional for night-204 with owned isolation: more pages may join until capacity or the first terminal result. All released calls must finish before a single restart. This is a local capture option, not a production network fix.\nWithout --armed, all model requests are refused.');
+    console.log('A night-204 restart refuses retained owned uncertain holds by default. Only an explicit --review-uncertain <local operator audit.json> can validate the exact retained run and UUID/reservation set after active and owned unfinished work has drained. This does not release holds, grant an allowance, retry requests or acknowledge a later unknown charge.');
     return;
   }
   const value = (name, fallback) => { const at = args.indexOf(name); return at < 0 ? fallback : args[at + 1]; };
   const profileName = value('--profile', 'rehearsal');
   const profile = recordingProfile(profileName);
+  const reviewPath = value('--review-uncertain', null);
+  if (args.includes('--review-uncertain') && (profileName !== 'night-204' || typeof reviewPath !== 'string' || reviewPath.startsWith('--'))) throw Error('--review-uncertain requires the night-204 profile and a local operator audit JSON path');
   const repo = resolve(value('--repo', process.cwd()));
   const output = resolve(value('--out', join(repo, 'output/live-rehearsal', new Date().toISOString().replaceAll(':', '-'))));
   const upstream = localOrigin(value('--upstream', 'http://127.0.0.1:8790'));
@@ -409,6 +451,8 @@ async function main() {
   let worker;
   process.once('exit', () => { worker?.kill(); closeSync(lock); unlinkSync(lockPath); });
   const run = approvedRun(join(shared, profile.recordName), baseline, profile);
+  const retainedHoldReview = profileName === 'night-204' ? reviewRetainedNightHolds(run, ledger, reviewPath === null ? null : JSON.parse(readFileSync(resolve(reviewPath), 'utf8'))) : null;
+  if (retainedHoldReview) appendFileSync(join(output, 'receipts.jsonl'), JSON.stringify({ kind: 'retained-hold-review', at: new Date().toISOString(), review: retainedHoldReview }) + '\n');
   const baselineFile = join(output, 'baseline.json');
   if (!existsSync(baselineFile)) writeFileSync(baselineFile, JSON.stringify({ at: new Date().toISOString(), repo, upstream, port, profile: profileName, waveWidth, ceilingMicros: profile.ceilingMicros, armed: args.includes('--armed'), balance: baseline, approvedRun: run.snapshot() }, null, 2));
   const calls = [];
