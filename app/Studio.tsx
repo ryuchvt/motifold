@@ -9,6 +9,7 @@ import { PieceView } from "./PieceView";
 import { PlayedChart } from "./PlayedView";
 import { ScoreView, type ScoreViewHandle } from "./ScoreView";
 import { AUDIO_FILE, isAudioFile, listenTo } from "./listen";
+import { OWN_KEY } from "../server/pools";
 import { hasOwnKey, onSpark, setOwnKey } from "./spark";
 import { Thinking } from "./Thinking";
 import { looksFreelyPlayed } from "./timing";
@@ -220,13 +221,13 @@ export function Studio() {
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
-                  if (!typedKey.trim()) return;
+                  if (!OWN_KEY.test(typedKey.trim())) return;
                   setOwnKey(typedKey.trim());
                   setTypedKey("");
                   enter("own");
                 }}
               >
-                <input type="password" autoComplete="off" aria-label="Your Meta Model API key" placeholder="Meta Model API key" value={typedKey} onChange={(e) => setTypedKey(e.target.value)} />
+                <input type="password" autoComplete="off" aria-label="Your Meta Model API key" placeholder="Meta Model API key" required minLength={8} maxLength={300} value={typedKey} onChange={(e) => setTypedKey(e.target.value)} />
                 <button className="button small">Go</button>
               </form>
               {hasOwnKey() && (

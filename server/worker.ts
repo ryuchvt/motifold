@@ -4,7 +4,7 @@
 import { DurableObject } from "cloudflare:workers";
 import { runCall, sha256, type LedgerPort } from "./call";
 import { Answers, type CacheClaim, Ledger, type ReserveRequest, type Sql } from "./ledger";
-import { POOLS, SLOTS } from "./pools";
+import { OWN_KEY, POOLS, SLOTS } from "./pools";
 import { SHAPES } from "./shapes";
 import { MODEL } from "./spark";
 
@@ -90,12 +90,13 @@ export default {
 
     // A visitor's own key spends their own money, so it isn't counted against any pool of ours and isn't kept anywhere.
     const own = request.headers.get("x-motifold-key");
+    if (own !== null && !OWN_KEY.test(own)) return new Response("That isn't a Meta key", { status: 400 });
     const pool = own ? "own" : dev ? "dev" : "public";
     const context = {
       attemptId: body.attemptId,
       pool,
       visitor: await visitorKey(request, env, dev),
-      key: own && /^[\x21-\x7e]{8,300}$/.test(own) ? own : env.META_API_KEY,
+      key: own ?? env.META_API_KEY,
       ledger: ledgerPort(stub),
       slots: SLOTS[pool] ?? 1,
     };

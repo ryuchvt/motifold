@@ -146,17 +146,17 @@ describe("callSpark", () => {
   });
 });
 
-describe("a connection that's already dead", () => {
+describe("a connection that fails", () => {
   const call = { instructions: "x", input: "y", schemaName: "s", schema: {}, effort: "low", maxOutputTokens: 10, deadlineMs: 5000, cacheKey: "k" } as const;
-  it("is tried again at once, so no reservation is held for a request that never left", async () => {
+  it("is not sent again, however fast it failed, because Meta may have got the first one (review M2)", async () => {
     const body = JSON.stringify({ status: "completed", usage: { input_tokens: 1, output_tokens: 1 }, output: [{ type: "message", content: [{ type: "output_text", text: "{}" }] }] });
     let tries = 0;
     const outcome = await callSpark(call, "key", (async () => {
       if (++tries === 1) throw new Error("Network connection lost.");
       return new Response(body);
     }) as typeof fetch);
-    expect(tries).toBe(2);
-    expect(outcome.status).toBe("ok");
+    expect(tries).toBe(1);
+    expect(outcome).toMatchObject({ status: "unknown", reason: "network" });
   });
   it("still reports a connection that keeps failing", async () => {
     const outcome = await callSpark(call, "key", (async () => { throw new Error("gone"); }) as typeof fetch);

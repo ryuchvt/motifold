@@ -21,3 +21,6 @@ export const POOLS: Pool[] = [
 
 /** Calls that may be running at once before this kind of caller has to wait. A visitor's own key never waits. */
 export const SLOTS: Record<string, number> = { dev: 2, public: 3, own: 50 };
+
+/** What a visitor's own Meta key can look like. Anything else is refused, and never falls back to Ryu's key (review M1). */
+export const OWN_KEY = /^[\x21-\x7e]{8,300}$/;

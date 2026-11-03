@@ -156,7 +156,8 @@ export class Ledger {
       }
       if (this.quotaUsed(pool, r, day)) return { ok: false, reason: "quota" };
       const running = this.one(
-        `SELECT COUNT(*) AS n FROM attempts WHERE state IN ('reserved', 'dispatched') AND lease_until > ?`,
+        `SELECT COUNT(*) AS n FROM attempts WHERE pool = ? AND state IN ('reserved', 'dispatched') AND lease_until > ?`,
+        pool.id,
         now,
       );
       if (Number(running?.n ?? 0) >= r.slots) return { ok: false, reason: "busy" };
