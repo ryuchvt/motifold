@@ -71,6 +71,8 @@ export function PieceView(props: {
   hasNew: boolean;
   /** A bounce of this version to play instead of the browser's instruments. */
   render?: string;
+  /** The beat actually sounding, or null when playback lets go. */
+  onBeat?: (beat: number | null) => void;
   onSelect: (bar: string) => void;
   onSelectRange: (from: string, to: string) => void;
   onFocus: (focus: RoleFocus) => void;
@@ -109,6 +111,9 @@ export function PieceView(props: {
   const sound = useRef<ReturnType<typeof createPreview> | null>(null);
   const bounce = useRef<HTMLAudioElement | null>(null);
   const heard = useRef(0);
+  const active = useRef(false);
+  const onBeatNow = useRef(props.onBeat);
+  onBeatNow.current = props.onBeat;
   const head = useRef<HTMLDivElement>(null);
   const readout = useRef<HTMLSpanElement>(null);
   /** Bars being dragged across, which become what's on the page when the press ends. */
@@ -122,18 +127,25 @@ export function PieceView(props: {
     if (head.current) head.current.style.left = along(beat, totalBeats);
     if (readout.current) readout.current.textContent = words(beat);
     playhead.set({ words: words(beat) });
+    if (active.current) onBeatNow.current?.(beat);
   };
 
   useEffect(() => {
-    moveHead(from);
+    moveHead(active.current ? heard.current : from);
   }, [from, totalBeats]);
   useEffect(() => () => {
+    active.current = false;
     sound.current?.stop();
     bounce.current?.pause();
+    onBeatNow.current?.(null);
     playhead.set({ playing: false });
   }, []);
   useEffect(() => {
-    bounce.current?.pause();
+    if (bounce.current) {
+      active.current = false;
+      bounce.current.pause();
+      onBeatNow.current?.(null);
+    }
     bounce.current = null;
   }, [render]);
   // So the first press of play can already use real instruments.
@@ -144,6 +156,7 @@ export function PieceView(props: {
   }, [focus, solo, data]);
 
   const start = (beat: number) => {
+    active.current = true;
     if (render) {
       const audio = (bounce.current ??= new Audio(render));
       audio.currentTime = clock.seconds(beat);
@@ -158,6 +171,8 @@ export function PieceView(props: {
       };
       requestAnimationFrame(follow);
       audio.onended = () => {
+        active.current = false;
+        onBeatNow.current?.(null);
         setPlaying(false);
         setFrom(0);
       };
@@ -175,6 +190,8 @@ export function PieceView(props: {
         moveHead(now);
       },
       () => {
+        active.current = false;
+        onBeatNow.current?.(null);
         setPlaying(false);
         setFrom(0);
       },
@@ -185,8 +202,10 @@ export function PieceView(props: {
   };
   /** Pause carries on from the bar it stopped in. Stop goes back to the start. */
   const stop = (back = false) => {
+    active.current = false;
     bounce.current?.pause();
     sound.current?.stop();
+    onBeatNow.current?.(null);
     setPlaying(false);
     setFrom(back ? 0 : (barOf(heard.current)?.start ?? 0));
     if (back) moveHead(0);

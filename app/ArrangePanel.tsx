@@ -603,7 +603,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
             })}
           </ul>
           <p className="spark-note">These are guesses. The orange ones it isn't sure of.</p>
-          {action(<button className="button primary arrange-go" onClick={arranged.confirmTracks}>
+          {action(<button className="button primary arrange-go" onClick={() => { arranged.confirmTracks(); onNavigate?.(); }}>
             Confirm tracks
           </button>)}
         </>

@@ -10,6 +10,7 @@ import { PieceView } from './PieceView';
 import { ScoreView, type ScoreViewHandle, type Tap } from './ScoreView';
 import { attentionOf, writingProgress } from './attention';
 import { playhead } from './playhead';
+import { scoreCursor } from './scoreCursor';
 import type { BarHighlight } from '../render/barOverlay';
 
 const NO_MARKS: never[] = [];
@@ -60,6 +61,7 @@ export function Workspace({ arranged, loaded, busy, demo, prepared, render, sour
   const [mode, setMode] = useState<'arrange' | 'recompose'>('arrange');
   const [chosen, setChosen] = useState<number | null>(null);
   const [stage, setStage] = useState('Study');
+  const previousStage = useRef('Study');
   const [zoom, setZoom] = useState(.8);
   const [inspectorOpen, setInspectorOpen] = useState(true);
   const [expanded, setExpanded] = useState(false);
@@ -68,22 +70,35 @@ export function Workspace({ arranged, loaded, busy, demo, prepared, render, sour
   const [actionHost, setActionHost] = useState<HTMLDivElement | null>(null);
   const [drawError, setDrawError] = useState<string | null>(null);
   const scoreView = useRef<ScoreViewHandle>(null);
+  const changeStage = (name: string) => {
+    setStage(name);
+    onStage(name);
+    if (previousStage.current !== name && window.matchMedia?.("(max-width: 760px)").matches) requestAnimationFrame(() => {
+      const target = name === 'Pick' ? '.idea-comparison' : name === 'Write' ? '.score-desk' : '.composer-inspector';
+      (document.querySelector(target) ?? document.querySelector('.composer-inspector'))?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    previousStage.current = name;
+  };
   const pendingAudition = useRef<{ index: number; beat: number; generation: object | null } | null>(null);
   const auditionFrame = useRef<number | null>(null);
   const waitingChoice = useRef<{ index: number; generation: object | null } | null>(null);
   const data = arranged.overview;
   const page = arranged.page ?? loaded;
+  const cursor = useMemo(() => scoreCursor(page.score, data?.bars ?? []), [page.score, data]);
   const attention = useMemo(() => attentionOf(arranged), [arranged.piece, arranged.answered, arranged.options, arranged.trying, arranged.tracks, arranged.tracksConfirmed]);
   const shownAttention = stage === 'Study' || stage === 'Setup' ? attention : attention.filter((a) => a.kind !== 'missing');
   const progress = useMemo(() => writingProgress(arranged), [arranged.options, arranged.trying]);
   const plans = mode === 'recompose' ? (arranged.recompose.status === 'ready' && !arranged.recomposed ? arranged.recompose.plans : null) : arranged.options.status === 'ready' && !arranged.recomposed ? arranged.options.plans : null;
   const generation = mode === 'arrange' ? (arranged.options.status === 'ready' ? arranged.options.input : null) : (arranged.recompose.status === 'ready' ? arranged.recompose.input : null);
   const clearAudition = () => { waitingChoice.current = null; pendingAudition.current = null; if (auditionFrame.current !== null) cancelAnimationFrame(auditionFrame.current); };
-  useEffect(() => { setChosen(null); clearAudition(); }, [mode, generation]);
+  useEffect(() => {
+    setChosen(null); clearAudition();
+    if (generation && window.matchMedia?.("(max-width: 760px)").matches) requestAnimationFrame(() => document.querySelector('.idea-comparison')?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+  }, [mode, generation]);
   const written = mode === 'arrange' && arranged.options.status === 'ready' ? Object.entries(arranged.options.notes).flatMap(([k, n]) => n.status === 'ready' ? [Number(k)] : []) : [];
   const previewed = mode === 'arrange' && arranged.options.status === 'ready' ? Object.entries(arranged.options.notes).flatMap(([k, n]) => n.status === 'ready' && n.preview ? [Number(k)] : []) : [];
   const marks = arranged.studyMarks && { ...arranged.studyMarks, sections: layers.sections ? arranged.studyMarks.sections : [], chords: layers.chords ? arranged.studyMarks.chords : [], passages: layers.marks ? arranged.studyMarks.passages : [] };
-  const pick = (selection: Selection | null) => { clearAudition(); setPicked(selection); if (selection) setInspectorOpen(true); };
+  const pick = (selection: Selection | null) => { clearAudition(); setPicked(selection); if (selection) { setInspectorOpen(true); if (window.matchMedia?.("(max-width: 760px)").matches) requestAnimationFrame(() => document.querySelector(".composer-inspector")?.scrollIntoView({ behavior: "smooth", block: "start" })); } };
   const choose = (index: number, audition = false) => {
     const beat = playhead.beat;
     clearAudition();
@@ -158,7 +173,7 @@ export function Workspace({ arranged, loaded, busy, demo, prepared, render, sour
       <main className="music-space">
         <div className="overview-shell">
           <div className="overview-title"><span>Whole piece <span className="music-meta">{numbers.length} bars / {data?.rows.length ?? 0} tracks</span></span><div><button className="text-control" aria-expanded={expanded} onClick={() => setExpanded(!expanded)}>{expanded ? 'Compact overview' : 'Expand overview'}</button><button className="icon-control" aria-label={inspectorOpen ? 'Hide controls' : 'Show controls'} onClick={() => setInspectorOpen(!inspectorOpen)}>{inspectorOpen ? <PanelRightClose size={16}/> : <PanelRightOpen size={16}/>}</button></div></div>
-          <div className="overview-scroll">{data && arranged.view && <PieceView data={data} sections={arranged.sections} moments={arranged.moments} selected={arranged.view} focus={arranged.focus} solo={arranged.solo} instrumentOf={arranged.instrumentOf} hasNew={arranged.trying?.kind === 'option'} render={render} onSelect={(bar) => { clearAudition(); arranged.select(bar); }} onSelectRange={selectRange} onFocus={arranged.setFocus} onSolo={arranged.toggleSolo} attention={shownAttention} forms={arranged.study.status === 'ready' ? arranged.study.answer.sections : []} progress={progress} picked={picked} onPick={pick}/>}</div>
+          <div className="overview-scroll">{data && arranged.view && <PieceView data={data} sections={arranged.sections} moments={arranged.moments} selected={arranged.view} focus={arranged.focus} solo={arranged.solo} instrumentOf={arranged.instrumentOf} hasNew={arranged.trying?.kind === 'option'} render={render} onSelect={(bar) => { clearAudition(); arranged.select(bar); }} onSelectRange={selectRange} onFocus={arranged.setFocus} onSolo={arranged.toggleSolo} onBeat={(beat) => scoreView.current?.showPlaying(cursor(beat))} attention={shownAttention} forms={arranged.study.status === 'ready' ? arranged.study.answer.sections : []} progress={progress} picked={picked} onPick={pick}/>}</div>
           {stage === 'Study' && <SectionRail arranged={arranged} onTrial={() => { clearAudition(); setPicked(null); }}/>}
         </div>
         {data && <Compare data={data} sections={arranged.sections} orders={stage === 'Study' && arranged.options.status === 'none' ? arranged.orders.filter((o) => o.index !== -1) : []} ordered={arranged.trying?.kind === 'structure' ? arranged.trying.index : null} onOrder={(index) => { clearAudition(); setPicked(null); arranged.setTrying(index === null ? null : { kind: 'structure', index }); }} onKeepOrder={() => { clearAudition(); setPicked(null); arranged.keep(); }} plans={stage === 'Pick' ? plans : null} recompose={mode === 'recompose'} chosen={chosen} onChoose={(index) => choose(index)} onAudition={(index) => choose(index, true)} compact written={written} previewed={previewed} onPreview={demo ? undefined : (index) => void arranged.askPreview(index)} busy={busy} onShowBars={selectRange}/>}
@@ -172,7 +187,7 @@ export function Workspace({ arranged, loaded, busy, demo, prepared, render, sour
           <div className="score-status" role="status"><span>{writing ? `Writing bars ${writing.from} to ${writing.to}` : sourceNote || (render ? 'Playing the saved instrument bounce' : 'Select a passage to explore or change it')}</span><span>{picked?.kind === 'bars' ? `Selected bar ${picked.from}${picked.to !== picked.from ? ` to ${picked.to}` : ''}` : 'Space to play / Escape to close'}</span></div>
         </section>
       </main>
-      <aside className="composer-inspector" aria-label="Composition controls"><div className="inspector-topline"><span>{picked ? 'Your selection' : stage === 'Setup' ? 'Your direction' : stage === 'Pick' ? 'Your choice' : stage === 'Export' ? 'Your score' : 'Composition'}</span><button className="icon-control" aria-label="Hide controls" onClick={() => setInspectorOpen(false)}><PanelRightClose size={16}/></button></div><div className="inspector-scroll"><ArrangePanel arranged={arranged} busy={busy} demo={demo} prepared={prepared} onStage={(name) => { setStage(name); onStage(name); }} selection={picked} attention={attention} onPick={pick} onMode={setMode} chosenPlan={chosen} onChoosePlan={(index) => { clearAudition(); setChosen(index); }} navigationHost={navigationHost} actionHost={actionHost} comparisonHosted onNavigate={() => { clearAudition(); setPicked(null); setInspectorOpen(true); if (window.matchMedia?.("(max-width: 760px)").matches) requestAnimationFrame(() => document.querySelector(".composer-inspector")?.scrollIntoView({ behavior: "smooth", block: "start" })); }}/></div><div className="inspector-action" ref={setActionHost}/></aside>
+      <aside className="composer-inspector" aria-label="Composition controls"><div className="inspector-topline"><span>{picked ? 'Your selection' : stage === 'Setup' ? 'Your direction' : stage === 'Pick' ? 'Your choice' : stage === 'Export' ? 'Your score' : 'Composition'}</span><button className="icon-control" aria-label="Hide controls" onClick={() => setInspectorOpen(false)}><PanelRightClose size={16}/></button></div><div className="inspector-scroll"><ArrangePanel arranged={arranged} busy={busy} demo={demo} prepared={prepared} onStage={changeStage} selection={picked} attention={attention} onPick={pick} onMode={(next) => { if (next !== mode) { clearAudition(); setMode(next); if (!arranged.recomposed) arranged.setTrying(null, true); } }} chosenPlan={chosen} onChoosePlan={(index) => { clearAudition(); setChosen(index); }} navigationHost={navigationHost} actionHost={actionHost} comparisonHosted onNavigate={() => { clearAudition(); setPicked(null); setInspectorOpen(true); if (window.matchMedia?.("(max-width: 760px)").matches) requestAnimationFrame(() => document.querySelector(".composer-inspector")?.scrollIntoView({ behavior: "smooth", block: "start" })); }}/></div><div className="inspector-action" ref={setActionHost}/></aside>
     </div>
   </div>;
 }

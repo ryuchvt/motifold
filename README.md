@@ -6,11 +6,11 @@ You choose how free it gets. **Arrange** keeps your melody exactly as it is and 
 
 I write to picture, so I often play an idea in with no click. A file like that has no bars that mean anything, and anything that reads notation needs bars. Most tools stop there. Motifold starts there.
 
-## Try it with no key
+## Try it
 
-Run it (below) or open the hosted site, then press **Watch it work**. That plays back real runs of the app on my own piano theme, through the same screens, with the model's real thinking as it came. It costs nothing and needs no key or login. Every step says it's a replay, when it was recorded, and how long it took live. The recordings and what was sent to the model are in `public/demo/`.
+Give it your own Meta Model API key to try your own piece. The key stays in that browser tab, goes with each call and is never stored. The hosted site also lets anyone try one piece on my credit, with a limit per visitor and a limit a day, until that runs out.
 
-To try your own piece, give it your own Meta Model API key. The key stays in that browser tab, goes with each call and is never stored. The hosted site also lets anyone try one piece on my credit, with a limit per visitor and a limit a day, until that runs out.
+The free **Watch it work** door is waiting for the final recorded runs. It stays disabled until those files are present in `public/demo/`. A prepared replay uses the same screens and says when it was recorded and how long it took live.
 
 ## What Muse Spark does
 
@@ -46,7 +46,9 @@ npm install
 npm run server
 ```
 
-Open the address it prints and press **Watch it work**. No key is needed for that. To let your own runs be live on the local server too, copy `.dev.vars.example` to `.dev.vars` and put your key in it. Or paste your key on the first page.
+Open the address it prints. For live calls, copy `.dev.vars.example` to `.dev.vars` and put your key in it. Or paste your key on the first page.
+
+To explore the interface with no model calls, run `npm run dev:ui` and open http://127.0.0.1:5199. It opens a supplied score with fixed local answers. Every screen labels it as a sample. The preview server refuses API calls, and the sample answers are excluded from the production build. This sample is for checking the interface, not for filming a live demonstration.
 
 `npm test` runs the tests.
 
@@ -76,7 +78,7 @@ The instrument sounds in `public/samples/` are from Versilian Studios' [VSCO 2 C
 | [fflate](https://github.com/101arrowz/fflate) | MIT | Compressed files |
 | [OpenSheetMusicDisplay](https://github.com/opensheetmusicdisplay/opensheetmusicdisplay) | BSD 3-Clause | Draws the score |
 | [Kalam](https://github.com/itfoundry/kalam), a typeface | SIL Open Font License 1.1 | The section names |
-| [JetBrains Mono](https://www.jetbrains.com/lp/mono/), a typeface | SIL Open Font License 1.1 | The labels |
+| [Lucide](https://lucide.dev) | ISC | Interface icons |
 | [jsdom](https://github.com/jsdom/jsdom) | MIT | Lets the tests draw scores without a browser |
 | [React](https://react.dev) | MIT | The interface |
 | [Vite](https://vite.dev) | MIT | Builds the app |

@@ -145,11 +145,22 @@ export const ScoreView = forwardRef<ScoreViewHandle, Props>(function ScoreView(
     showPlaying(at) {
       if (!drawn) return;
       const painted = paintPlayhead(drawn, at);
-      if (painted && painted.y !== playingLine.current) {
-        // Below whatever stays stuck to the top of the page: the chart, when it's playing, or the header.
-        const covered = document.querySelector(".movement.playing")?.getBoundingClientRect().bottom ?? 0;
-        (painted.line as SVGElement).style.scrollMarginTop = `${Math.max(covered, 72) + 16}px`;
-        painted.line.scrollIntoView({ behavior: "smooth", block: "start" });
+      if (painted) {
+        const pane = root.current?.closest<HTMLElement>(".notation-scroll");
+        if (pane) {
+          const line = painted.line.getBoundingClientRect();
+          const top = pane.getBoundingClientRect().top + pane.clientTop + 16;
+          const bottom = top + pane.clientHeight - 32;
+          const left = pane.getBoundingClientRect().left + pane.clientLeft + 16;
+          const horizontal = pane.clientWidth > 0 && (line.left < left || line.right > left + pane.clientWidth - 32);
+          const vertical = painted.y !== playingLine.current && (line.top < top || line.bottom > bottom);
+          if (vertical || horizontal) pane.scrollTo({ top: vertical ? Math.max(0, pane.scrollTop + line.top - top) : pane.scrollTop, ...(horizontal ? { left: Math.max(0, pane.scrollLeft + line.left - left) } : {}), behavior: "smooth" });
+        } else if (painted.y !== playingLine.current) {
+          // Below whatever stays stuck to the top of the page: the chart, when it's playing, or the header.
+          const covered = document.querySelector(".movement.playing")?.getBoundingClientRect().bottom ?? 0;
+          (painted.line as SVGElement).style.scrollMarginTop = `${Math.max(covered, 72) + 16}px`;
+          painted.line.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
       }
       playingLine.current = painted?.y ?? null;
     },
