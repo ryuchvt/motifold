@@ -25,19 +25,22 @@ async function setup() {
   const host = document.body.appendChild(document.createElement("div"));
   root = createRoot(host);
   await act(async () => root!.render(<Thinking />));
+  const hide = host.querySelector<HTMLButtonElement>(".thinking-hide");
+  if (hide) act(() => hide.click());
   return { host, finish };
 }
 
-it("control: a single reading shows progress and clears it on completion", async () => {
+it("control: an explicitly opened reading shows progress and clears it on completion", async () => {
   const { host, finish } = await setup();
   let work!: Promise<SparkReply>;
   await act(async () => { work = askSpark("read_piece", {}); });
+  act(() => host.querySelector<HTMLButtonElement>(".muse-activity-mobile")!.click());
   expect(host.querySelector('[role="status"]')).not.toBeNull();
   await act(async () => { finish.get("read_piece")!(reply); await work; });
   expect(host.querySelector('[role="status"]')).toBeNull();
 });
 
-it("keeps progress visible for an unfinished study when the parallel reading completes", async () => {
+it("keeps explicitly opened progress visible for an unfinished study when the parallel reading completes", async () => {
   const { host, finish } = await setup();
   let study!: Promise<SparkReply>;
   let reading!: Promise<SparkReply>;
@@ -45,6 +48,7 @@ it("keeps progress visible for an unfinished study when the parallel reading com
     study = askSpark("study_score", {});
     reading = askSpark("read_piece", {});
   });
+  act(() => host.querySelector<HTMLButtonElement>(".muse-activity-mobile")!.click());
   await act(async () => { finish.get("read_piece")!(reply); await reading; });
   try {
     expect(host.querySelector('[role="status"]'), "the study is still running and streaming, so all live progress must not disappear").not.toBeNull();

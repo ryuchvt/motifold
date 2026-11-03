@@ -16,6 +16,23 @@ const GAP = 8;
 const MOST_CIRCLED = 8;
 /** OSMD lays out in its own units, ten to the SVG's pixel. */
 const OSMD_UNIT = 10;
+const canvases = new WeakMap<SVGElement, { height: string | null; viewBox: string | null; paintedHeight: string | null; paintedViewBox: string | null }>();
+
+/** The notation's own viewport, before pencil added below its last system. A fresh OSMD size becomes the new base. */
+function restoreCanvas(svg: SVGElement) {
+  const height = svg.getAttribute("height"), viewBox = svg.getAttribute("viewBox");
+  let base = canvases.get(svg);
+  if (!base || height !== base.paintedHeight || viewBox !== base.paintedViewBox) {
+    base = { height, viewBox, paintedHeight: height, paintedViewBox: viewBox };
+    canvases.set(svg, base);
+  }
+  for (const [key, value] of [["height", base.height], ["viewBox", base.viewBox]] as const) {
+    if (value === null) svg.removeAttribute(key); else svg.setAttribute(key, value);
+  }
+  base.paintedHeight = base.height;
+  base.paintedViewBox = base.viewBox;
+  return base;
+}
 
 /** What a musician pencils on a score while studying it, by measure index (Mark Tse, "Score (Studying) Marking"). */
 export interface StudyMarks {
@@ -129,6 +146,7 @@ export function paintStudyMarks(drawn: DrawnScore, marks: StudyMarks | null): vo
   const backend = drawn.osmd.Drawer?.Backends?.[0] as { getSvgElement?: () => SVGElement } | undefined;
   const svg = backend?.getSvgElement?.();
   if (!svg) return;
+  const canvas = restoreCanvas(svg);
   for (const old of svg.querySelectorAll(`.${STUDY_CLASS}`)) old.remove();
   if (!marks) return;
 
@@ -341,5 +359,19 @@ export function paintStudyMarks(drawn: DrawnScore, marks: StudyMarks | null): vo
     const nameX = formAt + 15;
     const name = write(nameX, line, "name", section.name);
     if (section.mood) write(nameX + (name.getComputedTextLength?.() ?? section.name.length * 8) + 7, line, "mood", section.mood);
+  }
+
+  // OSMD sizes the sheet before these words exist. Grow the viewport and rendered height together without shrinking the notes.
+  const view = canvas.viewBox?.trim().split(/[\s,]+/).map(Number);
+  const pixels = Number(canvas.height);
+  if (view?.length === 4 && view.every(Number.isFinite) && view[3]! > 0 && pixels > 0 && typeof group.getBBox === "function") {
+    const bounds = group.getBBox();
+    const height = Math.max(view[3]!, bounds.y + bounds.height + 12 - view[1]!);
+    if (Number.isFinite(height) && height > view[3]!) {
+      canvas.paintedHeight = String(pixels * height / view[3]!);
+      canvas.paintedViewBox = `${view[0]} ${view[1]} ${view[2]} ${height}`;
+      svg.setAttribute("height", canvas.paintedHeight);
+      svg.setAttribute("viewBox", canvas.paintedViewBox);
+    }
   }
 }

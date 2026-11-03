@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { replay, skipReplay } from "./demo";
 import { onSpark, type SparkEvent } from "./spark";
+import "./thinking-workspace.css";
 
 const STAGES: Record<string, { what: string; chip: string; usually: string }> = {
   read_bars: { what: "Finding the bars from your notes", chip: "FINDING THE BARS", usually: "about a minute" },
@@ -93,14 +94,10 @@ function useNow(on: boolean) {
 }
 
 /** The panel's open or shut, shared by the chip and the panel. */
-let shut = false;
-let opened = false;
 const panelListeners = new Set<() => void>();
-let panel = { shut, opened };
-const setPanel = (next: { shut?: boolean; opened?: boolean }) => {
-  shut = next.shut ?? shut;
-  opened = next.opened ?? opened;
-  panel = { shut, opened };
+let panel = { opened: false };
+const setPanel = (opened: boolean) => {
+  panel = { opened };
   for (const l of panelListeners) l();
 };
 const subscribePanel = (listener: () => void) => {
@@ -120,9 +117,9 @@ export function MuseChip() {
   const clockNow = useNow(now.length > 0);
   const current = now[now.length - 1];
   const words = current ? `${STAGES[current.shape]?.chip ?? "THINKING"}${current.shape === "arrange" && current.bars ? ` ${current.bars.replace("bars ", "").replace(" to ", "–").toUpperCase()}` : ""}` : "READY";
-  const showing = current ? !state.shut : state.opened;
+  const showing = state.opened;
   return (
-    <button className={`muse-chip${current ? " on" : ""}`} aria-expanded={showing} aria-label={`Muse Spark, ${current ? STAGES[current.shape]?.what ?? "thinking" : "ready"}. ${showing ? "Hide" : "Show"} what it's doing.`} onClick={() => (current ? setPanel({ shut: !state.shut }) : setPanel({ opened: !state.opened }))}>
+    <button className={`muse-chip${current ? " on" : ""}`} aria-expanded={showing} aria-label={`Muse Spark, ${current ? STAGES[current.shape]?.what ?? "thinking" : "ready"}. ${showing ? "Hide" : "Show"} what it's doing.`} onClick={() => setPanel(!showing)}>
       <span className={`signal${current ? " on" : ""}`} aria-hidden />
       <span>MUSE SPARK · {words}</span>
       {current && <span className="muse-chip-clock">{clock(clockNow - current.started)}</span>}
@@ -142,22 +139,20 @@ export function Thinking({ sample = false }: { sample?: boolean }) {
   useEffect(() => {
     list.current?.scrollTo({ top: list.current.scrollHeight });
   }, [current?.callId, current?.lines.length]);
-  // A new call opens it again, unless the composer shut it during this one.
-  const callId = current?.callId;
-  useEffect(() => {
-    if (callId) setPanel({ shut: false });
-  }, [callId]);
-
-  const showing = current ? !state.shut : state.opened;
-  if (!showing) return null;
+  // Model events update status and reasoning without opening a panel over the score's actions.
+  if (!state.opened) return <button className="muse-activity-mobile" aria-expanded={false} aria-label="Show what Muse Spark is doing" onClick={() => setPanel(true)}>
+    <span>{current ? STAGES[current.shape]?.what ?? "Muse Spark is working" : "Muse Spark activity"}</span>
+    <span>{current ? `${clock(clockNow - current.started)} / ` : ""}Show activity</span>
+  </button>;
   const stage = current ? STAGES[current.shape] : null;
+  const recorded = replay.active || ("enabled" in replay && replay.enabled === true);
   return (
     <aside className="thinking" role={current ? "status" : undefined} aria-live="polite" aria-label="What Muse Spark is doing">
       <header>
         <span className={`signal${current ? " on" : ""}`} aria-hidden />
         <strong>{current ? current.label : "Muse Spark is ready"}</strong>
         {current && <span className="thinking-clock">{clock(clockNow - current.started)}</span>}
-        <button className="thinking-hide" aria-label="Hide" onClick={() => (current ? setPanel({ shut: true }) : setPanel({ opened: false }))}>
+        <button className="thinking-hide" aria-label="Hide" onClick={() => setPanel(false)}>
           –
         </button>
       </header>
@@ -199,12 +194,12 @@ export function Thinking({ sample = false }: { sample?: boolean }) {
       <footer>
         {sample ? (
           <span>Local sample answers. No model call.</span>
-        ) : replay.active ? (
+        ) : recorded ? (
           <>
-            <span>A replay of the real run, recorded {replay.recorded}. This step took {clock(replay.realMs)} live.</span>
-            <button className="thinking-skip" onClick={skipReplay}>
+            <span>{replay.active ? `A replay of the real run, recorded ${replay.recorded}. This step took ${clock(replay.realMs)} live.` : `Recorded replay${replay.recorded ? ` from ${replay.recorded}` : ""}. ${current ? "Loading a saved answer. No model call." : "No model call is running."}`}</span>
+            {replay.active && <button className="thinking-skip" onClick={skipReplay}>
               Skip
-            </button>
+            </button>}
           </>
         ) : current ? (
           <span>Live on Muse Spark. This usually takes {stage?.usually ?? "a minute or two"}.</span>

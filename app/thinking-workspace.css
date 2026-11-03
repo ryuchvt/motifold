@@ -1,0 +1,7 @@
+/* The header opens activity on desktop. On phones, keep a small control in the page flow, clear of score actions. */
+.muse-activity-mobile { display:none; }
+@media (max-width:760px) {
+  .studio .muse-activity-mobile { display:flex; flex:none; align-items:center; justify-content:space-between; gap:12px; min-height:32px; padding:6px 12px; border:0; border-top:1px solid var(--line); background:#111923; color:#c4d0df; font:11px/1.4 var(--sans,system-ui,sans-serif); text-align:left; cursor:pointer; }
+  .muse-activity-mobile>span:first-child { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .muse-activity-mobile>span+span { flex:none; color:#e2eaf4; }
+}

@@ -287,8 +287,8 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
     } else if (creating === "plan") {
       if (options === recipe.optionsBefore) return;
       if (options.status === "ready") {
-        // A replay has no answers for previews, and a recorded run never had them.
-        if (demo || options.saved) return finish();
+        // Local fallback answers already contain their saved notes. Recorded transports replay the real preview requests.
+        if (options.saved) return finish();
         recipe.previewInput = options.input;
         setCreating("preview");
         options.plans.forEach((_, index) => void arranged.askPreview(index));
@@ -366,6 +366,15 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
       Next: {STEPS[to - 1]}
     </button>
   );
+
+  if (mode === "recompose" && current === 4 && !arranged.recomposed) {
+    const hasPlans = arranged.recompose.status === "ready" || arranged.recompose.status === "asking";
+    return <div className="reading arrange">{steps}
+      <h2 className="arrange-title">Choose a recomposition first</h2>
+      <p className="arrange-said">{hasPlans ? "Choose a plan in Pick to write a new piece." : "Create recomposition plans in Setup, then choose one in Pick."} Your previous arrangement is still available.</p>
+      {action(<button className="button primary arrange-go" onClick={() => go(hasPlans ? 3 : 2)}>{hasPlans ? "Back to plans" : "Back to direction"}</button>)}
+    </div>;
+  }
 
   if (!intentMatches && (current === 3 || current === 4)) return <div className="reading arrange">{steps}<h2 className="arrange-title">Create a new {mode === 'arrange' ? 'arrangement' : 'expansion'}</h2><p className="arrange-said">The previous result uses a different direction. Your source and that result are still kept. Choose Create in Setup to make this version.</p>{action(<button className="button primary arrange-go" onClick={() => go(2)}>Back to direction</button>)}</div>;
 
@@ -765,7 +774,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
           <p className="spark-note">
             {mode === "recompose" ? `Recompose, ${FREEDOMS[freedom - 1]![0].toLowerCase()}` : mode === "expand" ? "Expand" : "Arrange"}
             {mode !== "arrange" && mood ? `, ${mood.toLowerCase()}` : mode === "arrange" ? ", neutral" : ""}
-            {template ? `, ${template.toLowerCase()}` : ""}
+            {keepTracks && mode !== "recompose" ? ", current instruments" : template ? `, ${template.toLowerCase()}` : ""}
             {writeWords.trim() ? `: "${writeWords.trim().slice(0, 80)}${writeWords.trim().length > 80 ? "…" : ""}"` : ""}.{" "}
             <button className="arrange-quiet inline" onClick={() => setStep(2)}>
               Change the setup

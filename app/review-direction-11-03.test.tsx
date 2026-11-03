@@ -16,7 +16,7 @@ const xmlText = `<score-partwise><part-list><score-part id="P1"><part-name>Flute
 const score = parseScore(xmlText), loaded = { fileName: "local.musicxml", xmlText, score };
 let root: Root | null = null;
 afterEach(() => { act(() => root?.unmount()); root = null; document.body.replaceChildren(); setTransport(null); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
-async function setup(workspace = false) {
+async function setup(workspace = false, demo = false) {
   const calls: { shape: string; input: any }[] = [], frames: FrameRequestCallback[] = [];
   vi.stubGlobal("requestAnimationFrame", (callback: FrameRequestCallback) => frames.push(callback));
   vi.stubGlobal("cancelAnimationFrame", () => {});
@@ -27,6 +27,8 @@ async function setup(workspace = false) {
     calls.push({ shape, input });
     const answer = shape === "read_piece" ? { summary: "A local sketch", sections: [], roles: [], questions: [], structures: [], missing: [], thin: [] }
       : shape === "plan_options" ? { options: ["A", "B"].map((letter) => ({ name: `${input.intent ?? (input.moreBars > 0 ? "expand" : "arrange")} ${letter}`, idea: "An answer", why: [{ from: "1", to: "12", what: "An answer", principle: "Use source material" }] })) }
+      : shape === "plan_recompose" ? { options: [{ name: "A fresh recomposition", idea: "A new phrase from the source", why: [{ from: "1", to: "8", what: "A new phrase", principle: "Develop the source" }], motif: { from: "1", to: "1", what: "Opening" }, fifths: 0, time: "4/4", qpm: 90 }] }
+      : shape === "write_theme" ? { lines: [] }
       : shape === "arrange" ? { adds: [{ part: "Oboe", bar: input.window.from, events: "C5@0+1" }], doubles: [] }
       : shape === "distribute" ? { idea: "The same line", plan: [{ from: "1", to: "12", line: "Flute", voice: "all", part: "Flute", octave: 0, why: "Keep the source" }] } : null;
     return answer ? { status: "ok", cached: false, answer } : { status: "fallback", reason: "not-prepared" };
@@ -34,7 +36,7 @@ async function setup(workspace = false) {
   let now!: Arranged;
   function Host() {
     now = useArrange(loaded, score.parts[0]!, { from: 0, to: 11 }, null);
-    return workspace ? <Workspace arranged={now} loaded={loaded} busy={false} demo={false} prepared={[]} sourceNote={null} onStage={() => {}}/> : <ArrangePanel arranged={now} busy={false}/>;
+    return workspace ? <Workspace arranged={now} loaded={loaded} busy={false} demo={demo} prepared={[]} sourceNote={null} onStage={() => {}}/> : <ArrangePanel arranged={now} busy={false} demo={demo}/>;
   }
   const host = document.body.appendChild(document.createElement("div")); root = createRoot(host);
   await act(async () => root!.render(<Host/>));
@@ -58,6 +60,37 @@ it("defaults to faithful current instruments, hides moods, and sends Arrange int
   await vi.waitFor(() => expect(screen.now.options.status).toBe("ready"));
   expect(screen.calls.some((call) => call.shape === "distribute")).toBe(false);
   expect(screen.calls.find((call) => call.shape === "plan_options")!.input).toMatchObject({ intent: "arrange", where: "inside", moreBars: 0 });
+  const summary = [...screen.host.querySelectorAll("p")].find((paragraph) => paragraph.textContent?.trim().startsWith("Arrange, neutral"))!;
+  expect(summary.textContent).toContain("current instruments");
+  expect(summary.textContent).not.toContain("string orchestra");
+});
+
+it("names the selected ensemble in Pick when the notes were laid out on new players", async () => {
+  const screen = await setup();
+  await press(screen.host, "Next: Setup");
+  const ensemble = screen.host.querySelector('[aria-label="Ensemble"]') as unknown as HTMLSelectElement;
+  act(() => { ensemble.value = "String orchestra"; ensemble.dispatchEvent(new Event("change", { bubbles: true })); });
+  await press(screen.host, "Create");
+  await vi.waitFor(() => expect(screen.now.options.status).toBe("ready"));
+  const summary = [...screen.host.querySelectorAll("p")].find((paragraph) => paragraph.textContent?.trim().startsWith("Arrange, neutral"))!;
+  expect(summary.textContent).toContain("string orchestra");
+  expect(summary.textContent).not.toContain("current instruments");
+});
+
+it("sends both first-section previews through the recorded transport when a demo creates plans", async () => {
+  const fetch = vi.fn(() => { throw Error("Recorded previews must not reach a live transport"); });
+  vi.stubGlobal("fetch", fetch);
+  const screen = await setup(false, true);
+  await press(screen.host, "Next: Setup"); await press(screen.host, "Create");
+  await vi.waitFor(() => {
+    const options = screen.now.options;
+    expect(options.status === "ready" && options.plans.every((_, index) => options.notes[index]?.status === "ready")).toBe(true);
+  });
+  expect(screen.calls.filter(call => call.shape === "arrange").map(call => [call.input.chosen.name, call.input.window])).toEqual([
+    ["arrange A", { from: "1", to: "8" }], ["arrange B", { from: "1", to: "8" }],
+  ]);
+  expect(screen.now.options.status === "ready" && Object.values(screen.now.options.notes).every(note => note.status === "ready" && note.preview)).toBe(true);
+  expect(fetch).not.toHaveBeenCalled();
 });
 
 it("keeps Expand intent even when development stays within the existing bars", async () => {
@@ -117,4 +150,30 @@ it("does not enable exporting an empty new score after recomposition failed to w
   const download = [...screen.host.querySelectorAll<HTMLButtonElement>('button')].find(button => button.textContent?.trim() === 'Download MIDI')!;
   expect(download.disabled).toBe(true);
   expect(screen.host.textContent).toContain('no sounding notes');
+});
+
+it.each(["arrange", "expand"] as const)("keeps a completed %s out of Recompose Write until a new piece is chosen", async (intent) => {
+  const screen = await setup(true);
+  await press(screen.host, "Next: Setup");
+  if (intent === "expand") await press(screen.host, "Expand");
+  await press(screen.host, "Create");
+  await vi.waitFor(() => expect(screen.now.options.status).toBe("ready"));
+  await act(() => screen.now.askNotes(0));
+  await press(screen.host, "Setup"); await press(screen.host, "Recompose");
+  const before = screen.calls.length;
+  await press(screen.host, "Write");
+  expect(screen.host.textContent).not.toContain(`${intent} A`);
+  expect(screen.host.textContent).toContain("Choose a recomposition first");
+  expect(screen.calls).toHaveLength(before);
+
+  await act(() => screen.now.askRecompose("", 8, ["Flute"]));
+  expect(screen.host.textContent).not.toContain(`${intent} A`);
+  expect(screen.host.textContent).toContain("Choose a recomposition first");
+  await press(screen.host, "Back to plans");
+  const choice = screen.host.querySelector<HTMLButtonElement>(".idea-choose")!;
+  act(() => choice.click());
+  await press(screen.host, "Write this one");
+  await vi.waitFor(() => expect(screen.now.recomposed).not.toBeNull());
+  expect(screen.host.querySelector('[aria-current="step"]')?.textContent).toBe("Write");
+  expect(screen.host.querySelector(".arrange-title")?.textContent).toBe("A fresh recomposition");
 });
