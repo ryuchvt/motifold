@@ -129,6 +129,14 @@ export function validateOutcome(summary, archive, { recipe, readers, receipts, s
     demand(check.notes === 114 && check.placed === 114 && !check.notPlaced.length && !check.outOfRange.length && !check.together.length && !check.ignored && equal(check, captured.check), 'Source placement does not preserve all 114 accepted attacks');
     baseXml = readers.scoreOfParts(source, input, rebuilt.parts);
     const layout = readers.parseScore(baseXml);
+    const sourceClock = page => page.parts[0].measures.slice(0, source.parts[0].measures.length).map(measure => ({
+      bar: measure.number,
+      start: measure.start / page.ticksPerQuarter,
+      length: measure.length / page.ticksPerQuarter,
+      metre: measure.time,
+      tempos: measure.tempos.map(mark => ({ beat: mark.onset / page.ticksPerQuarter, qpm: mark.qpm })),
+    }));
+    demand(equal(sourceClock(exported), sourceClock(source)), 'Export changed a source tempo offset or metre');
     const fullTracks = readers.scoreTracks(exported);
     for (const track of readers.scoreTracks(layout)) demand(containsNotes(fullTracks.filter(part => part.name === track.name).flatMap(part => part.notes), track.notes), 'Export changed a recorded source-layout event');
     placement = { acceptedSourceNotes: 114, placed: check.placed, rangeOctaveMoves: check.moved, sourceLayoutNotes: readers.scoreTracks(layout).reduce((sum, track) => sum + track.notes.length, 0) };
@@ -144,6 +152,11 @@ export function validateOutcome(summary, archive, { recipe, readers, receipts, s
   }
   demand([...coverage.values()].every(count => count === 1), 'Missing or overlapping authenticated writing windows');
   const adds = writes.flatMap(call => readers.withDoubles(call.reply.answer, bars));
+  // Only a preview followed by further windows takes useArrange's unfinished/resume branch.
+  // A one-call preview is reused as-is; a fresh recomposition also retains raw reply order.
+  const preview = `${summary.caseId}-${summary.label.toLowerCase()}-preview`;
+  const resumed = writes.length > 1 && recipe.intent !== 'recompose' && (summary.caseId === null || requests.some(call => call.shape === 'arrange' && call.caseId === preview && call.status === 'ok'));
+  if (resumed) adds.sort((a, b) => bars.indexOf(a.bar) - bars.indexOf(b.bar));
   const base = readers.parseScore(baseXml), check = readers.checkOption({ ...summary.plan, adds }, base, input);
   demand(equal(check, summary.check), 'Capture checks disagree with the actual written answers');
   const rebuiltXml = readers.withOption(baseXml, base, check);

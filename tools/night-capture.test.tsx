@@ -31,7 +31,7 @@ it('enumerates102 unique recipes and204 outcomes in the approved priority order'
   expect(NIGHT_RECIPES.filter(item => item.intent === 'recompose')).toHaveLength(90);
 });
 
-async function setup(failure?: 'notes' | 'theme' | 'zero-adds') {
+async function setup(failure?: 'notes' | 'theme' | 'zero-adds' | 'grouped-theme') {
   vi.stubGlobal('crypto', webcrypto);
   vi.stubGlobal('fetch', vi.fn(() => { throw Error('No real network is allowed'); }));
   const requests: { shape: string; input: any }[] = [];
@@ -48,6 +48,7 @@ async function setup(failure?: 'notes' | 'theme' | 'zero-adds') {
       if (failure === 'notes') return { status: 'fallback', reason: 'budget' };
       if (failure === 'zero-adds') return { status: 'ok', cached: false, answer: { adds: [], doubles: [] } };
       const from = Number(asked.window?.from ?? '1'), to = Number(asked.window?.to ?? '24');
+      if (asked.seed && failure === 'grouped-theme') return { status: 'ok', cached: false, answer: { adds: ['Violin I', 'Violin II'].flatMap(part => Array.from({ length: to - from + 1 }, (_, index) => ({ part, bar: String(from + index), events: 'C5@0+3', dyn: 'mp', role: 'melody', art: '' }))), doubles: [] } };
       if (asked.seed || from > 24) return { status: 'ok', cached: false, answer: { adds: Array.from({ length: to - from + 1 }, (_, index) => ({ part: 'Violin I', bar: String(from + index), events: `${asked.chosen.name === 'Synthetic B' ? 'D5' : 'C5'}@0+3`, dyn: 'mp', role: 'melody', art: '' })), doubles: [] } };
       const receipt = saved.find((call: any) => call.shape === 'arrange' && call.input.chosen.name === recordedPlan.name && call.input.window.from === String(from));
       if (!receipt) throw Error(`No local fixture window ${from}`);
@@ -100,6 +101,24 @@ it('captures two real-hook recompositions from their own plans at active option 
   expect(requests.filter(call => call.shape === 'write_theme').map(call => call.input.chosen.name)).toEqual(['Synthetic A', 'Synthetic B']);
   expect(requests.filter(call => call.shape === 'arrange').every(call => call.input.seed.theme.includes('tune: C5@0+3'))).toBe(true);
   expect(files.get('a-score.musicxml')).not.toEqual(files.get('b-score.musicxml'));
+});
+
+it('fresh multiwindow recomposition keeps player-grouped reply order and supplies the theme as context rather than pre-added notes', async () => {
+  const { current, io, files, requests } = await setup('grouped-theme');
+  const recipe = NIGHT_RECIPES.find(item => item.intent === 'recompose' && item.ensemble === 'String orchestra' && item.mood === 'Neutral')!;
+  const result = await runNightRecipe(recipe, current, io, 'grouped-theme-local-smoke');
+  expect(result.status, result.error).toBe('complete');
+  for (const label of ['a', 'b']) {
+    const summary = JSON.parse(strFromU8(files.get(`${label}-summary.json`)!));
+    const writes = requests.filter(call => call.shape === 'arrange' && call.input.chosen.name === summary.plan.name);
+    expect(writes).toHaveLength(4);
+    const expected = writes.flatMap(call => ['Violin I', 'Violin II'].flatMap(part => Array.from({ length: Number(call.input.window.to) - Number(call.input.window.from) + 1 }, (_, index) => [part, String(Number(call.input.window.from) + index)])));
+    expect(summary.check.adds.map((add: { part: string; bar: string }) => [add.part, add.bar])).toEqual(expected);
+    expect(summary.notes).toBe(64);
+    expect(writes[1]!.input.earlier).toBe('Violin I: C5@0+3 / Violin II: C5@0+3');
+    expect(writes[1]!.input.seed.theme).toContain('Bar 9 tune: C5@0+3');
+  }
+  expect(fetch).not.toHaveBeenCalled();
 });
 
 it.each(['notes', 'theme'] as const)('retains diagnostic failure and rejects a bad %s outcome without exporting it', async failure => {

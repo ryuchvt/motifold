@@ -86,6 +86,44 @@ it('accepts genuine source-only orchestration and recorded range-fitting octaves
   }
 });
 
+it('reproduces the hook stable bar ordering when a resumed preview reply groups its added notes by player', () => {
+  const x = fixture();
+  const writes = x.receipts.filter(row => row.shape === 'arrange' && row.input.chosen.name === x.summary.plan.name);
+  for (const call of writes) call.reply.answer.adds.sort((a, b) => a.part.localeCompare(b.part) || Number(a.bar) - Number(b.bar));
+  const layout = x.receipts.find(row => row.shape === 'distribute');
+  const placed = arrange.placeNotes(source, layout.input, layout.reply.answer, recipe.instruments, false);
+  const baseXml = arrange.scoreOfParts(source, layout.input, placed.parts), base = parseScore(baseXml), input = writes[0].input;
+  const bars = input.written.map(bar => bar.bar), raw = writes.flatMap(call => arrange.withDoubles(call.reply.answer, bars));
+  const adds = [...raw].sort((a, b) => bars.indexOf(a.bar) - bars.indexOf(b.bar));
+  const check = arrange.checkOption({ ...x.summary.plan, adds }, base, input);
+  expect(arrange.checkOption({ ...x.summary.plan, adds: raw }, base, input)).not.toEqual(check);
+  const bytes = arrange.packageFiles(arrange.withOption(baseXml, base, check), check, 'A local resumed hook export');
+  x.summary.check = check; x.summary.zip.sha256 = hash(bytes);
+  expect(validateOutcome(x.summary, bytes, { recipe, readers, receipts: x.receipts, sourceXml }).inspection.notes).toBe(211);
+});
+
+it('keeps raw player-grouped order when a single preview already contains the whole arrangement', () => {
+  const x = fixture(), oldName = x.summary.plan.name;
+  const plan = { ...x.summary.plan, why: [] };
+  x.summary.plan = plan;
+  x.receipts.find(row => row.shape === 'plan_options').reply.answer.options[0] = plan;
+  const writes = x.receipts.filter(row => row.shape === 'arrange' && row.input.chosen.name === oldName), first = writes[0];
+  const raw = writes.flatMap(row => arrange.withDoubles(row.reply.answer, row.input.written.map(bar => bar.bar))).sort((a, b) => a.part.localeCompare(b.part) || Number(a.bar) - Number(b.bar));
+  first.input.chosen = plan; delete first.input.window;
+  first.reply.answer = { adds: raw, doubles: [] };
+  const dropped = new Set(writes.slice(1).map(row => row.attemptId));
+  x.receipts = x.receipts.filter(row => !dropped.has(row.attemptId));
+  x.summary.requests = x.summary.requests.filter(row => !dropped.has(row.attemptId));
+  const layout = x.receipts.find(row => row.shape === 'distribute');
+  const placed = arrange.placeNotes(source, layout.input, layout.reply.answer, recipe.instruments, false);
+  const baseXml = arrange.scoreOfParts(source, layout.input, placed.parts), base = parseScore(baseXml);
+  const check = arrange.checkOption({ ...plan, adds: raw }, base, first.input);
+  expect(check.adds.map(add => add.bar)).not.toEqual([...check.adds].sort((a, b) => Number(a.bar) - Number(b.bar)).map(add => add.bar));
+  const bytes = arrange.packageFiles(arrange.withOption(baseXml, base, check), check, 'A one-call whole preview');
+  x.summary.check = check; x.summary.zip.sha256 = hash(bytes);
+  expect(validateOutcome(x.summary, bytes, { recipe, readers, receipts: x.receipts, sourceXml }).inspection.notes).toBe(211);
+});
+
 it('verifies a complete32-bar recomposition and refuses a failed or missing theme despite a playable full export', () => {
   const x = fixture(), recomposition = expectedRecipes(TEMPLATES).find(item => item.intent === 'recompose' && item.ensemble === 'String orchestra' && item.mood === 'Neutral');
   const plan = { name: 'Local recomposition fixture', idea: 'The source reshaped', fifths: 0, time: '3/4', qpm: 90, motif: { from: '1', to: '2', what: 'The opening' }, why: [{ from: '1', to: '32', what: 'A new treatment', principle: 'Keep the melody' }] };
@@ -143,6 +181,18 @@ it('refuses uncompleted windows, hard acceptance failures, unproven requests and
   files['all-parts.mid'] = arrange.midiFile(arrange.scoreTracks(score), 91, { beats: 3, beatType: 4 });
   const changed = zipSync(files);
   expect(() => validateOutcome({ ...x.summary, zip: { ...x.summary.zip, sha256: hash(changed) } }, changed, options)).toThrow(/MIDI notes, tempos/);
+});
+
+it('rejects a self-consistent XML/MIDI export that moves one source tempo offset despite retaining all50 marks, or changes source metre', () => {
+  const x = fixture(), options = { recipe, readers, receipts: x.receipts, sourceXml };
+  const xml = strFromU8(unzipSync(archive)['score.musicxml']);
+  const shifted = xml.replace(/<forward><duration>(\d+)<\/duration><\/forward><sound tempo="([^"]+)"\/><backup><duration>\1<\/duration><\/backup>/, (_all, ticks, qpm) => `<forward><duration>${Number(ticks) + 1}</duration></forward><sound tempo="${qpm}"/><backup><duration>${Number(ticks) + 1}</duration></backup>`);
+  expect(shifted).not.toBe(xml);
+  expect(parseScore(shifted).parts[0].measures.flatMap(measure => measure.tempos)).toHaveLength(50);
+  for (const changedXml of [shifted, xml.replace('<beats>3</beats>', '<beats>4</beats>')]) {
+    const changed = arrange.packageFiles(changedXml, x.summary.check, 'A changed source clock');
+    expect(() => validateOutcome({ ...x.summary, zip: { ...x.summary.zip, sha256: hash(changed) } }, changed, options)).toThrow('source tempo offset or metre');
+  }
 });
 
 it('publishes only a verified A, leaves203 entries disabled, and preserves the original tutorial and117-note MIDI', () => {

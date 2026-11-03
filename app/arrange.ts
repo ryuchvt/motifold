@@ -594,9 +594,9 @@ function staffXml(events: NewEvent[], staff: number | null, voiceBase: number, b
   return xml + (marks?.after ?? "");
 }
 
-const childrenOf = (el: Element, name: string) => {
+const childrenOf = (el: Element, name?: string) => {
   const out: Element[] = [];
-  for (let n = el.firstChild; n; n = n.nextSibling) if (n.nodeType === 1 && (n as Element).tagName === name) out.push(n as Element);
+  for (let n = el.firstChild; n; n = n.nextSibling) if (n.nodeType === 1 && (!name || (n as Element).tagName === name)) out.push(n as Element);
   return out;
 };
 
@@ -608,6 +608,52 @@ function append(parent: Element, xml: string): void {
 }
 
 const serialize = (doc: Document) => new XMLSerializer().serializeToString(doc as never);
+
+/** Keep timed marks in a template bar independent of the rests being replaced. */
+function anchorTimedMarks(measure: Element): () => void {
+  let cursor = 0;
+  const atCursor: { el: Element; cursor: number }[] = [];
+  const offsetOf = (el: Element) => Number(childrenOf(el, "offset")[0]?.textContent ?? 0);
+  const offsetTo = (el: Element, value: number, before?: Element | null) => {
+    const old = childrenOf(el, "offset")[0];
+    if (!old && value === 0) return;
+    const offset = old ?? el.ownerDocument!.createElement("offset");
+    offset.textContent = String(value);
+    if (!old) el.insertBefore(offset, before ?? null);
+  };
+  for (const el of childrenOf(measure)) {
+    const duration = Number(childrenOf(el, "duration")[0]?.textContent ?? 0);
+    if (el.tagName === "forward") cursor += duration;
+    else if (el.tagName === "backup") cursor = Math.max(0, cursor - duration);
+    else if (el.tagName === "note" && !childrenOf(el, "chord").length && !childrenOf(el, "grace").length) cursor += duration;
+    else if (el.tagName === "sound") offsetTo(el, cursor + offsetOf(el));
+    else if (el.tagName === "direction") {
+      const oldOffset = childrenOf(el, "offset")[0];
+      const playbackOffset = oldOffset?.getAttribute("sound") === "yes" ? offsetOf(el) : 0;
+      const metronome = childrenOf(el, "direction-type").flatMap((type) => childrenOf(type, "metronome"))[0];
+      if (metronome && !childrenOf(el, "sound").some((sound) => sound.hasAttribute("tempo"))) {
+        // A metronome-only direction can have different printed and audible offsets.
+        // Keep its original cursor without conflating them or changing its sound child.
+        if (cursor) atCursor.push({ el, cursor });
+        continue;
+      }
+      for (const sound of childrenOf(el, "sound")) {
+        const own = childrenOf(sound, "offset")[0];
+        offsetTo(sound, cursor + (own ? offsetOf(sound) : playbackOffset));
+      }
+      if (childrenOf(el, "direction-type").some((type) => ["dynamics", "wedge"].some((tag) => childrenOf(type, tag).length))) {
+        offsetTo(el, cursor + offsetOf(el), childrenOf(el).find((child) => child.tagName !== "direction-type"));
+      }
+    }
+  }
+  return () => {
+    for (const { el, cursor } of atCursor) {
+      const nodes = parseXml(`<x><forward><duration>${cursor}</duration></forward><backup><duration>${cursor}</duration></backup></x>`).documentElement;
+      measure.insertBefore(measure.ownerDocument!.importNode(nodes.firstChild!, true), el);
+      measure.insertBefore(measure.ownerDocument!.importNode(nodes.lastChild!, true), el.nextSibling);
+    }
+  };
+}
 
 /**
  * The score with an option's notes on it, as new parts and new bars. The composer's bars are never opened. Notes for one of their
@@ -664,7 +710,9 @@ export function withOption(xmlText: string, score: Score, check: OptionCheck, co
         const measure = measures.find((m) => m.getAttribute("number") === bar);
         const inScore = lead.measures[barList.indexOf(bar)]!;
         if (!measure) continue;
+        const restoreCursors = anchorTimedMarks(measure);
         for (const tag of ["note", "forward", "backup"]) for (const el of childrenOf(measure, tag)) measure.removeChild(el);
+        restoreCursors();
         const closing = childrenOf(measure, "barline").filter((line) => line.getAttribute("location") !== "left");
         for (const line of closing) measure.removeChild(line);
         append(measure, staffXml(check.adds.filter((a) => a.bar === bar && a.part === part.name).flatMap((a) => a.events), null, 1, Math.round((inScore.length / score.ticksPerQuarter) * DIV), inkOf(roleIn(part.name, bar), color), 0, part.transposition, marksOf(part.name, bar)));

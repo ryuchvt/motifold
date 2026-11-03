@@ -211,12 +211,14 @@ function parsePart(id: string, info: PartInfo | undefined, measureEls: Element[]
     let repeatForward = false;
     let repeatBackward: number | null = null;
 
-    const readSound = (sound: Element | undefined) => {
+    const readSound = (sound: Element | undefined, directionOffset = 0) => {
       if (!sound) return;
+      // A sound's own offset wins over its direction's playback offset.
+      const onset = cursor + ticks(num(sound, "offset") ?? directionOffset);
       const tempo = Number(sound.getAttribute("tempo"));
-      if (sound.hasAttribute("tempo") && tempo > 0) tempos.push({ onset: cursor, qpm: tempo });
+      if (sound.hasAttribute("tempo") && tempo > 0) tempos.push({ onset, qpm: tempo });
       const level = Number(sound.getAttribute("dynamics"));
-      if (sound.hasAttribute("dynamics") && level >= 0) levels.push({ onset: cursor, velocity: Math.max(1, Math.min(127, Math.round(level * 0.9))) });
+      if (sound.hasAttribute("dynamics") && level >= 0) levels.push({ onset, velocity: Math.max(1, Math.min(127, Math.round(level * 0.9))) });
       for (const kind of JUMP_ATTRIBUTES) {
         if (sound.hasAttribute(kind) && !jumps.includes(kind)) jumps.push(kind);
       }
@@ -290,22 +292,25 @@ function parsePart(id: string, info: PartInfo | undefined, measureEls: Element[]
           maxCursor = Math.max(maxCursor, cursor);
           break;
         case "direction": {
+          const offset = child(el, "offset");
+          const printedOnset = cursor + ticks(num(offset) ?? 0);
+          const playbackOffset = offset?.getAttribute("sound") === "yes" ? num(offset) ?? 0 : 0;
           for (const dt of children(el, "direction-type")) {
             const staff = num(el, "staff");
             for (const dynamics of children(dt, "dynamics")) {
-              for (const mark of children(dynamics)) dynamicMarks.push({ onset: cursor, kind: "dynamics", value: mark.tagName, ...(mark.textContent?.trim() ? { text: mark.textContent.trim() } : {}), ...(staff ? { staff } : {}) });
+              for (const mark of children(dynamics)) dynamicMarks.push({ onset: printedOnset, kind: "dynamics", value: mark.tagName, ...(mark.textContent?.trim() ? { text: mark.textContent.trim() } : {}), ...(staff ? { staff } : {}) });
             }
             for (const wedge of children(dt, "wedge")) {
               const type = wedge.getAttribute("type");
               const number = wedge.getAttribute("number");
-              if (type) dynamicMarks.push({ onset: cursor, kind: "wedge", value: type, ...(number ? { number } : {}), ...(staff ? { staff } : {}) });
+              if (type) dynamicMarks.push({ onset: printedOnset, kind: "wedge", value: type, ...(number ? { number } : {}), ...(staff ? { staff } : {}) });
             }
             const metronome = child(dt, "metronome");
             const perMinute = num(metronome, "per-minute");
             const unit = text(metronome, "beat-unit");
             if (metronome && perMinute && unit && !child(el, "sound")?.hasAttribute("tempo")) {
               const dotted = children(metronome, "beat-unit-dot").length;
-              tempos.push({ onset: cursor, qpm: perMinute * beatUnitQuarters(unit, dotted) });
+              tempos.push({ onset: cursor + ticks(playbackOffset), qpm: perMinute * beatUnitQuarters(unit, dotted) });
             }
             for (const w of children(dt, "words")) {
               const t = w.textContent?.replace(/\s+/g, " ").trim();
@@ -319,7 +324,7 @@ function parsePart(id: string, info: PartInfo | undefined, measureEls: Element[]
             if (child(dt, "segno") && !jumps.includes("segno")) jumps.push("segno");
             if (child(dt, "coda") && !jumps.includes("coda")) jumps.push("coda");
           }
-          readSound(child(el, "sound"));
+          readSound(child(el, "sound"), playbackOffset);
           break;
         }
         case "sound":
