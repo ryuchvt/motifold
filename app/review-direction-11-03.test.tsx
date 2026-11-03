@@ -30,7 +30,7 @@ async function setup(workspace = false, demo = false) {
       : shape === "plan_recompose" ? { options: [{ name: "A fresh recomposition", idea: "A new phrase from the source", why: [{ from: "1", to: "8", what: "A new phrase", principle: "Develop the source" }], motif: { from: "1", to: "1", what: "Opening" }, fifths: 0, time: "4/4", qpm: 90 }] }
       : shape === "write_theme" ? { lines: [] }
       : shape === "arrange" ? { adds: [{ part: "Oboe", bar: input.window.from, events: "C5@0+1" }], doubles: [] }
-      : shape === "distribute" ? { idea: "The same line", plan: [{ from: "1", to: "12", line: "Flute", voice: "all", part: "Flute", octave: 0, why: "Keep the source" }] } : null;
+      : shape === "distribute" ? { idea: "The same line", plan: [{ from: "1", to: "12", line: "Flute", voice: "all", part: input.instruments[0], octave: 0, why: "Keep the source on the selected player" }] } : null;
     return answer ? { status: "ok", cached: false, answer } : { status: "fallback", reason: "not-prepared" };
   });
   let now!: Arranged;

@@ -2,8 +2,8 @@ import { createElement } from 'react';
 import { createRoot } from 'react-dom/client';
 import { unzipSync, strFromU8 } from 'fflate';
 import { parseScore } from '../score';
-import { rangeOf, scoreTracks, type PlacedCheck } from '../app/arrange';
-import { noteName } from '../app/notes';
+import { scoreTracks, type PlacedCheck } from '../app/arrange';
+import { placementRangeWords } from '../app/placementRepair';
 import { useArrange, type Arranged } from '../app/useArrange';
 import { setOwnKey, setTransport } from '../app/spark';
 import { NIGHT_RECIPES, NIGHT_SOURCE, type NightRecipe } from './night-capture-matrix';
@@ -21,7 +21,7 @@ const bytes = (value: unknown) => new TextEncoder().encode(JSON.stringify(value,
 export interface NightRequest { shape: string; status: string; reason?: string; attemptId?: string; caseId?: string; input?: unknown; cached?: boolean; model?: string; version?: string }
 function fail(condition: unknown, message: string): asserts condition { if (!condition) throw Error(message); }
 
-/** Keep askSpark's ordinary network retry from releasing a second register-repair request. */
+/** Defend each register-repair phase against repeated physical dispatch. */
 export function claimRegisterRepair(context: string, shape: string, claimed: Set<string>): void {
   if (!context.endsWith('-layout-range-repair')) return;
   fail(shape === 'distribute', 'Register repair permits only distribute');
@@ -32,20 +32,7 @@ export function claimRegisterRepair(context: string, shape: string, claimed: Set
 /** One bounded technical layout request; it cannot authorize changing source note classes or timing. */
 export function registerRepairWords(check: PlacedCheck): string | null {
   if (check.notes !== NIGHT_SOURCE.notes || check.placed !== NIGHT_SOURCE.notes || check.notPlaced.length || check.together.length || check.ignored || !check.outOfRange.length) return null;
-  const parts = [...new Set(check.outOfRange.map(note => note.part))];
-  if (parts.some(part => !rangeOf(part))) return null;
-  const bounds = parts.map(part => { const range = rangeOf(part)!; return `${part} ${noteName(range[1])}..${noteName(range[2])}`; }).join('; ');
-  let words = `Register repair only: keep every source note's pitch class, onset, duration and harmony. Whole-octave placement or redistribute existing voices only; no new material or mood. Sounding ranges: ${bounds}.`;
-  // The existing distribute/UI words limit is400. Never truncate an instrument's range or a note name.
-  if (words.length > 400) return null;
-  const examples = parts.map(part => [...new Set(check.outOfRange.filter(note => note.part === part).map(note => `${note.part} bar${note.bar}:${note.name}`))]);
-  const facts = Array.from({ length: Math.max(...examples.map(items => items.length)) }, (_, index) => examples.flatMap(items => items[index] ? [items[index]!] : [])).flat();
-  for (const fact of facts) {
-    const more = ` ${fact};`;
-    if (words.length + more.length > 400) break;
-    words += more;
-  }
-  return words;
+  return placementRangeWords(check.outOfRange);
 }
 const digest = async (data: Uint8Array) => [...new Uint8Array(await crypto.subtle.digest('SHA-256', new Uint8Array(data).buffer))].map(byte => byte.toString(16).padStart(2, '0')).join('');
 function options(now: Arranged) { fail(now.options.status === 'ready', `Options ${now.options.status}`); return now.options; }

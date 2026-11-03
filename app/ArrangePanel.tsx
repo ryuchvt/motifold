@@ -13,6 +13,7 @@ import type { Selection } from "./selection";
 import type { DemoRun } from "./demo";
 import { useTutorialGuide } from "./Tutorial";
 import { FailureReason } from "./failureReason";
+import { canSuggestRangeRepair, placementCheckWords, placementHasProblems, placementRangeWords } from "./placementRepair";
 
 const orderWords = (order: Stretch[]) => order.map((o, k) => (k ? barsWords(o.from, o.to).toLowerCase() : barsWords(o.from, o.to))).join(", then ");
 const barsWords = (from: string, to: string) => (from === to ? `Bar ${from}` : `Bars ${from} to ${to}`);
@@ -209,6 +210,9 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
   const [picked, setPicked] = useState<string[]>(startWith?.instruments ?? []);
   const [ownInstrument, setOwnInstrument] = useState("");
   const [placeWords, setPlaceWords] = useState("");
+  const placementField = useRef<HTMLTextAreaElement>(null);
+  const [placementRecovery, setPlacementRecovery] = useState<{ kind: "range" | "checks" | "split"; facts: string | null; added: boolean; checks: string[] } | null>(null);
+  const [focusPlacement, setFocusPlacement] = useState(false);
   const [writeWords, setWriteWords] = useState("");
   const [mood, setMood] = useState<string | null>(initialSetup?.mood && initialSetup.mood.toLowerCase() !== "neutral" ? initialSetup.mood : null);
   /** Stay with the composer's melody, or take it as a motif (Ryu, 11-02). */
@@ -275,6 +279,11 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
       return;
     }
     const intent = mode as "arrange" | "expand";
+    if (keepTracks && placed.status === "ready" && placementHasProblems(placed.check)) {
+      createRecipe.current = null;
+      setCreating(null);
+      return;
+    }
     const count = intent === "arrange" ? 0 : moreBars;
     const location = intent === "arrange" ? "inside" : where;
     createRecipe.current = { words, moreBars: count, where: location, intent, placedBefore: placed, optionsBefore: options };
@@ -298,6 +307,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
     if (creating === "layout") {
       if (placed === recipe.placedBefore) return;
       if (placed.status === "ready") {
+        if (placementHasProblems(placed.check)) return finish();
         recipe.optionsBefore = options;
         setCreating("plan");
         void askOptions(recipe.words, recipe.moreBars, recipe.where, recipe.intent);
@@ -335,6 +345,38 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
   const open = Math.max(reached, floor);
   const current = step === 5 && standing ? 5 : Math.min(step, open);
   useEffect(() => onStage?.(STEPS[current - 1]!), [current]);
+  useEffect(() => {
+    if (!focusPlacement || current !== 2) return;
+    const frame = requestAnimationFrame(() => {
+      placementField.current?.focus();
+      placementField.current?.scrollIntoView?.({ block: "center" });
+      setFocusPlacement(false);
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [focusPlacement, current]);
+  const adjustPlacement = () => {
+    if (placed.status !== "ready") return;
+    const rangeSafe = canSuggestRangeRepair(placed.check);
+    const facts = rangeSafe ? placementRangeWords(placed.check.outOfRange) : null;
+    const separator = placeWords.trim() ? " " : "";
+    const direction = askedWords();
+    const remaining = Math.min(400 - placeWords.length - separator.length, 400 - direction.length - (direction ? 1 : 0) - (placeWords.trim() ? placeWords.trimStart().length + separator.length : 0));
+    const addition = rangeSafe ? placementRangeWords(placed.check.outOfRange, remaining) : null;
+    if (addition) setPlaceWords(placeWords + separator + addition);
+    setPlacementRecovery({ kind: rangeSafe ? "range" : "checks", facts, added: !!addition, checks: placementCheckWords(placed.check) });
+    setKeepTracks(false);
+    onPick?.(null);
+    go(2);
+    setFocusPlacement(true);
+  };
+  const splitAndReviewPlacement = () => {
+    splitPlaced();
+    setKeepTracks(true);
+    setPlacementRecovery({ kind: "split", facts: null, added: false, checks: [] });
+    onPick?.(null);
+    go(2);
+    setFocusPlacement(true);
+  };
   const intentMatches = mode === "recompose" || options.status !== "ready" || !options.input.intent || options.input.intent === mode;
   const exportScore = arranged.shown?.score ?? standing;
   const hasExportNotes = !!exportScore?.parts.some(part => part.notes.some(note => !note.rest && !note.hidden && !note.cue && !note.grace && (note.soundingMidi !== null || note.unpitched)));
@@ -647,6 +689,13 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
       {steps}
       {notes?.status === "ready" && notes.reason && <FailureReason reason={notes.reason} onExplore={onExplore}/>}
       {arranged.themeReason && <><p className="spark-note">The new melody did not finish. The available score is still here.</p><FailureReason reason={arranged.themeReason} onExplore={onExplore}/></>}
+      {current === 3 && mode !== "recompose" && placed.status === "ready" && placementHasProblems(placed.check) && <div className="arrange-hit" role="alert">
+        <strong>{canSuggestRangeRepair(placed.check) ? "Check the instrument ranges" : "Check the instrument placement"}</strong>
+        <p>Planning is paused. Review these placement checks before writing plans.</p>
+        {placementCheckWords(placed.check).map(sentence => <p key={sentence}>{sentence}</p>)}
+        {placed.check.together.length > 0 && <button className="button small" disabled={busy} onClick={splitAndReviewPlacement}>Split those into single lines</button>}
+        <button className="button small" disabled={busy} onClick={adjustPlacement}>Adjust instrument placement</button>
+      </div>}
       {inspector}
 
       {!inspector && current === 1 && !arranged.tracksConfirmed && (
@@ -780,13 +829,14 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
           {mode === 'recompose' && <More title="Mood" open><p className="spark-note">Neutral keeps the character of your source. Choose a mood to give the new piece a different direction.</p><span className="arrange-chips" role="group" aria-label="Mood"><button className={`chip-button${!mood ? ' on' : ''}`} aria-pressed={!mood} onClick={() => setMood(null)}>Neutral</button>{moodsHere.filter((item) => demo || SUGGESTED_MOODS.includes(item) || item === mood).map((item) => <button key={item} className={`chip-button${mood === item ? ' on' : ''}`} aria-pressed={mood === item} onClick={() => setMood(item)}>{item}</button>)}</span><More title="More moods"><span className="arrange-chips">{moodsHere.filter((item) => !SUGGESTED_MOODS.includes(item)).map((item) => <button key={item} className="chip-button small" onClick={() => setMood(item)}>{item}</button>)}</span></More></More>}
           <label className="setup-direction"><span>Your direction <small>optional</small></span><textarea className="arrange-box" rows={3} maxLength={360} aria-label="What you want, or what inspired it" value={writeWords} placeholder={mode === 'arrange' ? 'Let the viola answer the tune. Keep my harmony and the quiet character.' : mode === 'expand' ? 'Add a contrasting section, bring my theme back, then complete the ending.' : 'Describe what should stay recognisable and the feeling of the new piece.'} onChange={(event) => setWriteWords(event.target.value)}/></label>
           {mode !== 'arrange' && <More title={mode === 'recompose' ? 'Length of the new piece' : 'Where to expand'} open>{mode === 'recompose' ? <label className="arrange-inline">Total bars<input type="number" min={8} max={64} value={length} onChange={(event) => setLength(Math.max(8, Math.min(64, Math.round(Number(event.target.value)) || 8)))}/></label> : <><span className="arrange-chips" role="group" aria-label="What to write">{([['after','Continue after the ending'],['both','Develop the piece and continue'],['inside','Develop within existing bars']] as const).map(([value,label]) => <button key={value} className={`chip-button${where === value ? ' on' : ''}`} aria-pressed={where === value} onClick={() => setWhere(value)}>{label}</button>)}</span>{reachesEnd && where !== 'inside' && <label className="arrange-inline">Added bars<input type="number" min={1} max={32} value={moreBars} onChange={(event) => setMoreBars(Math.max(1, Math.min(32, Math.round(Number(event.target.value)) || 1)))}/></label>}</>}</More>}
-          <More title="Advanced musical controls">
+          <More title="Advanced musical controls" open={placementRecovery ? true : undefined}>
             {mode === 'expand' && <p className="spark-note">All of your source notes stay. New sections, a return or a fuller ending grow from the same character.</p>}
             {mode !== 'recompose' && <label className="arrange-check"><input type="checkbox" checked={keepTracks} onChange={(event) => setKeepTracks(event.target.checked)}/>Keep my own tracks as they are, and only add new parts</label>}
-            <label className="setup-direction"><span>Instrument placement</span><textarea className="arrange-box" rows={2} maxLength={400} aria-label="How you want it laid out" value={placeWords} placeholder="Violas carry the tune first. Bring the violins in later." onChange={(event) => setPlaceWords(event.target.value)}/></label>
+            <label className="setup-direction"><span>Instrument placement</span><textarea ref={placementField} className="arrange-box" rows={placementRecovery ? 6 : 2} maxLength={400} aria-label="How you want it laid out" value={placeWords} placeholder="Violas carry the tune first. Bring the violins in later." onChange={(event) => setPlaceWords(event.target.value)}/></label>
+            {placementRecovery && <div className="spark-note" role="status"><p>{placementRecovery.kind === "split" ? "Those parts are split into single lines. Review the current players, then press Create to plan from these parts." : placementRecovery.kind === "checks" ? "Your own wording is kept. Review these checks and update your placement instructions, then press Create." : placementRecovery.added ? "Your placement wording is kept with range guidance added. Review it, then press Create." : "Your own wording is kept. Make room in your direction or placement notes for the range guidance below, then press Create."}</p>{placementRecovery.kind === "checks" && placementRecovery.checks.map(sentence => <p key={sentence}>{sentence}</p>)}{!placementRecovery.added && placementRecovery.facts && <p>{placementRecovery.facts}</p>}</div>}
             <More title="Timing for a scene" open={cues.length > 0}><p className="spark-note">Add a moment the music should meet. A moment beyond your current ending needs Expand.</p><Moments arranged={arranged}/></More>
           </More>
-          {action(<div><p className="action-summary">{mode === 'arrange' ? 'Arrange / Neutral / All source notes kept' : mode === 'expand' ? 'Expand / Neutral / All source notes kept' : `Recompose / ${FREEDOMS[freedom - 1]![0]} / ${mood ?? 'Neutral'}`}<br/>{keepTracks && mode !== 'recompose' ? 'Current instruments' : template ?? `${chosen.length} players`}</p><button className="button primary arrange-go" data-tutorial="create" disabled={busy || !recordedChoicesMatch || (mode !== 'recompose' && !keepTracks && chosen.length === 0)} onClick={create}>Create</button></div>)}
+          {action(<div><p className="action-summary">{mode === 'arrange' ? 'Arrange / Neutral / Keep all source notes' : mode === 'expand' ? 'Expand / Neutral / Keep all source notes' : `Recompose / ${FREEDOMS[freedom - 1]![0]} / ${mood ?? 'Neutral'}`}<br/>{keepTracks && mode !== 'recompose' ? 'Current instruments' : template ?? `${chosen.length} players`}</p><button className="button primary arrange-go" data-tutorial="create" disabled={busy || !recordedChoicesMatch || (mode !== 'recompose' && !keepTracks && chosen.length === 0)} onClick={create}>Create</button></div>)}
           {guide&&!recordedChoicesMatch&&<p className="spark-note" role="status">This guide has one exact recorded setup. Use the explorer for other prepared choices. <button className="arrange-quiet" disabled={busy} onClick={restoreRecordedChoices}>Restore recorded choices</button></p>}
           <p className="spark-note">{mode === 'recompose' ? 'First compare two musical plans. Notes are written after you choose.' : 'Compare two plans and their first sections. Then choose which one to finish.'}</p>
         </>
@@ -846,11 +896,6 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
                       {sentence}
                     </p>
                   ))}
-                  {placed.check.together.length > 0 && (
-                    <button className="button small" onClick={splitPlaced}>
-                      Split those into single lines
-                    </button>
-                  )}
                 </More>
               )}
               <More title="Delete a part">

@@ -8,6 +8,8 @@ import { parseScore } from "../score";
 import type { ArrangeInput, DistributeInput, WriteInput } from "../server/shapes";
 import { ArrangePanel } from "./ArrangePanel";
 import { useArrange, type Arranged } from "./useArrange";
+import { rangeOf } from "./arrange";
+import { scoreLines } from "./scoreInput";
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 const xmlText=readFileSync("test-fixtures/contract-score.musicxml","utf8");
@@ -33,7 +35,21 @@ function setup(){
     if(url.endsWith("distribute")){
       const asked=input as DistributeInput;
       layouts.push(asked);
-      const answer={idea:"The chosen players",plan:[{from:asked.written[0]!.bar,to:asked.written.at(-1)!.bar,line:asked.lines![0]!,voice:"all",part:asked.instruments[0]!,octave:0,why:"Keep the source line"}]};
+      // Give this ownership test a complete playable layout; range/missing-note failures have separate tests.
+      const players=asked.instruments.filter(name=>name!=='Piano');
+      const densePlayer=asked.instruments.find(name=>name==='Piano')??players[4]!;
+      const specs=[{line:asked.lines![0]!,voice:"all",part:players[0]!},{line:asked.lines![1]!,voice:"1",part:players[1]!},{line:asked.lines![1]!,voice:"2",part:players[2]!},{line:asked.lines![1]!,voice:"3",part:players[3]!},{line:asked.lines![2]!,voice:"all",part:densePlayer}];
+      const answer={idea:"The chosen players",plan:specs.flatMap(spec=>asked.written.map(({bar},k)=>{
+        const line=scoreLines(score.parts).find(line=>line.label===spec.line)!;
+        const source=score.parts.find(part=>part.id===line.partId)!;
+        const groups=new Map<number,number[]>();
+        for(const index of source.measures[k]!.noteIndexes){const note=source.notes[index]!;if(note.staff!==line.staff||note.rest||note.grace||note.soundingMidi===null)continue;groups.set(note.onset,[...(groups.get(note.onset)??[]),note.soundingMidi]);}
+        const heights=[...groups.values()].flatMap(group=>{const high=[...group].sort((a,b)=>b-a);return spec.voice==='all'?high:high.slice(Number(spec.voice)-1,Number(spec.voice));});
+        const player=spec.part,range=rangeOf(player)!;
+        const octave=[0,1,-1,2,-2].find(octave=>heights.every(height=>height+12*octave>=range[1]&&height+12*octave<=range[2]));
+        if(octave===undefined)throw Error('Invalid ownership fixture range');
+        return {from:bar,to:bar,line:spec.line,voice:spec.voice,part:player,octave,why:'Retain every synthetic source voice on the chosen players'};
+      }))};
       if(holdLayout)return await new Promise<Response>(resolve=>{release=()=>resolve(response(answer));});
       return response(answer);
     }
@@ -76,7 +92,7 @@ async function finished(screen:ReturnType<typeof setup>,run:number){
   await vi.waitFor(async()=>{
     await act(async()=>{});
     const options=screen.now.options;
-    expect(options.status).toBe("ready");
+    expect(options.status,JSON.stringify(screen.now.placed.status==='ready'?screen.now.placed.check:screen.now.placed)).toBe("ready");
     if(options.status!=="ready")return;
     expect(options.plans[0]!.name).toBe(`Run ${run} A`);
     expect(options.plans.every((_,index)=>options.notes[index]?.status==="ready")).toBe(true);
@@ -91,6 +107,10 @@ it("Create snapshots its recipe and waits for a fresh layout before planning ove
   await finished(screen,1);
   await press(screen.host,"Setup");
   await act(async()=>{ const ensemble=screen.host.querySelector('[aria-label="Ensemble"]') as unknown as HTMLSelectElement; ensemble.value='Brass quintet'; ensemble.dispatchEvent(new Event('change',{bubbles:true})); });
+  // The dense synthetic lower staff needs a polyphonic player alongside the brass.
+  await act(async()=>{ const ensemble=screen.host.querySelector('[aria-label="Ensemble"]') as unknown as HTMLSelectElement; ensemble.value='custom'; ensemble.dispatchEvent(new Event('change',{bubbles:true})); });
+  const piano=[...screen.host.querySelectorAll<HTMLButtonElement>('[aria-label="Your instruments"] button')].find(button=>button.textContent==='Piano')!;
+  await act(async()=>piano.click());
   const expand=[...screen.host.querySelectorAll<HTMLButtonElement>('.intent-choice')].find(button=>button.textContent?.startsWith('Expand'))!;
   await act(async()=>expand.click());
   await direction(screen.host,"Hold low warm inner voices.");
