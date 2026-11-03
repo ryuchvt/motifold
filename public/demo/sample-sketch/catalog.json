@@ -154,11 +154,16 @@
       "ensemble": "Woodwind quintet",
       "mood": "Neutral",
       "option": 0,
-      "name": "Woodwind quintet A",
+      "name": "Low horn foundation with clarinet replies",
       "bars": 24,
       "sourceBars": 24,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/arrange-neutral-woodwind-quintet-a/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/arrange-neutral-woodwind-quintet-a/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/arrange-neutral-woodwind-quintet-a/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/arrange-neutral-woodwind-quintet-a/run.json",
+      "xmlSha256": "3470ceee9f3be0f08c59363964d349d7381775bfbc5ace2a1f3fb984252c05a4",
+      "midiSha256": "a6aa35203a0ac0f3ed5ac20f519800a91a24ae077fe2e8680b1f52a28033e5e3"
     },
     {
       "id": "arrange-neutral-woodwind-quintet-b",
@@ -167,11 +172,16 @@
       "ensemble": "Woodwind quintet",
       "mood": "Neutral",
       "option": 1,
-      "name": "Woodwind quintet B",
+      "name": "Clarinet broken chords with horn offbeats",
       "bars": 24,
       "sourceBars": 24,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/arrange-neutral-woodwind-quintet-b/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/arrange-neutral-woodwind-quintet-b/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/arrange-neutral-woodwind-quintet-b/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/arrange-neutral-woodwind-quintet-b/run.json",
+      "xmlSha256": "ae35c719a9013ba2ba29c8d007f4eb040b8e7802145da4e4e20652c8e374ba83",
+      "midiSha256": "8357f6cf4000f33ce0e117d580ab08ebdc717493166289cb71d058cf70286936"
     },
     {
       "id": "arrange-neutral-brass-quintet-a",
@@ -180,11 +190,16 @@
       "ensemble": "Brass quintet",
       "mood": "Neutral",
       "option": 0,
-      "name": "Brass quintet A",
+      "name": "Pedal Support",
       "bars": 24,
       "sourceBars": 24,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/arrange-neutral-brass-quintet-a/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/arrange-neutral-brass-quintet-a/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/arrange-neutral-brass-quintet-a/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/arrange-neutral-brass-quintet-a/run.json",
+      "xmlSha256": "84f26b0488b08613f7ff9968e0ac9335b56e79818fdbca508acf3557518d2908",
+      "midiSha256": "ba686ac7118676b0c255e0d571889d1f12662ca9712d573dcb21323e562533f3"
     },
     {
       "id": "arrange-neutral-brass-quintet-b",
@@ -193,11 +208,16 @@
       "ensemble": "Brass quintet",
       "mood": "Neutral",
       "option": 1,
-      "name": "Brass quintet B",
+      "name": "Gap Answer",
       "bars": 24,
       "sourceBars": 24,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/arrange-neutral-brass-quintet-b/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/arrange-neutral-brass-quintet-b/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/arrange-neutral-brass-quintet-b/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/arrange-neutral-brass-quintet-b/run.json",
+      "xmlSha256": "bb370d94c79eb80c1d73d46950d41604378d9f98bc99503c8729bc6861f75f22",
+      "midiSha256": "572ad2258e2011b4ea39ebee3bf4b1ca1da0e0dd549715fe3707f9d6af554ebf"
     },
     {
       "id": "expand-neutral-string-orchestra-a",
@@ -206,11 +226,16 @@
       "ensemble": "String orchestra",
       "mood": "Neutral",
       "option": 0,
-      "name": "String orchestra A",
+      "name": "Low Octave Ground with Sung Return",
       "bars": 40,
       "sourceBars": 24,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/expand-neutral-string-orchestra-a/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/expand-neutral-string-orchestra-a/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/expand-neutral-string-orchestra-a/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/expand-neutral-string-orchestra-a/run.json",
+      "xmlSha256": "b27787f15d623e3d34a35bdaa4317cb1aa594f046b6e86bc0bd848ac4e92b473",
+      "midiSha256": "83937d6e5f456886eb1e62ba23e559c26adf6db94d62e5664da9fb0a3b1f7213"
     },
     {
       "id": "expand-neutral-string-orchestra-b",
@@ -219,11 +244,16 @@
       "ensemble": "String orchestra",
       "mood": "Neutral",
       "option": 1,
-      "name": "String orchestra B",
+      "name": "Inverted Answer with Quiet Unison",
       "bars": 40,
       "sourceBars": 24,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/expand-neutral-string-orchestra-b/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/expand-neutral-string-orchestra-b/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/expand-neutral-string-orchestra-b/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/expand-neutral-string-orchestra-b/run.json",
+      "xmlSha256": "31fa25df5fdce7a902e9268de382fe836f481cd0ea14e0b3aa91f0f1377c6e30",
+      "midiSha256": "4a2383b1e47bef0c90a9626fd826ba5a6c730b7e6216ea020c341da8afc3021b"
     },
     {
       "id": "expand-neutral-string-quartet-a",

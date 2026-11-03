@@ -1,0 +1,72 @@
+{
+  "id": "expand-neutral-string-orchestra-b",
+  "recipe": {
+    "id": "expand-neutral-string-orchestra",
+    "intent": "expand",
+    "ensemble": "String orchestra",
+    "instruments": [
+      "Violin I",
+      "Violin II",
+      "Viola",
+      "Cello",
+      "Double Bass"
+    ],
+    "mood": "Neutral",
+    "bars": 40,
+    "moreBars": 16,
+    "where": "both",
+    "tuneOnly": false,
+    "freedom": 2
+  },
+  "option": 1,
+  "plan": "Inverted Answer with Quiet Unison",
+  "status": "complete",
+  "verified": {
+    "sha256": "10bb5c3193e13bccce4faa998d7a14311588365a30b4cdd340452363a40b700b",
+    "files": 9,
+    "parts": [
+      {
+        "name": "Violin I",
+        "bars": 40
+      },
+      {
+        "name": "Violin II",
+        "bars": 40
+      },
+      {
+        "name": "Viola",
+        "bars": 40
+      },
+      {
+        "name": "Cello",
+        "bars": 40
+      },
+      {
+        "name": "Double Bass",
+        "bars": 40
+      }
+    ],
+    "tracks": 5,
+    "notes": 286,
+    "ppq": 480,
+    "scoreAndMidiAgree": true
+  },
+  "placement": {
+    "acceptedSourceNotes": 114,
+    "placed": 114,
+    "rangeOctaveMoves": 0,
+    "sourceLayoutNotes": 114
+  },
+  "advisoryClashes": [
+    {
+      "bar": "23",
+      "part": "Viola",
+      "name": "B3"
+    }
+  ],
+  "audio": {
+    "status": "not-rendered",
+    "expectedFile": "audio/render.wav"
+  },
+  "provenance": "Actual successful Meta calls. The recorded stages may include cold retries. No uninterrupted live session is claimed."
+}

@@ -1,0 +1,16 @@
+Sample sketch: Gap Answer
+
+Horn and trombone answer trumpet gaps with its falling third, tuba grounds late octaves.
+
+Bars 1 to 8. Horn answers trumpet gaps with falling B-G echo. Use tune's own third to link phrases. Chords: C | F | C | F | G | C | F | C Level: p soft, breathing
+Bars 9 to 16. Trombone and horn hold soft inner chord tones. Thicken repeat texture, keep melody forward. Chords: C | F | C | F | G | F | G | C Level: mp steady
+Bars 17 to 20. Tuba adds low roots, horn sustains fifths. Restore low octave, leave trombone bass clear. Chords: C | F | C | F Level: mp grounded, steady
+Bars 21 to 24. Tuba grounds G-C arrivals, horn holds thirds. Make final steps audible without new harmony. Chords: G | C | C | C Level: mf settling to p
+
+All 114 of your notes are on the instruments you chose, at the rhythm you wrote.
+30 were moved by an octave to fit their instrument.
+
+48 new notes. The code checked each one against what's sounding and the range of its instrument.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your notes keep their rhythm and their pitches, apart from any octave moves counted above.

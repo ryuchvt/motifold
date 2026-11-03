@@ -1,0 +1,72 @@
+{
+  "id": "arrange-neutral-woodwind-quintet-b",
+  "recipe": {
+    "id": "arrange-neutral-woodwind-quintet",
+    "intent": "arrange",
+    "ensemble": "Woodwind quintet",
+    "instruments": [
+      "Flute",
+      "Oboe",
+      "Clarinet",
+      "Horn",
+      "Bassoon"
+    ],
+    "mood": "Neutral",
+    "bars": 24,
+    "moreBars": 0,
+    "where": "inside",
+    "tuneOnly": false,
+    "freedom": 2
+  },
+  "option": 1,
+  "plan": "Clarinet broken chords with horn offbeats",
+  "status": "complete",
+  "verified": {
+    "sha256": "06dbf32d6aa8c90d53e5a27a50e46ea8b5b6185f94cc849f64970d6f3a7f428b",
+    "files": 9,
+    "parts": [
+      {
+        "name": "Flute",
+        "bars": 24
+      },
+      {
+        "name": "Oboe",
+        "bars": 24
+      },
+      {
+        "name": "Clarinet",
+        "bars": 24
+      },
+      {
+        "name": "Horn",
+        "bars": 24
+      },
+      {
+        "name": "Bassoon",
+        "bars": 24
+      }
+    ],
+    "tracks": 5,
+    "notes": 255,
+    "ppq": 480,
+    "scoreAndMidiAgree": true
+  },
+  "placement": {
+    "acceptedSourceNotes": 114,
+    "placed": 114,
+    "rangeOctaveMoves": 0,
+    "sourceLayoutNotes": 115
+  },
+  "advisoryClashes": [
+    {
+      "bar": "9",
+      "part": "Clarinet",
+      "name": "C4"
+    }
+  ],
+  "audio": {
+    "status": "not-rendered",
+    "expectedFile": "audio/render.wav"
+  },
+  "provenance": "Actual successful Meta calls. The recorded stages may include cold retries. No uninterrupted live session is claimed."
+}

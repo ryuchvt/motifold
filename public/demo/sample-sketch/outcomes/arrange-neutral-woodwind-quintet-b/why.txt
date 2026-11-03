@@ -1,0 +1,21 @@
+Sample sketch: Clarinet broken chords with horn offbeats
+
+Clarinet arpeggiates theme chords in chalumeau, horn punctuates phrase ends, oboe sustains harmony to lift repeat and high octave.
+
+Bars 1 to 7. Clarinet broken chords, horn silent to stay thin. Accompany with motion, keep melody foremost. Chords: C | F | C | F | G | C | F Level: pp light and rocking
+Bars 8 to 8. Clarinet arpeggiates C, oboe holds top G. Prolong arrival with gentle motion. Chords: C Level: pp sustained
+Bars 9 to 11. Oboe sustains thirds, clarinet continues rocking figure. Vary repeat by changing accompaniment. Chords: C | F | C Level: p with lift
+Bars 12 to 13. Clarinet weaves stepwise thirds, horn holds roots. Support duet without doubling tune. Chords: F | G Level: p steady
+Bars 14 to 16. Horn offbeat fifths, clarinet flowing eighths. Drive phrase rhythm, keep tune clear. Chords: F | G | C Level: mp growing
+Bars 17 to 20. Clarinet low arpeggios, oboe long high pedal. Fill empty octave with motion below. Chords: C | F | C | F Level: mf bright but light
+Bars 21 to 21. Clarinet holds B-D, horn low G pedal. Reinforce dominant with quiet brass depth. Chords: G Level: mf full
+Bars 22 to 22. Oboe holds E, clarinet steps G-A figure. Ease tension toward final bars. Chords: C Level: mf softening
+Bars 23 to 24. Horn and clarinet attack C then sustain. Fix cadence on downbeat, then thin. Chords: C G | C Level: pp to ppp still
+
+All 114 of your notes are on the instruments you chose, at the rhythm you wrote.
+
+140 new notes. The code checked each one against what's sounding and the range of its instrument.
+One long note sits a semitone from something else sounding. That can be a good suspension or a slip, so check by ear: Clarinet C4 in bar 9.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your notes keep their rhythm and their pitches, apart from any octave moves counted above.

@@ -1,0 +1,21 @@
+Sample sketch: Low horn foundation with clarinet replies
+
+Horn restores low octave below bassoon, clarinet echoes theme in gaps, oboe tints repeat for contrast without crowding melody.
+
+Bars 1 to 7. Horn holds low roots, clarinet doubles theme thirds softly. Balance source first, keep melody clear. Chords: C | F | C | F | G | C | F Level: p soft and steady
+Bars 8 to 8. Oboe holds G, clarinet holds C third below. Support arrival without new motion. Chords: C Level: p sustained
+Bars 9 to 11. Oboe takes echo, horn adds low C-G pedal. Contrast literal repeat with colour. Chords: C | F | C Level: mp slightly fuller
+Bars 12 to 13. Clarinet sustains thirds, horn grounds roots low. Fill harmony, leave duet melody clear. Chords: F | G Level: mp steady
+Bars 14 to 16. Oboe answers gaps, clarinet holds inner thirds. Add answer only against held notes. Chords: F | G | C Level: mf growing slightly
+Bars 17 to 20. Horn supplies low octave C-F roots. Restore bass depth under high bassoon. Chords: C | F | C | F Level: mf steady and light
+Bars 21 to 21. Horn holds low D-G, clarinet holds B third. Keep dominant pedal, leave duet clear. Chords: G Level: mf steady
+Bars 22 to 22. Horn sustains low C, oboe sustains G fifth. Thin texture before final approach. Chords: C Level: mf easing back
+Bars 23 to 24. Clarinet and horn stress downbeat C then rest. Make arrival clear, let tail dissolve. Chords: C G | C Level: p to pp fading
+
+All 114 of your notes are on the instruments you chose, at the rhythm you wrote.
+
+57 new notes. The code checked each one against what's sounding and the range of its instrument.
+3 long notes sit a semitone from something else sounding. That can be a good suspension or a slip, so check by ear: Clarinet C4 in bar 1, Clarinet C4 in bar 3, Clarinet C4 in bar 6.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your notes keep their rhythm and their pitches, apart from any octave moves counted above.

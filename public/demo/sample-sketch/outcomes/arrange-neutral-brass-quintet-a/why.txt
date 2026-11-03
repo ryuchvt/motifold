@@ -1,0 +1,18 @@
+Sample sketch: Pedal Support
+
+Horn sustains chord tones, tuba restores low octave late, repeats gain colour without new tunes.
+
+Bars 1 to 7. Horn holds soft roots, trombone and trumpet 2 rest. Leave trumpet tune clear above low bass. Chords: C | F | C | F | G | C | F Level: p steady
+Bars 8 to 11. Horn holds thirds softly on repeat. Add weight to repeat, keep tune forward. Chords: C | C | F | C Level: p growing to mp
+Bars 12 to 16. Trombone and horn sustain middle chord tones. Support octave lift without covering trumpets. Chords: F | G | F | G | C Level: mp steady
+Bars 17 to 22. Tuba restores low roots, horn holds fifths. Fill empty octave, keep bass function fixed. Chords: C | F | C | F | G | C Level: mp steady, grounded
+Bars 23 to 24. Tuba low C holds, horn holds E and G. Weight final tonic, let trumpet arrival speak. Chords: C | C Level: mf to p settling
+
+All 114 of your notes are on the instruments you chose, at the rhythm you wrote.
+30 were moved by an octave to fit their instrument.
+
+39 new notes. The code checked each one against what's sounding and the range of its instrument.
+3 long notes sit a semitone from something else sounding. That can be a good suspension or a slip, so check by ear: Horn C3 in bar 1, Horn C3 in bar 3, Horn C3 in bar 6.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your notes keep their rhythm and their pitches, apart from any octave moves counted above.

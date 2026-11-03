@@ -1,0 +1,18 @@
+Sample sketch: Low Octave Ground with Sung Return
+
+Give repeat its contrast with upper support, fill low octave below high theme, then sing B section from F-G lift to full C close.
+
+Bars 1 to 8. Double Bass roots, Viola holds fifths under Violin I. Keep first statement thin so repeat can grow. Chords: C|F|C|F|G|C|F|C Level: pp staying soft
+Bars 9 to 16. Viola answers gaps, Double Bass sustains motion. Vary repeat without covering fixed melody. Chords: C|F|C|F|G|F|G|C Level: p growing to mp
+Bars 17 to 24. Double Bass fills low octave, Viola fills inner thirds. Support high shift from below, keep tune clear. Chords: C|F|C|F|G|C|G|C Level: mp staying light
+Bars 25 to 32. Viola sings F-G lift, Violin I answers E-B rocking, Double Bass walks. Contrast by line, then lead back to home theme. Chords: F|C|F|G|Am|Dm|G|G Level: mf broadening slightly
+Bars 33 to 36. Violin I restates opening E-B-G, Cello grounds C. Return home clearly to prepare final cadence. Chords: C|F|G|C Level: mf easing back
+Bars 37 to 40. Violin I holds C, Viola and Double Bass close below. Let ending belong to source, no new climax. Chords: F|G|C|C Level: p settling to pp
+
+All 114 of your notes are on the instruments you chose, at the rhythm you wrote.
+1 landed on the same pitch at the same moment as another note and became one.
+
+149 new notes. The code checked each one against what's sounding and the range of its instrument.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your notes keep their rhythm and their pitches, apart from any octave moves counted above.

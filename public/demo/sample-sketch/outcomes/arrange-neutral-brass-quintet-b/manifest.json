@@ -1,0 +1,66 @@
+{
+  "id": "arrange-neutral-brass-quintet-b",
+  "recipe": {
+    "id": "arrange-neutral-brass-quintet",
+    "intent": "arrange",
+    "ensemble": "Brass quintet",
+    "instruments": [
+      "Trumpet 1",
+      "Trumpet 2",
+      "Horn",
+      "Trombone",
+      "Tuba"
+    ],
+    "mood": "Neutral",
+    "bars": 24,
+    "moreBars": 0,
+    "where": "inside",
+    "tuneOnly": false,
+    "freedom": 2
+  },
+  "option": 1,
+  "plan": "Gap Answer",
+  "status": "complete",
+  "verified": {
+    "sha256": "fd18d833043cd0350f9d6a7ebd19789a197e644b8b7ebbd54dade547d8a0e089",
+    "files": 9,
+    "parts": [
+      {
+        "name": "Trumpet 1",
+        "bars": 24
+      },
+      {
+        "name": "Trumpet 2",
+        "bars": 24
+      },
+      {
+        "name": "Horn",
+        "bars": 24
+      },
+      {
+        "name": "Trombone",
+        "bars": 24
+      },
+      {
+        "name": "Tuba",
+        "bars": 24
+      }
+    ],
+    "tracks": 5,
+    "notes": 162,
+    "ppq": 480,
+    "scoreAndMidiAgree": true
+  },
+  "placement": {
+    "acceptedSourceNotes": 114,
+    "placed": 114,
+    "rangeOctaveMoves": 30,
+    "sourceLayoutNotes": 114
+  },
+  "advisoryClashes": [],
+  "audio": {
+    "status": "not-rendered",
+    "expectedFile": "audio/render.wav"
+  },
+  "provenance": "Actual successful Meta calls. The recorded stages may include cold retries. No uninterrupted live session is claimed."
+}

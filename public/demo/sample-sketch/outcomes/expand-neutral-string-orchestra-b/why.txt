@@ -1,0 +1,19 @@
+Sample sketch: Inverted Answer with Quiet Unison
+
+Let second violin carry rocking motif over pedal, then bring high violins back for quiet unison close.
+
+Bars 1 to 8. Viola pedals roots, Double Bass doubles at octave. Leave tune exposed at opening. Chords: C|F|C|F|G|C|F|C Level: pp staying soft
+Bars 9 to 16. Double Bass walks, Viola answers long F notes. Answer holds to lift repeat gently. Chords: C|F|C|F|G|F|G|C Level: p growing to mp
+Bars 17 to 24. Viola sustains thirds, Double Bass grounds low C-G. Fill empty low octave without crowding. Chords: C|F|C|F|G|C|G|C Level: mp staying steady
+Bars 25 to 32. Violin II leads rocking motif, Viola inverts below, Cello steps. Develop by inversion, keep same waltz pulse. Chords: F|C|F|G|Am|Dm|G|G Level: mp growing to mf
+Bars 33 to 36. Violin I recalls opening phrase, Viola fills gaps. Bring back theme briefly before final close. Chords: C|F|G|C Level: mf easing back
+Bars 37 to 40. Violin I and Violin II join unison, Double Bass settles on C. End quietly where source harmony resolves. Chords: F|G|C|C Level: p fading to pp
+
+All 114 of your notes are on the instruments you chose, at the rhythm you wrote.
+1 landed on the same pitch at the same moment as another note and became one.
+
+172 new notes. The code checked each one against what's sounding and the range of its instrument.
+One long note sits a semitone from something else sounding. That can be a good suspension or a slip, so check by ear: Viola B3 in bar 23.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your notes keep their rhythm and their pitches, apart from any octave moves counted above.
