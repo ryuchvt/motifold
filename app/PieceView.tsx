@@ -75,6 +75,8 @@ export function PieceView(props: {
   render?: string;
   /** The beat actually sounding, or null when playback lets go. */
   onBeat?: (beat: number | null) => void;
+  /** A real tempo-map interaction, for the optional hands-on guide. */
+  onTempoInspect?: (beat: number, bar: string) => void;
   onSelect: (bar: string) => void;
   onSelectRange: (from: string, to: string) => void;
   onFocus: (focus: RoleFocus) => void;
@@ -317,6 +319,7 @@ export function PieceView(props: {
       </div>
       <div className="stage-grid">
         <TempoLane tempos={data.tempos} bars={bars} total={totalBeats} onInspect={(beat,bar)=>{
+          props.onTempoInspect?.(beat,bar);
           if (tempoFrame.current !== null) cancelAnimationFrame(tempoFrame.current);
           onSelect(bar);
           // Passage selection also seeks to its barline. The exact inspected beat follows that commit.

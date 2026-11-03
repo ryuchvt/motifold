@@ -1,0 +1,72 @@
+// @vitest-environment jsdom
+import {act} from 'react';
+import {createRoot,type Root} from 'react-dom/client';
+import {afterEach,expect,it,vi} from 'vitest';
+import {readFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import {TutorialCoach,tutorialTransition,TUTORIAL_STEPS,type TutorialGuide} from './Tutorial';
+import {rawSketchData} from './TutorialSketch';
+import type {DemoPiece} from './demo';
+(globalThis as any).IS_REACT_ACT_ENVIRONMENT=true;
+const piece=JSON.parse(readFileSync('public/demo/index.json','utf8')).pieces[0] as DemoPiece;
+type State=Parameters<typeof tutorialTransition>[0];
+const initial=():State=>({piece,run:4,step:0,events:{}});
+const mark=(state:State,event:Parameters<TutorialGuide['mark']>[0],user=true)=>tutorialTransition(state,{kind:'event',run:4,event,complete:true,user});
+let root:Root|null=null;
+afterEach(()=>{act(()=>root?.unmount());root=null;document.body.replaceChildren();vi.restoreAllMocks();vi.unstubAllGlobals()});
+it('requires real actions for each stage, supports Back, and ignores a previous run',()=>{
+ let state=initial();
+ expect(tutorialTransition(state,{kind:'continue'})).toBe(state);
+ expect(tutorialTransition(state,{kind:'event',run:3,event:'accepted-bars',complete:true,user:true})).toBe(state);
+ state=mark(state,'accepted-bars');expect(state.step).toBe(1);
+ state=mark(state,'tempo-inspected');expect(state.step).toBe(2);
+ for(const event of ['study-started','study-ready','tracks-confirmed']as const)state=mark(state,event);
+ expect(state.step).toBe(2);
+ state=mark(state,'questions-done');expect(state.step).toBe(3);
+ state=tutorialTransition(state,{kind:'back'});expect(state.step).toBe(2);
+ state=tutorialTransition(state,{kind:'continue'});expect(state.step).toBe(3);
+ state=mark(state,'created');expect(state.step).toBe(4);
+ for(const event of ['previews-ready','audition-a','plan-chosen']as const)state=mark(state,event);
+ expect(state.step).toBe(4);
+ state=mark(state,'audition-b');expect(state.step).toBe(5);
+ state=mark(state,'write-started');expect(state.step).toBe(5);
+ state=mark(state,'write-ready',false);expect(state.step).toBe(6);
+ state=mark(state,'downloaded');expect(state.step).toBe(TUTORIAL_STEPS.length);
+});
+it('does not reuse auditions, writing or export from an earlier Create after Back',()=>{
+ let state:State={...initial(),step:3,events:{created:true,'previews-ready':true,'audition-a':true,'audition-b':true,'plan-chosen':true,'write-started':true,'write-ready':true,downloaded:true}};
+ state=mark(state,'created');expect(state.step).toBe(4);
+ expect(state.events).toEqual({created:true});
+ state=mark(state,'previews-ready',false);expect(state.step).toBe(4);
+ // Navigating with the ordinary workflow tabs can return to Setup without coach Back.
+ state=mark({...state,step:6,events:{...state.events,downloaded:true}},'created');
+ expect(state.step).toBe(4);expect(state.events.downloaded).toBeUndefined();
+});
+it('discovers a required control after async mounting, cleans old highlights, and scrolls only its pane',async()=>{
+ const host=document.body.appendChild(document.createElement('div'));host.className='studio';
+ const pane=host.appendChild(document.createElement('main'));pane.style.overflowY='auto';
+ const coach=host.appendChild(document.createElement('div'));root=createRoot(coach);
+ const scroll=vi.fn();pane.scrollTo=scroll;pane.getBoundingClientRect=()=>({top:0,bottom:200} as DOMRect);
+ const guide={piece,recipe:piece.recipe,run:4,step:0,stepId:'raw',stage:null,events:{},completeOptions:[0],mark:()=>{}} satisfies TutorialGuide;
+ const props={onBack:()=>{},onContinue:()=>{},onSkip:()=>{},onExit:()=>{}};
+ await act(async()=>root!.render(<TutorialCoach guide={guide} {...props}/>));
+ const button=document.createElement('button');button.dataset.tutorial='accept-bars';button.getBoundingClientRect=()=>({top:400,bottom:430}as DOMRect);
+ await act(async()=>{pane.appendChild(button)});
+ expect(button.classList.contains('tutorial-target')).toBe(true);expect(scroll).not.toHaveBeenCalled();
+ const show=[...coach.querySelectorAll('button')].find(button=>button.textContent==='Show control')!;
+ act(()=>show.click());expect(scroll).toHaveBeenCalledWith({top:376,behavior:'smooth'});
+ await act(async()=>root!.render(<TutorialCoach guide={{...guide,step:1,stepId:'tempo'}} {...props}/>));
+ expect(button.classList.contains('tutorial-target')).toBe(false);
+ const tempo=document.createElement('div');tempo.dataset.tutorial='tempo';tempo.getBoundingClientRect=()=>({top:500,bottom:530}as DOMRect);
+ await act(async()=>{pane.appendChild(tempo)});expect(tempo.classList.contains('tutorial-target')).toBe(true);expect(scroll).toHaveBeenLastCalledWith({top:476,behavior:'smooth'});
+ act(()=>root!.unmount());root=null;expect(tempo.classList.contains('tutorial-target')).toBe(false);
+});
+it('keeps all raw attacks and key releases distinct from the interpreted score and pedal playback',()=>{
+ const bytes=new Uint8Array(readFileSync('public/demo/sample-sketch/Sample_sketch.mid'));
+ const before=createHash('sha256').update(bytes).digest('hex');const raw=rawSketchData(bytes);
+ expect(raw.notes).toHaveLength(117);expect(raw.playbackNotes).toHaveLength(117);expect(raw.offset).toBeCloseTo(2698,0);
+ expect(raw.total).toBeGreaterThan(70);expect(raw.total).toBeLessThan(80);
+ expect(raw.notes.some((note,index)=>raw.playbackNotes[index]!.length>note.length+.1)).toBe(true);
+ expect(raw.playbackNotes.map(note=>[note.start,note.height,note.velocity])).toEqual(raw.notes.map(note=>[note.start,note.height,note.velocity]));
+ expect(createHash('sha256').update(bytes).digest('hex')).toBe(before);
+});
