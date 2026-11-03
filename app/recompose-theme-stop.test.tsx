@@ -87,6 +87,19 @@ it.each([
   expect(x.now.standing).toBe(score); expect(x.now.recomposed).toBeNull();
 });
 
+it("keeps silent line entries as rests when the theme contains a usable tune", async () => {
+  const x = setup(); await prepare(x);
+  const answer = { lines: [...valid.lines, { role: "countermelody", bar: "1", events: "" }, { role: "tune", bar: "2", events: "   " }] };
+  const original = JSON.stringify(answer);
+  x.theme(async () => okay(answer));
+  await act(() => x.now.writeRecomposed(0));
+  expect(x.calls.map(c => c.shape)).toEqual(["plan_recompose", "write_theme", "arrange"]);
+  expect(x.now.themeWrite).toBeNull(); expect(x.now.themeReason).toBeNull();
+  expect(x.now.recomposed).toMatchObject({ plan: plans[0], tuneBars: 1 });
+  expect(JSON.stringify(answer)).toBe(original);
+  expect(x.fetch).not.toHaveBeenCalled();
+});
+
 it("a pending theme keeps the earlier result and cannot dispatch until a valid answer arrives", async () => {
   const x = setup(); await previous(x); await prepare(x);
   const before = x.now.options, shown = x.now.shown?.xmlText;

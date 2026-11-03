@@ -80,7 +80,9 @@ function usableTheme(answer: unknown, score: Score): ThemeAnswer["lines"] | null
     if (!line || !["tune", "countermelody", "bass"].includes(line.role) || typeof line.bar !== "string" || typeof line.events !== "string") return null;
     const bar = bars.find((bar) => bar.number === line.bar);
     const parsed = parseEvents(line.events);
-    if (!bar || parsed.unreadable || !parsed.events.length) return null;
+    if (!bar || parsed.unreadable) return null;
+    // A silent line is a rest. It cannot supply the required sounding tune.
+    if (!parsed.events.length) continue;
     const length = bar.length / score.ticksPerQuarter;
     // Parsing snaps for notation. Do not let that rounding hide an out-of-bar
     // release in the actual answer supplied to the next model call.
@@ -614,7 +616,7 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     setPlaced({ status: "none" });
     setOff([]);
     setOffBars([]);
-    setRecomposed({ plan, heights, opening, tuneBars: new Set(lines.filter((l) => l.role === "tune").map((l) => l.bar)).size, bars: length });
+    setRecomposed({ plan, heights, opening, tuneBars: new Set(lines.filter((l) => l.role === "tune" && l.events.trim()).map((l) => l.bar)).size, bars: length });
     const input = arrangeInput(page.score, page.score.parts[0]!, 0, length - 1, asked.ask, 0, null, { instruments, where: "inside", answers: asked.answers, freedom: asked.freedom });
     setOptions({ status: "ready", plans: [plan], input, notes: {}, saved: false });
     const tune = sourceText(asked).slice(0, 16000);
