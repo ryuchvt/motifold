@@ -54,12 +54,32 @@ it('discovers a required control after async mounting, cleans old highlights, an
  await act(async()=>{pane.appendChild(button)});
  expect(button.classList.contains('tutorial-target')).toBe(true);expect(scroll).not.toHaveBeenCalled();
  const show=[...coach.querySelectorAll('button')].find(button=>button.textContent==='Show control')!;
- act(()=>show.click());expect(scroll).toHaveBeenCalledWith({top:376,behavior:'smooth'});
+ const reveal=vi.fn();button.scrollIntoView=reveal;
+ act(()=>show.click());expect(reveal).toHaveBeenCalledWith({behavior:'smooth',block:'center',inline:'nearest'});
+ expect(scroll).not.toHaveBeenCalled();
  await act(async()=>root!.render(<TutorialCoach guide={{...guide,step:1,stepId:'tempo'}} {...props}/>));
  expect(button.classList.contains('tutorial-target')).toBe(false);
  const tempo=document.createElement('div');tempo.dataset.tutorial='tempo';tempo.getBoundingClientRect=()=>({top:500,bottom:530}as DOMRect);
  await act(async()=>{pane.appendChild(tempo)});expect(tempo.classList.contains('tutorial-target')).toBe(true);expect(scroll).toHaveBeenLastCalledWith({top:476,behavior:'smooth'});
  act(()=>root!.unmount());root=null;expect(tempo.classList.contains('tutorial-target')).toBe(false);
+});
+it('explicitly reveals an offscreen raw control through all ancestors when the nearest pane cannot scroll',async()=>{
+ const host=document.body.appendChild(document.createElement('div'));host.className='studio';
+ const pane=host.appendChild(document.createElement('main'));pane.style.overflowY='auto';
+ pane.getBoundingClientRect=()=>({top:158,bottom:938}as DOMRect);
+ Object.defineProperties(pane,{clientHeight:{value:780},scrollHeight:{value:780}});
+ const localScroll=vi.fn();pane.scrollTo=localScroll;
+ const button=pane.appendChild(document.createElement('button'));button.dataset.tutorial='accept-bars';
+ button.getBoundingClientRect=()=>({top:868,bottom:904}as DOMRect);
+ const reveal=vi.fn();button.scrollIntoView=reveal;
+ const coach=host.appendChild(document.createElement('div'));root=createRoot(coach);
+ const guide={piece,recipe:piece.recipe,run:4,step:0,stepId:'raw',stage:null,events:{},completeOptions:[0],mark:()=>{}} satisfies TutorialGuide;
+ await act(async()=>root!.render(<TutorialCoach guide={guide} onBack={()=>{}} onContinue={()=>{}} onSkip={()=>{}} onExit={()=>{}}/>));
+ expect(button.classList.contains('tutorial-target')).toBe(true);expect(reveal).not.toHaveBeenCalled();
+ act(()=>[...coach.querySelectorAll('button')].find(button=>button.textContent==='Show control')!.click());
+ // Native scrollIntoView's default is all scroll ancestors, including the viewport.
+ expect(reveal).toHaveBeenCalledExactlyOnceWith({behavior:'smooth',block:'center',inline:'nearest'});
+ expect(localScroll).not.toHaveBeenCalled();
 });
 it('keeps all raw attacks and key releases distinct from the interpreted score and pedal playback',()=>{
  const bytes=new Uint8Array(readFileSync('public/demo/sample-sketch/Sample_sketch.mid'));

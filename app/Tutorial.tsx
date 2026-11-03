@@ -49,8 +49,11 @@ export function useTutorialController(){
 export function TutorialCoach({guide,onBack,onContinue,onSkip,onExit}:{guide:TutorialGuide;onBack:()=>void;onContinue:()=>void;onSkip:()=>void;onExit:()=>void}){
   const step=TUTORIAL_STEPS[guide.step];
   const done=step?.requires.every(event=>guide.events[event]);
-  const showControl=useCallback((target:HTMLElement|null)=>{
+  const showControl=useCallback((target:HTMLElement|null,explicit=false)=>{
     if(!target)return;
+    // An explicit request must reveal the control in the viewport too. A pane can
+    // extend below the screen without having any internal scroll range of its own.
+    if(explicit){target.scrollIntoView({behavior:'smooth',block:'center',inline:'nearest'});return}
     let pane=target.parentElement;
     while(pane&&!/(auto|scroll)/.test(getComputedStyle(pane).overflowY))pane=pane.parentElement;
     if(pane){const at=target.getBoundingClientRect(),box=pane.getBoundingClientRect();if(at.top<box.top||at.bottom>box.bottom)pane.scrollTo({top:Math.max(0,pane.scrollTop+at.top-box.top-24),behavior:'smooth'})}
@@ -65,5 +68,5 @@ export function TutorialCoach({guide,onBack,onContinue,onSkip,onExit}:{guide:Tut
     return()=>{live=false;observer.disconnect();target?.classList.remove('tutorial-target')};
   },[guide.run,guide.step,guide.events,showControl]);
   if(!step)return null;
-  return <aside className="tutorial-coach" aria-label="Hands-on tutorial"><div><span className="tutorial-count">{guide.step+1} of {TUTORIAL_STEPS.length}</span><strong>{step.title}</strong><p>{step.words}</p></div><div className="tutorial-coach-actions"><button onClick={onBack} disabled={guide.step===0}>Back</button>{done&&<button onClick={onContinue}>Continue</button>}<button onClick={()=>showControl(document.querySelector<HTMLElement>(step.target))}>Show control</button><button onClick={onSkip}>Skip guide</button><button onClick={onExit}>Exit tutorial</button></div></aside>;
+  return <aside className="tutorial-coach" aria-label="Hands-on tutorial"><div><span className="tutorial-count">{guide.step+1} of {TUTORIAL_STEPS.length}</span><strong>{step.title}</strong><p>{step.words}</p></div><div className="tutorial-coach-actions"><button onClick={onBack} disabled={guide.step===0}>Back</button>{done&&<button onClick={onContinue}>Continue</button>}<button onClick={()=>showControl(document.querySelector<HTMLElement>(step.target),true)}>Show control</button><button onClick={onSkip}>Skip guide</button><button onClick={onExit}>Exit tutorial</button></div></aside>;
 }
