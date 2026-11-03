@@ -59,7 +59,7 @@ describe("a MIDI file as a score", () => {
   });
 
   it("plays back what the file played, with a note over the barline tied", () => {
-    expect(scoreTracks(score).find((t) => t.name === "Strng Long")!.notes).toEqual([{ start: 0, length: 3, height: 64 }, { start: 0, length: 3, height: 60 }, { start: 3, length: 2, height: 62 }]);
+    expect(scoreTracks(score).find((t) => t.name === "Strng Long")!.notes).toEqual([{ start: 0, length: 3, height: 64, velocity: 80 }, { start: 0, length: 3, height: 60, velocity: 80 }, { start: 3, length: 2, height: 62, velocity: 80 }]);
     const ticked = score.parts[0]!.notes.filter((n) => n.pitch?.step === "D");
     expect(ticked.map((n) => [n.tieStart, n.tieStop])).toEqual([[true, false], [false, true]]);
   });

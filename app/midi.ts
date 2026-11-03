@@ -184,7 +184,7 @@ export function midiScoreXml(bytes: Uint8Array, title: string): string {
         const start = Math.max(from, bar.start);
         const end = Math.min(until, bar.start + bar.length);
         if (end <= start + 1e-6) return;
-        part.bars[k]!.push({ start: start - bar.start, length: end - start, names: [name], tieStop: from < bar.start - 1e-6, tieStart: until > bar.start + bar.length + 1e-6 });
+        part.bars[k]!.push({ start: start - bar.start, length: end - start, names: [name], tieStop: from < bar.start - 1e-6, tieStart: until > bar.start + bar.length + 1e-6, ...(n.velocity !== undefined ? { velocity: n.velocity } : {}) });
       });
     }
     return part;

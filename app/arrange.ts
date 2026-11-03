@@ -531,14 +531,21 @@ const CLEFS: [RegExp, string, number][] = [
 
 /** One staff of one bar. Notes struck and released together are a chord, and overlapping ones go in voices of their own. */
 function staffXml(events: NewEvent[], staff: number | null, voiceBase: number, barTicks: number, color?: string, octaveShift = 0, transposition: Part["transposition"] = null, marks?: { before: string; after: string }): string {
-  type Token = { start: number; ticks: number; names: string[]; tieStart: boolean; tieStop: boolean; velocity?: number };
+  type Token = { start: number; ticks: number; names: string[]; tieStart: boolean; tieStop: boolean; velocities: Map<string, number> };
   const chords = new Map<string, Token>();
   for (const e of [...events].sort((a, b) => a.start - b.start)) {
-    const token = { start: Math.round(e.start * DIV), ticks: Math.max(1, Math.round(e.length * DIV)), names: [...new Set(e.names)], tieStart: !!e.tieStart, tieStop: !!e.tieStop, ...(e.velocity !== undefined ? { velocity: e.velocity } : {}) };
+    const names = [...new Set(e.names)];
+    const token: Token = { start: Math.round(e.start * DIV), ticks: Math.max(1, Math.round(e.length * DIV)), names, tieStart: !!e.tieStart, tieStop: !!e.tieStop, velocities: new Map(e.velocity !== undefined ? names.map((name) => [name, e.velocity!]) : []) };
     const key = `${token.start}|${token.ticks}|${token.tieStart}|${token.tieStop}`;
     const same = chords.get(key);
-    if (same) same.names = [...new Set([...same.names, ...token.names])];
-    else chords.set(key, token);
+    if (same) {
+      // Each note of a chord keeps how hard it was struck.
+      for (const name of token.names) {
+        if (same.names.includes(name)) continue;
+        same.names.push(name);
+        if (token.velocities.has(name)) same.velocities.set(name, token.velocities.get(name)!);
+      }
+    } else chords.set(key, token);
   }
   const voices: Token[][] = [];
   for (const token of chords.values()) {
@@ -557,7 +564,7 @@ function staffXml(events: NewEvent[], staff: number | null, voiceBase: number, b
     }
     // The first voice shows its rests, as any part would. The ones under it stay out of the way.
     const gap = (ticks: number) => (v === 0 ? restXml(ticks, voiceBase, staffTag) : `<forward><duration>${ticks}</duration></forward>`);
-    for (const { start, ticks, names, tieStart, tieStop, velocity } of voice) {
+    for (const { start, ticks, names, tieStart, tieStop, velocities } of voice) {
       if (start > cursor) {
         xml += gap(start - cursor);
         cursor = start;
@@ -566,6 +573,7 @@ function staffXml(events: NewEvent[], staff: number | null, voiceBase: number, b
       split.forEach((piece, k) => {
         const ties = [...(k || tieStop ? ["stop"] : []), ...(k < split.length - 1 || tieStart ? ["start"] : [])];
         names.forEach((name, i) => {
+          const velocity = velocities.get(name);
           xml += `<note${color ? ` color="${color}"` : ""}${velocity !== undefined ? ` dynamics="${Math.round(velocity / 0.09) / 10}"` : ""}>${i ? "<chord/>" : ""}${pitchXml(transposition ? writtenInFrame(name, transposition) : name, octaveShift)}<duration>${piece[0]}</duration>${ties.map((t) => `<tie type="${t}"/>`).join("")}<voice>${voiceBase + v}</voice>${typeXml(piece)}${staffTag}${ties.length ? `<notations>${ties.map((t) => `<tied type="${t}"/>`).join("")}</notations>` : ""}</note>`;
         });
         cursor += piece[0];
@@ -817,6 +825,14 @@ export interface PlacedPart {
   name: string;
   /** By position in the score's bars. */
   bars: NewEvent[][];
+  /** Playback levels, by position in the score's bars too, when the notes came from a part that had some. */
+  levels?: BarLevel[][];
+}
+
+/** A level at its beat in crotchets from the barline. */
+export interface BarLevel {
+  beat: number;
+  velocity: number;
 }
 
 export interface PlacedCheck {
@@ -851,14 +867,16 @@ interface LineNote {
 }
 
 /** Every line of a score, bar by bar, as the notes that sound, with how many there are and how many grace notes aren't counted among them. */
-function readLines(score: Score, input: StudyScoreInput): { lines: Map<string, LineNote[][]>; notes: number; grace: number } {
+function readLines(score: Score, input: StudyScoreInput): { lines: Map<string, LineNote[][]>; levels: Map<string, BarLevel[][]>; notes: number; grace: number } {
   const source = wholeScoreParts(score) ?? score.parts;
   const measures = input.written.map((w, k) => w.measure ?? k);
   let notes = 0;
   let grace = 0;
+  const levels = new Map<string, BarLevel[][]>();
   const lines = new Map(
     scoreLines(source).map((line) => {
       const part = source.find((p) => p.id === line.partId)!;
+      levels.set(line.label, measures.map((m) => (part.measures[m]?.levels ?? []).map((l) => ({ beat: l.onset / score.ticksPerQuarter, velocity: l.velocity }))));
       const inBars = measures.map((m) =>
         (part.measures[m]?.noteIndexes ?? []).flatMap((i): LineNote[] => {
           const n = part.notes[i]!;
@@ -877,7 +895,7 @@ function readLines(score: Score, input: StudyScoreInput): { lines: Map<string, L
       return [line.label, inBars] as const;
     }),
   );
-  return { lines, notes, grace };
+  return { lines, levels, notes, grace };
 }
 
 /** Where each bar starts, in crotchets, so a tie or an overlap can be seen across a barline. */
@@ -984,14 +1002,15 @@ export function splitLine(inBars: LineNote[][], barStart: number[], label: strin
 
 /** The score with these lines split into single lines. Every other line stays as it is, and no note changes. */
 export function scoreWithSplits(score: Score, input: StudyScoreInput, splitting: string[]): string {
-  const { lines } = readLines(score, input);
+  const { lines, levels } = readLines(score, input);
   const barStart = barStarts(score, input);
   // A staff with nothing on it yet is still one the composer chose, so it stays where it is.
   const parts = scoreLines(score.parts).flatMap(({ label }): PlacedPart[] => {
     const inBars = lines.get(label);
     if (!inBars) return [{ name: label, bars: input.written.map(() => []) }];
-    if (splitting.includes(label) && mostAtOnce(inBars, barStart) > 1) return splitLine(inBars, barStart, label, inBars.length);
-    return [{ name: label, bars: inBars.map((notes) => notes.map((n) => ({ start: n.start, length: n.length, names: [n.name], ...(n.velocity !== undefined ? { velocity: n.velocity } : {}), tieStart: n.tieStart, tieStop: n.tieStop }))) }];
+    const held = levels.get(label);
+    if (splitting.includes(label) && mostAtOnce(inBars, barStart) > 1) return splitLine(inBars, barStart, label, inBars.length).map((part) => ({ ...part, ...(held ? { levels: held } : {}) }));
+    return [{ name: label, ...(held ? { levels: held } : {}), bars: inBars.map((notes) => notes.map((n) => ({ start: n.start, length: n.length, names: [n.name], ...(n.velocity !== undefined ? { velocity: n.velocity } : {}), tieStart: n.tieStart, tieStop: n.tieStop }))) }];
   });
   for (const part of parts) settleTies(part, barStart);
   return scoreOfParts(score, input, parts);
@@ -1027,6 +1046,8 @@ export function placeNotes(score: Score, input: StudyScoreInput, answer: Distrib
       continue;
     }
     for (let k = from; k <= to; k++) {
+      // Where two lines come to one part in a bar, the first one's levels are the ones it plays.
+      if (read.levels.get(entry.line)?.[k]?.length && !target.levels?.[k]?.length) (target.levels ??= bars.map(() => []))[k] = read.levels.get(entry.line)![k]!;
       const attacks = new Map<number, LineNote[]>();
       for (const n of line[k]!) attacks.set(n.start, [...(attacks.get(n.start) ?? []), n]);
       for (const chord of attacks.values()) {
@@ -1051,7 +1072,7 @@ export function placeNotes(score: Score, input: StudyScoreInput, answer: Distrib
       check.material = true;
       continue;
     }
-    const target: PlacedPart = { name: `${label} (not placed)`, bars: bars.map(() => []) };
+    const target: PlacedPart = { name: `${label} (not placed)`, bars: bars.map(() => []), ...(read.levels.get(label)?.some((l) => l.length) ? { levels: read.levels.get(label)! } : {}) };
     parts.set(target.name, target);
     left.forEach((notes, k) => notes.forEach((n) => put(target, k, n, 0)));
   }
@@ -1102,7 +1123,34 @@ export interface BarHead {
   moreTempos?: { beat: number; qpm: number }[];
 }
 
-/** A new score of these parts over these bars. Only notes, rhythm and the signs that say where it goes are carried, not dynamics or articulation. */
+const LEVEL_WORDS = new Map(Object.entries(LEVELS).map(([word, velocity]) => [velocity, word]));
+
+/** A bar's levels, each at its beat, with the marks they read as: a word where a level has one, and a swell where two sit apart in the bar, which is how playback takes them too. */
+function levelsXml(levels: BarLevel[], barBeats: number, shown: { word: string | null }): { before: string; after: string } {
+  const out = { before: "", after: "" };
+  levels.forEach((level, k) => {
+    const [earlier, later] = [levels[k - 1], levels[k + 1]];
+    const word = LEVEL_WORDS.get(level.velocity) ?? null;
+    let mark = "";
+    if (earlier && earlier.beat < level.beat) mark = `<wedge type="stop"/>`;
+    else if (later && later.beat > level.beat && later.velocity !== level.velocity) mark = `<wedge type="${later.velocity > level.velocity ? "crescendo" : "diminuendo"}"/>`;
+    else if (word && word !== shown.word) {
+      mark = `<dynamics><${word}/></dynamics>`;
+      shown.word = word;
+    }
+    const sound = `<sound dynamics="${Math.round(level.velocity / 0.09) / 10}"/>`;
+    const direction = mark ? `<direction placement="below"><direction-type>${mark}</direction-type>${sound}</direction>` : sound;
+    // The end of the bar is where the notes leave off. Anything before it steps there and back.
+    if (level.beat >= barBeats - 1e-6) out.after += direction;
+    else if (level.beat > 1e-6) {
+      const gap = Math.round(level.beat * DIV);
+      out.before += `<forward><duration>${gap}</duration></forward>${direction}<backup><duration>${gap}</duration></backup>`;
+    } else out.before += direction;
+  });
+  return out;
+}
+
+/** A new score of these parts over these bars. Notes, rhythm, playback levels and the signs that say where it goes are carried, not articulation. */
 export function scoreXml(about: { title: string | null; movementTitle: string | null; composer: string | null; arranger?: string | null; rights?: string[] }, bars: BarHead[], parts: PlacedPart[]): string {
   const heads = parts.map((part, k) => `<score-part id="T${k + 1}"><part-name>${esc(part.name)}</part-name></score-part>`).join("");
   const body = parts.map((part, p) => {
@@ -1112,6 +1160,7 @@ export function scoreXml(about: { title: string | null; movementTitle: string | 
     const octaveShift = WRITTEN_OCTAVE.find(([word]) => word.test(part.name))?.[1] ?? 0;
     let shownTime = "";
     let shownKey: number | null = null;
+    const shownLevel = { word: null as string | null };
     const written = bars.map((m, k) => {
       const ticks = Math.round(m.length * DIV);
       const timeKey = m.time ? `${m.time.beats}/${m.time.beatType}` : "";
@@ -1130,8 +1179,9 @@ export function scoreXml(about: { title: string | null; movementTitle: string | 
         const gap = Math.round(t.beat * DIV);
         return `<forward><duration>${gap}</duration></forward><sound tempo="${t.qpm}"/><backup><duration>${gap}</duration></backup>`;
       });
+      const levels = levelsXml(part.levels?.[k] ?? [], m.length, shownLevel);
       const marks = p === 0 ? [...m.words.map((w) => `<direction placement="above"><direction-type><words>${esc(w)}</words></direction-type></direction>`), ...(m.qpm ? [`<sound tempo="${m.qpm}"/>`] : []), ...later].join("") : "";
-      return `<measure number="${esc(m.number)}"${m.implicit ? ` implicit="yes"` : ""}>${opens.length ? `<barline location="left">${opens.join("")}</barline>` : ""}${changes.length ? `<attributes>${changes.join("")}</attributes>` : ""}${marks}${staffXml(part.bars[k] ?? [], null, 1, ticks, undefined, octaveShift)}${closes.length ? `<barline location="right">${closes.join("")}</barline>` : ""}</measure>`;
+      return `<measure number="${esc(m.number)}"${m.implicit ? ` implicit="yes"` : ""}>${opens.length ? `<barline location="left">${opens.join("")}</barline>` : ""}${changes.length ? `<attributes>${changes.join("")}</attributes>` : ""}${marks}${levels.before}${staffXml(part.bars[k] ?? [], null, 1, ticks, undefined, octaveShift)}${levels.after}${closes.length ? `<barline location="right">${closes.join("")}</barline>` : ""}</measure>`;
     });
     return `<part id="T${p + 1}">${written.join("")}</part>`;
   });
