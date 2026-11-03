@@ -13,16 +13,16 @@ vi.mock('./audio/preview', async (original) => ({ ...(await original<typeof impo
 vi.mock('./audio/samples', () => ({ loadManifest: async () => null }));
 vi.mock('./ScoreView', () => ({ ScoreView: ({ onTap }: any) => <button aria-label="A note in bar 3" onClick={() => onTap({ bar: { partId: 'P1', measureIndex: 2 } })}>Note</button> }));
 (globalThis as any).IS_REACT_ACT_ENVIRONMENT = true;
-const xmlText = readFileSync('test-fixtures/arioso.musicxml', 'utf8');
+const xmlText = readFileSync('test-fixtures/contract-score.musicxml', 'utf8');
 const score = parseScore(xmlText);
-const loaded = { fileName: 'arioso.musicxml', xmlText, score };
+const loaded = { fileName: 'contract-score.musicxml', xmlText, score };
 let root: Root | null = null;
 afterEach(() => { act(() => root?.unmount()); root = null; document.body.replaceChildren(); setTransport(null); vi.unstubAllGlobals(); audio.play.mockReset(); audio.stop.mockReset(); });
 async function setup() {
   const frames: FrameRequestCallback[] = [];
   vi.stubGlobal('requestAnimationFrame', (callback: FrameRequestCallback) => { frames.push(callback); return frames.length; });
   vi.stubGlobal('cancelAnimationFrame', () => {});
-  const saved = JSON.parse(readFileSync('test-fixtures/arioso-arrangement.json', 'utf8'));
+  const saved = JSON.parse(readFileSync('test-fixtures/contract-arrangement.json', 'utf8'));
   setTransport(async (shape, raw) => {
     const input = raw as any;
     const answer = shape === 'read_piece' ? { ...saved.read.answer, questions: [] } : shape === 'plan_options' ? saved.plan.answer : shape === 'arrange' ? { adds: [{ part: 'Flute', bar: input.window.from, events: 'C5@0+1', dyn: 'mf' }], doubles: [] } : null;

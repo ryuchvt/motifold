@@ -32,17 +32,17 @@ beforeEach(() => {
 });
 afterEach(() => { vi.useRealTimers(); vi.unstubAllGlobals(); });
 
-it("starting the real Arioso at bar 10 hears the remainder of the cello note tied into it", () => {
-  const { score } = parseScoreFile(readFileSync("test-fixtures/arioso.musicxml"));
+it("starting the synthetic score at bar 10 hears the remainder of the cello note tied into it", () => {
+  const { score } = parseScoreFile(readFileSync("test-fixtures/contract-score.musicxml"));
   const data = pieceData(score, [], []);
   const bar = data.bars.find((b) => b.number === "10")!;
   const held = notesToHear(data, () => "Cello", null, ["Violoncello"])
     .find((n) => n.start < bar.start && n.start + n.length > bar.start)!;
-  expect({ bar: bar.start, start: held.start, length: held.length, height: held.height }).toEqual({ bar: 38, start: 37, length: 1.25, height: 69 });
+  expect({ bar: bar.start, start: held.start, length: held.length, height: held.height }).toEqual({ bar: 40, start: 39, length: 1.5, height: 62 });
   const preview = createPreview();
   preview.play([held], data.tempos, bar.start, () => {}, () => {});
   // A seek shouldn't erase sound already written and sustained at that beat.
-  expect(started.some((n) => Math.abs(n.frequency - 440) < 1e-6)).toBe(true);
+  expect(started.some((n) => Math.abs(n.frequency - 440 * 2 ** ((62 - 69) / 12)) < 1e-6)).toBe(true);
   preview.stop();
 });
 

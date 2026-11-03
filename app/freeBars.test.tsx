@@ -7,8 +7,8 @@ import { afterEach, expect, it, vi } from "vitest";
 import { FreeBars } from "./FreeBars";
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
-const bytes = new Uint8Array(readFileSync("test-fixtures/sad-theme.mid"));
-const saved = JSON.parse(readFileSync("test-fixtures/sad-theme-bars.json", "utf8"));
+const bytes = new Uint8Array(readFileSync("test-fixtures/Sample_sketch.mid"));
+const saved = JSON.parse(readFileSync("test-fixtures/sample-sketch-bars.json", "utf8"));
 let unmount = () => {};
 afterEach(() => {
   act(() => unmount());

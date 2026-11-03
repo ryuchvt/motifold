@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-// Actual shipped score and actual parsed cache keys. All network responses are local.
+// Original synthetic score and actual parsed cache keys. All network responses are local.
 import { readFileSync } from 'node:fs';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
@@ -14,12 +14,12 @@ import { scoreOfReading } from './timingScore';
 import { useArrange, type Arranged } from './useArrange';
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
-const xmlText = readFileSync('test-fixtures/arioso.musicxml', 'utf8');
+const xmlText = readFileSync('test-fixtures/contract-score.musicxml', 'utf8');
 const score = parseScore(xmlText);
-const loaded = { fileName: 'arioso.musicxml', xmlText, score };
+const loaded = { fileName: 'contract-score.musicxml', xmlText, score };
 const part = score.parts[0]!;
 const range = { from: 0, to: part.measures.length - 1 };
-const saved = JSON.parse(readFileSync('test-fixtures/arioso-arrangement.json', 'utf8'));
+const saved = JSON.parse(readFileSync('test-fixtures/contract-arrangement.json', 'utf8'));
 const reply = (status: string, extra: object = {}) => new Response(JSON.stringify({ status, ...extra }));
 let unmount = () => {};
 afterEach(() => { act(unmount); document.body.replaceChildren(); vi.unstubAllGlobals(); });
@@ -94,12 +94,12 @@ it('marks every unfinished section when the pool stops writing after the first s
 
 
 it('still reaches checked notes through the entire saved theme with no API key', async () => {
-  const savedTheme = JSON.parse(readFileSync('test-fixtures/sad-theme-arrangement.json', 'utf8'));
-  const savedBars = JSON.parse(readFileSync('test-fixtures/sad-theme-bars.json', 'utf8'));
-  const played = playedFromMidi(new Uint8Array(readFileSync('test-fixtures/sad-theme.mid')));
+  const savedTheme = JSON.parse(readFileSync('test-fixtures/sample-sketch-arrangement.json', 'utf8'));
+  const savedBars = JSON.parse(readFileSync('test-fixtures/sample-sketch-bars.json', 'utf8'));
+  const played = playedFromMidi(new Uint8Array(readFileSync('test-fixtures/Sample_sketch.mid')));
   const attacks = attacksOf(played);
   const reading = readWithinBars(attacks, savedBars.answer.meter, savedBars.answer.starts);
-  const themeXml = scoreOfReading(played, attacks, reading, 'Sad theme, played freely');
+  const themeXml = scoreOfReading(played, attacks, reading, 'Sample sketch');
   const themeScore = parseScore(themeXml);
   const themePart = themeScore.parts[0]!;
   const themePage = { fileName: 'theme.mid', xmlText: themeXml, score: themeScore };

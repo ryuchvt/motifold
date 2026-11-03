@@ -45,8 +45,8 @@ it('does not let calls on visitor keys consume the three public execution slots'
 
 it('keeps unknown first-request exposure when a fast response loss is followed by a successful retry', async () => {
   const { ledger, port } = setup();
-  const saved = JSON.parse(readFileSync('test-fixtures/arioso-arrangement.json', 'utf8'));
-  const score = parseScore(readFileSync('test-fixtures/arioso.musicxml', 'utf8'));
+  const saved = JSON.parse(readFileSync('test-fixtures/contract-arrangement.json', 'utf8'));
+  const score = parseScore(readFileSync('test-fixtures/contract-score.musicxml', 'utf8'));
   const input = pieceInput(score, score.parts[0]!, 0, score.parts[0]!.measures.length - 1);
   expect(readPiece.parse(input)).not.toBeNull();
   let requestsAccepted = 0;
@@ -69,9 +69,9 @@ it('keeps unknown first-request exposure when a fast response loss is followed b
 
 it('keeps a normal own key out of the ledger, response and upstream request body', async () => {
   const { ledger, port } = setup();
-  const score = parseScore(readFileSync('test-fixtures/arioso.musicxml', 'utf8'));
+  const score = parseScore(readFileSync('test-fixtures/contract-score.musicxml', 'utf8'));
   const input = pieceInput(score, score.parts[0]!, 0, score.parts[0]!.measures.length - 1);
-  const saved = JSON.parse(readFileSync('test-fixtures/arioso-arrangement.json', 'utf8'));
+  const saved = JSON.parse(readFileSync('test-fixtures/contract-arrangement.json', 'utf8'));
   const fakeKey = 'review-visitor-token';
   const fetchImpl = (async (_url: unknown, init?: RequestInit) => {
     expect(new Headers(init?.headers).get('Authorization')).toBe(`Bearer ${fakeKey}`);

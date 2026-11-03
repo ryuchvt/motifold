@@ -19,12 +19,12 @@ const audio = vi.hoisted(() => ({ play: vi.fn(), stop: vi.fn() }));
 vi.mock('./audio/preview', async (original) => ({ ...(await original<typeof import('./audio/preview')>()), createPreview: () => audio }));
 vi.mock('./audio/samples', async (original) => ({ ...(await original<typeof import('./audio/samples')>()), loadManifest: async () => null }));
 vi.mock('./ScoreView', () => ({ ScoreView: ({ xmlText }: { xmlText: string }) => <pre className="qa-score">{xmlText}</pre> }));
-const xmlText = readFileSync('test-fixtures/arioso.musicxml', 'utf8');
+const xmlText = readFileSync('test-fixtures/contract-score.musicxml', 'utf8');
 const score = parseScore(xmlText);
 const part = score.parts[0]!;
-const loaded = { fileName: 'arioso.musicxml', xmlText, score };
+const loaded = { fileName: 'contract-score.musicxml', xmlText, score };
 const range = { from: 0, to: part.measures.length - 1 };
-const saved = JSON.parse(readFileSync('test-fixtures/arioso-arrangement.json', 'utf8'));
+const saved = JSON.parse(readFileSync('test-fixtures/contract-arrangement.json', 'utf8'));
 let root: Root | null = null;
 beforeAll(() => { (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true; Element.prototype.scrollIntoView = () => {}; Element.prototype.scrollTo = () => {}; });
 afterEach(async () => { await act(async () => root?.unmount()); root = null; document.body.replaceChildren(); setOwnKey(null); setTransport(null); vi.unstubAllGlobals(); vi.restoreAllMocks(); audio.play.mockReset(); audio.stop.mockReset(); playhead.set({ playing: false, words: '' }); });
@@ -56,7 +56,7 @@ async function hostStudio() {
 }
 async function dropScore(host: Element) {
   const event = new Event('drop', { bubbles: true, cancelable: true });
-  Object.defineProperty(event, 'dataTransfer', { value: { files: [new File([xmlText], 'arioso.musicxml')] } });
+  Object.defineProperty(event, 'dataTransfer', { value: { files: [new File([xmlText], 'contract-score.musicxml')] } });
   await act(async () => host.querySelector('.drop')!.dispatchEvent(event));
 }
 function hostArrangement(withView = false) {

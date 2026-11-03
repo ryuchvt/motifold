@@ -1,4 +1,4 @@
-// The actual bundled score and the new Study contract. No model call or musical-quality verdict.
+// The original synthetic score and the Study contract. No model call or musical-quality verdict.
 import { readFileSync } from 'node:fs';
 import { expect, it } from 'vitest';
 import { parseScore } from '../score';
@@ -6,7 +6,7 @@ import { pieceInput } from '../app/arrange';
 import { studyScore, readPiece, type StudyScoreAnswer } from './shapes';
 import { reservationMicros } from './prices';
 import { POOLS } from './pools';
-const score = parseScore(readFileSync('test-fixtures/arioso.musicxml', 'utf8'));
+const score = parseScore(readFileSync('test-fixtures/contract-score.musicxml', 'utf8'));
 const input = pieceInput(score, score.parts[0]!, 0, score.parts[0]!.measures.length - 1);
 const bars = input.written.map((w) => w.bar);
 const answer: StudyScoreAnswer = {

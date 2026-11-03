@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-// Actual bundled Arioso; every response is local and no model is contacted.
+// Original synthetic contract score; every response is local and no model is contacted.
 import { readFileSync } from "node:fs";
 import { act } from "react";
 import { createRoot } from "react-dom/client";
@@ -10,12 +10,12 @@ import { writingWindows } from "./arrange";
 import { useArrange, type Arranged } from "./useArrange";
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
-const xmlText = readFileSync("test-fixtures/arioso.musicxml", "utf8");
+const xmlText = readFileSync("test-fixtures/contract-score.musicxml", "utf8");
 const score = parseScore(xmlText);
 const part = score.parts[0]!;
-const loaded = { fileName: "arioso.musicxml", xmlText, score };
+const loaded = { fileName: "contract-score.musicxml", xmlText, score };
 const range = { from: 0, to: part.measures.length - 1 };
-const saved = JSON.parse(readFileSync("test-fixtures/arioso-arrangement.json", "utf8"));
+const saved = JSON.parse(readFileSync("test-fixtures/contract-arrangement.json", "utf8"));
 const reply = (status: string, extra: object = {}) => new Response(JSON.stringify({ status, ...extra }));
 let unmount = () => {};
 afterEach(() => { act(unmount); document.body.replaceChildren(); vi.unstubAllGlobals(); });

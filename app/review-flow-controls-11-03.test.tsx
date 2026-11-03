@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-// Real bundled Arioso and its reading/plans. Every response is local, with no paid requests.
+// Original synthetic contract score and its reading/plans. Every response is local, with no paid requests.
 import { readFileSync } from "node:fs";
 import { act } from "react";
 import { createRoot } from "react-dom/client";
@@ -10,12 +10,12 @@ import { ArrangePanel } from "./ArrangePanel";
 import { useArrange, type Arranged } from "./useArrange";
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
-const xmlText = readFileSync("test-fixtures/arioso.musicxml", "utf8");
+const xmlText = readFileSync("test-fixtures/contract-score.musicxml", "utf8");
 const score = parseScore(xmlText);
-const loaded = { fileName: "arioso.musicxml", xmlText, score };
+const loaded = { fileName: "contract-score.musicxml", xmlText, score };
 const part = score.parts[0]!;
 const range = { from: 0, to: part.measures.length - 1 };
-const saved = JSON.parse(readFileSync("test-fixtures/arioso-arrangement.json", "utf8"));
+const saved = JSON.parse(readFileSync("test-fixtures/contract-arrangement.json", "utf8"));
 const plans = saved.plan.answer.options;
 const composed: RecomposePlan = { ...plans[0], name: "A new piece from the opening", motif: { from: "1", to: "2", what: "The opening" }, fifths: 0, time: "4/4", qpm: 90,
   why: [{ from: "1", to: "8", what: "The opening grows", principle: "Develop the source", variation: "A sequence", chords: "C | G" }] };

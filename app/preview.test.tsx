@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-// A plan's first section as a preview, then the rest when it's chosen. The real Arioso and its saved plans, with every reply local.
+// A plan's first section as a preview, then the rest when it's chosen. The original synthetic contract score and local plans.
 import { readFileSync } from "node:fs";
 import { act } from "react";
 import { createRoot } from "react-dom/client";
@@ -10,12 +10,12 @@ import { ArrangePanel } from "./ArrangePanel";
 import { useArrange, type Arranged } from "./useArrange";
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
-const xmlText = readFileSync("test-fixtures/arioso.musicxml", "utf8");
+const xmlText = readFileSync("test-fixtures/contract-score.musicxml", "utf8");
 const score = parseScore(xmlText);
-const loaded = { fileName: "arioso.musicxml", xmlText, score };
+const loaded = { fileName: "contract-score.musicxml", xmlText, score };
 const part = score.parts[0]!;
 const range = { from: 0, to: part.measures.length - 1 };
-const saved = JSON.parse(readFileSync("test-fixtures/arioso-arrangement.json", "utf8"));
+const saved = JSON.parse(readFileSync("test-fixtures/contract-arrangement.json", "utf8"));
 let unmount = () => {};
 afterEach(() => {
   act(unmount);

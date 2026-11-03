@@ -31,14 +31,14 @@ describe("the tempo map through the ordinary arranger workflow", () => {
 });
 
 it("the actual theme keeps its attack times from Use these bars through the saved placement and MIDI", () => {
-  const played = playedFromMidi(new Uint8Array(readFileSync("test-fixtures/sad-theme.mid")));
+  const played = playedFromMidi(new Uint8Array(readFileSync("test-fixtures/Sample_sketch.mid")));
   const attacks = attacksOf(played);
-  const answer = JSON.parse(readFileSync("test-fixtures/sad-theme-bars.json", "utf8")).answer;
+  const answer = JSON.parse(readFileSync("test-fixtures/sample-sketch-bars.json", "utf8")).answer;
   const reading = readWithinBars(attacks, answer.meter, answer.starts);
   const originalXml = scoreOfReading(played, attacks, reading, "Sad theme");
   const originalScore = parseScore(originalXml);
   const asked = pieceInput(originalScore, originalScore.parts[0]!, 0, 23);
-  const distribution = JSON.parse(readFileSync("test-fixtures/sad-theme-arrangement.json", "utf8")).distribute;
+  const distribution = JSON.parse(readFileSync("test-fixtures/sample-sketch-arrangement.json", "utf8")).distribute;
   const parts = placeNotes(originalScore, asked, distribution.answer, distribution.input.instruments).parts;
   const placedXml = scoreOfParts(originalScore, asked, parts);
   const exported = readMidi(unzipSync(packageFiles(placedXml, null, "Review"))["all-parts.mid"]!);

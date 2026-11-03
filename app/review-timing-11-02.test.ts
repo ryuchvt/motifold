@@ -55,10 +55,10 @@ describe.skipIf(!existsSync(elegie))("actual Elegie exported to the DAW", () => 
   });
 });
 
-it("real supplied pickup and split bars retain their absolute score note times in MIDI", () => {
+it("pickup and synthetic split bars retain their absolute score note times in MIDI", () => {
   // This is a positive statement about note-on time, not equality between a DAW's
   // integer bar labels and the score's printed 0/7a/7b/19a labels.
-  for (const file of ["test-fixtures/arioso.musicxml", "test-fixtures/fur-elise.musicxml"]) {
+  for (const file of ["test-fixtures/contract-score.musicxml", "test-fixtures/fur-elise.musicxml"]) {
     const { xmlText, score } = parseScoreFile(readFileSync(file));
     const fromScore = scoreTracks(score).flatMap((t) => t.notes.map((n) => [n.start, n.length, n.height]));
     const imported = readMidi(unzipSync(packageFiles(xmlText, null, "Review"))["all-parts.mid"]!);
@@ -68,27 +68,35 @@ it("real supplied pickup and split bars retain their absolute score note times i
   }
 });
 
-it("a real Arioso form starting at bar 9 exports its inherited tempo at the start", () => {
-  const xml = readFileSync("test-fixtures/arioso.musicxml", "utf8");
+it("a synthetic form starting at bar 9 exports its inherited tempo at the start", () => {
+  const xml = readFileSync("test-fixtures/contract-score.musicxml", "utf8");
+  const source = parseScore(xml);
+  expect(source.parts[0]!.measures.find((m) => m.number === "6")!.tempos[0]!.qpm).toBe(72);
+  expect(source.parts[0]!.measures.find((m) => m.number === "9")!.tempos).toEqual([]);
   const reordered = withStructure(xml, { order: [{ from: "9", to: "10" }] });
   const score = parseScore(reordered);
   // Preview backfills the first mark to beat zero, which can mask this export fault.
-  expect(beatClock(pieceData(score, [], []).tempos).seconds(4)).toBeCloseTo(4 * 60 / 31.5);
+  expect(beatClock(pieceData(score, [], []).tempos).seconds(4)).toBeCloseTo(4 * 60 / 72);
   const midi = readMidi(unzipSync(packageFiles(reordered, null, "Review"))["all-parts.mid"]!);
   expect(midi.tempos[0]).toMatchObject({ tick: 0 });
-  expect(midi.tempos[0]!.qpm).toBeCloseTo(31.5);
+  expect(midi.tempos[0]!.qpm).toBeCloseTo(72);
 });
 
-it("extending the real Arioso after its half-bar 7a shows the note at the beat exported to MIDI", () => {
-  const xml = onlyBars(readFileSync("test-fixtures/arioso.musicxml", "utf8"), "1", "7a");
+it("extending the synthetic score after its half-bar 7a shows the note at the beat exported to MIDI", () => {
+  const xml = onlyBars(readFileSync("test-fixtures/contract-score.musicxml", "utf8"), "1", "7a");
   const score = parseScore(xml);
+  const last = score.parts[0]!.measures.at(-1)!;
+  expect(last.number).toBe("7a");
+  expect(last.length / score.ticksPerQuarter).toBe(2);
+  expect(last.nominalLength! / score.ticksPerQuarter).toBe(4);
+  expect((last.start + last.length) / score.ticksPerQuarter).toBe(30);
   const check: OptionCheck = {
     adds: [{ part: "Flute", bar: "9", events: [{ start: 0, length: 1, names: ["C4"] }] }],
     notes: 1, overBars: 0, unreadable: 0, pastBarEnd: 0, outOfRange: [], clashes: [],
   };
   const finished = parseScore(withOption(xml, score, check));
   const played = scoreTracks(finished).find((t) => t.name === "Flute")!.notes[0]!;
-  expect(played.start).toBe(32); // New bar 8 is a full 4/4 bar after source beat 28.
+  expect(played.start).toBe(34); // The source ends at beat 30. Appended bar 8 fills four beats before bar 9.
   const picture = pieceData(score, [], [], { adds: check.adds }).rows.find((r) => r.label === "Flute")!.notes[0]!;
   expect(picture.start).toBe(played.start);
 });

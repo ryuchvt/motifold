@@ -15,10 +15,10 @@ import { readPiece, studyScore, type StudyScoreAnswer } from '../server/shapes';
 import { useArrange, type Arranged } from './useArrange';
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
-const xmlText = readFileSync('test-fixtures/arioso.musicxml', 'utf8');
+const xmlText = readFileSync('test-fixtures/contract-score.musicxml', 'utf8');
 const score = parseScore(xmlText);
 const part = score.parts[0]!;
-const loaded = { fileName: 'arioso.musicxml', xmlText, score };
+const loaded = { fileName: 'contract-score.musicxml', xmlText, score };
 const range = { from: 0, to: part.measures.length - 1 };
 let unmount = () => {};
 afterEach(() => { act(unmount); document.body.replaceChildren(); vi.unstubAllGlobals(); });
@@ -42,7 +42,7 @@ it('keeps the required read available when the optional study finishes and frees
   const studyStarted = new Promise<void>((resolve) => { dispatchedStudy = resolve; });
   let finishStudy!: (response: Response) => void;
   const studyReply = new Promise<Response>((resolve) => { finishStudy = resolve; });
-  const savedReading = JSON.parse(readFileSync('test-fixtures/arioso-arrangement.json', 'utf8')).read.answer;
+  const savedReading = JSON.parse(readFileSync('test-fixtures/contract-arrangement.json', 'utf8')).read.answer;
   const coreProvider = vi.fn(async () => Response.json({ status: 'completed', usage: { input_tokens: 1, output_tokens: 1 }, output: [{ type: 'message', content: [{ type: 'output_text', text: JSON.stringify(savedReading) }] }] }));
   const results: { shape: string; result: unknown }[] = [];
   vi.stubGlobal('fetch', async (url: string, init: RequestInit) => {

@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-// Actual bundled score and local responses. Create must keep one request's settings throughout its chain.
+// Original synthetic score and local responses. Create must keep one request's settings throughout its chain.
 import { readFileSync } from "node:fs";
 import { act } from "react";
 import { createRoot } from "react-dom/client";
@@ -10,10 +10,10 @@ import { ArrangePanel } from "./ArrangePanel";
 import { useArrange, type Arranged } from "./useArrange";
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
-const xmlText=readFileSync("test-fixtures/arioso.musicxml","utf8");
+const xmlText=readFileSync("test-fixtures/contract-score.musicxml","utf8");
 const score=parseScore(xmlText);
 const part=score.parts[0]!;
-const loaded={fileName:"arioso.musicxml",xmlText,score};
+const loaded={fileName:"contract-score.musicxml",xmlText,score};
 const range={from:0,to:part.measures.length-1};
 const response=(answer:unknown)=>new Response(JSON.stringify({status:"ok",answer}));
 let unmount=()=>{};

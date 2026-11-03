@@ -20,9 +20,9 @@ it("a grid MIDI chord keeps each note's own velocity", () => {
 });
 
 it("the bundled freely played theme keeps each chord note's own key velocity", () => {
-  const played = playedFromMidi(new Uint8Array(readFileSync("test-fixtures/sad-theme.mid")));
+  const played = playedFromMidi(new Uint8Array(readFileSync("test-fixtures/Sample_sketch.mid")));
   const attacks = attacksOf(played);
-  const saved = JSON.parse(readFileSync("test-fixtures/sad-theme-bars.json", "utf8")).answer;
+  const saved = JSON.parse(readFileSync("test-fixtures/sample-sketch-bars.json", "utf8")).answer;
   const reading = readWithinBars(attacks, saved.meter, saved.starts);
   const score = parseScore(scoreOfReading(played, attacks, reading, "Sad theme"));
   const notes = scoreTracks(score).flatMap((t) => t.notes);

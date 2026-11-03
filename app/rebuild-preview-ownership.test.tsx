@@ -9,16 +9,16 @@ import { onlyBars } from "./arrange";
 import { useArrange, type Arranged } from "./useArrange";
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
-const arioso = readFileSync("test-fixtures/arioso.musicxml","utf8");
+const contractScore = readFileSync("test-fixtures/contract-score.musicxml","utf8");
 const response = (answer: unknown) => new Response(JSON.stringify({status:"ok",answer}));
 let unmount = () => {};
 afterEach(() => { act(unmount); document.body.replaceChildren(); vi.unstubAllGlobals(); });
 
 function setup(single = false) {
-  const xmlText = single ? onlyBars(arioso,"1","7a") : arioso;
+  const xmlText = single ? onlyBars(contractScore,"1","7a") : contractScore;
   const score = parseScore(xmlText);
   const part = score.parts[0]!;
-  const loaded = {fileName:"arioso.musicxml",xmlText,score};
+  const loaded = {fileName:"contract-score.musicxml",xmlText,score};
   const range = {from:0,to:part.measures.length-1};
   const calls: WriteInput[] = [];
   let hold: (input: WriteInput) => boolean = () => false;

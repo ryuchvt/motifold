@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-// Real shipped Arioso and its saved answers; only network timing is controlled.
+// Original synthetic score and local contract answers; only network timing is controlled.
 import { readFileSync } from "node:fs";
 import { act } from "react";
 import { createRoot } from "react-dom/client";
@@ -9,12 +9,12 @@ import type { DistributeAnswer, PieceReading, PlanAnswer, WriteAnswer } from "..
 import { useArrange, type Arranged } from "./useArrange";
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
-const xmlText = readFileSync("test-fixtures/arioso.musicxml", "utf8");
+const xmlText = readFileSync("test-fixtures/contract-score.musicxml", "utf8");
 const score = parseScore(xmlText);
-const loaded = { fileName: "arioso.musicxml", xmlText, score };
+const loaded = { fileName: "contract-score.musicxml", xmlText, score };
 const part = score.parts[0]!;
 const range = { from: 0, to: part.measures.length - 1 };
-const saved = JSON.parse(readFileSync("test-fixtures/arioso-arrangement.json", "utf8")) as {
+const saved = JSON.parse(readFileSync("test-fixtures/contract-arrangement.json", "utf8")) as {
   read: { answer: PieceReading };
   distribute: { input: { instruments: string[] }; answer: DistributeAnswer };
   plan: { answer: PlanAnswer };
@@ -47,7 +47,7 @@ function setup(waitFor: "plan_options" | "arrange") {
   return { get now() { return current; }, release: () => release() };
 }
 
-it("does not restore a deleted real Arioso part through a plan that was already in flight", async () => {
+it("does not restore a deleted part through a plan that was already in flight", async () => {
   const screen = setup("plan_options");
   await act(() => screen.now.askPiece());
   await act(() => screen.now.askPlaced(saved.distribute.input.instruments, ""));

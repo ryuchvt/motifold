@@ -1,0 +1,1604 @@
+{
+  "provenance": {
+    "kind": "synthetic",
+    "generator": "scripts/generate-contract-fixtures.mjs",
+    "note": "Deterministic local test responses. No model call or recorded composition."
+  },
+  "read": {
+    "input": {
+      "piece": {
+        "title": "Contract score",
+        "composer": "Motifold test fixture",
+        "instrument": "Violoncello and Piano"
+      },
+      "fifths": 0,
+      "time": "4/4",
+      "written": [
+        {
+          "bar": "1",
+          "notes": "D3 C4 E4 G4 C2 C3 C#4 F4 Ab4 A3 C4 E4 G4 D2 D3 C#4 F4 Ab4 F3 C4 E4 G4 C2 C3 C#4 F4 Ab4 C4 C4 E4 G4 D2 D3 C#4 F4 Ab4",
+          "rhythm": "1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2",
+          "measure": 0
+        },
+        {
+          "bar": "2",
+          "notes": "A3 F4 A4 C5 F2 F3 F#4 Bb4 C#5 E4 F4 A4 C5 G2 G3 F#4 Bb4 C#5 C4 F4 A4 C5 F2 F3 F#4 Bb4 C#5 G4 F4 A4 C5 G2 G3 F#4 Bb4 C#5",
+          "rhythm": "1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2",
+          "measure": 1
+        },
+        {
+          "bar": "3",
+          "notes": "F3 D4 F#4 A4 D2 D3 Eb4 G4 Bb4 C4 D4 F#4 A4 E2 E3 Eb4 G4 Bb4 Ab3 D4 F#4 A4 D2 D3 Eb4 G4 Bb4 Eb4 D4 F#4 A4 E2 E3 Eb4 G4 Bb4",
+          "rhythm": "1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2",
+          "measure": 2
+        },
+        {
+          "bar": "4",
+          "notes": "C4 G4 B4 D5 G2 G3 Ab4 C5 Eb5 G4 G4 B4 D5 A2 A3 Ab4 C5 Eb5 Eb4 G4 B4 D5 G2 G3 Ab4 C5 Eb5 Bb4 G4 B4 D5 A2 A3 Ab4 C5 Eb5",
+          "rhythm": "1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2",
+          "measure": 3
+        },
+        {
+          "bar": "5",
+          "notes": "G3 E4 Ab4 B4 E2 E3 F4 A4 C5 D4 E4 Ab4 B4 F#2 F#3 F4 A4 C5 Bb3 E4 Ab4 B4 E2 E3 F4 A4 C5 F4 E4 Ab4 B4 F#2 F#3 F4 A4 C5",
+          "rhythm": "1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2",
+          "measure": 4
+        },
+        {
+          "bar": "6",
+          "notes": "D4 A4 C#5 E5 A2 A3 Bb4 D5 F5 A4 A4 C#5 E5 B2 B3 Bb4 D5 F5 F4 A4 C#5 E5 A2 A3 Bb4 D5 F5 C5 A4 C#5 E5 B2 B3 Bb4 D5 F5",
+          "rhythm": "1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2",
+          "measure": 5
+        },
+        {
+          "bar": "7",
+          "notes": "G3 Eb4 G4 Bb4 Eb2 Eb3 E4 Ab4 B4 Eb4 G4 Bb4 F2 F3 E4 Ab4 B4 Eb4 G4 Bb4 Eb2 Eb3 E4 Ab4 B4 Eb4 G4 Bb4 F2 F3 E4 Ab4 B4",
+          "rhythm": "4 0.5x3 1x2 0.5x6 1x2 0.5x6 1x2 0.5x6 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "1 2 2 2 3 3 2 2 2 2 2 2 3 3 2 2 2 2 2 2 3 3 2 2 2 2 2 2 3 3 2 2 2",
+          "measure": 6
+        },
+        {
+          "bar": "7a",
+          "notes": "G3 F#4 Bb4 C#5 F#2 F#3 G4 B4 D5 F#4 Bb4 C#5 Ab2 Ab3 G4 B4 D5",
+          "rhythm": "2 0.5x3 1x2 0.5x6 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1.5 1.5 1.5",
+          "staves": "1 2 2 2 3 3 2 2 2 2 2 2 3 3 2 2 2",
+          "measure": 7
+        },
+        {
+          "bar": "7b",
+          "notes": "A3 C4 E4 G4 C2 C3 C#4 F4 Ab4 E4 C4 E4 G4 D2 D3 C#4 F4 Ab4",
+          "rhythm": "1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5",
+          "staves": "1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2",
+          "measure": 8
+        },
+        {
+          "bar": "8",
+          "notes": "F3 F4 A4 C5 F2 F3 F#4 Bb4 C#5 C4 F4 A4 C5 G2 G3 F#4 Bb4 C#5 Ab3 F4 A4 C5 F2 F3 F#4 Bb4 C#5 Eb4 F4 A4 C5 G2 G3 F#4 Bb4 C#5",
+          "rhythm": "1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2",
+          "measure": 9
+        },
+        {
+          "bar": "9",
+          "notes": "C4 D4 F#4 A4 D2 D3 Eb4 G4 Bb4 G4 D4 F#4 A4 E2 E3 Eb4 G4 Bb4 Eb4 D4 F#4 A4 D2 D3 Eb4 G4 Bb4 D4 D4 F#4 A4 E2 E3 Eb4 G4 Bb4",
+          "rhythm": "1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2",
+          "measure": 10
+        },
+        {
+          "bar": "10",
+          "notes": "D4 G4 B4 D5 G2 G3 A3 Ab4 C5 Eb5 C4 G4 B4 D5 A2 A3 Ab4 C5 Eb5 Ab3 G4 B4 D5 G2 G3 Ab4 C5 Eb5 D4 G4 B4 D5 A2 A3 Ab4 C5 Eb5",
+          "rhythm": "0.5x4 1x2 0.5x4 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "1 2 2 2 3 3 1 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2",
+          "held": "1",
+          "measure": 11
+        },
+        {
+          "bar": "11",
+          "notes": "D4 E4 Ab4 B4 E2 E3 F4 A4 C5 A4 E4 Ab4 B4 F#2 F#3 F4 A4 C5 F4 E4 Ab4 B4 E2 E3 F4 A4 C5 C5 E4 Ab4 B4 F#2 F#3 F4 A4 C5",
+          "rhythm": "1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2",
+          "measure": 12
+        },
+        {
+          "bar": "12",
+          "notes": "E3 A4 C#5 E5 A2 A3 Bb4 D5 F5 B3 A4 C#5 E5 B2 B3 Bb4 D5 F5 G3 A4 C#5 E5 A2 A3 Bb4 D5 F5 D4 A4 C#5 E5 B2 B3 Bb4 D5 F5",
+          "rhythm": "1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2",
+          "measure": 13
+        },
+        {
+          "bar": "13",
+          "notes": "D3 Eb4 G4 Bb4 Eb2 Eb3 E4 Ab4 B4 A3 Eb4 G4 Bb4 F2 F3 E4 Ab4 B4 F3 Eb4 G4 Bb4 Eb2 Eb3 E4 Ab4 B4 C4 Eb4 G4 Bb4 F2 F3 E4 Ab4 B4",
+          "rhythm": "1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2",
+          "measure": 14
+        },
+        {
+          "bar": "14",
+          "notes": "A3 F#4 Bb4 C#5 F#2 F#3 G4 B4 D5 E4 F#4 Bb4 C#5 Ab2 Ab3 G4 B4 D5 C4 F#4 Bb4 C#5 F#2 F#3 G4 B4 D5 G4 F#4 Bb4 C#5 Ab2 Ab3 G4 B4 D5",
+          "rhythm": "1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2",
+          "measure": 15
+        },
+        {
+          "bar": "15",
+          "notes": "F3 C4 E4 G4 C2 C3 C#4 F4 Ab4 C4 C4 E4 G4 D2 D3 C#4 F4 Ab4 Ab3 C4 E4 G4 C2 C3 C#4 F4 Ab4 Eb4 C4 E4 G4 D2 D3 C#4 F4 Ab4",
+          "rhythm": "1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2",
+          "measure": 16
+        },
+        {
+          "bar": "16",
+          "notes": "C4 F4 A4 C5 F2 F3 F#4 Bb4 C#5 G4 F4 A4 C5 G2 G3 F#4 Bb4 C#5 Eb4 F4 A4 C5 F2 F3 F#4 Bb4 C#5 Bb4 F4 A4 C5 G2 G3 F#4 Bb4 C#5",
+          "rhythm": "1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2",
+          "measure": 17
+        },
+        {
+          "bar": "17",
+          "notes": "G3 D4 F#4 A4 D2 D3 Eb4 G4 Bb4 D4 D4 F#4 A4 E2 E3 Eb4 G4 Bb4 Bb3 D4 F#4 A4 D2 D3 Eb4 G4 Bb4 F4 D4 F#4 A4 E2 E3 Eb4 G4 Bb4",
+          "rhythm": "1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2",
+          "measure": 18
+        },
+        {
+          "bar": "18",
+          "notes": "D4 G4 B4 D5 G2 G3 Ab4 C5 Eb5 A4 G4 B4 D5 A2 A3 Ab4 C5 Eb5 F4 G4 B4 D5 G2 G3 Ab4 C5 Eb5 C5 G4 B4 D5 A2 A3 Ab4 C5 Eb5",
+          "rhythm": "1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2",
+          "measure": 19
+        },
+        {
+          "bar": "19",
+          "notes": "E3 E4 Ab4 B4 E2 E3 F4 A4 C5 B3 E4 Ab4 B4 F#2 F#3 F4 A4 C5 G3 E4 Ab4 B4 E2 E3 F4 A4 C5 D4 E4 Ab4 B4 F#2 F#3 F4 A4 C5",
+          "rhythm": "1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2",
+          "measure": 20
+        },
+        {
+          "bar": "19a",
+          "notes": "G3 A4 C#5 E5 A2 A3 Bb4 D5 F5 A4 C#5 E5 B2 B3 Bb4 D5 F5 A4 C#5 E5 A2 A3 Bb4 D5 F5",
+          "rhythm": "3 0.5x3 1x2 0.5x6 1x2 0.5x6 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2.5 2.5 2.5",
+          "staves": "1 2 2 2 3 3 2 2 2 2 2 2 3 3 2 2 2 2 2 2 3 3 2 2 2",
+          "measure": 21
+        },
+        {
+          "bar": "20",
+          "notes": "A3 Eb4 G4 Bb4 Eb2 Eb3 E4 Ab4 B4 E4 Eb4 G4 Bb4 F2 F3 E4 Ab4 B4 C4 Eb4 G4 Bb4 Eb2 Eb3 E4 Ab4 B4 G4 Eb4 G4 Bb4 F2 F3 E4 Ab4 B4",
+          "rhythm": "1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2",
+          "measure": 22
+        },
+        {
+          "bar": "21",
+          "notes": "D3 F#4 Bb4 C#5 F#2 F#3 G4 B4 D5 F#4 Bb4 C#5 Ab2 Ab3 G4 B4 D5 F#4 Bb4 C#5 F#2 F#3 G4 B4 D5 F#4 Bb4 C#5 Ab2 Ab3 G4 B4 D5",
+          "rhythm": "4 0.5x3 1x2 0.5x6 1x2 0.5x6 1x2 0.5x6 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "1 2 2 2 3 3 2 2 2 2 2 2 3 3 2 2 2 2 2 2 3 3 2 2 2 2 2 2 3 3 2 2 2",
+          "measure": 23
+        }
+      ],
+      "returns": [
+        {
+          "from": "13",
+          "to": "18",
+          "likeFrom": "1",
+          "likeTo": "6",
+          "changed": 0,
+          "line": "Violoncello"
+        },
+        {
+          "from": "8",
+          "to": "13",
+          "likeFrom": "2",
+          "likeTo": "7",
+          "changed": 0,
+          "line": "Piano"
+        },
+        {
+          "from": "15",
+          "to": "19",
+          "likeFrom": "1",
+          "likeTo": "5",
+          "changed": 0,
+          "line": "Piano"
+        },
+        {
+          "from": "20",
+          "to": "21",
+          "likeFrom": "13",
+          "likeTo": "14",
+          "changed": 0,
+          "line": "Piano"
+        }
+      ],
+      "lines": [
+        "Violoncello",
+        "Piano upper",
+        "Piano lower"
+      ]
+    },
+    "answer": {
+      "summary": "A synthetic cello line above repeating piano chords and octave pairs.",
+      "sections": [
+        {
+          "from": "1",
+          "to": "6",
+          "name": "Opening"
+        },
+        {
+          "from": "7",
+          "to": "7a",
+          "name": "Held span"
+        },
+        {
+          "from": "7b",
+          "to": "14",
+          "name": "Middle"
+        },
+        {
+          "from": "15",
+          "to": "19",
+          "name": "Return"
+        },
+        {
+          "from": "19a",
+          "to": "21",
+          "name": "Ending"
+        }
+      ],
+      "roles": [
+        {
+          "from": "1",
+          "to": "6",
+          "line": "Violoncello",
+          "role": "melody",
+          "of": "",
+          "why": "The generated single line"
+        },
+        {
+          "from": "7",
+          "to": "7a",
+          "line": "Violoncello",
+          "role": "pedal",
+          "of": "",
+          "why": "The generated single line"
+        },
+        {
+          "from": "7b",
+          "to": "19",
+          "line": "Violoncello",
+          "role": "melody",
+          "of": "",
+          "why": "The generated single line"
+        },
+        {
+          "from": "19a",
+          "to": "19a",
+          "line": "Violoncello",
+          "role": "pedal",
+          "of": "",
+          "why": "The generated single line"
+        },
+        {
+          "from": "20",
+          "to": "20",
+          "line": "Violoncello",
+          "role": "melody",
+          "of": "",
+          "why": "The generated single line"
+        },
+        {
+          "from": "21",
+          "to": "21",
+          "line": "Violoncello",
+          "role": "pedal",
+          "of": "",
+          "why": "The generated single line"
+        },
+        {
+          "from": "1",
+          "to": "21",
+          "line": "Piano upper",
+          "role": "harmony",
+          "of": "",
+          "why": "Repeated three-note blocks"
+        },
+        {
+          "from": "1",
+          "to": "6",
+          "line": "Piano lower",
+          "role": "bass",
+          "of": "",
+          "why": "The generated lower octave pairs"
+        },
+        {
+          "from": "7",
+          "to": "7a",
+          "line": "Piano lower",
+          "role": "pedal",
+          "of": "",
+          "why": "The generated lower octave pairs"
+        },
+        {
+          "from": "7b",
+          "to": "19",
+          "line": "Piano lower",
+          "role": "bass",
+          "of": "",
+          "why": "The generated lower octave pairs"
+        },
+        {
+          "from": "19a",
+          "to": "20",
+          "line": "Piano lower",
+          "role": "bass",
+          "of": "",
+          "why": "The generated lower octave pairs"
+        },
+        {
+          "from": "21",
+          "to": "21",
+          "line": "Piano lower",
+          "role": "pedal",
+          "of": "",
+          "why": "The generated lower octave pairs"
+        }
+      ],
+      "missing": [
+        {
+          "from": "1",
+          "to": "21",
+          "what": "An independent answer",
+          "why": "The fixture leaves another line open"
+        }
+      ],
+      "questions": [],
+      "thin": [],
+      "structures": [
+        {
+          "name": "Middle first",
+          "order": [
+            {
+              "from": "7b",
+              "to": "14"
+            },
+            {
+              "from": "1",
+              "to": "6"
+            },
+            {
+              "from": "15",
+              "to": "21"
+            }
+          ],
+          "why": "Exercise a changed order"
+        },
+        {
+          "name": "Repeat opening",
+          "order": [
+            {
+              "from": "1",
+              "to": "7a"
+            },
+            {
+              "from": "1",
+              "to": "6"
+            },
+            {
+              "from": "15",
+              "to": "21"
+            }
+          ],
+          "why": "Exercise a repeated stretch"
+        }
+      ],
+      "tracks": [
+        {
+          "line": "Violoncello",
+          "instrument": "Cello",
+          "sure": true,
+          "why": "One low line"
+        },
+        {
+          "line": "Piano upper",
+          "instrument": "Piano",
+          "sure": true,
+          "why": "Upper staff chords"
+        },
+        {
+          "line": "Piano lower",
+          "instrument": "Piano",
+          "sure": true,
+          "why": "Lower staff octave pairs"
+        }
+      ]
+    }
+  },
+  "distribute": {
+    "input": {
+      "piece": {
+        "title": "Contract score",
+        "composer": "Motifold test fixture",
+        "instrument": "Violoncello and Piano"
+      },
+      "fifths": 0,
+      "time": "4/4",
+      "written": [
+        {
+          "bar": "1",
+          "notes": "D3 C4 E4 G4 C2 C3 C#4 F4 Ab4 A3 C4 E4 G4 D2 D3 C#4 F4 Ab4 F3 C4 E4 G4 C2 C3 C#4 F4 Ab4 C4 C4 E4 G4 D2 D3 C#4 F4 Ab4",
+          "rhythm": "1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2",
+          "measure": 0
+        },
+        {
+          "bar": "2",
+          "notes": "A3 F4 A4 C5 F2 F3 F#4 Bb4 C#5 E4 F4 A4 C5 G2 G3 F#4 Bb4 C#5 C4 F4 A4 C5 F2 F3 F#4 Bb4 C#5 G4 F4 A4 C5 G2 G3 F#4 Bb4 C#5",
+          "rhythm": "1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2",
+          "measure": 1
+        },
+        {
+          "bar": "3",
+          "notes": "F3 D4 F#4 A4 D2 D3 Eb4 G4 Bb4 C4 D4 F#4 A4 E2 E3 Eb4 G4 Bb4 Ab3 D4 F#4 A4 D2 D3 Eb4 G4 Bb4 Eb4 D4 F#4 A4 E2 E3 Eb4 G4 Bb4",
+          "rhythm": "1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2",
+          "measure": 2
+        },
+        {
+          "bar": "4",
+          "notes": "C4 G4 B4 D5 G2 G3 Ab4 C5 Eb5 G4 G4 B4 D5 A2 A3 Ab4 C5 Eb5 Eb4 G4 B4 D5 G2 G3 Ab4 C5 Eb5 Bb4 G4 B4 D5 A2 A3 Ab4 C5 Eb5",
+          "rhythm": "1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2",
+          "measure": 3
+        },
+        {
+          "bar": "5",
+          "notes": "G3 E4 Ab4 B4 E2 E3 F4 A4 C5 D4 E4 Ab4 B4 F#2 F#3 F4 A4 C5 Bb3 E4 Ab4 B4 E2 E3 F4 A4 C5 F4 E4 Ab4 B4 F#2 F#3 F4 A4 C5",
+          "rhythm": "1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2",
+          "measure": 4
+        },
+        {
+          "bar": "6",
+          "notes": "D4 A4 C#5 E5 A2 A3 Bb4 D5 F5 A4 A4 C#5 E5 B2 B3 Bb4 D5 F5 F4 A4 C#5 E5 A2 A3 Bb4 D5 F5 C5 A4 C#5 E5 B2 B3 Bb4 D5 F5",
+          "rhythm": "1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2",
+          "measure": 5
+        },
+        {
+          "bar": "7",
+          "notes": "G3 Eb4 G4 Bb4 Eb2 Eb3 E4 Ab4 B4 Eb4 G4 Bb4 F2 F3 E4 Ab4 B4 Eb4 G4 Bb4 Eb2 Eb3 E4 Ab4 B4 Eb4 G4 Bb4 F2 F3 E4 Ab4 B4",
+          "rhythm": "4 0.5x3 1x2 0.5x6 1x2 0.5x6 1x2 0.5x6 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "1 2 2 2 3 3 2 2 2 2 2 2 3 3 2 2 2 2 2 2 3 3 2 2 2 2 2 2 3 3 2 2 2",
+          "measure": 6
+        },
+        {
+          "bar": "7a",
+          "notes": "G3 F#4 Bb4 C#5 F#2 F#3 G4 B4 D5 F#4 Bb4 C#5 Ab2 Ab3 G4 B4 D5",
+          "rhythm": "2 0.5x3 1x2 0.5x6 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1.5 1.5 1.5",
+          "staves": "1 2 2 2 3 3 2 2 2 2 2 2 3 3 2 2 2",
+          "measure": 7
+        },
+        {
+          "bar": "7b",
+          "notes": "A3 C4 E4 G4 C2 C3 C#4 F4 Ab4 E4 C4 E4 G4 D2 D3 C#4 F4 Ab4",
+          "rhythm": "1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5",
+          "staves": "1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2",
+          "measure": 8
+        },
+        {
+          "bar": "8",
+          "notes": "F3 F4 A4 C5 F2 F3 F#4 Bb4 C#5 C4 F4 A4 C5 G2 G3 F#4 Bb4 C#5 Ab3 F4 A4 C5 F2 F3 F#4 Bb4 C#5 Eb4 F4 A4 C5 G2 G3 F#4 Bb4 C#5",
+          "rhythm": "1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2",
+          "measure": 9
+        },
+        {
+          "bar": "9",
+          "notes": "C4 D4 F#4 A4 D2 D3 Eb4 G4 Bb4 G4 D4 F#4 A4 E2 E3 Eb4 G4 Bb4 Eb4 D4 F#4 A4 D2 D3 Eb4 G4 Bb4 D4 D4 F#4 A4 E2 E3 Eb4 G4 Bb4",
+          "rhythm": "1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2",
+          "measure": 10
+        },
+        {
+          "bar": "10",
+          "notes": "D4 G4 B4 D5 G2 G3 A3 Ab4 C5 Eb5 C4 G4 B4 D5 A2 A3 Ab4 C5 Eb5 Ab3 G4 B4 D5 G2 G3 Ab4 C5 Eb5 D4 G4 B4 D5 A2 A3 Ab4 C5 Eb5",
+          "rhythm": "0.5x4 1x2 0.5x4 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "1 2 2 2 3 3 1 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2",
+          "held": "1",
+          "measure": 11
+        },
+        {
+          "bar": "11",
+          "notes": "D4 E4 Ab4 B4 E2 E3 F4 A4 C5 A4 E4 Ab4 B4 F#2 F#3 F4 A4 C5 F4 E4 Ab4 B4 E2 E3 F4 A4 C5 C5 E4 Ab4 B4 F#2 F#3 F4 A4 C5",
+          "rhythm": "1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2",
+          "measure": 12
+        },
+        {
+          "bar": "12",
+          "notes": "E3 A4 C#5 E5 A2 A3 Bb4 D5 F5 B3 A4 C#5 E5 B2 B3 Bb4 D5 F5 G3 A4 C#5 E5 A2 A3 Bb4 D5 F5 D4 A4 C#5 E5 B2 B3 Bb4 D5 F5",
+          "rhythm": "1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2",
+          "measure": 13
+        },
+        {
+          "bar": "13",
+          "notes": "D3 Eb4 G4 Bb4 Eb2 Eb3 E4 Ab4 B4 A3 Eb4 G4 Bb4 F2 F3 E4 Ab4 B4 F3 Eb4 G4 Bb4 Eb2 Eb3 E4 Ab4 B4 C4 Eb4 G4 Bb4 F2 F3 E4 Ab4 B4",
+          "rhythm": "1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2",
+          "measure": 14
+        },
+        {
+          "bar": "14",
+          "notes": "A3 F#4 Bb4 C#5 F#2 F#3 G4 B4 D5 E4 F#4 Bb4 C#5 Ab2 Ab3 G4 B4 D5 C4 F#4 Bb4 C#5 F#2 F#3 G4 B4 D5 G4 F#4 Bb4 C#5 Ab2 Ab3 G4 B4 D5",
+          "rhythm": "1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2",
+          "measure": 15
+        },
+        {
+          "bar": "15",
+          "notes": "F3 C4 E4 G4 C2 C3 C#4 F4 Ab4 C4 C4 E4 G4 D2 D3 C#4 F4 Ab4 Ab3 C4 E4 G4 C2 C3 C#4 F4 Ab4 Eb4 C4 E4 G4 D2 D3 C#4 F4 Ab4",
+          "rhythm": "1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2",
+          "measure": 16
+        },
+        {
+          "bar": "16",
+          "notes": "C4 F4 A4 C5 F2 F3 F#4 Bb4 C#5 G4 F4 A4 C5 G2 G3 F#4 Bb4 C#5 Eb4 F4 A4 C5 F2 F3 F#4 Bb4 C#5 Bb4 F4 A4 C5 G2 G3 F#4 Bb4 C#5",
+          "rhythm": "1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2",
+          "measure": 17
+        },
+        {
+          "bar": "17",
+          "notes": "G3 D4 F#4 A4 D2 D3 Eb4 G4 Bb4 D4 D4 F#4 A4 E2 E3 Eb4 G4 Bb4 Bb3 D4 F#4 A4 D2 D3 Eb4 G4 Bb4 F4 D4 F#4 A4 E2 E3 Eb4 G4 Bb4",
+          "rhythm": "1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2",
+          "measure": 18
+        },
+        {
+          "bar": "18",
+          "notes": "D4 G4 B4 D5 G2 G3 Ab4 C5 Eb5 A4 G4 B4 D5 A2 A3 Ab4 C5 Eb5 F4 G4 B4 D5 G2 G3 Ab4 C5 Eb5 C5 G4 B4 D5 A2 A3 Ab4 C5 Eb5",
+          "rhythm": "1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2",
+          "measure": 19
+        },
+        {
+          "bar": "19",
+          "notes": "E3 E4 Ab4 B4 E2 E3 F4 A4 C5 B3 E4 Ab4 B4 F#2 F#3 F4 A4 C5 G3 E4 Ab4 B4 E2 E3 F4 A4 C5 D4 E4 Ab4 B4 F#2 F#3 F4 A4 C5",
+          "rhythm": "1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2",
+          "measure": 20
+        },
+        {
+          "bar": "19a",
+          "notes": "G3 A4 C#5 E5 A2 A3 Bb4 D5 F5 A4 C#5 E5 B2 B3 Bb4 D5 F5 A4 C#5 E5 A2 A3 Bb4 D5 F5",
+          "rhythm": "3 0.5x3 1x2 0.5x6 1x2 0.5x6 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2.5 2.5 2.5",
+          "staves": "1 2 2 2 3 3 2 2 2 2 2 2 3 3 2 2 2 2 2 2 3 3 2 2 2",
+          "measure": 21
+        },
+        {
+          "bar": "20",
+          "notes": "A3 Eb4 G4 Bb4 Eb2 Eb3 E4 Ab4 B4 E4 Eb4 G4 Bb4 F2 F3 E4 Ab4 B4 C4 Eb4 G4 Bb4 Eb2 Eb3 E4 Ab4 B4 G4 Eb4 G4 Bb4 F2 F3 E4 Ab4 B4",
+          "rhythm": "1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2 1 2 2 2 3 3 2 2 2",
+          "measure": 22
+        },
+        {
+          "bar": "21",
+          "notes": "D3 F#4 Bb4 C#5 F#2 F#3 G4 B4 D5 F#4 Bb4 C#5 Ab2 Ab3 G4 B4 D5 F#4 Bb4 C#5 F#2 F#3 G4 B4 D5 F#4 Bb4 C#5 Ab2 Ab3 G4 B4 D5",
+          "rhythm": "4 0.5x3 1x2 0.5x6 1x2 0.5x6 1x2 0.5x6 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "1 2 2 2 3 3 2 2 2 2 2 2 3 3 2 2 2 2 2 2 3 3 2 2 2 2 2 2 3 3 2 2 2",
+          "measure": 23
+        }
+      ],
+      "returns": [
+        {
+          "from": "13",
+          "to": "18",
+          "likeFrom": "1",
+          "likeTo": "6",
+          "changed": 0,
+          "line": "Violoncello"
+        },
+        {
+          "from": "8",
+          "to": "13",
+          "likeFrom": "2",
+          "likeTo": "7",
+          "changed": 0,
+          "line": "Piano"
+        },
+        {
+          "from": "15",
+          "to": "19",
+          "likeFrom": "1",
+          "likeTo": "5",
+          "changed": 0,
+          "line": "Piano"
+        },
+        {
+          "from": "20",
+          "to": "21",
+          "likeFrom": "13",
+          "likeTo": "14",
+          "changed": 0,
+          "line": "Piano"
+        }
+      ],
+      "lines": [
+        "Violoncello",
+        "Piano upper",
+        "Piano lower"
+      ],
+      "instruments": [
+        "Flute",
+        "Oboe",
+        "Clarinet",
+        "Bassoon",
+        "Horn 1",
+        "Horn 2",
+        "Violin I",
+        "Violin II",
+        "Viola",
+        "Cello",
+        "Double Bass"
+      ],
+      "roles": [
+        {
+          "from": "1",
+          "to": "6",
+          "line": "Violoncello",
+          "role": "melody",
+          "of": "",
+          "why": "The generated single line"
+        },
+        {
+          "from": "7",
+          "to": "7a",
+          "line": "Violoncello",
+          "role": "pedal",
+          "of": "",
+          "why": "The generated single line"
+        },
+        {
+          "from": "7b",
+          "to": "19",
+          "line": "Violoncello",
+          "role": "melody",
+          "of": "",
+          "why": "The generated single line"
+        },
+        {
+          "from": "19a",
+          "to": "19a",
+          "line": "Violoncello",
+          "role": "pedal",
+          "of": "",
+          "why": "The generated single line"
+        },
+        {
+          "from": "20",
+          "to": "20",
+          "line": "Violoncello",
+          "role": "melody",
+          "of": "",
+          "why": "The generated single line"
+        },
+        {
+          "from": "21",
+          "to": "21",
+          "line": "Violoncello",
+          "role": "pedal",
+          "of": "",
+          "why": "The generated single line"
+        },
+        {
+          "from": "1",
+          "to": "21",
+          "line": "Piano upper",
+          "role": "harmony",
+          "of": "",
+          "why": "Repeated three-note blocks"
+        },
+        {
+          "from": "1",
+          "to": "6",
+          "line": "Piano lower",
+          "role": "bass",
+          "of": "",
+          "why": "The generated lower octave pairs"
+        },
+        {
+          "from": "7",
+          "to": "7a",
+          "line": "Piano lower",
+          "role": "pedal",
+          "of": "",
+          "why": "The generated lower octave pairs"
+        },
+        {
+          "from": "7b",
+          "to": "19",
+          "line": "Piano lower",
+          "role": "bass",
+          "of": "",
+          "why": "The generated lower octave pairs"
+        },
+        {
+          "from": "19a",
+          "to": "20",
+          "line": "Piano lower",
+          "role": "bass",
+          "of": "",
+          "why": "The generated lower octave pairs"
+        },
+        {
+          "from": "21",
+          "to": "21",
+          "line": "Piano lower",
+          "role": "pedal",
+          "of": "",
+          "why": "The generated lower octave pairs"
+        }
+      ],
+      "answers": [],
+      "ask": null,
+      "tracks": []
+    },
+    "answer": {
+      "idea": "Put each generated line on separate players for placement tests.",
+      "plan": [
+        {
+          "from": "1",
+          "to": "21",
+          "line": "Violoncello",
+          "voice": "all",
+          "part": "Cello",
+          "octave": 0,
+          "why": "Exercise line and chord-voice placement"
+        },
+        {
+          "from": "1",
+          "to": "21",
+          "line": "Piano upper",
+          "voice": "1",
+          "part": "Violin I",
+          "octave": 0,
+          "why": "Exercise line and chord-voice placement"
+        },
+        {
+          "from": "1",
+          "to": "21",
+          "line": "Piano upper",
+          "voice": "2",
+          "part": "Violin II",
+          "octave": 0,
+          "why": "Exercise line and chord-voice placement"
+        },
+        {
+          "from": "1",
+          "to": "21",
+          "line": "Piano upper",
+          "voice": "bottom",
+          "part": "Viola",
+          "octave": 0,
+          "why": "Exercise line and chord-voice placement"
+        },
+        {
+          "from": "1",
+          "to": "21",
+          "line": "Piano lower",
+          "voice": "1",
+          "part": "Bassoon",
+          "octave": 0,
+          "why": "Exercise line and chord-voice placement"
+        },
+        {
+          "from": "1",
+          "to": "21",
+          "line": "Piano lower",
+          "voice": "bottom",
+          "part": "Double Bass",
+          "octave": 0,
+          "why": "Exercise line and chord-voice placement"
+        },
+        {
+          "from": "8",
+          "to": "21",
+          "line": "Piano upper",
+          "voice": "1",
+          "part": "Flute",
+          "octave": 0,
+          "why": "Exercise line and chord-voice placement"
+        },
+        {
+          "from": "8",
+          "to": "21",
+          "line": "Piano upper",
+          "voice": "2",
+          "part": "Oboe",
+          "octave": 0,
+          "why": "Exercise line and chord-voice placement"
+        },
+        {
+          "from": "8",
+          "to": "21",
+          "line": "Piano upper",
+          "voice": "bottom",
+          "part": "Clarinet",
+          "octave": 0,
+          "why": "Exercise line and chord-voice placement"
+        },
+        {
+          "from": "11",
+          "to": "21",
+          "line": "Piano lower",
+          "voice": "1",
+          "part": "Horn 1",
+          "octave": 1,
+          "why": "Exercise line and chord-voice placement"
+        },
+        {
+          "from": "11",
+          "to": "21",
+          "line": "Piano lower",
+          "voice": "1",
+          "part": "Horn 2",
+          "octave": 1,
+          "why": "Exercise line and chord-voice placement"
+        }
+      ]
+    }
+  },
+  "plan": {
+    "input": {
+      "piece": {
+        "title": "Contract score",
+        "composer": "Motifold test fixture",
+        "instrument": "Flute and Oboe and Clarinet and Bassoon and Horn 1 and Horn 2 and Violin I and V"
+      },
+      "fifths": 0,
+      "time": "4/4",
+      "written": [
+        {
+          "bar": "1",
+          "notes": "C3 G4 E4 C4 D3 C2 Ab4 F4 C#4 D3 G4 E4 C4 A3 D2 Ab4 F4 C#4 C3 G4 E4 C4 F3 C2 Ab4 F4 C#4 D3 G4 E4 C4 C4 D2 Ab4 F4 C#4",
+          "rhythm": "1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "4 7 8 9 10 11 7 8 9 4 7 8 9 10 11 7 8 9 4 7 8 9 10 11 7 8 9 4 7 8 9 10 11 7 8 9",
+          "measure": 0
+        },
+        {
+          "bar": "2",
+          "notes": "F3 C5 A4 F4 A3 F2 C#5 Bb4 F#4 G3 C5 A4 F4 E4 G2 C#5 Bb4 F#4 F3 C5 A4 F4 C4 F2 C#5 Bb4 F#4 G3 C5 A4 F4 G4 G2 C#5 Bb4 F#4",
+          "rhythm": "1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "4 7 8 9 10 11 7 8 9 4 7 8 9 10 11 7 8 9 4 7 8 9 10 11 7 8 9 4 7 8 9 10 11 7 8 9",
+          "measure": 1
+        },
+        {
+          "bar": "3",
+          "notes": "D3 A4 F#4 D4 F3 D2 Bb4 G4 Eb4 E3 A4 F#4 D4 C4 E2 Bb4 G4 Eb4 D3 A4 F#4 D4 Ab3 D2 Bb4 G4 Eb4 E3 A4 F#4 D4 Eb4 E2 Bb4 G4 Eb4",
+          "rhythm": "1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "4 7 8 9 10 11 7 8 9 4 7 8 9 10 11 7 8 9 4 7 8 9 10 11 7 8 9 4 7 8 9 10 11 7 8 9",
+          "measure": 2
+        },
+        {
+          "bar": "4",
+          "notes": "G3 D5 B4 G4 C4 G2 Eb5 C5 Ab4 A3 D5 B4 G4 G4 A2 Eb5 C5 Ab4 G3 D5 B4 G4 Eb4 G2 Eb5 C5 Ab4 A3 D5 B4 G4 Bb4 A2 Eb5 C5 Ab4",
+          "rhythm": "1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "4 7 8 9 10 11 7 8 9 4 7 8 9 10 11 7 8 9 4 7 8 9 10 11 7 8 9 4 7 8 9 10 11 7 8 9",
+          "measure": 3
+        },
+        {
+          "bar": "5",
+          "notes": "E3 B4 Ab4 E4 G3 E2 C5 A4 F4 F#3 B4 Ab4 E4 D4 F#2 C5 A4 F4 E3 B4 Ab4 E4 Bb3 E2 C5 A4 F4 F#3 B4 Ab4 E4 F4 F#2 C5 A4 F4",
+          "rhythm": "1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "4 7 8 9 10 11 7 8 9 4 7 8 9 10 11 7 8 9 4 7 8 9 10 11 7 8 9 4 7 8 9 10 11 7 8 9",
+          "measure": 4
+        },
+        {
+          "bar": "6",
+          "notes": "A3 E5 C#5 A4 D4 A2 F5 D5 Bb4 B3 E5 C#5 A4 A4 B2 F5 D5 Bb4 A3 E5 C#5 A4 F4 A2 F5 D5 Bb4 B3 E5 C#5 A4 C5 B2 F5 D5 Bb4",
+          "rhythm": "1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "4 7 8 9 10 11 7 8 9 4 7 8 9 10 11 7 8 9 4 7 8 9 10 11 7 8 9 4 7 8 9 10 11 7 8 9",
+          "measure": 5
+        },
+        {
+          "bar": "7",
+          "notes": "Eb3 Bb4 G4 Eb4 G3 Eb2 B4 Ab4 E4 F3 Bb4 G4 Eb4 F2 B4 Ab4 E4 Eb3 Bb4 G4 Eb4 Eb2 B4 Ab4 E4 F3 Bb4 G4 Eb4 F2 B4 Ab4 E4",
+          "rhythm": "1 0.5x3 4 1 0.5x3 1 0.5x3 1 0.5x3 1 0.5x3 1 0.5x3 1 0.5x3 1 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1.5 1.5 1.5 2 2 2 2 2 2.5 2.5 2.5 3 3 3 3 3 3.5 3.5 3.5",
+          "staves": "4 7 8 9 10 11 7 8 9 4 7 8 9 11 7 8 9 4 7 8 9 11 7 8 9 4 7 8 9 11 7 8 9",
+          "measure": 6
+        },
+        {
+          "bar": "7a",
+          "notes": "F#3 C#5 Bb4 F#4 G3 F#2 D5 B4 G4 Ab3 C#5 Bb4 F#4 Ab2 D5 B4 G4",
+          "rhythm": "1 0.5x3 2 1 0.5x3 1 0.5x3 1 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1.5 1.5 1.5",
+          "staves": "4 7 8 9 10 11 7 8 9 4 7 8 9 11 7 8 9",
+          "measure": 7
+        },
+        {
+          "bar": "7b",
+          "notes": "C3 G4 E4 C4 A3 C2 Ab4 F4 C#4 D3 G4 E4 C4 E4 D2 Ab4 F4 C#4",
+          "rhythm": "1 0.5x3 1x2 0.5x3 1 0.5x3 1x2 0.5x3",
+          "at": "0 0 0 0 0 0 0.5 0.5 0.5 1 1 1 1 1 1 1.5 1.5 1.5",
+          "staves": "4 7 8 9 10 11 7 8 9 4 7 8 9 10 11 7 8 9",
+          "measure": 8
+        },
+        {
+          "bar": "8",
+          "notes": "C5 A4 F4 F3 C5 A4 F4 F3 F2 C#5 Bb4 F#4 C#5 Bb4 F#4 C5 A4 F4 G3 C5 A4 F4 C4 G2 C#5 Bb4 F#4 C#5 Bb4 F#4 C5 A4 F4 F3 C5 A4 F4 Ab3 F2 C#5 Bb4 F#4 C#5 Bb4 F#4 C5 A4 F4 G3 C5 A4 F4 Eb4 G2 C#5 Bb4 F#4 C#5 Bb4 F#4",
+          "rhythm": "0.5x3 1 0.5x3 1x2 0.5x9 1 0.5x3 1x2 0.5x9 1 0.5x3 1x2 0.5x9 1 0.5x3 1x2 0.5x6",
+          "at": "0 0 0 0 0 0 0 0 0 0.5 0.5 0.5 0.5 0.5 0.5 1 1 1 1 1 1 1 1 1 1.5 1.5 1.5 1.5 1.5 1.5 2 2 2 2 2 2 2 2 2 2.5 2.5 2.5 2.5 2.5 2.5 3 3 3 3 3 3 3 3 3 3.5 3.5 3.5 3.5 3.5 3.5",
+          "staves": "1 2 3 4 7 8 9 10 11 1 2 3 7 8 9 1 2 3 4 7 8 9 10 11 1 2 3 7 8 9 1 2 3 4 7 8 9 10 11 1 2 3 7 8 9 1 2 3 4 7 8 9 10 11 1 2 3 7 8 9",
+          "measure": 9
+        },
+        {
+          "bar": "9",
+          "notes": "A4 F#4 D4 D3 A4 F#4 D4 C4 D2 Bb4 G4 Eb4 Bb4 G4 Eb4 A4 F#4 D4 E3 A4 F#4 D4 G4 E2 Bb4 G4 Eb4 Bb4 G4 Eb4 A4 F#4 D4 D3 A4 F#4 D4 Eb4 D2 Bb4 G4 Eb4 Bb4 G4 Eb4 A4 F#4 D4 E3 A4 F#4 D4 D4 E2 Bb4 G4 Eb4 Bb4 G4 Eb4",
+          "rhythm": "0.5x3 1 0.5x3 1x2 0.5x9 1 0.5x3 1x2 0.5x9 1 0.5x3 1x2 0.5x9 1 0.5x3 1x2 0.5x6",
+          "at": "0 0 0 0 0 0 0 0 0 0.5 0.5 0.5 0.5 0.5 0.5 1 1 1 1 1 1 1 1 1 1.5 1.5 1.5 1.5 1.5 1.5 2 2 2 2 2 2 2 2 2 2.5 2.5 2.5 2.5 2.5 2.5 3 3 3 3 3 3 3 3 3 3.5 3.5 3.5 3.5 3.5 3.5",
+          "staves": "1 2 3 4 7 8 9 10 11 1 2 3 7 8 9 1 2 3 4 7 8 9 10 11 1 2 3 7 8 9 1 2 3 4 7 8 9 10 11 1 2 3 7 8 9 1 2 3 4 7 8 9 10 11 1 2 3 7 8 9",
+          "measure": 10
+        },
+        {
+          "bar": "10",
+          "notes": "D5 B4 G4 G3 D5 B4 G4 D4 G2 Eb5 C5 Ab4 Eb5 C5 Ab4 A3 D5 B4 G4 A3 D5 B4 G4 C4 A2 Eb5 C5 Ab4 Eb5 C5 Ab4 D5 B4 G4 G3 D5 B4 G4 Ab3 G2 Eb5 C5 Ab4 Eb5 C5 Ab4 D5 B4 G4 A3 D5 B4 G4 D4 A2 Eb5 C5 Ab4 Eb5 C5 Ab4",
+          "rhythm": "0.5x3 1 0.5x4 1 0.5x10 1 0.5x3 1x2 0.5x9 1 0.5x3 1x2 0.5x9 1 0.5x3 1x2 0.5x6",
+          "at": "0 0 0 0 0 0 0 0 0 0.5 0.5 0.5 0.5 0.5 0.5 0.5 1 1 1 1 1 1 1 1 1 1.5 1.5 1.5 1.5 1.5 1.5 2 2 2 2 2 2 2 2 2 2.5 2.5 2.5 2.5 2.5 2.5 3 3 3 3 3 3 3 3 3 3.5 3.5 3.5 3.5 3.5 3.5",
+          "staves": "1 2 3 4 7 8 9 10 11 1 2 3 7 8 9 10 1 2 3 4 7 8 9 10 11 1 2 3 7 8 9 1 2 3 4 7 8 9 10 11 1 2 3 7 8 9 1 2 3 4 7 8 9 10 11 1 2 3 7 8 9",
+          "held": "8",
+          "measure": 11
+        },
+        {
+          "bar": "11",
+          "notes": "B4 Ab4 E4 E3 E4 E4 B4 Ab4 E4 D4 E2 C5 A4 F4 C5 A4 F4 B4 Ab4 E4 F#3 F#4 F#4 B4 Ab4 E4 A4 F#2 C5 A4 F4 C5 A4 F4 B4 Ab4 E4 E3 E4 E4 B4 Ab4 E4 F4 E2 C5 A4 F4 C5 A4 F4 B4 Ab4 E4 F#3 F#4 F#4 B4 Ab4 E4 C5 F#2 C5 A4 F4 C5 A4 F4",
+          "rhythm": "0.5x3 1x3 0.5x3 1x2 0.5x9 1x3 0.5x3 1x2 0.5x9 1x3 0.5x3 1x2 0.5x9 1x3 0.5x3 1x2 0.5x6",
+          "at": "0 0 0 0 0 0 0 0 0 0 0 0.5 0.5 0.5 0.5 0.5 0.5 1 1 1 1 1 1 1 1 1 1 1 1.5 1.5 1.5 1.5 1.5 1.5 2 2 2 2 2 2 2 2 2 2 2 2.5 2.5 2.5 2.5 2.5 2.5 3 3 3 3 3 3 3 3 3 3 3 3.5 3.5 3.5 3.5 3.5 3.5",
+          "staves": "1 2 3 4 5 6 7 8 9 10 11 1 2 3 7 8 9 1 2 3 4 5 6 7 8 9 10 11 1 2 3 7 8 9 1 2 3 4 5 6 7 8 9 10 11 1 2 3 7 8 9 1 2 3 4 5 6 7 8 9 10 11 1 2 3 7 8 9",
+          "measure": 12
+        },
+        {
+          "bar": "12",
+          "notes": "E5 C#5 A4 A3 A4 A4 E5 C#5 A4 E3 A2 F5 D5 Bb4 F5 D5 Bb4 E5 C#5 A4 B3 B4 B4 E5 C#5 A4 B3 B2 F5 D5 Bb4 F5 D5 Bb4 E5 C#5 A4 A3 A4 A4 E5 C#5 A4 G3 A2 F5 D5 Bb4 F5 D5 Bb4 E5 C#5 A4 B3 B4 B4 E5 C#5 A4 D4 B2 F5 D5 Bb4 F5 D5 Bb4",
+          "rhythm": "0.5x3 1x3 0.5x3 1x2 0.5x9 1x3 0.5x3 1x2 0.5x9 1x3 0.5x3 1x2 0.5x9 1x3 0.5x3 1x2 0.5x6",
+          "at": "0 0 0 0 0 0 0 0 0 0 0 0.5 0.5 0.5 0.5 0.5 0.5 1 1 1 1 1 1 1 1 1 1 1 1.5 1.5 1.5 1.5 1.5 1.5 2 2 2 2 2 2 2 2 2 2 2 2.5 2.5 2.5 2.5 2.5 2.5 3 3 3 3 3 3 3 3 3 3 3 3.5 3.5 3.5 3.5 3.5 3.5",
+          "staves": "1 2 3 4 5 6 7 8 9 10 11 1 2 3 7 8 9 1 2 3 4 5 6 7 8 9 10 11 1 2 3 7 8 9 1 2 3 4 5 6 7 8 9 10 11 1 2 3 7 8 9 1 2 3 4 5 6 7 8 9 10 11 1 2 3 7 8 9",
+          "measure": 13
+        },
+        {
+          "bar": "13",
+          "notes": "Bb4 G4 Eb4 Eb3 Eb4 Eb4 Bb4 G4 Eb4 D3 Eb2 B4 Ab4 E4 B4 Ab4 E4 Bb4 G4 Eb4 F3 F4 F4 Bb4 G4 Eb4 A3 F2 B4 Ab4 E4 B4 Ab4 E4 Bb4 G4 Eb4 Eb3 Eb4 Eb4 Bb4 G4 Eb4 F3 Eb2 B4 Ab4 E4 B4 Ab4 E4 Bb4 G4 Eb4 F3 F4 F4 Bb4 G4 Eb4 C4 F2 B4 Ab4 E4 B4 Ab4 E4",
+          "rhythm": "0.5x3 1x3 0.5x3 1x2 0.5x9 1x3 0.5x3 1x2 0.5x9 1x3 0.5x3 1x2 0.5x9 1x3 0.5x3 1x2 0.5x6",
+          "at": "0 0 0 0 0 0 0 0 0 0 0 0.5 0.5 0.5 0.5 0.5 0.5 1 1 1 1 1 1 1 1 1 1 1 1.5 1.5 1.5 1.5 1.5 1.5 2 2 2 2 2 2 2 2 2 2 2 2.5 2.5 2.5 2.5 2.5 2.5 3 3 3 3 3 3 3 3 3 3 3 3.5 3.5 3.5 3.5 3.5 3.5",
+          "staves": "1 2 3 4 5 6 7 8 9 10 11 1 2 3 7 8 9 1 2 3 4 5 6 7 8 9 10 11 1 2 3 7 8 9 1 2 3 4 5 6 7 8 9 10 11 1 2 3 7 8 9 1 2 3 4 5 6 7 8 9 10 11 1 2 3 7 8 9",
+          "measure": 14
+        },
+        {
+          "bar": "14",
+          "notes": "C#5 Bb4 F#4 F#3 F#4 F#4 C#5 Bb4 F#4 A3 F#2 D5 B4 G4 D5 B4 G4 C#5 Bb4 F#4 Ab3 Ab4 Ab4 C#5 Bb4 F#4 E4 Ab2 D5 B4 G4 D5 B4 G4 C#5 Bb4 F#4 F#3 F#4 F#4 C#5 Bb4 F#4 C4 F#2 D5 B4 G4 D5 B4 G4 C#5 Bb4 F#4 Ab3 Ab4 Ab4 C#5 Bb4 F#4 G4 Ab2 D5 B4 G4 D5 B4 G4",
+          "rhythm": "0.5x3 1x3 0.5x3 1x2 0.5x9 1x3 0.5x3 1x2 0.5x9 1x3 0.5x3 1x2 0.5x9 1x3 0.5x3 1x2 0.5x6",
+          "at": "0 0 0 0 0 0 0 0 0 0 0 0.5 0.5 0.5 0.5 0.5 0.5 1 1 1 1 1 1 1 1 1 1 1 1.5 1.5 1.5 1.5 1.5 1.5 2 2 2 2 2 2 2 2 2 2 2 2.5 2.5 2.5 2.5 2.5 2.5 3 3 3 3 3 3 3 3 3 3 3 3.5 3.5 3.5 3.5 3.5 3.5",
+          "staves": "1 2 3 4 5 6 7 8 9 10 11 1 2 3 7 8 9 1 2 3 4 5 6 7 8 9 10 11 1 2 3 7 8 9 1 2 3 4 5 6 7 8 9 10 11 1 2 3 7 8 9 1 2 3 4 5 6 7 8 9 10 11 1 2 3 7 8 9",
+          "measure": 15
+        },
+        {
+          "bar": "15",
+          "notes": "G4 E4 C4 C3 C4 C4 G4 E4 C4 F3 C2 Ab4 F4 C#4 Ab4 F4 C#4 G4 E4 C4 D3 D4 D4 G4 E4 C4 C4 D2 Ab4 F4 C#4 Ab4 F4 C#4 G4 E4 C4 C3 C4 C4 G4 E4 C4 Ab3 C2 Ab4 F4 C#4 Ab4 F4 C#4 G4 E4 C4 D3 D4 D4 G4 E4 C4 Eb4 D2 Ab4 F4 C#4 Ab4 F4 C#4",
+          "rhythm": "0.5x3 1x3 0.5x3 1x2 0.5x9 1x3 0.5x3 1x2 0.5x9 1x3 0.5x3 1x2 0.5x9 1x3 0.5x3 1x2 0.5x6",
+          "at": "0 0 0 0 0 0 0 0 0 0 0 0.5 0.5 0.5 0.5 0.5 0.5 1 1 1 1 1 1 1 1 1 1 1 1.5 1.5 1.5 1.5 1.5 1.5 2 2 2 2 2 2 2 2 2 2 2 2.5 2.5 2.5 2.5 2.5 2.5 3 3 3 3 3 3 3 3 3 3 3 3.5 3.5 3.5 3.5 3.5 3.5",
+          "staves": "1 2 3 4 5 6 7 8 9 10 11 1 2 3 7 8 9 1 2 3 4 5 6 7 8 9 10 11 1 2 3 7 8 9 1 2 3 4 5 6 7 8 9 10 11 1 2 3 7 8 9 1 2 3 4 5 6 7 8 9 10 11 1 2 3 7 8 9",
+          "measure": 16
+        },
+        {
+          "bar": "16",
+          "notes": "C5 A4 F4 F3 F4 F4 C5 A4 F4 C4 F2 C#5 Bb4 F#4 C#5 Bb4 F#4 C5 A4 F4 G3 G4 G4 C5 A4 F4 G4 G2 C#5 Bb4 F#4 C#5 Bb4 F#4 C5 A4 F4 F3 F4 F4 C5 A4 F4 Eb4 F2 C#5 Bb4 F#4 C#5 Bb4 F#4 C5 A4 F4 G3 G4 G4 C5 A4 F4 Bb4 G2 C#5 Bb4 F#4 C#5 Bb4 F#4",
+          "rhythm": "0.5x3 1x3 0.5x3 1x2 0.5x9 1x3 0.5x3 1x2 0.5x9 1x3 0.5x3 1x2 0.5x9 1x3 0.5x3 1x2 0.5x6",
+          "at": "0 0 0 0 0 0 0 0 0 0 0 0.5 0.5 0.5 0.5 0.5 0.5 1 1 1 1 1 1 1 1 1 1 1 1.5 1.5 1.5 1.5 1.5 1.5 2 2 2 2 2 2 2 2 2 2 2 2.5 2.5 2.5 2.5 2.5 2.5 3 3 3 3 3 3 3 3 3 3 3 3.5 3.5 3.5 3.5 3.5 3.5",
+          "staves": "1 2 3 4 5 6 7 8 9 10 11 1 2 3 7 8 9 1 2 3 4 5 6 7 8 9 10 11 1 2 3 7 8 9 1 2 3 4 5 6 7 8 9 10 11 1 2 3 7 8 9 1 2 3 4 5 6 7 8 9 10 11 1 2 3 7 8 9",
+          "measure": 17
+        },
+        {
+          "bar": "17",
+          "notes": "A4 F#4 D4 D3 D4 D4 A4 F#4 D4 G3 D2 Bb4 G4 Eb4 Bb4 G4 Eb4 A4 F#4 D4 E3 E4 E4 A4 F#4 D4 D4 E2 Bb4 G4 Eb4 Bb4 G4 Eb4 A4 F#4 D4 D3 D4 D4 A4 F#4 D4 Bb3 D2 Bb4 G4 Eb4 Bb4 G4 Eb4 A4 F#4 D4 E3 E4 E4 A4 F#4 D4 F4 E2 Bb4 G4 Eb4 Bb4 G4 Eb4",
+          "rhythm": "0.5x3 1x3 0.5x3 1x2 0.5x9 1x3 0.5x3 1x2 0.5x9 1x3 0.5x3 1x2 0.5x9 1x3 0.5x3 1x2 0.5x6",
+          "at": "0 0 0 0 0 0 0 0 0 0 0 0.5 0.5 0.5 0.5 0.5 0.5 1 1 1 1 1 1 1 1 1 1 1 1.5 1.5 1.5 1.5 1.5 1.5 2 2 2 2 2 2 2 2 2 2 2 2.5 2.5 2.5 2.5 2.5 2.5 3 3 3 3 3 3 3 3 3 3 3 3.5 3.5 3.5 3.5 3.5 3.5",
+          "staves": "1 2 3 4 5 6 7 8 9 10 11 1 2 3 7 8 9 1 2 3 4 5 6 7 8 9 10 11 1 2 3 7 8 9 1 2 3 4 5 6 7 8 9 10 11 1 2 3 7 8 9 1 2 3 4 5 6 7 8 9 10 11 1 2 3 7 8 9",
+          "measure": 18
+        },
+        {
+          "bar": "18",
+          "notes": "D5 B4 G4 G3 G4 G4 D5 B4 G4 D4 G2 Eb5 C5 Ab4 Eb5 C5 Ab4 D5 B4 G4 A3 A4 A4 D5 B4 G4 A4 A2 Eb5 C5 Ab4 Eb5 C5 Ab4 D5 B4 G4 G3 G4 G4 D5 B4 G4 F4 G2 Eb5 C5 Ab4 Eb5 C5 Ab4 D5 B4 G4 A3 A4 A4 D5 B4 G4 C5 A2 Eb5 C5 Ab4 Eb5 C5 Ab4",
+          "rhythm": "0.5x3 1x3 0.5x3 1x2 0.5x9 1x3 0.5x3 1x2 0.5x9 1x3 0.5x3 1x2 0.5x9 1x3 0.5x3 1x2 0.5x6",
+          "at": "0 0 0 0 0 0 0 0 0 0 0 0.5 0.5 0.5 0.5 0.5 0.5 1 1 1 1 1 1 1 1 1 1 1 1.5 1.5 1.5 1.5 1.5 1.5 2 2 2 2 2 2 2 2 2 2 2 2.5 2.5 2.5 2.5 2.5 2.5 3 3 3 3 3 3 3 3 3 3 3 3.5 3.5 3.5 3.5 3.5 3.5",
+          "staves": "1 2 3 4 5 6 7 8 9 10 11 1 2 3 7 8 9 1 2 3 4 5 6 7 8 9 10 11 1 2 3 7 8 9 1 2 3 4 5 6 7 8 9 10 11 1 2 3 7 8 9 1 2 3 4 5 6 7 8 9 10 11 1 2 3 7 8 9",
+          "measure": 19
+        },
+        {
+          "bar": "19",
+          "notes": "B4 Ab4 E4 E3 E4 E4 B4 Ab4 E4 E3 E2 C5 A4 F4 C5 A4 F4 B4 Ab4 E4 F#3 F#4 F#4 B4 Ab4 E4 B3 F#2 C5 A4 F4 C5 A4 F4 B4 Ab4 E4 E3 E4 E4 B4 Ab4 E4 G3 E2 C5 A4 F4 C5 A4 F4 B4 Ab4 E4 F#3 F#4 F#4 B4 Ab4 E4 D4 F#2 C5 A4 F4 C5 A4 F4",
+          "rhythm": "0.5x3 1x3 0.5x3 1x2 0.5x9 1x3 0.5x3 1x2 0.5x9 1x3 0.5x3 1x2 0.5x9 1x3 0.5x3 1x2 0.5x6",
+          "at": "0 0 0 0 0 0 0 0 0 0 0 0.5 0.5 0.5 0.5 0.5 0.5 1 1 1 1 1 1 1 1 1 1 1 1.5 1.5 1.5 1.5 1.5 1.5 2 2 2 2 2 2 2 2 2 2 2 2.5 2.5 2.5 2.5 2.5 2.5 3 3 3 3 3 3 3 3 3 3 3 3.5 3.5 3.5 3.5 3.5 3.5",
+          "staves": "1 2 3 4 5 6 7 8 9 10 11 1 2 3 7 8 9 1 2 3 4 5 6 7 8 9 10 11 1 2 3 7 8 9 1 2 3 4 5 6 7 8 9 10 11 1 2 3 7 8 9 1 2 3 4 5 6 7 8 9 10 11 1 2 3 7 8 9",
+          "measure": 20
+        },
+        {
+          "bar": "19a",
+          "notes": "E5 C#5 A4 A3 A4 A4 E5 C#5 A4 G3 A2 F5 D5 Bb4 F5 D5 Bb4 E5 C#5 A4 B3 B4 B4 E5 C#5 A4 B2 F5 D5 Bb4 F5 D5 Bb4 E5 C#5 A4 A3 A4 A4 E5 C#5 A4 A2 F5 D5 Bb4 F5 D5 Bb4",
+          "rhythm": "0.5x3 1x3 0.5x3 3 1 0.5x9 1x3 0.5x3 1 0.5x9 1x3 0.5x3 1 0.5x6",
+          "at": "0 0 0 0 0 0 0 0 0 0 0 0.5 0.5 0.5 0.5 0.5 0.5 1 1 1 1 1 1 1 1 1 1 1.5 1.5 1.5 1.5 1.5 1.5 2 2 2 2 2 2 2 2 2 2 2.5 2.5 2.5 2.5 2.5 2.5",
+          "staves": "1 2 3 4 5 6 7 8 9 10 11 1 2 3 7 8 9 1 2 3 4 5 6 7 8 9 11 1 2 3 7 8 9 1 2 3 4 5 6 7 8 9 11 1 2 3 7 8 9",
+          "measure": 21
+        },
+        {
+          "bar": "20",
+          "notes": "Bb4 G4 Eb4 Eb3 Eb4 Eb4 Bb4 G4 Eb4 A3 Eb2 B4 Ab4 E4 B4 Ab4 E4 Bb4 G4 Eb4 F3 F4 F4 Bb4 G4 Eb4 E4 F2 B4 Ab4 E4 B4 Ab4 E4 Bb4 G4 Eb4 Eb3 Eb4 Eb4 Bb4 G4 Eb4 C4 Eb2 B4 Ab4 E4 B4 Ab4 E4 Bb4 G4 Eb4 F3 F4 F4 Bb4 G4 Eb4 G4 F2 B4 Ab4 E4 B4 Ab4 E4",
+          "rhythm": "0.5x3 1x3 0.5x3 1x2 0.5x9 1x3 0.5x3 1x2 0.5x9 1x3 0.5x3 1x2 0.5x9 1x3 0.5x3 1x2 0.5x6",
+          "at": "0 0 0 0 0 0 0 0 0 0 0 0.5 0.5 0.5 0.5 0.5 0.5 1 1 1 1 1 1 1 1 1 1 1 1.5 1.5 1.5 1.5 1.5 1.5 2 2 2 2 2 2 2 2 2 2 2 2.5 2.5 2.5 2.5 2.5 2.5 3 3 3 3 3 3 3 3 3 3 3 3.5 3.5 3.5 3.5 3.5 3.5",
+          "staves": "1 2 3 4 5 6 7 8 9 10 11 1 2 3 7 8 9 1 2 3 4 5 6 7 8 9 10 11 1 2 3 7 8 9 1 2 3 4 5 6 7 8 9 10 11 1 2 3 7 8 9 1 2 3 4 5 6 7 8 9 10 11 1 2 3 7 8 9",
+          "measure": 22
+        },
+        {
+          "bar": "21",
+          "notes": "C#5 Bb4 F#4 F#3 F#4 F#4 C#5 Bb4 F#4 D3 F#2 D5 B4 G4 D5 B4 G4 C#5 Bb4 F#4 Ab3 Ab4 Ab4 C#5 Bb4 F#4 Ab2 D5 B4 G4 D5 B4 G4 C#5 Bb4 F#4 F#3 F#4 F#4 C#5 Bb4 F#4 F#2 D5 B4 G4 D5 B4 G4 C#5 Bb4 F#4 Ab3 Ab4 Ab4 C#5 Bb4 F#4 Ab2 D5 B4 G4 D5 B4 G4",
+          "rhythm": "0.5x3 1x3 0.5x3 4 1 0.5x9 1x3 0.5x3 1 0.5x9 1x3 0.5x3 1 0.5x9 1x3 0.5x3 1 0.5x6",
+          "at": "0 0 0 0 0 0 0 0 0 0 0 0.5 0.5 0.5 0.5 0.5 0.5 1 1 1 1 1 1 1 1 1 1 1.5 1.5 1.5 1.5 1.5 1.5 2 2 2 2 2 2 2 2 2 2 2.5 2.5 2.5 2.5 2.5 2.5 3 3 3 3 3 3 3 3 3 3 3.5 3.5 3.5 3.5 3.5 3.5",
+          "staves": "1 2 3 4 5 6 7 8 9 10 11 1 2 3 7 8 9 1 2 3 4 5 6 7 8 9 11 1 2 3 7 8 9 1 2 3 4 5 6 7 8 9 11 1 2 3 7 8 9 1 2 3 4 5 6 7 8 9 11 1 2 3 7 8 9",
+          "measure": 23
+        }
+      ],
+      "returns": [
+        {
+          "from": "16",
+          "to": "19",
+          "likeFrom": "8",
+          "likeTo": "11",
+          "changed": 0,
+          "line": "Flute"
+        },
+        {
+          "from": "20",
+          "to": "21",
+          "likeFrom": "13",
+          "likeTo": "14",
+          "changed": 0,
+          "line": "Flute"
+        },
+        {
+          "from": "16",
+          "to": "19",
+          "likeFrom": "8",
+          "likeTo": "11",
+          "changed": 0,
+          "line": "Oboe"
+        },
+        {
+          "from": "20",
+          "to": "21",
+          "likeFrom": "13",
+          "likeTo": "14",
+          "changed": 0,
+          "line": "Oboe"
+        },
+        {
+          "from": "16",
+          "to": "19",
+          "likeFrom": "8",
+          "likeTo": "11",
+          "changed": 0,
+          "line": "Clarinet"
+        },
+        {
+          "from": "20",
+          "to": "21",
+          "likeFrom": "13",
+          "likeTo": "14",
+          "changed": 0,
+          "line": "Clarinet"
+        },
+        {
+          "from": "8",
+          "to": "13",
+          "likeFrom": "2",
+          "likeTo": "7",
+          "changed": 0,
+          "line": "Bassoon"
+        },
+        {
+          "from": "15",
+          "to": "19",
+          "likeFrom": "1",
+          "likeTo": "5",
+          "changed": 0,
+          "line": "Bassoon"
+        },
+        {
+          "from": "20",
+          "to": "21",
+          "likeFrom": "13",
+          "likeTo": "14",
+          "changed": 0,
+          "line": "Bassoon"
+        },
+        {
+          "from": "20",
+          "to": "21",
+          "likeFrom": "13",
+          "likeTo": "14",
+          "changed": 0,
+          "line": "Horn 1"
+        },
+        {
+          "from": "20",
+          "to": "21",
+          "likeFrom": "13",
+          "likeTo": "14",
+          "changed": 0,
+          "line": "Horn 2"
+        },
+        {
+          "from": "8",
+          "to": "13",
+          "likeFrom": "2",
+          "likeTo": "7",
+          "changed": 0,
+          "line": "Violin I"
+        },
+        {
+          "from": "15",
+          "to": "19",
+          "likeFrom": "1",
+          "likeTo": "5",
+          "changed": 0,
+          "line": "Violin I"
+        },
+        {
+          "from": "20",
+          "to": "21",
+          "likeFrom": "13",
+          "likeTo": "14",
+          "changed": 0,
+          "line": "Violin I"
+        },
+        {
+          "from": "8",
+          "to": "13",
+          "likeFrom": "2",
+          "likeTo": "7",
+          "changed": 0,
+          "line": "Violin II"
+        },
+        {
+          "from": "15",
+          "to": "19",
+          "likeFrom": "1",
+          "likeTo": "5",
+          "changed": 0,
+          "line": "Violin II"
+        },
+        {
+          "from": "20",
+          "to": "21",
+          "likeFrom": "13",
+          "likeTo": "14",
+          "changed": 0,
+          "line": "Violin II"
+        },
+        {
+          "from": "8",
+          "to": "13",
+          "likeFrom": "2",
+          "likeTo": "7",
+          "changed": 0,
+          "line": "Viola"
+        },
+        {
+          "from": "15",
+          "to": "19",
+          "likeFrom": "1",
+          "likeTo": "5",
+          "changed": 0,
+          "line": "Viola"
+        },
+        {
+          "from": "20",
+          "to": "21",
+          "likeFrom": "13",
+          "likeTo": "14",
+          "changed": 0,
+          "line": "Viola"
+        },
+        {
+          "from": "13",
+          "to": "18",
+          "likeFrom": "1",
+          "likeTo": "6",
+          "changed": 0,
+          "line": "Cello"
+        },
+        {
+          "from": "8",
+          "to": "13",
+          "likeFrom": "2",
+          "likeTo": "7",
+          "changed": 0,
+          "line": "Double Bass"
+        },
+        {
+          "from": "15",
+          "to": "19",
+          "likeFrom": "1",
+          "likeTo": "5",
+          "changed": 0,
+          "line": "Double Bass"
+        },
+        {
+          "from": "20",
+          "to": "21",
+          "likeFrom": "13",
+          "likeTo": "14",
+          "changed": 0,
+          "line": "Double Bass"
+        }
+      ],
+      "lines": [
+        "Flute",
+        "Oboe",
+        "Clarinet",
+        "Bassoon",
+        "Horn 1",
+        "Horn 2",
+        "Violin I",
+        "Violin II",
+        "Viola",
+        "Cello",
+        "Double Bass"
+      ],
+      "moreBars": 0,
+      "ask": null,
+      "reading": null,
+      "instruments": [
+        "Flute",
+        "Oboe",
+        "Clarinet",
+        "Bassoon",
+        "Horn 1",
+        "Horn 2",
+        "Violin I",
+        "Violin II",
+        "Viola",
+        "Cello",
+        "Double Bass"
+      ],
+      "where": "inside",
+      "tracks": [],
+      "answers": [],
+      "cues": []
+    },
+    "answer": {
+      "options": [
+        {
+          "name": "Lower answer",
+          "idea": "Use a separate lower line in the opening.",
+          "why": [
+            {
+              "from": "1",
+              "to": "6",
+              "what": "A lower answer",
+              "principle": "Keep the generated source intact",
+              "chords": "D | A",
+              "dynamics": "mp"
+            },
+            {
+              "from": "7",
+              "to": "7a",
+              "what": "A lower answer",
+              "principle": "Keep the generated source intact",
+              "chords": "D | A",
+              "dynamics": "mp"
+            },
+            {
+              "from": "7b",
+              "to": "7b",
+              "what": "A lower answer",
+              "principle": "Keep the generated source intact",
+              "chords": "D | A",
+              "dynamics": "mp"
+            },
+            {
+              "from": "8",
+              "to": "10",
+              "what": "A lower answer",
+              "principle": "Keep the generated source intact",
+              "chords": "D | A",
+              "dynamics": "mp"
+            }
+          ]
+        },
+        {
+          "name": "Upper answer",
+          "idea": "Use a separate upper line in the opening.",
+          "why": [
+            {
+              "from": "1",
+              "to": "6",
+              "what": "An upper answer",
+              "principle": "Keep the generated source intact",
+              "chords": "D | G",
+              "dynamics": "mp"
+            },
+            {
+              "from": "7",
+              "to": "7a",
+              "what": "An upper answer",
+              "principle": "Keep the generated source intact",
+              "chords": "D | G",
+              "dynamics": "mp"
+            },
+            {
+              "from": "7b",
+              "to": "7b",
+              "what": "An upper answer",
+              "principle": "Keep the generated source intact",
+              "chords": "D | G",
+              "dynamics": "mp"
+            },
+            {
+              "from": "8",
+              "to": "10",
+              "what": "An upper answer",
+              "principle": "Keep the generated source intact",
+              "chords": "D | G",
+              "dynamics": "mp"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "notes": [
+    {
+      "adds": [
+        {
+          "part": "Clarinet",
+          "bar": "1",
+          "events": "D4@0.5+0.5 F4@1.5+0.5",
+          "dyn": "p<mp",
+          "role": "countermelody"
+        },
+        {
+          "part": "Clarinet",
+          "bar": "2",
+          "events": "F4@0.5+0.5 E4@1.5+0.5",
+          "dyn": "mp",
+          "role": "countermelody"
+        },
+        {
+          "part": "Clarinet",
+          "bar": "3",
+          "events": "E4@0.5+0.5 A4@1.5+0.5",
+          "dyn": "mp",
+          "role": "countermelody"
+        },
+        {
+          "part": "Clarinet",
+          "bar": "4",
+          "events": "A4@0.5+0.5 D4@1.5+0.5",
+          "dyn": "p<mp",
+          "role": "countermelody"
+        },
+        {
+          "part": "Clarinet",
+          "bar": "5",
+          "events": "D4@0.5+0.5 F4@1.5+0.5",
+          "dyn": "mp",
+          "role": "countermelody"
+        },
+        {
+          "part": "Clarinet",
+          "bar": "6",
+          "events": "F4@0.5+0.5 E4@1.5+0.5",
+          "dyn": "mp",
+          "role": "countermelody"
+        },
+        {
+          "part": "Clarinet",
+          "bar": "7",
+          "events": "E4@0.5+0.5 A4@1.5+0.5",
+          "dyn": "p<mp",
+          "role": "countermelody"
+        },
+        {
+          "part": "Clarinet",
+          "bar": "7a",
+          "events": "A4@0.5+0.5 D4@1.5+0.5",
+          "dyn": "mp",
+          "role": "countermelody"
+        },
+        {
+          "part": "Clarinet",
+          "bar": "7b",
+          "events": "D4@0.5+0.5 F4@1.5+0.5",
+          "dyn": "mp",
+          "role": "countermelody"
+        },
+        {
+          "part": "Horn 2",
+          "bar": "8",
+          "events": "F4@0.5+0.5 E4@1.5+0.5",
+          "dyn": "p<mp",
+          "role": "countermelody"
+        },
+        {
+          "part": "Horn 2",
+          "bar": "9",
+          "events": "E4@0.5+0.5 A4@1.5+0.5",
+          "dyn": "mp",
+          "role": "countermelody"
+        },
+        {
+          "part": "Horn 2",
+          "bar": "10",
+          "events": "A4@0.5+0.5 D4@1.5+0.5",
+          "dyn": "mp",
+          "role": "countermelody"
+        }
+      ],
+      "doubles": []
+    },
+    {
+      "adds": [
+        {
+          "part": "Flute",
+          "bar": "1",
+          "events": "D5@0.5+0.5 F5@1.5+0.5",
+          "dyn": "p<mp",
+          "role": "countermelody"
+        },
+        {
+          "part": "Flute",
+          "bar": "2",
+          "events": "F5@0.5+0.5 E5@1.5+0.5",
+          "dyn": "mp",
+          "role": "countermelody"
+        },
+        {
+          "part": "Flute",
+          "bar": "3",
+          "events": "E5@0.5+0.5 A5@1.5+0.5",
+          "dyn": "mp",
+          "role": "countermelody"
+        },
+        {
+          "part": "Flute",
+          "bar": "4",
+          "events": "A5@0.5+0.5 D5@1.5+0.5",
+          "dyn": "p<mp",
+          "role": "countermelody"
+        },
+        {
+          "part": "Flute",
+          "bar": "5",
+          "events": "D5@0.5+0.5 F5@1.5+0.5",
+          "dyn": "mp",
+          "role": "countermelody"
+        },
+        {
+          "part": "Flute",
+          "bar": "6",
+          "events": "F5@0.5+0.5 E5@1.5+0.5",
+          "dyn": "mp",
+          "role": "countermelody"
+        },
+        {
+          "part": "Flute",
+          "bar": "7",
+          "events": "E5@0.5+0.5 A5@1.5+0.5",
+          "dyn": "p<mp",
+          "role": "countermelody"
+        },
+        {
+          "part": "Flute",
+          "bar": "7a",
+          "events": "A5@0.5+0.5 D5@1.5+0.5",
+          "dyn": "mp",
+          "role": "countermelody"
+        },
+        {
+          "part": "Flute",
+          "bar": "7b",
+          "events": "D5@0.5+0.5 F5@1.5+0.5",
+          "dyn": "mp",
+          "role": "countermelody"
+        },
+        {
+          "part": "Horn 1",
+          "bar": "8",
+          "events": "F4@0.5+0.5 E4@1.5+0.5",
+          "dyn": "p<mp",
+          "role": "countermelody"
+        },
+        {
+          "part": "Horn 1",
+          "bar": "9",
+          "events": "E4@0.5+0.5 A4@1.5+0.5",
+          "dyn": "mp",
+          "role": "countermelody"
+        },
+        {
+          "part": "Horn 1",
+          "bar": "10",
+          "events": "A4@0.5+0.5 D4@1.5+0.5",
+          "dyn": "mp",
+          "role": "countermelody"
+        }
+      ],
+      "doubles": []
+    }
+  ]
+}

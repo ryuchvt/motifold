@@ -17,10 +17,10 @@ vi.mock("./audio/preview", async (original) => ({ ...(await original<typeof impo
 vi.mock("./audio/samples", () => ({ loadManifest: async () => null }));
 vi.mock("./ScoreView", () => ({ ScoreView: () => <div aria-label="Local notation"/> }));
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
-const xmlText = readFileSync("test-fixtures/arioso.musicxml", "utf8");
+const xmlText = readFileSync("test-fixtures/contract-score.musicxml", "utf8");
 const score = parseScore(xmlText);
-const loaded = { fileName: "arioso.musicxml", xmlText, score };
-const saved = JSON.parse(readFileSync("test-fixtures/arioso-arrangement.json", "utf8"));
+const loaded = { fileName: "contract-score.musicxml", xmlText, score };
+const saved = JSON.parse(readFileSync("test-fixtures/contract-arrangement.json", "utf8"));
 let root: Root | null = null;
 afterEach(() => { act(() => root?.unmount()); root = null; document.body.replaceChildren(); setTransport(null); vi.restoreAllMocks(); vi.unstubAllGlobals(); audio.play.mockReset(); audio.stop.mockReset(); });
 
