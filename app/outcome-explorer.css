@@ -1,0 +1,23 @@
+.outcome-explorer { flex:1; min-height:0; overflow:auto; padding:24px clamp(14px,3vw,46px); }
+.explorer-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:24px; margin-bottom:22px; }
+.explorer-heading h1 { font:500 clamp(23px,3vw,34px)/1.15 var(--sans); margin:0 0 10px; letter-spacing:-1px; }
+.explorer-heading p { max-width:720px; color:#a9b8cd; line-height:1.6; margin:0; }
+.explorer-filters { display:flex; flex-wrap:wrap; align-items:flex-end; gap:12px; margin:20px 0 16px; }
+.explorer-filters label { display:flex; flex-direction:column; gap:7px; min-width:210px; font-size:12px; color:#aab9ce; }
+.explorer-availability { margin-left:auto; font-size:12px; color:#9baac0; padding-bottom:11px; }
+.explorer-choices { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:17px; }
+.explorer-choice { display:grid; grid-template-columns:28px 1fr; gap:5px 10px; text-align:left; border:1px solid var(--line2); border-radius:8px; background:#121923; padding:13px; color:#d3deec; cursor:pointer; }
+.explorer-choice>span { grid-row:1/3; font-weight:600; align-self:center; }
+.explorer-choice strong { font:500 14px/1.4 var(--sans); }.explorer-choice small { color:#94a5bd; font-size:11px; }.explorer-choice.on { background:#243247; border-color:#a6b9d0; }
+.explorer-unavailable { padding:20px; border:1px solid var(--line); border-radius:8px; color:#b9c7d9; line-height:1.6; }
+.explorer-transport { display:flex; flex-wrap:wrap; align-items:center; gap:9px; margin:18px 0; }.explorer-transport>strong { flex:1; min-width:200px; font-weight:500; }.explorer-transport>span { font-size:11px; color:#a6b5ca; }.explorer-render-slot { flex-basis:100%; }
+.explorer-overview { border:1px solid var(--line); border-radius:9px; background:#0e141c; padding:12px; max-height:260px; overflow:auto; margin-bottom:14px; }
+.explorer-score { min-height:320px; height:55vh; }.explorer-score .score-toolbar { gap:10px; }.explorer-score .score-toolbar label { display:flex; align-items:center; gap:8px; }
+.explorer-downloads { display:flex; flex-wrap:wrap; gap:9px; align-items:center; padding:18px 0 25px; }.explorer-downloads p { flex-basis:100%; font-size:12px; color:#95a6bd; line-height:1.5; }
+@media(max-width:760px) { .outcome-explorer { padding:17px 12px; }.explorer-heading { flex-direction:column; gap:12px; }.explorer-filters label { width:100%; }.explorer-filters select { width:100%; }.explorer-availability { margin:0; }.explorer-choices { grid-template-columns:1fr; }.explorer-overview { max-height:190px; }.explorer-score { height:52vh; }.explorer-score .notation-scroll .sheet-view { min-width:600px; }.explorer-transport>strong { flex-basis:100%; }.explorer-downloads .button { flex:1; text-align:center; } }
+
+/* A prepared XML does not carry verified per-note authorship. Keep it neutral. */
+.studio .outcome-explorer .note.kind-plain { stroke: #a7b6c9; }
+.explorer-score-label { color: var(--muted); font-size: 12px; }
+
+.explorer-preset { color: #a5b6cc; font-size:12px; line-height:1.5; }

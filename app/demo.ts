@@ -35,6 +35,7 @@ export interface DemoOutcome {
   midiSha256?: string;
   /** The exact exported score used for this DAW render, not merely a similarly named plan. */
   renderXmlSha256?: string;
+  renderCredit?: string;
 }
 export interface DemoCatalog { version: 1; pieceId: string; recorded: string; outcomes: DemoOutcome[] }
 export interface DemoPiece {
@@ -43,6 +44,8 @@ export interface DemoPiece {
   words: string;
   midi: string;
   xml: string;
+  mappedMidi?: string;
+  acceptedMidi?: string;
   recipe: DemoRecipe;
   /** The exact choices made in the recording, including any answers and which option is complete. */
   guide: string[];
@@ -73,7 +76,7 @@ export function recordedDemoCatalog(value: unknown, pieceId: string): DemoCatalo
   for (const item of value.outcomes) {
     if (!object(item) || !fileKey(item.id) || ids.has(item.id) || !fileKey(item.runKey) || !intent(item.intent) || !text(item.ensemble) || typeof item.mood !== "string" || (item.option !== 0 && item.option !== 1) || !text(item.name) || !validCount(item.bars) || !validCount(item.sourceBars) || !optionalFreedom(item.freedom) || !["unavailable", "preview", "complete"].includes(String(item.status))) return null;
     if (item.intent !== "recompose" && moodName(item.mood) !== "") return null;
-    if (!["xml", "midi", "zip", "run", "render"].every(key => item[key] === undefined || localAsset(item[key])) || !["xmlSha256", "midiSha256", "renderXmlSha256"].every(key => hash(item[key])) || (item.reason !== undefined && !text(item.reason))) return null;
+    if (!["xml", "midi", "zip", "run", "render"].every(key => item[key] === undefined || localAsset(item[key])) || !["xmlSha256", "midiSha256", "renderXmlSha256"].every(key => hash(item[key])) || (item.reason !== undefined && !text(item.reason)) || (item.renderCredit !== undefined && !text(item.renderCredit))) return null;
     if (item.status === "complete" && (!localAsset(item.xml) || !localAsset(item.midi) || !localAsset(item.zip))) return null;
     if (item.status === "preview" && !localAsset(item.xml)) return null;
     ids.add(item.id);
@@ -90,6 +93,7 @@ export function recordedDemoIndex(value: unknown): DemoIndex | null {
   if (!object(value) || !text(value.recorded) || !Number.isFinite(Date.parse(value.recorded)) || !Array.isArray(value.pieces) || value.pieces.length !== 1) return null;
   const valid = value.pieces.every((piece: unknown) => {
     if (!object(piece) || !fileKey(piece.id) || !text(piece.name) || !text(piece.words) || !localAsset(piece.midi) || !localAsset(piece.xml)) return false;
+    if (![piece.mappedMidi,piece.acceptedMidi].every(file=>file===undefined||localAsset(file))) return false;
     const recipe = piece.recipe;
     if (!object(recipe) || !intent(recipe.intent) || !text(recipe.ensemble) || !Number.isInteger(recipe.moreBars) || Number(recipe.moreBars) < 0 || !["inside", "after", "both"].includes(String(recipe.where)) || recipe.useMelodyOnly !== false || !optionalFreedom(recipe.freedom) || (recipe.length !== undefined && !validCount(recipe.length)) || (recipe.mood !== undefined && typeof recipe.mood !== "string")) return false;
     if (recipe.intent === "arrange" && (recipe.moreBars !== 0 || recipe.where !== "inside")) return false;
