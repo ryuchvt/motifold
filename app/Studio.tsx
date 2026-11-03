@@ -1,12 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { parseScore, type Score } from "../score";
 import { ArrangePanel } from "./ArrangePanel";
-import { FreeBars, type FreePiece } from "./FreeBars";
+import { FreeBars } from "./FreeBars";
 import { loadDemoIndex, startDemo, stopDemo, type DemoIndex, type DemoPiece } from "./demo";
 import { isMidi } from "./midi";
 import { openedScore } from "./opened";
 import { PieceView } from "./PieceView";
-import { PlayedChart } from "./PlayedView";
 import { ScoreView, type ScoreViewHandle } from "./ScoreView";
 import { AUDIO_FILE, isAudioFile, listenTo } from "./listen";
 import { OWN_KEY } from "../server/pools";
@@ -38,7 +37,6 @@ export function Studio() {
   const [typedKey, setTypedKey] = useState("");
   const [loaded, setLoaded] = useState<{ fileName: string; xmlText: string; score: Score } | null>(null);
   const [unbarred, setUnbarred] = useState<{ fileName: string; bytes: Uint8Array } | null>(null);
-  const [freePiece, setFreePiece] = useState<FreePiece | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [thinking, setThinking] = useState(false);
   const [zoom, setZoom] = useState(0.8);
@@ -77,7 +75,6 @@ export function Studio() {
     const mine = ++opening.current;
     stopListening();
     setError(null);
-    setFreePiece(null);
     try {
       if (isAudioFile(file)) {
         setLoaded(null);
@@ -164,7 +161,6 @@ export function Studio() {
     setAccess(null);
     setLoaded(null);
     setUnbarred(null);
-    setFreePiece(null);
     setDemoPiece(null);
     setSourceNote(null);
   };
@@ -173,7 +169,6 @@ export function Studio() {
     stopListening();
     setLoaded(null);
     setUnbarred(null);
-    setFreePiece(null);
     setSourceNote(null);
   };
 
@@ -339,9 +334,8 @@ export function Studio() {
           bytes={unbarred.bytes}
           title={unbarred.fileName.replace(/\.[^.]+$/, "")}
           savedFile={null}
-          onUse={(xmlText, piece) => {
+          onUse={(xmlText) => {
             setUnbarred(null);
-            setFreePiece(piece);
             setLoaded({ fileName: unbarred.fileName, xmlText, score: parseScore(xmlText) });
           }}
           onKeep={() => void open(new File([unbarred.bytes as BlobPart], unbarred.fileName), true)}
@@ -370,7 +364,6 @@ export function Studio() {
               />
             )}
             {render && <p className="note-line">You're hearing my own bounce of Muse Spark's notes through my own instruments, with no note corrected. I chose the sounds and the balance.</p>}
-            {freePiece && !arranged.kept && <PlayedChart piece={freePiece} levels={null} audio={null} onBar={(bar) => arranged.select(bar)} />}
             {onPage && (
               <section className="sheet" aria-label="Notation">
                 <span className="zoom">
