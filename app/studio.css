@@ -843,3 +843,161 @@ button.door-card:hover {
   text-align: left;
   cursor: pointer;
 }
+
+/* Overview: form letters, what needs the composer's eye, previews, and the plan being written. */
+.studio .stage {
+  position: relative;
+}
+.studio .stage-section[data-form]::before {
+  content: attr(data-form) "  ";
+  font: 600 12px var(--mono);
+  color: var(--ink);
+}
+.studio .stage-attention {
+  position: relative;
+  height: 22px;
+}
+.studio .stage-mark {
+  position: absolute;
+  top: 3px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0;
+  border: 1px solid var(--line2);
+  border-radius: 50%;
+  background: var(--stage);
+  color: var(--ink);
+  font: 600 10px/14px var(--mono);
+  text-align: center;
+  cursor: pointer;
+  transition: background 150ms, border-color 150ms;
+}
+.studio .stage-mark.mark-missing {
+  height: 14px;
+  border: 1px dashed rgba(255, 255, 255, 0.45);
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.04);
+}
+.studio .stage-mark:hover,
+.studio .stage-mark:focus-visible,
+.studio .stage-mark.on {
+  border-color: var(--ink);
+  background: rgba(255, 255, 255, 0.16);
+}
+.studio .stage-flag {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-left: 6px;
+  border: 1px solid var(--ink);
+  border-radius: 50%;
+  vertical-align: middle;
+}
+.studio .stage-name.picked {
+  color: var(--ink);
+  font-weight: 600;
+}
+.studio .stage-window {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  pointer-events: none;
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+}
+.studio .stage-window.queued {
+  background: repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.035) 0 6px, transparent 6px 12px);
+}
+.studio .stage-window.writing {
+  border: 1px solid rgba(91, 155, 255, 0.7);
+  background: rgba(91, 155, 255, 0.08);
+  animation: writing 1.6s ease-in-out infinite;
+}
+.studio .stage-window.unfinished {
+  border: 1px dashed rgba(255, 255, 255, 0.5);
+}
+.studio .stage-window span {
+  position: absolute;
+  top: 4px;
+  left: 6px;
+  font: 10px var(--mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+@keyframes writing {
+  50% {
+    background: rgba(91, 155, 255, 0.16);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .studio .stage-window.writing {
+    animation: none;
+  }
+}
+.studio .stage-hover {
+  position: absolute;
+  z-index: 5;
+  display: grid;
+  gap: 3px;
+  width: 280px;
+  padding: 10px 12px;
+  border: 1px solid var(--line2);
+  border-radius: 2px;
+  background: #121217;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--muted);
+}
+.studio .stage-hover strong {
+  color: var(--ink);
+  font-size: 13px;
+}
+
+/* The inspector: what's picked, its facts, and what can be done with it. */
+.inspector {
+  display: grid;
+  gap: 10px;
+}
+.inspector-head {
+  position: relative;
+  display: grid;
+  gap: 4px;
+  padding-right: 36px;
+}
+.inspector-head .arrange-title {
+  margin: 0;
+}
+.inspector-kicker {
+  font: 10px var(--mono);
+  letter-spacing: 0.16em;
+  color: var(--muted);
+}
+.inspector-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--line2);
+  border-radius: 2px;
+  background: none;
+  color: var(--ink);
+  font-size: 16px;
+  cursor: pointer;
+}
+.inspector-form {
+  display: inline-block;
+  min-width: 22px;
+  padding: 1px 5px;
+  border: 1px solid var(--line2);
+  border-radius: 2px;
+  font: 600 12px var(--mono);
+  text-align: center;
+}
+.inspector-chords {
+  margin: 0;
+  font: 15px "Kalam", cursive;
+  color: var(--ink);
+}

@@ -5,6 +5,9 @@ import { cueHits, cueWords, orderHits, parseTime, placeCues } from "./cues";
 import { inScoreOrder, instrumentFromName, PICKABLE, TEMPLATES, TRACK_CHOICES } from "./orchestra";
 import { StudyMap, StudyWords } from "./ScoreStudy";
 import type { Arranged, Stretch } from "./useArrange";
+import type { Attention } from "./attention";
+import { playhead } from "./playhead";
+import type { Selection } from "./selection";
 
 const orderWords = (order: Stretch[]) => order.map((o, k) => (k ? barsWords(o.from, o.to).toLowerCase() : barsWords(o.from, o.to))).join(", then ");
 const barsWords = (from: string, to: string) => (from === to ? `Bar ${from}` : `Bars ${from} to ${to}`);
@@ -179,14 +182,12 @@ const MOODS = ["Sad", "Tender", "Hopeful", "Dreamy", "Pastoral", "Wonder", "Stor
 /** Whether a saved answer happens to be for the instruments the composer picked. */
 const sameChoice = (placed: { instruments: string[]; chosen: string[] }) => [...placed.instruments].sort().join("|") === [...placed.chosen].sort().join("|");
 
-export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onStage }: { arranged: Arranged; busy: boolean; demo?: boolean; prepared?: { key: string; mode: "arrange" | "recompose"; mood: string }[]; onStage?: (name: string) => void }) {
+export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onStage, selection = null, attention = [], onPick }: { arranged: Arranged; busy: boolean; demo?: boolean; prepared?: { key: string; mode: "arrange" | "recompose"; mood: string }[]; onStage?: (name: string) => void; selection?: Selection | null; attention?: Attention[]; onPick?: (selection: Selection | null) => void }) {
   const { piece, study, chords, splitting, toggleSplit, splitAll, tracks, setTrack, answered, answer, placed, options, trying, setTrying, off, togglePart, offBars, putBackBars, remaining, allParts, gone, toggleGone, handOrder, setHandOrder, bars, cues, roles, standing, structures, fitting, askFit, kept, askPiece, askPlaced, splitPlaced, askOptions, askNotes, keep, startAgain, download, reachesEnd, wholeScore, selectRange } = arranged;
   /** The step on screen, counted from Study. */
   const [step, setStep] = useState(1);
   /** The furthest step the composer has gone to. Steps past it are named but can't be opened yet. */
   const [reached, setReached] = useState(1);
-  /** Study shows the track guesses first, then the questions and what it heard. */
-  const [tracksDone, setTracksDone] = useState(false);
   /** The plan being written, by its place in the list. */
   const [pick, setPick] = useState<number | null>(null);
   const [skipped, setSkipped] = useState<number[]>([]);
@@ -291,7 +292,6 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
           disabled={busy}
           onClick={() => {
             setStep(1);
-            setTracksDone(false);
             void askPiece();
           }}
         >
@@ -346,11 +346,180 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
   const left = notes?.status === "ready" && onPage ? remaining(notes.check) : notes?.status === "ready" ? notes.check : null;
   const done = notes?.status === "ready" && !notes.writing;
 
+  const barList = piece.written.map((w) => w.bar);
+  const within = (from: string, to: string) => (x: { from: string; to: string }) => barList.indexOf(x.from) <= barList.indexOf(to) && barList.indexOf(x.to) >= barList.indexOf(from);
+  const closeInspector = () => onPick?.(null);
+  const inspectorHead = (kicker: string, title: string) => (
+    <header className="inspector-head">
+      <span className="inspector-kicker">{kicker}</span>
+      <h2 className="arrange-title">{title}</h2>
+      <button className="inspector-close" aria-label={`Back to ${STEPS[current - 1]}`} onClick={closeInspector}>
+        ×
+      </button>
+    </header>
+  );
+  /** What's known about some bars, whichever way they were picked: their place in the form, their chords and who has the tune. */
+  const barsFacts = (from: string, to: string) => {
+    const study = arranged.study.status === "ready" ? arranged.study.answer : null;
+    const form = study?.sections.filter(within(from, to)) ?? [];
+    const chords = (study?.harmony.filter(within(from, to)) ?? []).map((h) => h.chord).filter((c) => c !== "pass" && c !== "?");
+    const tune = arranged.roles.filter(within(from, to)).filter((r) => r.role === "melody" || r.role === "countermelody");
+    const lines = [...new Set(tune.map((r) => `${r.role === "melody" ? "Tune" : "Countermelody"}: ${r.line}`))];
+    const onScoreNow = trying?.kind === "option" && options.status === "ready" && options.notes[trying.index]?.status === "ready";
+    return (
+      <>
+        {form.map((f) => (
+          <p key={f.from} className="arrange-said">
+            <span className="inspector-form">{f.form}</span> {f.name}, {f.mood}. {f.what}
+          </p>
+        ))}
+        {chords.length > 0 && <p className="inspector-chords">{chords.slice(0, 16).join("  ·  ")}</p>}
+        {lines.map((l) => (
+          <p key={l} className="spark-note">
+            {l}
+          </p>
+        ))}
+        <span className="arrange-actions">
+          <button className="button small" onClick={() => playhead.play()}>
+            Play from here
+          </button>
+          {onScoreNow && arranged.newHere.length > 0 && (
+            <button className="button small" onClick={arranged.toggleHere}>
+              {arranged.offHere ? "Put back what's new here" : "Leave out what's new here"}
+            </button>
+          )}
+        </span>
+        {onScoreNow && !busy && (
+          <More title="Rewrite these bars">
+            <textarea className="arrange-box" rows={2} maxLength={400} aria-label="What to change in these bars" value={fixWords} placeholder="Thinner here, and let the horns answer the tune." onChange={(e) => setFixWords(e.target.value)} />
+            <button className="button small" disabled={busy || !fixWords.trim()} onClick={() => void arranged.askFix(trying!.index, from, to, fixWords.trim())}>
+              Rewrite {barsWords(from, to).toLowerCase()}
+            </button>
+            {arranged.fixing === "unavailable" && <p className="arrange-said">That didn't come back, so these bars are as they were.</p>}
+          </More>
+        )}
+      </>
+    );
+  };
+  const item = selection?.kind === "attention" ? attention.find((a) => a.id === selection.id) : undefined;
+  const inspector = !selection ? null : (
+    <div className="inspector">
+      {selection.kind === "section" && (
+        <>
+          {inspectorHead("SECTION", `${arranged.sections.find((x) => x.from === selection.from)?.name || barsWords(selection.from, selection.to)}`)}
+          <p className="spark-note">{barsWords(selection.from, selection.to)}</p>
+          {barsFacts(selection.from, selection.to)}
+        </>
+      )}
+      {selection.kind === "bars" && (
+        <>
+          {inspectorHead("BARS", barsWords(selection.from, selection.to))}
+          {barsFacts(selection.from, selection.to)}
+        </>
+      )}
+      {selection.kind === "lane" && (
+        <>
+          {inspectorHead("TRACK", selection.line)}
+          {lines.includes(selection.line) && (
+            <ul className="arrange-tracks">
+              <TrackChoice line={selection.line} value={tracks[selection.line] ?? ""} doubt={!instrumentFromName(selection.line) && !!guessOf(selection.line) && !guessOf(selection.line)!.sure} why={guessOf(selection.line)?.why} onChange={(value) => setTrack(selection.line, value)} />
+            </ul>
+          )}
+          {[...new Set(arranged.roles.filter((r) => r.line === selection.line).map((r) => `${barsWords(r.from, r.to)}: ${r.role}${r.of ? ` of ${r.of}` : ""}`))].slice(0, 6).map((l) => (
+            <p key={l} className="spark-note">
+              {l}
+            </p>
+          ))}
+          <span className="arrange-actions">
+            <button className="button small" onClick={() => arranged.toggleSolo(selection.line)}>
+              {arranged.solo.includes(selection.line) ? "Hear everything" : "Hear only this"}
+            </button>
+          </span>
+        </>
+      )}
+      {selection.kind === "attention" && !item && (
+        <>
+          {inspectorHead("TO CHECK", "Done")}
+          <p className="spark-note">That's been dealt with.</p>
+        </>
+      )}
+      {item?.kind === "track" && (
+        <>
+          {inspectorHead("TO CHECK", `What is ${item.line}?`)}
+          {item.why && <p className="spark-note">{item.why}</p>}
+          <ul className="arrange-tracks">
+            <TrackChoice line={item.line!} value={tracks[item.line!] ?? ""} doubt why={item.why} onChange={(value) => setTrack(item.line!, value)} />
+          </ul>
+          <button
+            className="button primary arrange-go"
+            onClick={() => {
+              arranged.confirmTracks();
+              closeInspector();
+            }}
+          >
+            Confirm tracks
+          </button>
+        </>
+      )}
+      {item?.kind === "question" && (
+        <>
+          {inspectorHead("A QUESTION", barsWords(item.from, item.to))}
+          <Question
+            question={questions[item.index!]!}
+            count={item.index! + 1}
+            of={questions.length}
+            onAnswer={(text) => {
+              answer(item.index!, text);
+              closeInspector();
+            }}
+            onSkip={() => {
+              setSkipped([...skipped, item.index!]);
+              closeInspector();
+            }}
+            onShow={onShow}
+          />
+        </>
+      )}
+      {item?.kind === "missing" && (
+        <>
+          {inspectorHead("COULD ADD", barsWords(item.from, item.to))}
+          <p className="arrange-said">{sentences(item.detail)}</p>
+          {item.why && <p className="spark-note">{sentences(item.why)}</p>}
+          <span className="arrange-actions">
+            <button
+              className="button small"
+              onClick={() => {
+                setWriteWords((now) => [now.trim(), `${sentences(item.detail)} (${barsWords(item.from, item.to).toLowerCase()})`].filter(Boolean).join(" "));
+                closeInspector();
+              }}
+            >
+              Add this to my direction
+            </button>
+            <button className="button small" onClick={() => playhead.play()}>
+              Play these bars
+            </button>
+          </span>
+          <p className="spark-note">A suggestion from Muse Spark, not a mistake. Your direction is where it would be asked for.</p>
+        </>
+      )}
+      {item?.kind === "unfinished" && (
+        <>
+          {inspectorHead("DIDN'T FINISH", barsWords(item.from, item.to))}
+          <p className="arrange-said">{item.detail}</p>
+          <button className="button primary arrange-go" disabled={busy} onClick={() => write(item.index!, "arrange")}>
+            Write what's missing
+          </button>
+        </>
+      )}
+    </div>
+  );
+
   return (
     <div className="reading arrange">
       {steps}
+      {inspector}
 
-      {current === 1 && !tracksDone && (
+      {!inspector && current === 1 && !arranged.tracksConfirmed && (
         <>
           <h2 className="arrange-title">What is each track?</h2>
           <ul className="arrange-tracks">
@@ -360,14 +529,14 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
             })}
           </ul>
           <p className="spark-note">These are guesses. The orange ones it isn't sure of.</p>
-          <button className="button primary arrange-go" onClick={() => setTracksDone(true)}>
-            Looks right
+          <button className="button primary arrange-go" onClick={arranged.confirmTracks}>
+            Confirm tracks
           </button>
         </>
       )}
 
-      {current === 1 &&
-        tracksDone &&
+      {!inspector && current === 1 &&
+        arranged.tracksConfirmed &&
         (nextQuestion >= 0 ? (
           <Question key={nextQuestion} question={questions[nextQuestion]!} count={nextQuestion + 1} of={questions.length} onAnswer={(text) => answer(nextQuestion, text)} onSkip={() => setSkipped([...skipped, nextQuestion])} onShow={onShow} />
         ) : (
@@ -456,7 +625,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
           </>
         ))}
 
-      {current === 2 && (
+      {!inspector && current === 2 && (
         <>
           <h2 className="arrange-title">Who plays it?</h2>
           <span className="arrange-chips" role="group" aria-label="Templates">
@@ -568,7 +737,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
         </>
       )}
 
-      {current === 3 && (
+      {!inspector && current === 3 && (
         <>
           <h2 className="arrange-title">Where should it go?</h2>
           {arranged.recomposed && (
@@ -724,7 +893,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
         </>
       )}
 
-      {current === 4 && o && (
+      {!inspector && current === 4 && o && (
         <>
           <h2 className="arrange-title">{o.name}</h2>
           <p className="card-text">{sentences(o.idea)}</p>
@@ -811,7 +980,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
         </>
       )}
 
-      {current === 5 && (
+      {!inspector && current === 5 && (
         <>
           <h2 className="arrange-title">Take it to your DAW</h2>
           <p className="spark-note">What's on the score, every part on its own track from bar 1, with your moments as markers.</p>

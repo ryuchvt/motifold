@@ -96,6 +96,8 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
   const [gone, setGone] = useState<string[]>([]);
   const [piece, setPiece] = useState<PieceState>({ status: "none" });
   const [study, setStudy] = useState<StudyState>({ status: "none" });
+  /** The composer has looked at the track guesses and said they're right. */
+  const [tracksConfirmed, setTracksConfirmed] = useState(false);
   const studyTurn = useRef(0);
   /** What the composer says each track is, by the name Muse Spark knows it by. */
   const [tracks, setTracks] = useState<Record<string, string>>({});
@@ -236,6 +238,7 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
       // A name that says what it is needs no judgement, and anything else starts as Muse Spark's guess.
       setTracks(Object.fromEntries(lines.map((line) => [line, instrumentFromName(line) ?? answer.tracks?.find((t) => t.line === line)?.instrument ?? ""])));
       setAnswered({});
+      setTracksConfirmed(false);
       setPiece({ status: "ready", answer, written: input.written, lines, saved });
     };
     if (reply.status === "ok") {
@@ -725,6 +728,8 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
   return {
     piece,
     study,
+    tracksConfirmed,
+    confirmTracks: () => setTracksConfirmed(true),
     /** The study in pencil on the composer's own score. Not on anything new or kept, whose notes it never read. */
     studyMarks,
     map,

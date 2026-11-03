@@ -14,6 +14,8 @@ import { MuseChip, Thinking } from "./Thinking";
 import { playhead, usePlayhead } from "./playhead";
 import { looksFreelyPlayed } from "./timing";
 import { useArrange } from "./useArrange";
+import { attentionOf, writingProgress } from "./attention";
+import type { Selection } from "./selection";
 
 type Access = "demo" | "live" | "own";
 const NO_MARKS: never[] = [];
@@ -86,6 +88,16 @@ export function Studio() {
   const range = useMemo(() => ({ from: 0, to: part ? part.measures.length - 1 : 0 }), [part]);
   const arranged = useArrange(loaded, part, range, null);
   const onPage = arranged.page ?? loaded;
+  /** What the composer has picked, shown in the overview, on the score and in the inspector together. */
+  const [picked, setPicked] = useState<Selection | null>(null);
+  useEffect(() => setPicked(null), [loaded]);
+  const attention = useMemo(() => attentionOf(arranged), [arranged.piece, arranged.answered, arranged.options, arranged.trying, arranged.tracks, arranged.tracksConfirmed]);
+  const progress = useMemo(() => writingProgress(arranged), [arranged.options, arranged.trying]);
+  const forms = arranged.study.status === "ready" ? arranged.study.answer.sections : [];
+  // A picked marker that's been dealt with goes back to the overview.
+  useEffect(() => {
+    if (picked?.kind === "attention" && !attention.some((a) => a.id === picked.id)) setPicked(null);
+  }, [attention, picked]);
 
   // Reading what's opened needs no decision, so it starts by itself.
   useEffect(() => {
@@ -388,13 +400,21 @@ export function Studio() {
                 hasNew={arranged.trying?.kind === "option"}
                 render={render}
                 onSelect={arranged.select}
-                onSelectRange={arranged.selectRange}
+                onSelectRange={(from, to) => {
+                  arranged.selectRange(from, to);
+                  setPicked({ kind: "bars", from, to });
+                }}
                 onFocus={arranged.setFocus}
                 onSolo={arranged.toggleSolo}
                 orders={arranged.options.status === "none" && arranged.trying?.kind !== "option" ? arranged.orders : []}
                 ordered={arranged.trying?.kind === "structure" ? arranged.trying.index : null}
                 onOrder={(index) => arranged.setTrying(index === null ? null : { kind: "structure", index })}
                 onKeepOrder={arranged.keep}
+                attention={attention}
+                forms={forms}
+                progress={progress}
+                picked={picked}
+                onPick={setPicked}
               />
             )}
             {render && <p className="note-line">You're hearing my own bounce of Muse Spark's notes through my own instruments, with no note corrected. I chose the sounds and the balance.</p>}
@@ -413,7 +433,7 @@ export function Studio() {
             )}
           </main>
           <aside className="work-side">
-            <ArrangePanel arranged={arranged} busy={thinking} demo={access === "demo"} prepared={demoPiece?.runs ?? []} onStage={setStage} />
+            <ArrangePanel arranged={arranged} busy={thinking} demo={access === "demo"} prepared={demoPiece?.runs ?? []} onStage={setStage} selection={picked} attention={attention} onPick={setPicked} />
           </aside>
         </div>
       )}

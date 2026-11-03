@@ -527,7 +527,7 @@ describe("the study", () => {
     const screen = setUp();
     await press(screen.host, "Read my score");
     expect(asked).toEqual(["read_piece", "study_score"]);
-    await press(screen.host, "Looks right");
+    await press(screen.host, "Confirm tracks");
     await press(screen.host, "Skip this");
     expect(screen.host.textContent).toContain("Two bars that rise a step.");
     expect(screen.host.textContent).toContain("2 bars, 1 idea");
@@ -577,7 +577,7 @@ describe("the panel", () => {
     expect(host.textContent).toContain("What is each track?");
     expect((host.querySelector(".arrange-tracks select") as unknown as HTMLSelectElement).value).toBe("Violin");
     expect(host.querySelector(".unsure")).toBeTruthy();
-    await press(host, "Looks right");
+    await press(host, "Confirm tracks");
     expect(host.textContent).toContain("Is Inst 2 a tune here?");
     expect(host.textContent).toContain("question 1 of 1");
     expect(host.textContent).not.toContain("No ending");
@@ -658,7 +658,7 @@ describe("the panel", () => {
     vi.stubGlobal("fetch", async (url: string, init?: RequestInit) => spark(url, init));
     const screen = setUp();
     await press(screen.host, "Read my score");
-    await press(screen.host, "Looks right");
+    await press(screen.host, "Confirm tracks");
     await press(screen.host, "Skip this");
     expect(screen.host.textContent).toContain("What's missing");
     expect(screen.arranged.answered).toEqual({});
@@ -668,7 +668,7 @@ describe("the panel", () => {
     vi.stubGlobal("fetch", async (url: string, init?: RequestInit) => spark(url, init));
     const { host } = setUp();
     await press(host, "Read my score");
-    await press(host, "Looks right");
+    await press(host, "Confirm tracks");
     await press(host, "Skip this");
     await press(host, "Next: Players");
     await press(host, "Keep my tracks as they are");
@@ -680,7 +680,7 @@ describe("the panel", () => {
     vi.stubGlobal("fetch", async (url: string, init?: RequestInit) => spark(url, init));
     const { host } = setUp();
     await press(host, "Read my score");
-    await press(host, "Looks right");
+    await press(host, "Confirm tracks");
     await press(host, "Skip this");
     await press(host, "Next: Players");
     await press(host, "Keep my tracks as they are");
@@ -698,7 +698,7 @@ describe("the panel", () => {
     vi.stubGlobal("fetch", async (url: string, init?: RequestInit) => (url.endsWith("arrange") ? reply("fallback", { reason: "failed" }) : spark(url, init)));
     const { host } = setUp();
     await press(host, "Read my score");
-    await press(host, "Looks right");
+    await press(host, "Confirm tracks");
     await press(host, "Skip this");
     await press(host, "Next: Players");
     await press(host, "Keep my tracks as they are");

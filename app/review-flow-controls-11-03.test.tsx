@@ -53,7 +53,7 @@ const press = async (host: Element, name: string) => {
 };
 async function direction(host: Element) {
   await press(host, "Read my score");
-  await press(host, "Looks right");
+  await press(host, "Confirm tracks");
   for (let i = 0; i < 12 && [...host.querySelectorAll("button")].some(b => b.textContent?.trim() === "Skip this"); i++) await press(host, "Skip this");
   await press(host, "Next: Players");
   await press(host, "Keep my tracks as they are");
