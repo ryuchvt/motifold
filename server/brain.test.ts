@@ -66,19 +66,20 @@ describe("what the arranger knows about music", () => {
   });
 
   it("thinks about mood when planning, and doesn't spend the writing call's time on it", () => {
-    expect(planOptions.build(asked()).instructions).toContain(MOODS);
+    expect(planOptions.build(asked({ intent: "expand", moreBars: 8 })).instructions).toContain(MOODS);
+    expect(planOptions.build(asked()).instructions).not.toContain(MOODS);
     expect(arrange.build(written()).instructions).not.toContain(MOODS);
   });
 
   it("only thinks about piano writing when there's a piano", () => {
     expect(planOptions.build(asked()).instructions).not.toContain(PIANO_WRITING);
-    expect(planOptions.build(asked({ instruments: ["Piano", "Cello"] })).instructions).toContain(PIANO_WRITING);
-    expect(arrange.build({ ...written(), instruments: ["Piano"] }).instructions).toContain(PIANO_WRITING);
+    expect(planOptions.build(asked({ intent: "expand", instruments: ["Piano", "Cello"] })).instructions).toContain(PIANO_WRITING);
+    expect(arrange.build({ ...written(), intent: "expand", instruments: ["Piano"] }).instructions).toContain(PIANO_WRITING);
   });
 
   it("reaches every call that makes a musical decision", () => {
     expect(readPiece.build(asked()).instructions).toContain(READING_A_SCORE);
-    expect(distribute.build({ ...asked(), instruments: ["Cello"], roles: [] }).instructions).toContain("translation and not copying");
+    expect(distribute.build({ ...asked(), intent: "expand", instruments: ["Cello"], roles: [] }).instructions).toContain("translation and not copying");
     expect(fitForm.build({ ...asked(), roles: [], moments: [{ beats: 0, time: "0:00", what: "" }] }).instructions).toContain("Not every moment deserves a hit");
   });
 });
@@ -103,7 +104,7 @@ describe("recomposing and writing from a source", () => {
   });
 
   it("asks for layers, ornament and a role for each part", () => {
-    const built = arrange.build(written());
+    const built = arrange.build({ ...written(), intent: "expand" });
     expect(built.instructions).toContain("Keep at least three things a listener could follow apart");
     expect(built.instructions).toContain("Decoration is what makes a line sound played");
     const schema = built.schema as { properties: { adds: { items: { required: string[] } } } };
