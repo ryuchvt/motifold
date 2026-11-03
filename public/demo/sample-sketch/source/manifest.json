@@ -1,0 +1,42 @@
+{
+  "originalMidiNotes": 117,
+  "acceptedScoreNotes": 114,
+  "originalMidiSha256": "782c244e9d31572a3c3225c6af170a75ea94224b7e92ea1e1a6d6183ddb70d54",
+  "acceptedXmlSha256": "a8b4ee04a41ee125b8e7e042fe6c5dd3baf82fe65fd588eac6823770a9b8304f",
+  "performanceTempoMapNotes": 117,
+  "performanceTempoMapSha256": "1f5910ddd28e5d60755680a2fe5631ff417ba6ffb32e4b095772f914dc815b6a",
+  "acceptedMidiSha256": "0502e345ce3fe3a141d07a08173d5af8cac4cbb63787f652f7d695ef0f7cce31",
+  "tempoMarks": 50,
+  "normalization": {
+    "notes": 117,
+    "normalizedTo": "First musical note at time zero",
+    "originalDawLeadSeconds": 2698,
+    "originalInitialNoteLeadSeconds": 0.020833333333484916,
+    "removedBeforeFirstNoteSeconds": 2698.0208333333335,
+    "onsetMedianAbsoluteMs": 0.15073958311973001,
+    "onsetMaxAbsoluteMs": 1.2119083333033132,
+    "durationMedianAbsoluteMs": 0.5270749998445012,
+    "durationMaxAbsoluteMs": 1.700029166879613
+  },
+  "files": [
+    {
+      "file": "original-performance-117.mid",
+      "notes": 117,
+      "sha256": "782c244e9d31572a3c3225c6af170a75ea94224b7e92ea1e1a6d6183ddb70d54",
+      "label": "Original performance MIDI. The exact original 117 notes and file bytes, including its DAW lead-in."
+    },
+    {
+      "file": "performance-tempo-map-117.mid",
+      "notes": 117,
+      "sha256": "1f5910ddd28e5d60755680a2fe5631ff417ba6ffb32e4b095772f914dc815b6a",
+      "label": "Performance with tempo map. Preserves rubato, velocities and note-offs within MIDI tick rounding. The DAW lead-in is removed and the first musical note starts at time zero."
+    },
+    {
+      "file": "accepted-score-114.mid",
+      "notation": "accepted-score.musicxml",
+      "notes": 114,
+      "sha256": "0502e345ce3fe3a141d07a08173d5af8cac4cbb63787f652f7d695ef0f7cce31",
+      "label": "Interpreted notation MIDI. Nearby attacks are grouped and note durations are interpreted for readable lines. Three very soft notes are omitted. This is the source used by the recorded arrangements."
+    }
+  ]
+}

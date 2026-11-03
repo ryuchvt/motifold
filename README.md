@@ -2,17 +2,19 @@
 
 Motifold turns a musical sketch into an orchestral score you can read, change and take into your DAW. You bring a melody or a piano part, as MIDI or MusicXML, or one line you sing, hum or play into a recording. It works out what you played, reads it, asks what it can't tell, and writes the rest as notes.
 
-You choose the job. **Arrange** is neutral. It keeps your notes, harmony, key, metre, timing, character and section order, and adds no bars. It can voice your music for different instruments and add a supporting counterline within your theme. **Expand** keeps that character and develops the same piece with a connected section, a return or a finished ending. Your written notes and harmony stay. **Recompose** writes a new piece within the freedom you choose, with a new mood and harmony if you want them. Its default keeps your whole tune recognisable while allowing its rhythm and harmony to change.
+You choose the job. **Arrange** is neutral. It keeps the accepted score's notes, harmony, key, metre, timing, character and section order, and adds no bars. It can voice your music for different instruments and add a supporting counterline within your theme. **Expand** keeps that character and develops the same piece with a connected section, a return or a finished ending. Your written notes and harmony stay. **Recompose** writes a new piece within the freedom you choose, with a new mood and harmony if you want them. Its default keeps your whole tune recognisable, with small changes to the melody and new harmony.
 
 I write to picture, so I often play an idea in with no click. A file like that has no bars that mean anything, and anything that reads notation needs bars. Most tools stop there. Motifold starts there.
 
 ## Try it
 
-Give it your own Meta Model API key to try your own piece. The key stays in that browser tab, goes with each call and is never stored. The hosted site also lets anyone try one piece on my credit, with a limit per visitor and a limit a day, until that runs out.
+Give it your own Meta Model API key to try your own piece. The key stays in that browser tab and goes with each call. The server does not store it. The hosted site also lets anyone try one piece on my credit, with a limit per visitor and a limit a day, until that runs out.
 
-The free **Watch it work** door opens the verified recorded walkthrough when its complete index is published in `public/demo/`. A replay uses the same screens, spends no credit and keeps the real model, prompt version and elapsed time in each saved call. It follows one exact prepared direction. Changes without a recorded answer stop there and never become a paid call.
+The free **Start hands-on tutorial** path begins with my original piano performance, then shows its saved interpreted bars and tempo map. It guides actual Study, Setup, A/B comparison, writing and export controls. Both guided string options are complete. The model answers are real recorded replies. The activity panel shows their original duration while replay shortens the wait. No credit is used.
 
-The recorded path uses my exact `Sample_sketch.mid`, read as 24 bars of 3/4. It includes the reading, harmony analysis, String orchestra layout, two first-section previews and the complete selected A arrangement with its export. The original MIDI has 117 notes. Its accepted notation reading has 114, because the existing import threshold excludes three very soft notes at velocities 1, 5 and 4. Those notes remain in the original MIDI download. The recorded walkthrough opens the exact accepted MusicXML directly, so it does not make a new bar-reading call. The exact steps and capture history are in [DEMO.md](DEMO.md).
+**Explore recorded outcomes** opens the complete prepared scores and downloads directly. The planned matrix has 204 outcomes across Arrange, Expand and Recompose. The catalog reports how many are actually prepared. Unrecorded choices say so and cannot silently become paid calls. Recorded lengths and Recompose freedom use fixed presets. Live runs retain the full controls.
+
+My exact `Sample_sketch.mid` has 117 attacks and its original DAW offset. Its accepted notation has 114 attacks in 24 bars of 3/4. Three very soft attacks remain in the original MIDI. The notation groups nearby attacks and interprets note lengths for readable lines. A separate 117-note performance MIDI uses the saved tempo map while preserving rubato and note releases within MIDI tick rounding. All three versions are clearly labeled. The tutorial opens saved analysis and makes no new bar-reading call. See [DEMO.md](DEMO.md).
 
 ## What Muse Spark does
 
@@ -36,7 +38,7 @@ Faithful Arrange keeps the source harmony and character. A theme is a recognisab
 
 ## What the code does
 
-The code measures and checks, and never makes a musical decision. It reads a free performance into a tempo map, beat by beat, so the score and the MIDI keep your timing. It moves your notes onto instruments without adding any and counts them. It checks every new note against what's sounding and the instrument's range. It copies doublings exactly, so a full orchestra stays within what one call can write. It carries levels through to the page, to MIDI velocity and to a mod wheel curve. On a recomposition it measures how often the motif's shape really comes back, as written, upside down or backwards. It says all of this on screen, and it doesn't tell you the music is good. That's your ear.
+The code measures and checks, and never makes a musical decision. It maps a free performance into musical bars and a tempo map. The performance MIDI keeps the played timing within MIDI tick rounding. The notation is a readable interpretation of nearby attacks and note lengths, which you accept before arranging. It moves your notes onto instruments without adding any and counts them. It checks every new note against what's sounding and the instrument's range. It copies doublings exactly, so a full orchestra stays within what one call can write. It carries levels through to the page, to MIDI velocity and to a mod wheel curve. On a recomposition it measures how often the motif's shape really comes back, as written, upside down or backwards. It says all of this on screen, and it doesn't tell you the music is good. That's your ear.
 
 Muse Spark 1.3 is the only AI model Motifold uses. Live calls go from the server to Meta's Model API, on my key or on yours. A recorded replay reads local saved replies and never contacts the provider.
 

@@ -1,0 +1,20 @@
+Sample sketch: Held Inner Thirds
+
+Keep violin lead clear, hold soft chord tones beneath, thicken repeat slightly and restore low octave later.
+
+Bars 1 to 7. Viola holds roots, Violin II holds thirds. Keep tune forward, accompaniment soft and below. Chords: C | F | C | F | G | C | F Level: p steady and light
+Bars 8 to 8. Violin II holds E to complete chord. Fill missing third, let arrival settle. Chords: C Level: p fading gently
+Bars 9 to 11. Viola and Violin II sustain thirds together. Give repeat fresh colour without covering tune. Chords: C | F | C Level: mp steady, slightly fuller
+Bars 12 to 13. Viola holds low roots under duet. Support two violins, keep bass foundation clear. Chords: F | G Level: mp steady
+Bars 14 to 16. Viola roots, Violin II upper thirds sustain. Build phrase steadily, keep tune on top. Chords: F | G | C Level: mp growing to mf
+Bars 17 to 20. Viola plays low roots, Violin II middle thirds. Restore missing low octave, balance high tune. Chords: C | F | C | F Level: mf steady, warm
+Bars 21 to 21. Viola holds low G root. Anchor duet climax with firm bass. Chords: G Level: mf steady
+Bars 22 to 24. Viola and Violin II hold C and G. Confirm final C, let tune close gently. Chords: C | C | C Level: mf easing to p
+
+All 114 of your notes are on the instruments you chose, at the rhythm you wrote.
+
+44 new notes. The code checked each one against what's sounding and the range of its instrument.
+4 long notes sit a semitone from something else sounding. That can be a good suspension or a slip, so check by ear: Viola C4 in bar 1, Viola C4 in bar 3, Viola C4 in bar 6, Viola C4 in bar 9.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your notes keep their rhythm and their pitches, apart from any octave moves counted above.

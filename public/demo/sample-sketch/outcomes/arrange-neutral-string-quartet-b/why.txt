@@ -1,0 +1,19 @@
+Sample sketch: Soft Pulsed Answers
+
+Keep tune clear with gentle offbeat pulses, answer held notes briefly and fill low octave with soft steps.
+
+Bars 1 to 7. Viola pulses roots offbeat, Violin II answers holds. Add motion without hiding melody line. Chords: C | F | C | F | G | C | F Level: p light and pulsing
+Bars 8 to 8. Violin II softly repeats E twice. Lighten arrival, keep C chord clear. Chords: C Level: p soft and still
+Bars 9 to 11. Violin II echoes tail, Viola pulses roots. Mark repeat with motion, not volume. Chords: C | F | C Level: mp light pulsing
+Bars 12 to 13. Viola pulses low roots gently. Keep duet light, maintain steady tread. Chords: F | G Level: mp steady pulsing
+Bars 14 to 16. Viola steps bass, Violin II answers gaps. Answer held notes, support phrase shape. Chords: F | G | C Level: mp growing slightly
+Bars 17 to 20. Viola walks low roots, Violin II sustains thirds. Fill low octave, steady high brilliance. Chords: C | F | C | F Level: mf warm and steady
+Bars 21 to 21. Viola pulses low G twice. Drive peak without covering duet. Chords: G Level: mf firm
+Bars 22 to 24. Violin II holds G, Viola steps C to close. Make final C clear, let sound fade. Chords: C | C | C Level: mf fading to p
+
+All 114 of your notes are on the instruments you chose, at the rhythm you wrote.
+
+83 new notes. The code checked each one against what's sounding and the range of its instrument.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your notes keep their rhythm and their pitches, apart from any octave moves counted above.

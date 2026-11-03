@@ -4,7 +4,7 @@
     {
       "id": "sample-sketch",
       "name": "My piano sketch, arranged for strings",
-      "words": "I compare two ways to arrange my theme for strings, then finish A. This is a recorded walkthrough and uses no credit.",
+      "words": "Compare two recorded string arrangements of my piano sketch, then finish A or B. This walkthrough uses no credit.",
       "midi": "/demo/sample-sketch/Sample_sketch.mid",
       "xml": "/demo/sample-sketch/sample-sketch.musicxml",
       "recipe": {
@@ -16,21 +16,51 @@
       },
       "guide": [
         "This is a recorded walkthrough and uses no credit.",
-        "In Study, confirm both Piano upper and Piano lower as Piano.",
-        "Skip all three questions. Leave the optional direction blank.",
+        "The accepted bar analysis is saved. Confirm both Piano upper and Piano lower as Piano.",
+        "Skip all questions and leave the optional direction blank.",
         "In Setup, use Arrange and String orchestra. Keep all source notes, stay neutral and add no bars.",
-        "Choose Create. Compare A, Held middle voices with repeat contrast, and B, Pulsed support with brief answers. Both have a recorded preview of bars 1 to 8.",
-        "Choose A and write the rest. A is complete across bars 1 to 24. B has only its first-section preview.",
-        "Export A directly while it is selected. Download MIDI includes the notation and separate part files. Other answers, settings or rewrites have no prepared reply."
+        "Choose Create. Compare A, Anchored Sustaining, and B, Answering Counterline. Both have recorded opening previews and complete continuations.",
+        "Choose A or B and write the rest. Either recorded option can finish across bars 1 to 24.",
+        "Export the selected option directly. Other settings and rewrites have no prepared reply."
       ],
       "runs": [
         {
           "key": "arrange-neutral",
           "mode": "arrange",
           "mood": ""
+        },
+        {
+          "key": "guided-neutral-strings",
+          "mode": "arrange",
+          "ensemble": "String orchestra",
+          "mood": "Neutral",
+          "selfContained": true
         }
       ],
       "verifiedExport": {
+        "file": "/demo/sample-sketch/outcomes/arrange-neutral-string-orchestra-a/arrangement.zip",
+        "sha256": "1d7bf26929ab503fa28b8ad2efe631b2c11e34151b87b39edf8d095c3e09f0bf",
+        "plan": "Anchored Sustaining",
+        "parts": 5,
+        "bars": 24,
+        "notes": 183,
+        "sourceLayoutNotes": 114,
+        "newNotes": 69
+      },
+      "mappedMidi": "/demo/sample-sketch/source/performance-tempo-map-117.mid",
+      "acceptedMidi": "/demo/sample-sketch/source/accepted-score-114.mid",
+      "catalog": "/demo/sample-sketch/catalog.json",
+      "tutorial": {
+        "runKey": "guided-neutral-strings",
+        "acceptedLabel": "Saved accepted bar analysis.",
+        "rawNoteCount": 117,
+        "acceptedNoteCount": 114,
+        "completeOptions": [
+          0,
+          1
+        ]
+      },
+      "legacyVerifiedExport": {
         "file": "/demo/sample-sketch/neutral-strings-a.zip",
         "sha256": "452c77e4c1c5c9a45d1e4c9f58fe7be9ded8aa5b3a9cf958408ca752eeaecc78",
         "plan": "Held middle voices with repeat contrast",

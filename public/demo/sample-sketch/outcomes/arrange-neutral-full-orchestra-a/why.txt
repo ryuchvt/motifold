@@ -1,0 +1,16 @@
+Sample sketch: Airy winds over low foundation
+
+Keep string tune and bass, colour repeat with winds, add double bass and harp depth, reserve brass percussion for close.
+
+Bars 1 to 7. Double bass doubles cello, harp breaks chords. Ground bass line without covering violin tune. Chords: C | F | C | F | G | C | F Level: pp growing to mp
+Bars 8 to 11. Flutes double violin tune, bassoons double cello. Give repeat fresh colour while leaving tune clear. Chords: C | C | F | C Level: mp steady
+Bars 12 to 16. Horns hold harmony, harp continues broken chords. Support paired violins, keep melody on top. Chords: F | G | F | G | C Level: mf steady
+Bars 17 to 22. Double bass stays low, clarinets fill middle. Fill empty low octave, let high tune sing. Chords: C | F | C | F | G | C Level: mf growing to f
+Bars 23 to 24. Timpani on C with bass drum cymbals confirm close. Hold back before, let cadence land clearly. Chords: C | C Level: f settling to p
+
+All 114 of your notes are on the instruments you chose, at the rhythm you wrote.
+
+119 new notes. The code checked each one against what's sounding and the range of its instrument.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your notes keep their rhythm and their pitches, apart from any octave moves counted above.

@@ -1,0 +1,102 @@
+{
+  "id": "arrange-neutral-chamber-orchestra-a",
+  "recipe": {
+    "id": "arrange-neutral-chamber-orchestra",
+    "intent": "arrange",
+    "ensemble": "Chamber orchestra",
+    "instruments": [
+      "Flute",
+      "Oboe",
+      "Clarinet",
+      "Bassoon",
+      "Horn 1",
+      "Horn 2",
+      "Violin I",
+      "Violin II",
+      "Viola",
+      "Cello",
+      "Double Bass"
+    ],
+    "mood": "Neutral",
+    "bars": 24,
+    "moreBars": 0,
+    "where": "inside",
+    "tuneOnly": false,
+    "freedom": 2
+  },
+  "option": 0,
+  "plan": "Soft wind cushion with deep bass",
+  "status": "complete",
+  "verified": {
+    "sha256": "d5828b97e708297ce250d6b8f634dd830d10d1eb2c2a256c83f815cf5e1bb055",
+    "files": 15,
+    "parts": [
+      {
+        "name": "Flute",
+        "bars": 24
+      },
+      {
+        "name": "Oboe",
+        "bars": 24
+      },
+      {
+        "name": "Clarinet",
+        "bars": 24
+      },
+      {
+        "name": "Bassoon",
+        "bars": 24
+      },
+      {
+        "name": "Horn 1",
+        "bars": 24
+      },
+      {
+        "name": "Horn 2",
+        "bars": 24
+      },
+      {
+        "name": "Violin I",
+        "bars": 24
+      },
+      {
+        "name": "Violin II",
+        "bars": 24
+      },
+      {
+        "name": "Viola",
+        "bars": 24
+      },
+      {
+        "name": "Cello",
+        "bars": 24
+      },
+      {
+        "name": "Double Bass",
+        "bars": 24
+      }
+    ],
+    "tracks": 11,
+    "notes": 167,
+    "ppq": 480,
+    "scoreAndMidiAgree": true
+  },
+  "placement": {
+    "acceptedSourceNotes": 114,
+    "placed": 114,
+    "rangeOctaveMoves": 0,
+    "sourceLayoutNotes": 115
+  },
+  "advisoryClashes": [
+    {
+      "bar": "9",
+      "part": "Clarinet",
+      "name": "C4"
+    }
+  ],
+  "audio": {
+    "status": "not-rendered",
+    "expectedFile": "audio/render.wav"
+  },
+  "provenance": "Actual successful Meta calls. The recorded stages may include cold retries. No uninterrupted live session is claimed."
+}

@@ -1,0 +1,16 @@
+Sample sketch: Horn pedal with glockenspiel light
+
+Leave first statement thin, answer repeat with horns harp, carry high octaves with glockenspiel, close softly without brass blaze.
+
+Bars 1 to 7. Harp alone breaks chords, no other additions. Keep opening thin so repeat can bloom. Chords: C | F | C | F | G | C | F Level: pp steady
+Bars 8 to 11. Oboes answer violin, double bass grounds cello. Contrast repeat by answering gaps, not doubling. Chords: C | C | F | C Level: p growing to mp
+Bars 12 to 16. Horns pedal harmony, harp flows underneath. Cushion two violins, keep balance low. Chords: F | G | F | G | C Level: mp steady
+Bars 17 to 22. Double bass doubles low, glockenspiel lights tune. Fill low gap, lift high octave lightly. Chords: C | F | C | F | G | C Level: mp growing to mf
+Bars 23 to 24. Harp arpeggiates final, timpani on C seals. Make clear cadence without loud crash. Chords: C | C Level: mf settling to pp
+
+All 114 of your notes are on the instruments you chose, at the rhythm you wrote.
+
+130 new notes. The code checked each one against what's sounding and the range of its instrument.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your notes keep their rhythm and their pitches, apart from any octave moves counted above.

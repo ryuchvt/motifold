@@ -1,0 +1,9 @@
+THREE DIFFERENT SOURCES
+
+1. original-performance-117.mid is the byte-exact original. It includes the original DAW lead-in. Keep it as the untouched performance archive.
+
+2. performance-tempo-map-117.mid has all 117 notes on the accepted 24 bars of 3/4, with 50 tempo anchors. Its first musical note starts at time zero. It preserves the rubato, velocities and individual note-offs within MIDI tick rounding. Import its tempo map when comparing the performed timing.
+
+3. accepted-score-114.mid and accepted-score.musicxml are interpreted notation. Nearby attacks are grouped and note durations are interpreted for readable piano lines. They omit three very soft notes. They are not a timing-identical copy of the performance. The recorded arrangements preserve this accepted notation source.
+
+No source download contains a DAW audio render.

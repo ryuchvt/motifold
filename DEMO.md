@@ -1,39 +1,53 @@
-# The recorded walkthrough
+# The recorded tutorial and outcome explorer
 
-I compare two ways to arrange my piano theme for strings, then finish A. The saved path includes the source reading, harmony analysis, layout, both first-section previews, all of A and its direct export. B has only a preview. The public replay opens when its complete index is present in `public/demo/`.
+I start with my own unedited piano performance, inspect its saved bar reading, and compare two complete string arrangements. The tutorial and explorer use real recorded Meta replies. They make no model calls and use no credit.
 
-I use my own `Sample_sketch.mid`. Its SHA-256 is `782c244e9d31572a3c3225c6af170a75ea94224b7e92ea1e1a6d6183ddb70d54`. The accepted reading has 24 bars of 3/4 and two piano parts. It contains 114 notes. Three very soft notes remain in the original 117-note MIDI but are excluded from that notation reading.
+## The three source files
 
-## Follow the recording
+The original `Sample_sketch.mid` has 117 note attacks and a 44 minute 58 second DAW offset. Its SHA-256 is `782c244e9d31572a3c3225c6af170a75ea94224b7e92ea1e1a6d6183ddb70d54`. The original download is unchanged. Browser playback starts at the first musical event so there is no long silent wait. It also follows the recorded pedal.
 
-1. Choose Watch it work, then Start recorded walkthrough. It opens the exact accepted MusicXML. The original MIDI is a separate download.
-2. In Study, confirm both `Piano upper` and `Piano lower` as Piano.
-3. Skip all three questions. I leave “Is the held middle note a second tune?”, “Are the added thirds part of the tune?” and “Does the piece end on bar 24?” unanswered.
-4. In Setup, use Arrange and String orchestra. Keep all source notes and harmony. Leave the optional direction empty. Stay neutral and add no bars.
-5. Choose Create. Compare A, `Held middle voices with repeat contrast`, and B, `Pulsed support with brief answers`. Their previews cover bars 1 to 8.
-6. Choose A and write the rest. Its remaining recorded sections are bars 9 to 13, 14 to 21 and 22 to 24. B has no recorded continuation.
-7. Export A directly while it is selected. Download MIDI includes the MusicXML, separate part files and a separate MIDI of the new notes.
+The performance MIDI with the saved tempo map keeps all 117 attacks and their played note releases, apart from MIDI tick rounding. This separate copy removes the leading DAW offset and uses the saved 50 tempo anchors.
 
-The finished A has five string parts over 24 bars and 211 played notes. The layout contains 169 notes, including source doublings. A adds 42 checked notes. All source-layout note pitches, starts, lengths and velocities remain unchanged. The replay export matches every file payload in the actual live export. ZIP container timestamps can differ.
+The accepted notation has 114 attacks in 24 bars of 3/4. Three soft attacks remain only in the performance files. Nearby attacks were grouped and note releases were interpreted for readable notation. This score is an interpretation of the performance. It does not keep every raw key release unchanged. Arrange and Expand preserve the accepted score they receive.
 
-The actual A export is `public/demo/sample-sketch/neutral-strings-a.zip`, SHA-256 `452c77e4c1c5c9a45d1e4c9f58fe7be9ded8aa5b3a9cf958408ca752eeaecc78`. It has nine files. Its MusicXML and MIDI agree on all 211 notes. This verifies the recorded data and export, not the quality of the music.
+The render pack keeps the untouched performance, the performance with the tempo map, and the accepted notation as separate source files.
 
-## How I captured it
+## Follow the tutorial
 
-These are successful real calls to Muse Spark 1.3. I retained their exact requests, replies, thinking summaries, model, prompt version, elapsed time and available usage. Capturing the run required local retries and fresh Worker isolation between some stages. I assembled the successful stages into this recorded walkthrough. I do not claim an uninterrupted live session or a production network fix. Failed and uncertain attempts remain in the private spending audit.
+1. Choose Start hands-on tutorial. Play the raw MIDI and open the saved interpreted bars.
+2. Inspect the tempo map. Then choose Study these bars to replay the recorded reading and harmony analysis.
+3. Confirm Piano upper and Piano lower as Piano. Skip the unanswered questions for this recorded take.
+4. In Setup, use Arrange and String orchestra. Keep all source notes, stay neutral, add no bars and leave the optional direction blank.
+5. Choose Create. Compare the two real opening previews and audition A and B.
+6. Choose either complete plan and write its saved continuation.
+7. Open Export and download that arrangement directly. The ZIP contains full MIDI, MusicXML, individual parts and a MIDI of the added notes.
 
-| Recorded call | Prompt version | Recorded elapsed time |
-| --- | --- | --- |
-| Reading | `read-piece-5` | 101.600 s |
-| Harmony analysis | `study-score-m1` | 134.219 s |
-| String layout | `distribute-5` | 75.548 s |
-| A and B plans | `plan-options-9` | 133.007 s |
-| A preview, 1 to 8 | `arrange-14` | 17.824 s |
-| B preview, 1 to 8 | `arrange-14` | 54.946 s |
-| A continuation, 9 to 13 | `arrange-14` | 88.122 s |
-| A continuation, 14 to 21 | `arrange-14` | 73.644 s |
-| A ending, 22 to 24 | `arrange-14` | 38.314 s |
+The current guided pair is A, Anchored Sustaining, and B, Answering Counterline. Both cover all 24 bars with five string parts. A has 183 played notes and B has 180. Both preserve all 114 accepted source events. The original older A-only walkthrough remains a separate saved run.
 
-The fresh reading and successful harmony analysis are in `shared.json`. The remaining successful calls are in `arrange-neutral.json`. Redundant cached copies are omitted so each request has one canonical take. Playback can shorten the wait while displaying its actual recorded duration. The opening uses the accepted XML directly and makes no new bar-reading call.
+The guide follows actual controls and waits for the action at each step. Back revisits a step. Skip removes the guide while keeping the recorded session. Exit returns to the start.
 
-The replay uses no credit. Other ensembles, answers, moods, chord edits or rewrites have no prepared reply unless I recorded that exact request. It stops on an unprepared request rather than sending it to Meta. Ordinary local score edits and exports still work. The local Hopeful and Dark UI examples are separate saved runs.
+## Explore the prepared outcomes
+
+After the tutorial, choose direction, ensemble, mood where applicable, and A or B. The explorer opens the actual completed score and its matching downloads without starting analysis or generation. An unprepared combination says so and has no fabricated score or download.
+
+The planned matrix has 204 outcomes. Arrange has six ensembles and two options, with the original 24 bars and no mood change. Expand has the same six ensembles and two options, with the source character and 16 added bars for a total of 40. Recompose has Neutral and fourteen moods across six ensembles, with two options, 32 bars and the recorded Reshaped freedom setting.
+
+The catalog reports the number actually prepared. The target is not a claim that every outcome has been recorded. Custom lengths, other freedoms, rewrites and changed answers need their own live run.
+
+## Audio and DAW rendering
+
+Current playback uses browser instruments. Muse Spark writes notes rather than audio. Real DAW bounces have not been added yet.
+
+For each prepared outcome, the render pack has the actual combined MIDI, individual MIDI parts, MusicXML, generation metadata and a render checklist. I will render the exported MIDI with my own licensed instruments without editing the generated MIDI. A DAW render is attached only to the exact exported score hash it came from. Soloing a part uses browser playback rather than playing an unrelated full mix.
+
+The interface identifies prepared model replies, generated MIDI and any later DAW audio as prerecorded. It does not present them as a new live call.
+
+## Capture and verification
+
+The saved calls retain their actual requests, replies, thinking summaries, model, prompt version, elapsed time and reported usage. Successful stages can be assembled after local cold Worker restarts. I do not claim an uninterrupted live session or a production transport fix. Replay may shorten the wait while showing the original recorded duration.
+
+The accepted bar analysis is saved data. No new bar-reading call or invented bar-reading reasoning is shown. The guided A/B run is self-contained so it cannot mix an earlier reading with a later answer for the same request.
+
+Before publication, each completed outcome is reconstructed from its authenticated recorded answers. Its full bar coverage, source placement, tempo map, metre, MusicXML, combined MIDI and individual part files are checked. Missing sections, failed themes and hard acceptance failures are not published as complete. This verifies the data and export. My ear still decides the musical result.
+
+Ordinary score edits and exports remain available if shared credit refuses a live call. The separate `dev:ui` Hopeful and Dark fixtures are for interface checks and are not the public tutorial.

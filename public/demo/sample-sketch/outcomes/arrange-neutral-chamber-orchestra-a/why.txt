@@ -1,0 +1,19 @@
+Sample sketch: Soft wind cushion with deep bass
+
+Keep violin tune front, add soft woodwind held chords on repeats and deep bass below high cello, closing quietly.
+
+Bars 1 to 7. Double Bass doubles Cello roots low, others rest. Anchor bass quietly, leave tune exposed. Chords: C | F | C | F | G | C | F Level: p steady
+Bars 8 to 8. Flute holds G with violins, Horns sustain C. Bridge held note without covering tune. Chords: C Level: p steady
+Bars 9 to 11. Oboe doubles tune softly, Clarinet sustains chords. Vary repeat by colour, not louder. Chords: C | F | C Level: p growing to mp
+Bars 12 to 13. Bassoon Viola sustain thirds, Double Bass roots. Thicken duet without hiding tune. Chords: F | G Level: mp steady
+Bars 14 to 20. Clarinet answers gaps, Double Bass grounds low octave. Support high cello, leave melody clear. Chords: F | G | C | C | F | C | F Level: mp steady to mf
+Bars 21 to 21. Horns sustain G chord, Flute doubles top G. Lift peak lightly, keep brass back. Chords: G Level: mf steady
+Bars 22 to 24. Bassoon Double Bass affirm C arrival, Oboe holds. Close calmly on tonic without new chord. Chords: C | C | C Level: mf fading to p
+
+All 114 of your notes are on the instruments you chose, at the rhythm you wrote.
+
+52 new notes. The code checked each one against what's sounding and the range of its instrument.
+One long note sits a semitone from something else sounding. That can be a good suspension or a slip, so check by ear: Clarinet C4 in bar 9.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your notes keep their rhythm and their pitches, apart from any octave moves counted above.

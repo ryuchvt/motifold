@@ -1,0 +1,17 @@
+Sample sketch: Anchored Sustaining
+
+Double bass grounds harmony low, viola and violin II sustain theme chord tones, second statement slightly fuller for contrast.
+
+Bars 1 to 7. Double bass doubles cello roots low, viola sustains theme thirds, violin II tacit. Keep first statement thin so repeat can grow. Chords: Em | F | Em | F | G | Em | F Level: pp steady and light
+Bars 8 to 8. Double bass holds low C, violin II holds G quietly. Bridge phrases without covering held melody. Chords: C Level: pp held, waiting
+Bars 9 to 11. Double bass continues low, viola sustains, violin II doubles melody octave below. Vary literal repeat by colour, not new tune. Chords: Em | F | Em Level: pp growing to mp
+Bars 12 to 16. Double bass anchors roots, viola sustains thirds, violin II tacit then doubles. Leave duet clear, add weight around it. Chords: F | G | F | G | C Level: mp steady, singing
+Bars 17 to 22. Double bass supplies low roots, viola sustains, violin II sustains except bar 21. Fill empty low octave, keep high melody dominant. Chords: C | F | C | F | G | C Level: mp growing to mf
+Bars 23 to 24. Double bass anchors C, viola and violin II hold tonic chord tones. Clarify final arrival without adding new harmony. Chords: C | C Level: mf settling to p
+
+All 114 of your notes are on the instruments you chose, at the rhythm you wrote.
+
+69 new notes. The code checked each one against what's sounding and the range of its instrument.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your notes keep their rhythm and their pitches, apart from any octave moves counted above.

@@ -1,0 +1,17 @@
+Sample sketch: Answering Counterline
+
+Double bass punctuates phrase ends, viola and violin II answer held notes with short theme fragments.
+
+Bars 1 to 7. Double bass marks roots short, viola answers melody with thirds, violin II tacit. Keep texture light, let gaps speak. Chords: Em | F | Em | F | G | Em | F Level: pp with small lifts
+Bars 8 to 8. Double bass holds low C short, violin II echoes G. Mark arrival, then leave space. Chords: C Level: pp held breath
+Bars 9 to 11. Double bass continues short, violin II answers, viola sustains pedal. Answer repeat differently, same notes underneath. Chords: Em | F | Em Level: p answering quietly
+Bars 12 to 16. Double bass walks roots, viola answers gaps, violin II joins bars 14-16. Support duet without doubling its tune. Chords: F | G | F | G | C Level: mp steady dialogue
+Bars 17 to 22. Double bass marks low roots, viola answers, violin II answers except bar 21. Use theme fragments only in melody gaps. Chords: C | F | C | F | G | C Level: mf steady, answering
+Bars 23 to 24. Double bass holds C and G, viola and violin II settle on tonic. Let arrival sound final, then soften. Chords: C | C Level: mf fading to pp
+
+All 114 of your notes are on the instruments you chose, at the rhythm you wrote.
+
+66 new notes. The code checked each one against what's sounding and the range of its instrument.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your notes keep their rhythm and their pitches, apart from any octave moves counted above.

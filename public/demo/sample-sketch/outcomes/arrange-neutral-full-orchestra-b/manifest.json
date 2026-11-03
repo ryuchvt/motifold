@@ -1,0 +1,196 @@
+{
+  "id": "arrange-neutral-full-orchestra-b",
+  "recipe": {
+    "id": "arrange-neutral-full-orchestra",
+    "intent": "arrange",
+    "ensemble": "Full orchestra",
+    "instruments": [
+      "Piccolo",
+      "Flute 1",
+      "Flute 2",
+      "Oboe 1",
+      "Oboe 2",
+      "Clarinet 1",
+      "Clarinet 2",
+      "Bassoon 1",
+      "Bassoon 2",
+      "Horn 1",
+      "Horn 2",
+      "Horn 3",
+      "Horn 4",
+      "Trumpet 1",
+      "Trumpet 2",
+      "Trumpet 3",
+      "Trombone 1",
+      "Trombone 2",
+      "Bass Trombone",
+      "Tuba",
+      "Timpani",
+      "Glockenspiel",
+      "Snare Drum",
+      "Bass Drum",
+      "Cymbals",
+      "Harp",
+      "Violin I",
+      "Violin II",
+      "Viola",
+      "Cello",
+      "Double Bass"
+    ],
+    "mood": "Neutral",
+    "bars": 24,
+    "moreBars": 0,
+    "where": "inside",
+    "tuneOnly": false,
+    "freedom": 2
+  },
+  "option": 1,
+  "plan": "Horn pedal with glockenspiel light",
+  "status": "complete",
+  "verified": {
+    "sha256": "ddc30db6993edbb1cdf031357d4ef6dd016a0fecb975567dfe6233a6021af94a",
+    "files": 16,
+    "parts": [
+      {
+        "name": "Piccolo",
+        "bars": 24
+      },
+      {
+        "name": "Flute 1",
+        "bars": 24
+      },
+      {
+        "name": "Flute 2",
+        "bars": 24
+      },
+      {
+        "name": "Oboe 1",
+        "bars": 24
+      },
+      {
+        "name": "Oboe 2",
+        "bars": 24
+      },
+      {
+        "name": "Clarinet 1",
+        "bars": 24
+      },
+      {
+        "name": "Clarinet 2",
+        "bars": 24
+      },
+      {
+        "name": "Bassoon 1",
+        "bars": 24
+      },
+      {
+        "name": "Bassoon 2",
+        "bars": 24
+      },
+      {
+        "name": "Horn 1",
+        "bars": 24
+      },
+      {
+        "name": "Horn 2",
+        "bars": 24
+      },
+      {
+        "name": "Horn 3",
+        "bars": 24
+      },
+      {
+        "name": "Horn 4",
+        "bars": 24
+      },
+      {
+        "name": "Trumpet 1",
+        "bars": 24
+      },
+      {
+        "name": "Trumpet 2",
+        "bars": 24
+      },
+      {
+        "name": "Trumpet 3",
+        "bars": 24
+      },
+      {
+        "name": "Trombone 1",
+        "bars": 24
+      },
+      {
+        "name": "Trombone 2",
+        "bars": 24
+      },
+      {
+        "name": "Bass Trombone",
+        "bars": 24
+      },
+      {
+        "name": "Tuba",
+        "bars": 24
+      },
+      {
+        "name": "Timpani",
+        "bars": 24
+      },
+      {
+        "name": "Glockenspiel",
+        "bars": 24
+      },
+      {
+        "name": "Snare Drum",
+        "bars": 24
+      },
+      {
+        "name": "Bass Drum",
+        "bars": 24
+      },
+      {
+        "name": "Cymbals",
+        "bars": 24
+      },
+      {
+        "name": "Harp",
+        "bars": 24
+      },
+      {
+        "name": "Violin I",
+        "bars": 24
+      },
+      {
+        "name": "Violin II",
+        "bars": 24
+      },
+      {
+        "name": "Viola",
+        "bars": 24
+      },
+      {
+        "name": "Cello",
+        "bars": 24
+      },
+      {
+        "name": "Double Bass",
+        "bars": 24
+      }
+    ],
+    "tracks": 12,
+    "notes": 244,
+    "ppq": 480,
+    "scoreAndMidiAgree": true
+  },
+  "placement": {
+    "acceptedSourceNotes": 114,
+    "placed": 114,
+    "rangeOctaveMoves": 0,
+    "sourceLayoutNotes": 114
+  },
+  "advisoryClashes": [],
+  "audio": {
+    "status": "not-rendered",
+    "expectedFile": "audio/render.wav"
+  },
+  "provenance": "Actual successful Meta calls. The recorded stages may include cold retries. No uninterrupted live session is claimed."
+}

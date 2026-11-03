@@ -1,0 +1,66 @@
+{
+  "id": "arrange-neutral-string-orchestra-a",
+  "recipe": {
+    "id": "arrange-neutral-string-orchestra",
+    "intent": "arrange",
+    "ensemble": "String orchestra",
+    "instruments": [
+      "Violin I",
+      "Violin II",
+      "Viola",
+      "Cello",
+      "Double Bass"
+    ],
+    "mood": "Neutral",
+    "bars": 24,
+    "moreBars": 0,
+    "where": "inside",
+    "tuneOnly": false,
+    "freedom": 2
+  },
+  "option": 0,
+  "plan": "Anchored Sustaining",
+  "status": "complete",
+  "verified": {
+    "sha256": "1d7bf26929ab503fa28b8ad2efe631b2c11e34151b87b39edf8d095c3e09f0bf",
+    "files": 9,
+    "parts": [
+      {
+        "name": "Violin I",
+        "bars": 24
+      },
+      {
+        "name": "Violin II",
+        "bars": 24
+      },
+      {
+        "name": "Viola",
+        "bars": 24
+      },
+      {
+        "name": "Cello",
+        "bars": 24
+      },
+      {
+        "name": "Double Bass",
+        "bars": 24
+      }
+    ],
+    "tracks": 5,
+    "notes": 183,
+    "ppq": 480,
+    "scoreAndMidiAgree": true
+  },
+  "placement": {
+    "acceptedSourceNotes": 114,
+    "placed": 114,
+    "rangeOctaveMoves": 0,
+    "sourceLayoutNotes": 114
+  },
+  "advisoryClashes": [],
+  "audio": {
+    "status": "not-rendered",
+    "expectedFile": "audio/render.wav"
+  },
+  "provenance": "Actual successful Meta calls. The recorded stages may include cold retries. No uninterrupted live session is claimed."
+}

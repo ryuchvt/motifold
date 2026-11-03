@@ -1,0 +1,19 @@
+Sample sketch: Upper-string echoes with reed support
+
+Share tune echoes between winds and upper strings, viola counterline answers gaps, horns and bass ground final cadence.
+
+Bars 1 to 7. Viola Violin II sustain soft thirds below tune. Warm opening with low strings, no winds. Chords: C | F | C | F | G | C | F Level: pp steady, intimate
+Bars 8 to 8. Oboe holds G, Clarinet sustains C third. Light reed bridge into repeat. Chords: C Level: pp steady
+Bars 9 to 11. Flute doubles tune octave, Bassoon roots soft. Brighten repeat above, anchor below. Chords: C | F | C Level: pp growing to mp
+Bars 12 to 13. Horns sustain F G chords, Double Bass roots. Cushion duet with mellow brass. Chords: F | G Level: mp steady
+Bars 14 to 20. Viola answers held notes, Oboe sustains chords. Fill gaps, keep tune forward. Chords: F | G | C | C | F | C | F Level: mp steady
+Bars 21 to 21. Clarinet doubles G, Viola sustains fifth below. Support peak without brass glare. Chords: G Level: mf steady, brief
+Bars 22 to 24. Flute Horns Double Bass affirm final C softly. Ground low octave, let tune close. Chords: C | C | C Level: mp fading to pp
+
+All 114 of your notes are on the instruments you chose, at the rhythm you wrote.
+
+69 new notes. The code checked each one against what's sounding and the range of its instrument.
+3 long notes sit a semitone from something else sounding. That can be a good suspension or a slip, so check by ear: Viola C4 in bar 1, Viola C4 in bar 3, Viola C4 in bar 6.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your notes keep their rhythm and their pitches, apart from any octave moves counted above.

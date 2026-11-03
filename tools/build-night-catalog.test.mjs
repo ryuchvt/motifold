@@ -266,9 +266,14 @@ it('promotes only a verified same-case full A/B pair into a self-contained tutor
   expect(piece.tutorial).toMatchObject({ runKey: 'guided-neutral-strings', completeOptions: [0, 1], rawNoteCount: 117, acceptedNoteCount: 114 });
   expect(piece.runs).toContainEqual({ key: 'guided-neutral-strings', mode: 'arrange', ensemble: 'String orchestra', mood: 'Neutral', selfContained: true });
   expect(piece.runs).toEqual(expect.arrayContaining(oldIndex.pieces[0].runs));
-  expect(piece.legacyVerifiedExport).toEqual(oldIndex.pieces[0].verifiedExport);
+  expect(piece.legacyVerifiedExport).toEqual(oldIndex.pieces[0].legacyVerifiedExport ?? oldIndex.pieces[0].verifiedExport);
   const guided = JSON.parse(readFileSync(join(sourceFolder, 'guided-neutral-strings.json')));
   expect(guided.filter(call => call.shape === 'read_piece')).toHaveLength(1);
   expect(new Set(guided.filter(call => call.shape === 'arrange').map(call => call.input.chosen.name))).toEqual(new Set([x.summary.plan.name, bPlan.name]));
   expect(readFileSync(join(sourceFolder, 'shared.json'))).toEqual(readFileSync('public/demo/sample-sketch/shared.json'));
+  buildCatalog({ repo, input, output, receipts: [...x.receipts, ...bRows], readers, templates: TEMPLATES, publish: true });
+  const republished = JSON.parse(readFileSync(join(repo, 'public/demo/index.json'))).pieces[0];
+  expect(republished.legacyVerifiedExport).toEqual(piece.legacyVerifiedExport);
+  expect(republished.verifiedExport).toEqual(piece.verifiedExport);
+  expect(new Set(republished.runs.map(run => run.key)).size).toBe(republished.runs.length);
 });
