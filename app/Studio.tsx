@@ -9,7 +9,7 @@ import { openedScore } from "./opened";
 import { AUDIO_FILE, isAudioFile, listenTo } from "./listen";
 import { OWN_KEY } from "../server/pools";
 import { hasOwnKey, onSpark, setOwnKey } from "./spark";
-import { MuseChip, Thinking } from "./Thinking";
+import { MuseChip, Thinking, resetMuseActivity } from "./Thinking";
 import { playhead, usePlayhead } from "./playhead";
 import { looksFreelyPlayed } from "./timing";
 import { useArrange } from "./useArrange";
@@ -77,10 +77,13 @@ export function Studio({ initialScore = null, sample = false, initialSetup, samp
   const microphone = useRef<MediaRecorder | null>(null);
   // Only the last thing opened may change the page, because the composer can leave or open something else while a file is still being read.
   const opening = useRef(0);
+  const activeCalls = useRef(new Set<string>());
+  const resetRun = () => { activeCalls.current.clear(); setThinking(false); resetMuseActivity(); };
 
   useEffect(() => void loadDemoIndex().then(setDemo), []);
   useEffect(() => {
-    const running = new Set<string>();
+    resetRun();
+    const running = activeCalls.current;
     return onSpark((event) => {
       if (event.kind === "start") running.add(event.callId);
       if (event.kind === "end") running.delete(event.callId);
@@ -106,6 +109,7 @@ export function Studio({ initialScore = null, sample = false, initialSetup, samp
 
   const open = async (file: File, keepBars = false) => {
     const mine = ++opening.current;
+    if (!keepBars) resetRun();
     stopListening();
     setError(null);
     try {
@@ -201,6 +205,7 @@ export function Studio({ initialScore = null, sample = false, initialSetup, samp
   const choosePiece = (piece: DemoPiece) => demo && startDemo(piece, demo.recorded);
   const leave = () => {
     opening.current++;
+    resetRun();
     stopListening();
     if (!sample) stopDemo();
     setAccess(null);
@@ -211,6 +216,7 @@ export function Studio({ initialScore = null, sample = false, initialSetup, samp
   };
   const another = () => {
     opening.current++;
+    resetRun();
     stopListening();
     setLoaded(null);
     setUnbarred(null);
@@ -219,6 +225,7 @@ export function Studio({ initialScore = null, sample = false, initialSetup, samp
 
   const openSample = async () => {
     const mine = ++opening.current;
+    resetRun();
     setError(null);
     try {
       const { openSampleSketch } = await import('./sampleSketch');

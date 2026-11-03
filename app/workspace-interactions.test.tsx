@@ -69,6 +69,9 @@ it('A/B auditions keep the actual playback position and the visible passage', as
   expect(audio.play.mock.calls.at(-1)?.[2]).toBe(35.25);
   expect(screen.host.querySelectorAll('.composer-inspector .arrange-list>li')).toHaveLength(1);
   expect(screen.host.querySelectorAll('.inspector-action button')).toHaveLength(1);
+  const action = screen.host.querySelector('.inspector-action')!;
+  expect(action.parentElement?.classList.contains('workspace')).toBe(true);
+  expect(action.closest('.workspace-body')).toBeNull();
 });
 it('moving complete form blocks keeps every original block exactly once', () => {
   const blocks = [{ from: '1', to: '6' }, { from: '7', to: '7a' }, { from: '7b', to: '14' }];

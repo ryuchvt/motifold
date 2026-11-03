@@ -1,7 +1,37 @@
-/* The header opens activity on desktop. On phones, keep a small control in the page flow, clear of score actions. */
-.muse-activity-mobile { display:none; }
-@media (max-width:760px) {
-  .studio .muse-activity-mobile { display:flex; flex:none; align-items:center; justify-content:space-between; gap:12px; min-height:32px; padding:6px 12px; border:0; border-top:1px solid var(--line); background:#111923; color:#c4d0df; font:11px/1.4 var(--sans,system-ui,sans-serif); text-align:left; cursor:pointer; }
-  .muse-activity-mobile>span:first-child { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .muse-activity-mobile>span+span { flex:none; color:#e2eaf4; }
+/* Activity takes its own space below the workspace. It never covers notation or the inspector action. */
+.studio > .thinking.muse-dock { position:relative; inset:auto; flex:none; width:auto; max-width:none; max-height:none; margin:0; border:0; border-top:1px solid var(--line); border-radius:0; box-shadow:none; background:#111923; overflow:hidden; z-index:auto; padding:0; }
+.muse-dock > header { display:flex; align-items:center; gap:10px; min-height:37px; padding:8px 18px; }
+.muse-dock > header strong { flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.muse-dock .thinking-hide { position:static; flex:none; width:28px; min-height:26px; padding:0; border:1px solid var(--line2); border-radius:5px; background:transparent; color:var(--ink); }
+.muse-dock .thinking-clock { flex:none; color:#b9c8dc; font:11px var(--mono); }
+.muse-dock-content { display:grid; grid-template-columns:minmax(180px,1fr) minmax(0,2fr); column-gap:20px; max-height:150px; overflow:auto; padding:0 18px; scrollbar-width:thin; }
+.muse-dock-content > .thinking-also { grid-column:1/-1; }
+.muse-dock-content > .thinking-done { grid-column:1; grid-row:2 / span 2; max-height:140px; overflow:auto; }
+.muse-dock-content > .thinking-toggle { grid-column:2; position:static; border:0; border-radius:0; padding:3px 0; background:transparent; color:#bdcce0; text-align:left; }
+.muse-dock-content > .thinking-lines { grid-column:2; max-height:112px; overflow:auto; margin:4px 0 9px; }
+.muse-dock .thinking-done details { margin:4px 0 8px; }
+.muse-dock .thinking-done details summary { color:#9eafc7; cursor:pointer; font-size:11px; }
+.muse-dock .thinking-done details ol { list-style:disc; margin-left:17px; }
+.muse-dock .thinking-done details li:before { content:none; }
+.muse-dock > footer { min-height:25px; margin:0; padding:5px 18px; border-top:1px solid #ffffff09; font-size:11px; }
+.muse-dock.is-minimized > footer { display:none; }
+.studio .muse-activity-mobile { display:none; }
+@media(max-width:760px) {
+  .muse-dock > header { padding:6px 12px; min-height:35px; gap:7px; }
+  .studio .muse-dock > header strong { font-size:11px; }
+  .muse-dock .thinking-clock { font-size:9px; max-width:130px; white-space:normal; text-align:right; }
+  .muse-dock-content { display:block; max-height:128px; padding:0 12px; }
+  .muse-dock-content > .thinking-done { max-height:50px; }
+  .muse-dock-content > .thinking-lines { max-height:85px; }
+  .muse-dock > footer { padding:5px 12px; font-size:10px; }
+}
+/* The primary action also has a layout row, above activity on every screen size. */
+.studio .workspace > .inspector-action { position:static; inset:auto; flex:none; align-self:flex-end; width:346px; max-width:100%; box-shadow:none; border-radius:0; }
+.studio .inspector-hidden > .inspector-action { display:none; }
+.studio .workspace > .inspector-action:empty { display:none; }
+@media(min-width:1600px) { .studio .workspace > .inspector-action { width:380px; } }
+@media(max-width:1120px) and (min-width:761px) { .studio .workspace > .inspector-action { width:310px; } }
+@media(max-width:760px) {
+  .studio .workspace > .inspector-action { width:100%; margin:0; border:0; border-top:1px solid var(--line); padding:9px 16px; }
+  .studio .workspace .workspace-body { padding-bottom:0; }
 }

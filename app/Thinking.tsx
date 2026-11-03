@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { replay, skipReplay } from "./demo";
-import { onSpark, type SparkEvent } from "./spark";
+import { onSpark, resetSparkActivity, type RecordedTiming, type SparkEvent } from "./spark";
 import "./thinking-workspace.css";
 
 const STAGES: Record<string, { what: string; chip: string; usually: string }> = {
@@ -26,12 +26,15 @@ interface Running {
   started: number;
   updated: number;
   lines: string[];
+  timing?: RecordedTiming;
 }
 interface Finished {
   callId: string;
   label: string;
   ok: boolean;
   ms: number;
+  timing?: RecordedTiming;
+  lines: string[];
 }
 
 /**
@@ -60,6 +63,9 @@ function watch() {
       const bars = window ? (window.from === window.to ? `bar ${window.from}` : `bars ${window.from} to ${window.to}`) : null;
       const now = Date.now();
       running = [...running, { callId: event.callId, shape: event.shape, label: [stage?.what ?? "Thinking", plan, bars].filter(Boolean).join(" · "), bars, started: now, updated: now, lines: [] }];
+    } else if (event.kind === "recorded") {
+      if (!running.some((r) => r.callId === event.callId)) return;
+      running = running.map((r) => r.callId === event.callId ? { ...r, timing: event.timing } : r);
     } else if (event.kind === "thinking") {
       const at = running.findIndex((r) => r.callId === event.callId);
       if (at < 0) return;
@@ -68,7 +74,7 @@ function watch() {
       const at = running.findIndex((r) => r.callId === event.callId);
       if (at < 0) return;
       const ended = running[at]!;
-      finished = [...finished.slice(-7), { callId: ended.callId, label: ended.label, ok: event.ok, ms: Date.now() - ended.started }];
+      finished = [...finished.slice(-7), { callId: ended.callId, label: ended.label, ok: event.ok, ms: Date.now() - ended.started, timing: ended.timing, lines: ended.lines }];
       running = running.filter((_, k) => k !== at);
     }
     changed();
@@ -95,7 +101,7 @@ function useNow(on: boolean) {
 
 /** The panel's open or shut, shared by the chip and the panel. */
 const panelListeners = new Set<() => void>();
-let panel = { opened: false };
+let panel = { opened: true };
 const setPanel = (opened: boolean) => {
   panel = { opened };
   for (const l of panelListeners) l();
@@ -105,6 +111,14 @@ const subscribePanel = (listener: () => void) => {
   return () => void panelListeners.delete(listener);
 };
 const getPanel = () => panel;
+/** A different piece starts a different activity history. Late events from the old calls are ignored. */
+export function resetMuseActivity() {
+  resetSparkActivity();
+  running = [];
+  finished = [];
+  changed();
+  setPanel(true);
+}
 function usePanel() {
   return useSyncExternalStore(subscribePanel, getPanel, getPanel);
 }
@@ -139,28 +153,25 @@ export function Thinking({ sample = false }: { sample?: boolean }) {
   useEffect(() => {
     list.current?.scrollTo({ top: list.current.scrollHeight });
   }, [current?.callId, current?.lines.length]);
-  // Model events update status and reasoning without opening a panel over the score's actions.
-  if (!state.opened) return <button className="muse-activity-mobile" aria-expanded={false} aria-label="Show what Muse Spark is doing" onClick={() => setPanel(true)}>
-    <span>{current ? STAGES[current.shape]?.what ?? "Muse Spark is working" : "Muse Spark activity"}</span>
-    <span>{current ? `${clock(clockNow - current.started)} / ` : ""}Show activity</span>
-  </button>;
   const stage = current ? STAGES[current.shape] : null;
   const recorded = replay.active || ("enabled" in replay && replay.enabled === true);
+  const elapsed = (ms: number, timing?: RecordedTiming) => timing ? `Replay ${clock(ms)} / recorded live ${clock(timing.realMs)}` : `${sample ? "Sample" : recorded ? "Replay" : "Live"} ${clock(ms)}`;
   return (
-    <aside className="thinking" role={current ? "status" : undefined} aria-live="polite" aria-label="What Muse Spark is doing">
-      <header>
+    <aside className={`thinking muse-dock${state.opened ? "" : " is-minimized"}`} aria-label="What Muse Spark is doing">
+      <header role={current ? "status" : undefined}>
         <span className={`signal${current ? " on" : ""}`} aria-hidden />
         <strong>{current ? current.label : "Muse Spark is ready"}</strong>
-        {current && <span className="thinking-clock">{clock(clockNow - current.started)}</span>}
-        <button className="thinking-hide" aria-label="Hide" onClick={() => setPanel(false)}>
-          –
+        {current && <span className="thinking-clock">{elapsed(clockNow - current.started, current.timing)}</span>}
+        <button className="thinking-hide" aria-label={state.opened ? "Minimize activity" : "Expand activity"} aria-expanded={state.opened} onClick={() => setPanel(!state.opened)}>
+          {state.opened ? "−" : "+"}
         </button>
       </header>
+      {state.opened && <div className="muse-dock-content">
       {now.length > 1 && (
         <ol className="thinking-also">
           {now.slice(0, -1).map((r) => (
             <li key={r.callId}>
-              Also working: {r.label} · {clock(clockNow - r.started)}
+              Also working: {r.label} · {elapsed(clockNow - r.started, r.timing)}
             </li>
           ))}
         </ol>
@@ -169,8 +180,9 @@ export function Thinking({ sample = false }: { sample?: boolean }) {
         <ol className="thinking-done">
           {done.map((d) => (
             <li key={d.callId} className={d.ok ? undefined : "failed"}>
-              {d.label} · {clock(d.ms)}
+              {d.label} · {elapsed(d.ms, d.timing)}
               {d.ok ? "" : " · didn't come back"}
+              {d.lines.length > 0 && <details><summary>View its reasoning</summary><ol>{d.lines.map((line, index) => <li key={index}>{line}</li>)}</ol></details>}
             </li>
           ))}
         </ol>
@@ -191,12 +203,13 @@ export function Thinking({ sample = false }: { sample?: boolean }) {
           )}
         </>
       )}
+      </div>}
       <footer>
         {sample ? (
           <span>Local sample answers. No model call.</span>
         ) : recorded ? (
           <>
-            <span>{replay.active ? `A replay of the real run, recorded ${replay.recorded}. This step took ${clock(replay.realMs)} live.` : `Recorded replay${replay.recorded ? ` from ${replay.recorded}` : ""}. ${current ? "Loading a saved answer. No model call." : "No model call is running."}`}</span>
+            <span>{current?.timing ? `Recorded ${current.timing.recorded} on ${current.timing.model}. No model call.` : replay.active ? `A replay of the real run, recorded ${replay.recorded}. This step took ${clock(replay.realMs)} live.` : `Recorded replay${replay.recorded ? ` from ${replay.recorded}` : ""}. ${current ? "Loading a saved answer. No model call." : "No model call is running."}`}</span>
             {replay.active && <button className="thinking-skip" onClick={skipReplay}>
               Skip
             </button>}

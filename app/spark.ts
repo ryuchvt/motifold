@@ -3,11 +3,15 @@
 export type SparkReply = { status: "ok"; answer: unknown; cached: boolean } | { status: "fallback"; reason: string };
 
 /** What's happening on a call, for whoever is showing it. */
-export type SparkEvent = { callId: string } & ({ kind: "start"; shape: string; input: unknown } | { kind: "thinking"; shape: string; text: string } | { kind: "end"; shape: string; ok: boolean });
+export interface RecordedTiming { source: "recorded"; realMs: number; recorded: string; model: string; version: string }
+export type SparkEvent = { callId: string } & ({ kind: "start"; shape: string; input: unknown } | { kind: "recorded"; shape: string; timing: RecordedTiming } | { kind: "thinking"; shape: string; text: string } | { kind: "end"; shape: string; ok: boolean });
 type Listener = (event: SparkEvent) => void;
 const listeners = new Set<Listener>();
 // Activity belongs to this browser page. The server keeps its separate attempt UUID and accounting.
 let nextCall = 0;
+let activityRun = 0;
+/** Only activity changes owner here. In-flight request, retry and accounting contracts stay unchanged. */
+export const resetSparkActivity = () => { activityRun++; };
 export function onSpark(listener: Listener): () => void {
   listeners.add(listener);
   return () => void listeners.delete(listener);
@@ -15,7 +19,7 @@ export function onSpark(listener: Listener): () => void {
 const emit = (event: SparkEvent) => listeners.forEach((l) => l(event));
 
 /** Answers calls some other way than the Worker. */
-export type Transport = (shape: string, input: unknown, think: (text: string) => void) => Promise<SparkReply>;
+export type Transport = (shape: string, input: unknown, think: (text: string) => void, timing?: (value: RecordedTiming) => void) => Promise<SparkReply>;
 let transport: Transport | null = null;
 export const setTransport = (t: Transport | null) => {
   transport = t;
@@ -64,24 +68,26 @@ function headers(): Record<string, string> {
 }
 
 export async function askSpark(shape: string, input: unknown, signal?: AbortSignal): Promise<SparkReply> {
-  const reply = await askOnce(shape, input, signal);
+  const run = activityRun;
+  const reply = await askOnce(shape, input, signal, run);
   // A connection dropped halfway is worth one more go, and anything else isn't.
-  return reply.status === "fallback" && reply.reason === "network" && !signal?.aborted ? askOnce(shape, input, signal) : reply;
+  return reply.status === "fallback" && reply.reason === "network" && !signal?.aborted ? askOnce(shape, input, signal, run) : reply;
 }
 
-async function askOnce(shape: string, input: unknown, signal?: AbortSignal): Promise<SparkReply> {
+async function askOnce(shape: string, input: unknown, signal: AbortSignal | undefined, run: number): Promise<SparkReply> {
   const callId = `spark-${++nextCall}`;
-  emit({ kind: "start", callId, shape, input });
+  const publish = (event: SparkEvent) => { if (run === activityRun) emit(event); };
+  publish({ kind: "start", callId, shape, input });
   const started = Date.now();
   const thinking: RecordedCall["thinking"] = [];
   const think = (text: string) => {
     thinking.push({ at: Date.now() - started, text });
-    emit({ kind: "thinking", callId, shape, text });
+    publish({ kind: "thinking", callId, shape, text });
   };
   let reply: SparkReply;
   let meta: Partial<RecordedCall> = {};
   try {
-    if (transport) reply = await transport(shape, input, think);
+    if (transport) reply = await transport(shape, input, think, (timing) => publish({ kind: "recorded", callId, shape, timing }));
     else {
       const res = await fetch(`/api/spark/${shape}`, { method: "POST", headers: headers(), body: JSON.stringify({ attemptId: crypto.randomUUID(), input }), signal });
       if (!res.ok) reply = { status: "fallback", reason: `http-${res.status}` };
@@ -98,7 +104,7 @@ async function askOnce(shape: string, input: unknown, signal?: AbortSignal): Pro
     reply = { status: "fallback", reason: signal?.aborted ? "stale" : "unreachable" };
   }
   if (recordingOn()) recording.push({ shape, input, reply, ms: Date.now() - started, thinking, ...meta });
-  emit({ kind: "end", callId, shape, ok: reply.status === "ok" });
+  publish({ kind: "end", callId, shape, ok: reply.status === "ok" });
   return reply;
 }
 

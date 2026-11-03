@@ -13,7 +13,7 @@ import { Studio } from './Studio';
 
 const state = vi.hoisted(() => ({ latest: null as any }));
 vi.mock('./Workspace', () => ({ Workspace: (props: any) => { state.latest = props; return <main>Recorded score workspace</main>; } }));
-vi.mock('./Thinking', () => ({ MuseChip: () => null, Thinking: () => null }));
+vi.mock('./Thinking', () => ({ MuseChip: () => null, Thinking: () => null, resetMuseActivity: () => {} }));
 (globalThis as any).IS_REACT_ACT_ENVIRONMENT = true;
 const xml = readFileSync('public/demo/sample-sketch/sample-sketch.musicxml', 'utf8');
 const midi = new Uint8Array(readFileSync('public/demo/sample-sketch/Sample_sketch.mid'));

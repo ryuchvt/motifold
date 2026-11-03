@@ -16,7 +16,7 @@ vi.mock('./useArrange', async original => {
 });
 vi.mock('./ScoreView', () => ({ ScoreView: () => <div>Notation canvas</div> }));
 vi.mock('./audio/samples', () => ({ loadManifest: async () => null }));
-vi.mock('./Thinking', () => ({ MuseChip: () => null, Thinking: () => null }));
+vi.mock('./Thinking', () => ({ MuseChip: () => null, Thinking: () => null, resetMuseActivity: () => {} }));
 (globalThis as any).IS_REACT_ACT_ENVIRONMENT = true;
 const index = JSON.parse(readFileSync('public/demo/index.json', 'utf8'));
 const expected = unzipSync(new Uint8Array(readFileSync('public/demo/sample-sketch/neutral-strings-a.zip')));

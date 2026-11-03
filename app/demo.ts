@@ -107,7 +107,7 @@ export function startDemo(piece: DemoPiece, recorded: string): void {
   const current = () => session === generation;
   const files = [`/demo/${piece.id}/shared.json`, ...piece.runs.map(run => `/demo/${piece.id}/${run.key}.json`)];
   const calls = Promise.all(files.map(load)).then(groups => groups.flat());
-  const transport: Transport = async (shape, input, think) => {
+  const transport: Transport = async (shape, input, think, timing) => {
     const key = recordedRequestKey(shape, input);
     const available = await calls;
     if (!current()) return { status: "fallback", reason: "stale" };
@@ -115,6 +115,7 @@ export function startDemo(piece: DemoPiece, recorded: string): void {
     // Conflicting receipts for one exact request are ambiguous. Packaging must choose the actual take.
     const first = matches[0];
     if (!first || matches.some(call => stable(call.reply) !== stable(first.reply) || call.model !== first.model || call.version !== first.version)) return { status: "fallback", reason: "not-prepared" };
+    timing?.({ source: "recorded", realMs: first.ms, recorded, model: first.model, version: first.version });
     const id = Symbol();
     active.set(id, { ms: first.ms, recorded, model: first.model, version: first.version });
     replay.skip = false; showActive();

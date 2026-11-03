@@ -39,7 +39,8 @@ it("gives a recorded replay the same event identity contract with real recorded 
     const pending = askSpark("read_piece", {});
     await vi.advanceTimersByTimeAsync(1800);
     expect(await pending).toEqual(saved.reply);
-    expect(events.map(event => event.kind)).toEqual(["start", "thinking", "end"]);
+    expect(events.map(event => event.kind)).toEqual(["start", "recorded", "thinking", "end"]);
+    expect(events.find(event => event.kind === "recorded")).toMatchObject({ timing: { source: "recorded", realMs: 1800, recorded: "2026-11-03", model: "local-test", version: "read-piece-test" } });
     expect(events.every(event => event.callId === events[0]!.callId)).toBe(true);
     expect(typeof events[0]!.callId).toBe("string");
     expect(fetchNow).toHaveBeenCalledOnce();
