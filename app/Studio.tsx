@@ -209,6 +209,19 @@ export function Studio({ initialScore = null, sample = false, initialSetup, samp
     setSourceNote(null);
   };
 
+  const openSample = async () => {
+    const mine = ++opening.current;
+    setError(null);
+    try {
+      const { openSampleSketch } = await import('./sampleSketch');
+      const sketch = await openSampleSketch();
+      if (opening.current !== mine) return;
+      enter('live');
+      setLoaded(sketch);
+    } catch (failure) {
+      setError(failure instanceof Error ? failure.message : 'The sample could not be opened.');
+    }
+  };
   const inWork = !!loaded;
   // A bounce is only honest for its explicitly named, complete and unedited saved plan.
   const run = demoPiece?.runs.find((r) => arranged.lastAsk && r.key === arranged.lastAsk);
@@ -220,14 +233,14 @@ export function Studio({ initialScore = null, sample = false, initialSetup, samp
     <div className={`studio${inWork ? " studio-working" : ""}${sample ? " sample-mode" : ""}`}>
       <header className="hud">
         <button className="hud-name" onClick={leave}>
-          <img src="/brand/icon-white.png" alt=""/> <span>Motifold</span>
+          <span>Motifold</span>
         </button>
         {inWork && <span className="hud-project" title={loaded!.fileName}>{loaded!.fileName.replace(/\.[^.]+$/, "")}</span>}
         {inWork && <Transport />}
         {inWork && <span className="hud-stage">{stage.toUpperCase()}</span>}
         <MuseChip />
         <span className="hud-mode">{sample ? "SAVED EXAMPLES" : access === "demo" ? "REPLAY" : access === "own" ? "YOUR KEY" : access === "live" ? "SHARED CREDIT" : "MUSE SPARK 1.3"}</span>
-        <img className="phasecraft-wordmark" src="/brand/wordmark-white.png" alt="Phasecraft Audio"/>
+        <span className="author-credit" title="Chawanvit Vuthikornudomkit">by Ryu</span>
         <span className="hud-clock">
           <Clock />
         </span>
@@ -246,6 +259,9 @@ export function Studio({ initialScore = null, sample = false, initialSetup, samp
             Your next move.
           </h1>
           <p className="door-sub">Bring a sketch, played or written. Muse Spark reads it, asks what it can't tell, and writes the orchestral score as notes you can read, change and take into your DAW. Keep your melody and build around it, or give it up as a motif and let a new piece grow from it.</p>
+          <p className="door-author">Made by Chawanvit Vuthikornudomkit</p>
+          <div className="start-sample"><div><strong>Start with my piano sketch</strong><p>Hear the original, inspect its chords, then arrange it with Muse Spark.</p></div><button className="button primary" onClick={() => void openSample()}>Open sample and analyse</button></div>
+          {error && <p className="error" role="alert">{error}</p>}
           <div className="doors">
             <button className="door-card" onClick={() => enter("demo")} disabled={!demo}>
               <span className="door-n">01 ——</span>
@@ -386,7 +402,7 @@ export function Studio({ initialScore = null, sample = false, initialSetup, samp
       )}
 
       {inWork && <Workspace key={loaded!.fileName} arranged={arranged} loaded={loaded!} busy={thinking} demo={access === "demo"} prepared={demoPiece?.runs ?? []} render={render} sourceNote={sourceNote} onStage={setStage} initialSetup={initialSetup}/>}
-      {sample && <div className="ui-sample-banner">{sampleMessage ?? "Local UI sample. Fixed answers. No model calls."}</div>}
+      {sample && <div className="ui-sample-banner">{sampleMessage ?? "Local UI sample. Fixed answers. No model calls."} <a href="http://127.0.0.1:8788/?record">Open live workspace</a></div>}
       <Thinking sample={sample} />
     </div>
   );

@@ -6,7 +6,7 @@ import { sketchPreview } from './sampleSketch';
 import { newBarNumbers, type ArrangeInput, type StudyScoreAnswer, type WriteInput } from '../server/shapes';
 import { setTransport, type SparkReply, type Transport } from './spark';
 
-export const initialSetup = { ensemble: 'Full orchestra', mood: 'Hopeful', moreBars: 16 };
+export const initialSetup = { ensemble: 'Full orchestra', mood: 'Hopeful', moreBars: 16, intent: 'expand' as const, useMelodyOnly: true };
 export const previewMessage = 'Saved Hopeful and Dark arrangements for Sample_sketch.mid. No model calls.';
 
 export async function loadUiPreview() {

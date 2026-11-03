@@ -82,10 +82,13 @@ async function finished(screen:ReturnType<typeof setup>,run:number){
 it("Create snapshots its recipe and waits for a fresh layout before planning over previous ready results",async()=>{
   const screen=setup();
   await opened(screen);
+  await act(async()=>{ const ensemble=screen.host.querySelector('[aria-label="Ensemble"]') as unknown as HTMLSelectElement; ensemble.value='String orchestra'; ensemble.dispatchEvent(new Event('change',{bubbles:true})); });
   await press(screen.host,"Create");
   await finished(screen,1);
   await press(screen.host,"Setup");
-  await press(screen.host,"Brass quintet");
+  await act(async()=>{ const ensemble=screen.host.querySelector('[aria-label="Ensemble"]') as unknown as HTMLSelectElement; ensemble.value='Brass quintet'; ensemble.dispatchEvent(new Event('change',{bubbles:true})); });
+  const expand=[...screen.host.querySelectorAll<HTMLButtonElement>('.intent-choice')].find(button=>button.textContent?.startsWith('Expand'))!;
+  await act(async()=>expand.click());
   await press(screen.host,"Sad");
   screen.holdLayout();
   await press(screen.host,"Create");
@@ -119,4 +122,25 @@ it("keeping tracks waits for a new plan response before previewing instead of co
   await act(async()=>{screen.release();});
   await finished(screen,2);
   expect(screen.writes.slice(2).map(w=>w.chosen.name)).toEqual(["Run 2 A","Run 2 B"]);
+});
+it("defaults to neutral Arrange and never carries a previous mood into its request",async()=>{
+  const screen=setup();
+  await opened(screen);
+  expect(screen.host.querySelector('[aria-label="Mood"]')).toBeNull();
+  const intent=(name:string)=>[...screen.host.querySelectorAll<HTMLButtonElement>('.intent-choice')].find(button=>button.textContent?.startsWith(name))!;
+  await act(async()=>intent('Expand').click());
+  await press(screen.host,'Hopeful');
+  await act(async()=>intent('Arrange').click());
+  await press(screen.host,'Create');
+  await finished(screen,1);
+  expect(screen.layouts).toHaveLength(0);
+  expect(screen.plans[0]).toMatchObject({intent:'arrange',where:'inside',moreBars:0,ask:null});
+  expect(screen.now.standing?.parts.map(part=>part.notes.filter(note=>!note.rest).length)).toEqual(score.parts.map(part=>part.notes.filter(note=>!note.rest).length));
+});
+it("exports the original sketch before any generation has run",async()=>{
+  const screen=setup();
+  await press(screen.host,'Export');
+  expect(screen.host.textContent).toContain('Download MIDI');
+  expect(screen.plans).toHaveLength(0);
+  expect(screen.layouts).toHaveLength(0);
 });

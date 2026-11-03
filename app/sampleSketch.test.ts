@@ -29,7 +29,7 @@ it('rejects a different MIDI instead of applying this performance’s saved answ
 });
 it('uses the same piano theme’s saved arrangement names without a provider request', async () => {
   const reply = await previewTransport('plan_options', {}, () => {});
-  expect(initialSetup).toEqual({ ensemble: 'Full orchestra', mood: 'Hopeful', moreBars: 16 });
+  expect(initialSetup).toEqual({ ensemble: 'Full orchestra', mood: 'Hopeful', moreBars: 16, intent: 'expand', useMelodyOnly: true });
   expect(reply.status).toBe('ok');
   if (reply.status !== 'ok') return;
   const answer = reply.answer as { options: { name: string }[] };

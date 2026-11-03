@@ -34,11 +34,11 @@ export function arrangeInput(
   ask: string | null,
   moreBars: number,
   reading: ArrangeInput["reading"],
-  more: Partial<Pick<ArrangeInput, "instruments" | "where" | "tracks" | "answers" | "cues" | "source" | "freedom">> = {},
+  more: Partial<Pick<ArrangeInput, "instruments" | "where" | "tracks" | "answers" | "cues" | "source" | "freedom" | "intent">> = {},
 ): ArrangeInput {
   const reachesEnd = to >= (wholeScoreParts(score) ?? [part])[0]!.measures.length - 1;
   const where = more.where ?? "both";
-  return { ...pieceInput(score, part, from, to), moreBars: reachesEnd && where !== "inside" ? moreBars : 0, ask: ask?.trim() || null, reading, instruments: more.instruments ?? null, where, tracks: more.tracks ?? [], answers: more.answers ?? [], cues: more.cues ?? [], ...(more.source ? { source: more.source } : {}), ...(more.freedom ? { freedom: more.freedom } : {}) };
+  return { ...pieceInput(score, part, from, to), moreBars: reachesEnd && where !== "inside" ? moreBars : 0, ask: ask?.trim() || null, reading, instruments: more.instruments ?? null, where, tracks: more.tracks ?? [], answers: more.answers ?? [], cues: more.cues ?? [], ...(more.source ? { source: more.source } : {}), ...(more.freedom ? { freedom: more.freedom } : {}), ...(more.intent ? { intent: more.intent } : {}) };
 }
 
 export interface NewEvent {

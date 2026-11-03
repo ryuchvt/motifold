@@ -50,7 +50,7 @@ export default defineConfig(({ mode }) => ({
     },
   }] : [])],
   // Spark calls go to the local Worker (`npm run server`), which holds the key and the ledger.
-  server: { proxy: mode === "ui" ? undefined : { "/api": "http://127.0.0.1:8787" } },
+  server: { proxy: mode === "ui" ? undefined : { "/api": "http://127.0.0.1:8788" } },
   // The screen tests that write a whole plan run long when the full suite shares the machine.
   test: { testTimeout: 15_000 },
   build: {

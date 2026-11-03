@@ -8,6 +8,7 @@ import { StudyMap, StudyWords } from "./ScoreStudy";
 import type { Arranged, Stretch } from "./useArrange";
 import type { Attention } from "./attention";
 import { playhead } from "./playhead";
+import { Orders } from "./PieceView";
 import type { Selection } from "./selection";
 
 const orderWords = (order: Stretch[]) => order.map((o, k) => (k ? barsWords(o.from, o.to).toLowerCase() : barsWords(o.from, o.to))).join(", then ");
@@ -185,9 +186,10 @@ const SUGGESTED_MOODS = ["Hopeful", "Tender", "Sad", "Dreamy", "Heroic", "Tense"
 /** Whether a saved answer happens to be for the instruments the composer picked. */
 const sameChoice = (placed: { instruments: string[]; chosen: string[] }) => [...placed.instruments].sort().join("|") === [...placed.chosen].sort().join("|");
 
-export interface InitialSetup { ensemble?: string; mood?: string; moreBars?: number }
+export type WorkIntent = "arrange" | "expand" | "recompose";
+export interface InitialSetup { ensemble?: string; mood?: string; moreBars?: number; intent?: WorkIntent; useMelodyOnly?: boolean }
 
-export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onStage, selection = null, attention = [], onPick, onMode, chosenPlan = null, onChoosePlan, navigationHost, actionHost, comparisonHosted = false, onNavigate, initialSetup }: { arranged: Arranged; busy: boolean; demo?: boolean; prepared?: { key: string; mode: "arrange" | "recompose"; mood: string }[]; onStage?: (name: string) => void; selection?: Selection | null; attention?: Attention[]; onPick?: (selection: Selection | null) => void; onMode?: (mode: "arrange" | "recompose") => void; chosenPlan?: number | null; onChoosePlan?: (index: number) => void; navigationHost?: HTMLElement | null; actionHost?: HTMLElement | null; comparisonHosted?: boolean; onNavigate?: () => void; initialSetup?: InitialSetup }) {
+export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onStage, selection = null, attention = [], onPick, onMode, chosenPlan = null, onChoosePlan, navigationHost, actionHost, comparisonHosted = false, onNavigate, initialSetup }: { arranged: Arranged; busy: boolean; demo?: boolean; prepared?: { key: string; mode: "arrange" | "recompose"; mood: string }[]; onStage?: (name: string) => void; selection?: Selection | null; attention?: Attention[]; onPick?: (selection: Selection | null) => void; onMode?: (mode: WorkIntent) => void; chosenPlan?: number | null; onChoosePlan?: (index: number) => void; navigationHost?: HTMLElement | null; actionHost?: HTMLElement | null; comparisonHosted?: boolean; onNavigate?: () => void; initialSetup?: InitialSetup }) {
   const { piece, study, chords, splitting, toggleSplit, splitAll, tracks, setTrack, answered, answer, placed, options, trying, setTrying, off, togglePart, offBars, putBackBars, remaining, allParts, gone, toggleGone, handOrder, setHandOrder, bars, cues, roles, standing, structures, fitting, askFit, kept, askPiece, askPlaced, splitPlaced, askOptions, askNotes, keep, startAgain, download, reachesEnd, wholeScore, selectRange } = arranged;
   const action = (node: ReactNode) => actionHost ? createPortal(node, actionHost) : node;
   /** The step on screen, counted from Study. */
@@ -206,12 +208,12 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
   const [writeWords, setWriteWords] = useState("");
   const [mood, setMood] = useState<string | null>(initialSetup?.mood ?? null);
   /** Stay with the composer's melody, or take it as a motif (Ryu, 11-02). */
-  const [mode, setMode] = useState<"arrange" | "recompose">("arrange");
+  const [mode, setMode] = useState<WorkIntent>(initialSetup?.intent ?? "arrange");
   const [length, setLength] = useState(32);
   /** How far a recomposition may go from the tune. */
   const [freedom, setFreedom] = useState(3);
   /** Keep only the tune and write the rest new from the sketch, or keep every note on the instruments. */
-  const [tuneOnly, setTuneOnly] = useState(true);
+  const [tuneOnly, setTuneOnly] = useState(initialSetup?.useMelodyOnly ?? false);
   const [forPlayers, setForPlayers] = useState(false);
   const [fixWords, setFixWords] = useState("");
   const [fitWords, setFitWords] = useState("");
@@ -219,13 +221,14 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
   const [where, setWhere] = useState<ArrangeInput["where"]>("both");
 
   /** Keep the composer's tracks as they are and only add new parts, with no layout first. */
-  const [keepTracks, setKeepTracks] = useState(false);
+  const [keepTracks, setKeepTracks] = useState(!initialSetup?.ensemble);
   /** Where Create has got to. It runs the layout, the two plans and their first sections one after another, each from the last one's result. */
   const [creating, setCreating] = useState<null | "layout" | "plan" | "preview">(null);
   /** Later stages use the recipe pressed, even if the composer edits the next setup while it runs. */
   const createRecipe = useRef<{
     words: string;
     moreBars: number;
+    intent: "arrange" | "expand";
     where: ArrangeInput["where"];
     placedBefore: Arranged["placed"];
     optionsBefore: Arranged["options"];
@@ -237,10 +240,10 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
     setReached((now) => Math.max(now, to));
   };
   const moodsHere = demo ? MOODS.filter((m) => prepared.some((p) => p.key === (mode === "recompose" ? `recompose-${freedom}-${m.toLowerCase()}` : `arrange-${m.toLowerCase()}`))) : MOODS;
-  const askedWords = () => [mood ? `The mood I want: ${mood.toLowerCase()}.` : "", writeWords.trim()].filter(Boolean).join(" ");
+  const askedWords = () => [mode !== "arrange" && mood ? `The mood I want: ${mood.toLowerCase()}.` : "", writeWords.trim()].filter(Boolean).join(" ");
   const chosen = inScoreOrder(picked);
   const generate = () => {
-    if (mode === "arrange") void askOptions(askedWords(), moreBars, where);
+    if (mode !== "recompose") void askOptions(askedWords(), mode === "arrange" ? 0 : moreBars, mode === "arrange" ? "inside" : where, mode);
     else void arranged.askRecompose(askedWords(), length, chosen.length ? chosen : TEMPLATES.find((t) => t.name === "Full orchestra")!.instruments, freedom);
   };
   /** Everything chosen, so Muse Spark takes it from here and stops only where there's a choice to make. */
@@ -253,14 +256,17 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
       void arranged.askRecompose(words, length, chosen.length ? chosen : TEMPLATES.find((t) => t.name === "Full orchestra")!.instruments, freedom);
       return;
     }
-    createRecipe.current = { words, moreBars, where, placedBefore: placed, optionsBefore: options };
+    const intent = mode as "arrange" | "expand";
+    const count = intent === "arrange" ? 0 : moreBars;
+    const location = intent === "arrange" ? "inside" : where;
+    createRecipe.current = { words, moreBars: count, where: location, intent, placedBefore: placed, optionsBefore: options };
     if (keepTracks) {
       setCreating("plan");
-      void askOptions(words, moreBars, where);
+      void askOptions(words, count, location, intent);
       return;
     }
     setCreating("layout");
-    void askPlaced(chosen, [words, placeWords.trim()].filter(Boolean).join(" "), tuneOnly);
+    void askPlaced(chosen, [words, placeWords.trim()].filter(Boolean).join(" "), intent === "arrange" ? false : tuneOnly, intent);
   };
   // Each stage starts from what the last one left, after it's on the page, so the plans are made for the laid-out score.
   useEffect(() => {
@@ -276,7 +282,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
       if (placed.status === "ready") {
         recipe.optionsBefore = options;
         setCreating("plan");
-        void askOptions(recipe.words, recipe.moreBars, recipe.where);
+        void askOptions(recipe.words, recipe.moreBars, recipe.where, recipe.intent);
       } else if (placed.status === "unavailable") finish();
     } else if (creating === "plan") {
       if (options === recipe.optionsBefore) return;
@@ -307,8 +313,11 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
   const full = written.filter(([, n]) => !(n.status === "ready" && n.preview) && !(n.status === "asking" && creating === "preview"));
   const floor = full.some(([, n]) => n.status === "ready" && !n.writing) ? 5 : full.length ? 4 : options.status !== "none" || arranged.recompose.status !== "none" || placed.status !== "none" ? 3 : 1;
   const open = Math.max(reached, floor);
-  const current = Math.min(step, open);
+  const current = step === 5 && standing ? 5 : Math.min(step, open);
   useEffect(() => onStage?.(STEPS[current - 1]!), [current]);
+  const intentMatches = mode === "recompose" || options.status !== "ready" || !options.input.intent || options.input.intent === mode;
+  const exportScore = arranged.shown?.score ?? standing;
+  const hasExportNotes = !!exportScore?.parts.some(part => part.notes.some(note => !note.rest && !note.hidden && !note.cue && !note.grace && (note.soundingMidi !== null || note.unpitched)));
   const shownAt = arranged.recomposed ? 0 : ((comparisonHosted ? chosenPlan : null) ?? pick ?? (trying?.kind === "option" ? trying.index : written.length ? Number(written[0]![0]) : null));
 
   const onShow = trying?.kind === "structure" ? undefined : selectRange;
@@ -344,7 +353,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
       </li>
       {STEPS.map((name, k) => (
         <li key={name}>
-          <button className={current === k + 1 ? "on" : k + 1 < current ? "done" : undefined} aria-current={current === k + 1 ? "step" : undefined} disabled={k + 1 > open || piece.status !== "ready"} onClick={() => { setStep(k + 1); onNavigate?.(); }}>
+          <button className={current === k + 1 ? "on" : k + 1 < current ? "done" : undefined} aria-current={current === k + 1 ? "step" : undefined} disabled={k === 4 ? !standing : k + 1 > open || piece.status !== "ready"} onClick={() => { setStep(k + 1); onNavigate?.(); }}>
             {name}
           </button>
         </li>
@@ -357,6 +366,19 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
       Next: {STEPS[to - 1]}
     </button>
   );
+
+  if (!intentMatches && (current === 3 || current === 4)) return <div className="reading arrange">{steps}<h2 className="arrange-title">Create a new {mode === 'arrange' ? 'arrangement' : 'expansion'}</h2><p className="arrange-said">The previous result uses a different direction. Your source and that result are still kept. Choose Create in Setup to make this version.</p>{action(<button className="button primary arrange-go" onClick={() => go(2)}>Back to direction</button>)}</div>;
+
+  if (current === 5 && standing) return <div className="reading arrange">{steps}
+    <h2 className="arrange-title">Take it to your DAW</h2>
+    <p className="arrange-said">Download the complete score, including every bar and the changes you kept.</p>
+    {!hasExportNotes && <p className="arrange-said" role="status">There are no sounding notes to export yet. Write a section or return to your sketch.</p>}
+    <p className="spark-note">The ZIP contains MIDI, a MusicXML score, separate instrument tracks and your scene markers. Export works with your original sketch too.</p>
+    {action(<button className="button primary arrange-go" disabled={!hasExportNotes} onClick={() => download(forPlayers)}>Download MIDI</button>)}
+    <label className="arrange-check"><input type="checkbox" checked={forPlayers} onChange={(event) => setForPlayers(event.target.checked)}/>Also include a score transposed for the players</label>
+    {trying?.kind === 'option' && <button className="arrange-quiet" onClick={() => { keep(); setPick(null); go(2); }}>Build on this arrangement</button>}
+    {kept && <button className="arrange-quiet" onClick={startAgain}>Back to my score</button>}
+  </div>;
 
   if (piece.status === "none") {
     return (
@@ -604,7 +626,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
               return <TrackChoice key={line} line={line} value={tracks[line] ?? ""} doubt={!instrumentFromName(line) && !!guess && !guess.sure} why={guess?.why} onChange={(value) => setTrack(line, value)} />;
             })}
           </ul>
-          <p className="spark-note">These are guesses. The orange ones it isn't sure of.</p>
+          <p className="spark-note">{lines.some((line) => !instrumentFromName(line) && !!guessOf(line) && !guessOf(line)!.sure) ? "Check the highlighted names. Muse Spark is unsure of those instruments." : "These names come from your score. Change any that are wrong."}</p>
           {action(<button className="button primary arrange-go" onClick={() => { arranged.confirmTracks(); onNavigate?.(); }}>
             Confirm tracks
           </button>)}
@@ -618,18 +640,18 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
         ) : (
           <>
             <h2 className="arrange-title">What I hear</h2>
+            <p className="arrange-said">{reading.summary}</p>
             {study.status === "ready" ? (
               <>
                 <StudyMap answer={study.answer} written={study.written} onBar={(bar) => arranged.select(bar)} />
-                <StudyWords answer={study.answer} written={study.written} />
+                <More title="Phrases and harmonic details"><StudyWords answer={study.answer} written={study.written} /></More>
               </>
             ) : study.status === "asking" ? (
               <p className="spark-note">Studying the form and the harmony. This takes a minute or two, and it goes on the score when it's done.</p>
             ) : study.status === "unavailable" ? (
-              <p className="spark-note">Muse Spark couldn't study the form and harmony this time.</p>
+              <><p className="spark-note">The harmony analysis did not come back. Your score and answers are still here.</p><button className="button small" disabled={busy} onClick={() => void arranged.askStudy()}>Retry harmony analysis</button></>
             ) : null}
-            <p className="arrange-said">{reading.summary}</p>
-            {reading.missing.length > 0 && <p className="spark-note">What's missing</p>}
+            {reading.missing.length > 0 && <p className="spark-note">Ideas you can develop</p>}
             <ul className="arrange-lines">
               {reading.missing.map((m) => (
                 <li key={`${m.from}-${m.what}`}>{place(m.from, m.to, sentences(m.what), m.why)}</li>
@@ -644,8 +666,11 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
                 </ul>
               </More>
             )}
-            {structures.length > 0 && <p className="spark-note">Other orders of your bars are drawn under the overview, to see side by side.</p>}
-            <More title="Put my own order together" open={handOrder.length > 0}>
+            {structures.length > 0 && <p className="spark-note">You can also preview a different order of your sections below.</p>}
+            <More title="Change the section order" open={handOrder.length > 0}>
+              <p className="spark-note">A section is a group of bars, such as your opening or a returning tune. Try a different order without writing new notes. Preview it, then keep it or return to the original.</p>
+              {arranged.orders.length > 1 && <Orders orders={arranged.orders} ordered={trying?.kind === "structure" ? trying.index : null} onOrder={(index) => setTrying(index === null ? null : { kind: "structure", index })} onKeep={keep} bare/>}
+              <h3 className="setup-head">Choose your own sequence of bars</h3>
               {timed &&
                 (fitting === "asking" ? (
                   <p className="arrange-said">Fitting your bars to the timing. This takes about a minute.</p>
@@ -686,7 +711,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
                 })}
               </ol>
               <button className="button small" onClick={() => setHandOrder([...handOrder, { from: bars[0] ?? "1", to: bars[bars.length - 1] ?? "1" }])}>
-                Add a stretch
+                Add a bar range
               </button>
               {handOrder.length > 0 &&
                 standing &&
@@ -703,162 +728,34 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
 
       {!inspector && current === 2 && (
         <>
-          <h2 className="arrange-title">How should it go?</h2>
-          {arranged.recomposed && (
-            <button className="button small" onClick={startAgain}>
-              Back to my sketch
-            </button>
-          )}
-          <div className="arrange-modes" role="group" aria-label="How free">
-            <button className={`arrange-mode${mode === "arrange" ? " on" : ""}`} aria-pressed={mode === "arrange"} onClick={() => setMode("arrange")}>
-              <strong>Arrange</strong>
-              Keep my melody as it is. Expand it, add countermelodies and find what's missing.
-            </button>
-            <button className={`arrange-mode${mode === "recompose" ? " on" : ""}`} aria-pressed={mode === "recompose"} onClick={() => setMode("recompose")}>
-              <strong>Recompose</strong>
-              Take my melody as a motif and write a new piece from it, with its own key, metre and form.
-            </button>
+          <h2 className="arrange-title">What should change?</h2>
+          <p className="spark-note">Start with your piece as it is. Choose how far Motifold may go.</p>
+          {arranged.recomposed && <button className="button small" onClick={startAgain}>Back to my sketch</button>}
+          <div className="intent-choices" role="group" aria-label="Direction">
+            {([
+              ['arrange', 'Arrange', 'Keep this piece. Change its instruments or add a related counterline.'],
+              ['expand', 'Expand', 'Develop this piece with connected new music and a longer ending.'],
+              ['recompose', 'Recompose', 'Use my theme or motif to write a new piece.'],
+            ] as const).map(([value, title, detail]) => <button key={value} className={`intent-choice${mode === value ? ' on' : ''}`} aria-pressed={mode === value} onClick={() => { setMode(value); if (value === 'arrange') setTuneOnly(false); }}><span className="intent-radio"/><span><strong>{title}</strong><small>{detail}</small></span></button>)}
           </div>
-          {mode === "recompose" && (
-            <div className="freedom" role="group" aria-label="How far from your tune">
-              <span className="spark-note">How far from your tune</span>
-              <span className="freedom-stops">
-                {FREEDOMS.map(([name], k) => (
-                  <button key={name} className={`freedom-stop${freedom === k + 1 ? " on" : ""}`} aria-pressed={freedom === k + 1} onClick={() => setFreedom(k + 1)}>
-                    {k + 1} {name}
-                  </button>
-                ))}
-              </span>
-              <span className="spark-note">{FREEDOMS[freedom - 1]![1]}</span>
-            </div>
-          )}
-          <h3 className="setup-head">Who plays it</h3>
-          <span className="arrange-chips" role="group" aria-label="Templates">
-            {TEMPLATES.filter((t) => !demo || t.name === "Full orchestra").map((t) => (
-              <button
-                key={t.name}
-                className={`chip-button${template === t.name ? " on" : ""}`}
-                aria-pressed={template === t.name}
-                onClick={() => {
-                  setTemplate(t.name);
-                  setPicked(t.instruments);
-                }}
-              >
-                {t.name}
-              </button>
-            ))}
-          </span>
-          {demo && <p className="spark-note">This demo was prepared for a full orchestra. Any other players run live with your own key.</p>}
-          {!demo && (
-            <More title="Pick my own">
-              <span className="arrange-chips" role="group" aria-label="Your instruments">
-                {inScoreOrder([...new Set([...PICKABLE, ...picked])]).map((name) => (
-                  <button
-                    key={name}
-                    className={`chip-button small${picked.includes(name) ? " on" : ""}`}
-                    aria-pressed={picked.includes(name)}
-                    onClick={() => {
-                      setTemplate(null);
-                      setPicked((now) => (now.includes(name) ? now.filter((p) => p !== name) : [...now, name]));
-                    }}
-                  >
-                    {name}
-                  </button>
-                ))}
-              </span>
-              <form
-                className="arrange-own"
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  const name = ownInstrument.trim();
-                  if (name && !picked.includes(name)) setPicked((now) => [...now, name]);
-                  setOwnInstrument("");
-                }}
-              >
-                <input maxLength={40} aria-label="Another instrument" placeholder="Another instrument" value={ownInstrument} onChange={(e) => setOwnInstrument(e.target.value)} />
-                <button className="button small">Add</button>
-              </form>
-            </More>
-          )}
-          <div className="arrange-moods">
-            <p className="spark-note">{demo ? "The moods prepared for this demo. Any other mood, or your own words, runs live with your own key." : "The mood, if you have one. Words of your own go in the box below."}</p>
-            <span className="arrange-chips" role="group" aria-label="Mood">
-              {moodsHere.filter((m) => demo || SUGGESTED_MOODS.includes(m) || m === mood).map((m) => (
-                <button key={m} className={`chip-button${mood === m ? " on" : ""}`} aria-pressed={mood === m} onClick={() => setMood(mood === m ? null : m)}>
-                  {m}
-                </button>
-              ))}
-            </span>
-            {!demo && (
-              <More title="More moods">
-                <span className="arrange-chips" role="group" aria-label="More moods">
-                  {moodsHere.filter((m) => !SUGGESTED_MOODS.includes(m) && m !== mood).map((m) => (
-                    <button key={m} className="chip-button small" onClick={() => setMood(m)}>
-                      {m}
-                    </button>
-                  ))}
-                </span>
-              </More>
-            )}
-          </div>
-          <More title="Your direction" open={comparisonHosted}>
-            <textarea className="arrange-box" rows={2} maxLength={360} aria-label="What you want, or what inspired it" value={writeWords} placeholder="Rain on an empty street. Strings enter at bar 17, and end on E minor." onChange={(e) => setWriteWords(e.target.value)} />
+          {mode === 'arrange' && <div className="preserve-summary"><strong>Neutral. Keep my music as it is.</strong><span>Your notes, harmony, metre, timing and section order stay. Any counterline grows from your own musical material.</span></div>}
+          {mode === 'recompose' && <More title="How much of my theme stays" open><div className="freedom" role="group" aria-label="How far from your tune"><span className="freedom-stops">{FREEDOMS.map(([name], index) => <button key={name} className={`freedom-stop${freedom === index + 1 ? ' on' : ''}`} aria-pressed={freedom === index + 1} onClick={() => setFreedom(index + 1)}>{name}</button>)}</span><p className="spark-note">{FREEDOMS[freedom - 1]![1]}</p></div></More>}
+          <label className="setup-select"><span>Players</span><select aria-label="Ensemble" value={keepTracks && mode !== 'recompose' ? 'current' : template ?? 'custom'} onChange={(event) => { const value = event.target.value; setKeepTracks(value === 'current'); const selected = TEMPLATES.find((item) => item.name === value); if (selected) { setTemplate(selected.name); setPicked(selected.instruments); } else if (value === 'custom') setTemplate(null); }}>
+            {mode !== 'recompose' && <option value="current">Keep my current instruments</option>}
+            {TEMPLATES.filter((item) => !demo || item.name === 'Full orchestra').map((item) => <option key={item.name}>{item.name}</option>)}<option value="custom">Choose individual instruments</option>
+          </select></label>
+          {(template === null) && <More title="Choose individual instruments" open={template === null}><span className="arrange-chips" role="group" aria-label="Your instruments">{inScoreOrder([...new Set([...PICKABLE, ...picked])]).map((name) => <button key={name} className={`chip-button small${picked.includes(name) ? ' on' : ''}`} aria-pressed={picked.includes(name)} onClick={() => { setKeepTracks(false); setTemplate(null); setPicked((now) => now.includes(name) ? now.filter((item) => item !== name) : [...now, name]); }}>{name}</button>)}</span><form className="arrange-own" onSubmit={(event) => { event.preventDefault(); const name = ownInstrument.trim(); if (name && !picked.includes(name)) { setPicked((now) => [...now, name]); setKeepTracks(false); } setOwnInstrument(''); }}><input maxLength={40} aria-label="Another instrument" placeholder="Another instrument" value={ownInstrument} onChange={(event) => setOwnInstrument(event.target.value)}/><button className="button small">Add</button></form></More>}
+          {mode !== 'arrange' && <More title="Mood" open><p className="spark-note">Neutral keeps the character of your source. A mood is an optional new direction.</p><span className="arrange-chips" role="group" aria-label="Mood"><button className={`chip-button${!mood ? ' on' : ''}`} aria-pressed={!mood} onClick={() => setMood(null)}>Neutral</button>{moodsHere.filter((item) => demo || SUGGESTED_MOODS.includes(item) || item === mood).map((item) => <button key={item} className={`chip-button${mood === item ? ' on' : ''}`} aria-pressed={mood === item} onClick={() => setMood(item)}>{item}</button>)}</span><More title="More moods"><span className="arrange-chips">{moodsHere.filter((item) => !SUGGESTED_MOODS.includes(item)).map((item) => <button key={item} className="chip-button small" onClick={() => setMood(item)}>{item}</button>)}</span></More></More>}
+          <label className="setup-direction"><span>Your direction <small>optional</small></span><textarea className="arrange-box" rows={3} maxLength={360} aria-label="What you want, or what inspired it" value={writeWords} placeholder={mode === 'arrange' ? 'Let the viola answer the tune. Keep my harmony and the quiet character.' : 'Describe what should develop, what should stay, or the feeling you want.'} onChange={(event) => setWriteWords(event.target.value)}/></label>
+          {mode !== 'arrange' && <More title={mode === 'recompose' ? 'Length of the new piece' : 'Where to expand'} open>{mode === 'recompose' ? <label className="arrange-inline">Total bars<input type="number" min={8} max={64} value={length} onChange={(event) => setLength(Math.max(8, Math.min(64, Math.round(Number(event.target.value)) || 8)))}/></label> : <><span className="arrange-chips" role="group" aria-label="What to write">{([['after','Continue after the ending'],['both','Develop the piece and continue'],['inside','Develop within existing bars']] as const).map(([value,label]) => <button key={value} className={`chip-button${where === value ? ' on' : ''}`} aria-pressed={where === value} onClick={() => setWhere(value)}>{label}</button>)}</span>{reachesEnd && where !== 'inside' && <label className="arrange-inline">Added bars<input type="number" min={1} max={32} value={moreBars} onChange={(event) => setMoreBars(Math.max(1, Math.min(32, Math.round(Number(event.target.value)) || 1)))}/></label>}</>}</More>}
+          <More title="Advanced musical controls">
+            {mode === 'expand' && <label className="arrange-check"><input type="checkbox" disabled={keepTracks} checked={tuneOnly} onChange={(event) => setTuneOnly(event.target.checked)}/>Use only my melody as the source and write its accompaniment again</label>}{mode === "expand" && keepTracks && <p className="spark-note">Choose a new ensemble above to rewrite the accompaniment. Keeping your current instruments preserves all of your tracks.</p>}
+            {mode !== 'recompose' && <label className="arrange-check"><input type="checkbox" checked={keepTracks} onChange={(event) => setKeepTracks(event.target.checked)}/>Keep my own tracks as they are, and only add new parts</label>}
+            <label className="setup-direction"><span>Instrument placement</span><textarea className="arrange-box" rows={2} maxLength={400} aria-label="How you want it laid out" value={placeWords} placeholder="Violas carry the tune first. Bring the violins in later." onChange={(event) => setPlaceWords(event.target.value)}/></label>
+            <More title="Timing for a scene" open={cues.length > 0}><p className="spark-note">Add a moment the music should meet. A moment beyond your current ending needs Expand.</p><Moments arranged={arranged}/></More>
           </More>
-          <More title={mode === "recompose" ? "How long" : "Where the new music goes"} open={comparisonHosted}>
-            {mode === "recompose" ? (
-              <label className="arrange-inline">
-                Bars
-                <input type="number" min={8} max={64} value={length} onChange={(e) => setLength(Math.max(8, Math.min(64, Math.round(Number(e.target.value)) || 8)))} />
-              </label>
-            ) : (
-              <span className="arrange-chips" role="group" aria-label="What to write">
-                {(
-                  [
-                    ["inside", "Over what's there"],
-                    ["after", "After the end"],
-                    ["both", "Both"],
-                  ] as const
-                ).map(([value, label]) => (
-                  <button key={value} className={`chip-button${where === value ? " on" : ""}`} aria-pressed={where === value} onClick={() => setWhere(value)}>
-                    {label}
-                  </button>
-                ))}
-              </span>
-            )}
-            {mode === "arrange" && reachesEnd && where !== "inside" && (
-              <label className="arrange-inline">
-                New bars
-                <input type="number" min={1} max={32} value={moreBars} onChange={(e) => setMoreBars(Math.max(1, Math.min(32, Math.round(Number(e.target.value)) || 1)))} />
-              </label>
-            )}
-          </More>
-          <More title="Timing, for picture" open={cues.length > 0}>
-            <Moments arranged={arranged} />
-          </More>
-          {mode === "arrange" && (
-          <div className="arrange-modes" role="group" aria-label="What happens to your sketch">
-            <button className={`arrange-mode${tuneOnly ? " on" : ""}`} aria-pressed={tuneOnly} onClick={() => setTuneOnly(true)}>
-              <strong>Keep my tune, write the rest new</strong>
-              Your sketch is the source. Your chords and bass show the harmony, and the orchestra is written new from them.
-            </button>
-            <button className={`arrange-mode${tuneOnly ? "" : " on"}`} aria-pressed={!tuneOnly} onClick={() => setTuneOnly(false)}>
-              <strong>Keep every note of mine</strong>
-              Everything you wrote goes on the instruments, and new parts are added around it.
-            </button>
-          </div>
-          )}
-          <More title="Say how your notes are laid out">
-            <textarea className="arrange-box" rows={2} maxLength={400} aria-label="How you want it laid out" value={placeWords} placeholder="Violas have the tune first, and hold the violins back." onChange={(e) => setPlaceWords(e.target.value)} />
-          </More>
-          {mode === "arrange" && (
-            <label className="arrange-check">
-              <input type="checkbox" checked={keepTracks} onChange={(e) => setKeepTracks(e.target.checked)} /> Keep my own tracks as they are, and only add new parts
-            </label>
-          )}
-          {action(<div><p className="action-summary">{mode === "recompose" ? `Recompose / ${FREEDOMS[freedom - 1]![0]}` : keepTracks ? "Arrange / Keep my tracks" : tuneOnly ? "Arrange / Keep my melody" : "Arrange / Keep every note"}<br/>{template ?? `${chosen.length} players`}{mood ? ` / ${mood}` : ""}</p><button className="button primary arrange-go" disabled={busy || (demo && !mood) || (mode === "arrange" && !keepTracks && chosen.length === 0)} onClick={create}>
-            Create
-          </button></div>)}
-          <p className="spark-note">{mode === "recompose" ? "Muse Spark composes two new pieces from your motif for you to choose from." : "Muse Spark lays your notes on the players, plans two ways to go, and writes the first section of both, so you can choose by hearing them."}</p>
+          {action(<div><p className="action-summary">{mode === 'arrange' ? 'Arrange / Neutral / All source notes kept' : mode === 'expand' ? `Expand / ${mood ?? 'Neutral'}` : `Recompose / ${FREEDOMS[freedom - 1]![0]} / ${mood ?? 'Neutral'}`}<br/>{keepTracks && mode !== 'recompose' ? 'Current instruments' : template ?? `${chosen.length} players`}</p><button className="button primary arrange-go" disabled={busy || (mode !== 'recompose' && !keepTracks && chosen.length === 0)} onClick={create}>Create</button></div>)}
+          <p className="spark-note">{mode === 'recompose' ? 'First compare two musical plans. Notes are written after you choose.' : 'Compare two plans and their first sections. Then choose which one to finish.'}</p>
         </>
       )}
 
@@ -866,15 +763,15 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
         <>
           <h2 className="arrange-title">{comparisonHosted && chosenPlan !== null ? (mode === "recompose" && arranged.recompose.status === "ready" ? arranged.recompose.plans[chosenPlan]?.name : options.status === "ready" ? options.plans[chosenPlan]?.name : null) ?? "Your choice" : mode === "recompose" ? "Two new pieces" : "Two ways to go"}</h2>
           <p className="spark-note">
-            {mode === "recompose" ? `Recompose, ${FREEDOMS[freedom - 1]![0].toLowerCase()}` : "Arrange"}
-            {mood ? `, ${mood.toLowerCase()}` : ""}
+            {mode === "recompose" ? `Recompose, ${FREEDOMS[freedom - 1]![0].toLowerCase()}` : mode === "expand" ? "Expand" : "Arrange"}
+            {mode !== "arrange" && mood ? `, ${mood.toLowerCase()}` : mode === "arrange" ? ", neutral" : ""}
             {template ? `, ${template.toLowerCase()}` : ""}
             {writeWords.trim() ? `: "${writeWords.trim().slice(0, 80)}${writeWords.trim().length > 80 ? "…" : ""}"` : ""}.{" "}
             <button className="arrange-quiet inline" onClick={() => setStep(2)}>
               Change the setup
             </button>
           </p>
-          {mode === "arrange" && (!comparisonHosted || options.status !== "ready") && (
+          {mode !== "recompose" && (!comparisonHosted || options.status !== "ready") && (
             <ol className="create-steps" aria-label="What Create does">
               {!keepTracks && <li className={stateOf(placed.status)}>Lay your notes on the players</li>}
               <li className={stateOf(options.status)}>Plan two ways to go</li>
@@ -894,9 +791,9 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
                   disabled={busy}
                   onClick={() => {
                     setKeepTracks(true);
-                    createRecipe.current = { words: askedWords(), moreBars, where, placedBefore: placed, optionsBefore: options };
+                    createRecipe.current = { words: askedWords(), moreBars: mode === "arrange" ? 0 : moreBars, where: mode === "arrange" ? "inside" : where, intent: mode === "expand" ? "expand" : "arrange", placedBefore: placed, optionsBefore: options };
                     setCreating("plan");
-                    void askOptions(askedWords(), moreBars, where);
+                    void askOptions(askedWords(), mode === "arrange" ? 0 : moreBars, mode === "arrange" ? "inside" : where, mode === "expand" ? "expand" : "arrange");
                   }}
                 >
                   Carry on with my tracks as they are
@@ -942,7 +839,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
               </button>
             </>
           )}
-          {((mode === "recompose" && arranged.recompose.status === "ready") || (mode === "arrange" && options.status === "ready")) && !arranged.recomposed && <p className="spark-note">Choose A or B above the score. Audition its first section, change its chords here, then write the rest.</p>}
+          {((mode === "recompose" && arranged.recompose.status === "ready") || (mode !== "recompose" && options.status === "ready")) && !arranged.recomposed && <p className="spark-note">Choose A or B above the score. Audition its first section, change its chords here, then write the rest.</p>}
           {mode === "recompose" && arranged.recompose.status === "ready" && !arranged.recomposed && (
             <ul className="arrange-list">
               {arranged.recompose.plans.map((plan, index) => comparisonHosted && chosenPlan !== index ? null : (
@@ -957,7 +854,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
               ))}
             </ul>
           )}
-          {mode === "arrange" && options.status === "ready" && !arranged.recomposed && (
+          {mode !== "recompose" && options.status === "ready" && !arranged.recomposed && (
             <ul className="arrange-list">
               {options.plans.map((plan, index) => {
                 if (comparisonHosted && chosenPlan !== index) return null;
@@ -1020,7 +917,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
               })}
             </ul>
           )}
-          {((mode === "recompose" && arranged.recompose.status === "ready") || (mode === "arrange" && options.status === "ready")) && !creating && (
+          {((mode === "recompose" && arranged.recompose.status === "ready") || (mode !== "recompose" && options.status === "ready")) && !creating && (
             <button className="arrange-quiet" disabled={busy} onClick={generate}>
               Think of two more
             </button>
@@ -1119,36 +1016,6 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
           <button className="arrange-quiet" onClick={() => setStep(3)}>
             Choose another plan
           </button>
-        </>
-      )}
-
-      {!inspector && current === 5 && (
-        <>
-          <h2 className="arrange-title">Take it to your DAW</h2>
-          <p className="spark-note">A folder with what's on the score: the MIDI, every part on its own track from bar 1 with its levels on the mod wheel, the score in MusicXML, and your moments as markers.</p>
-          {action(<button className="button primary arrange-go" onClick={() => download(forPlayers)}>
-            Download MIDI
-          </button>)}
-          <label className="arrange-check">
-            <input type="checkbox" checked={forPlayers} onChange={(e) => setForPlayers(e.target.checked)} /> Also a MusicXML score transposed for the players, for Sibelius, Dorico or MuseScore
-          </label>
-          {trying?.kind === "option" && (
-            <button
-              className="arrange-quiet"
-              onClick={() => {
-                keep();
-                setPick(null);
-                go(2);
-              }}
-            >
-              Build on this arrangement
-            </button>
-          )}
-          {kept && (
-            <button className="arrange-quiet" onClick={startAgain}>
-              Back to my score
-            </button>
-          )}
         </>
       )}
 

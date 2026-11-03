@@ -593,9 +593,12 @@ describe("the panel", () => {
     expect(host.textContent).toContain("The tune is in Inst 1.");
     expect(host.textContent).toContain("No ending.");
     await press(host, "Next: Setup");
-    expect(host.textContent).toContain("How should it go?");
+    expect(host.textContent).toContain("What should change?");
     expect(host.textContent).not.toContain("Download MIDI");
-    await press(host, "String quartet");
+    await act(async () => {
+      const ensemble = host.querySelector('[aria-label="Ensemble"]') as unknown as HTMLSelectElement;
+      ensemble.value = 'String quartet'; ensemble.dispatchEvent(new Event('change', { bubbles: true }));
+    });
     await press(host, "Create");
     await settled();
     // Create lays the notes out, plans two ways and writes the first section of both, then stops for the choice.
@@ -609,8 +612,8 @@ describe("the panel", () => {
     await press(host, "Next: Export");
     expect(host.textContent).toContain("Download MIDI");
     await press(host, "Study");
-    expect(host.textContent).toContain("drawn under the overview");
-    await press(host, "Add a stretch");
+    expect(host.textContent).toContain("preview a different order");
+    await press(host, "Add a bar range");
     expect(host.querySelector('input[aria-label="Stretch 1 from bar"]')).toBeTruthy();
   });
 
@@ -664,7 +667,7 @@ describe("the panel", () => {
     await press(screen.host, "Read my score");
     await press(screen.host, "Confirm tracks");
     await press(screen.host, "Skip this");
-    expect(screen.host.textContent).toContain("What's missing");
+    expect(screen.host.textContent).toContain("Ideas you can develop");
     expect(screen.arranged.answered).toEqual({});
   });
 
@@ -675,8 +678,8 @@ describe("the panel", () => {
     await press(host, "Confirm tracks");
     await press(host, "Skip this");
     await press(host, "Next: Setup");
-    expect(host.textContent).toContain("How should it go?");
-    expect(host.textContent).toContain("Timing, for picture");
+    expect(host.textContent).toContain("What should change?");
+    expect(host.textContent).toContain("Timing for a scene");
     expect(host.textContent).toContain("Keep my own tracks as they are");
   });
 

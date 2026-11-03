@@ -41,7 +41,7 @@ function SectionRail({ arranged, onTrial }: { arranged: Arranged; onTrial: () =>
     setOver(null);
   };
   return <div className="section-rail" aria-label="Section order">
-    <div className="rail-label"><span>Form</span><span>{trial ? 'Trying your order' : 'Drag to try an order'}</span></div>
+    <div className="rail-label"><span>Section order</span><span>{trial ? 'Previewing a different order' : 'Move a section earlier or later'}</span></div>
     <div className="rail-blocks">
       {blocks.map((block, index) => <div key={`${block.from}-${index}`} className={`rail-block${over === index ? ' drop-over' : ''}${dragging === index ? ' dragging' : ''}`} style={{ flexGrow: block.beats }} draggable
         onDragStart={(e) => { e.dataTransfer.setData('text/plain', String(index)); e.dataTransfer.effectAllowed = 'move'; setDragging(index); }}
@@ -58,25 +58,27 @@ function SectionRail({ arranged, onTrial }: { arranged: Arranged; onTrial: () =>
 
 export function Workspace({ arranged, loaded, busy, demo, prepared, render, sourceNote, onStage, initialSetup }: { arranged: Arranged; loaded: LoadedSketch; busy: boolean; demo: boolean; prepared: DemoPiece['runs']; render?: string; sourceNote: string | null; onStage: (stage: string) => void; initialSetup?: InitialSetup }) {
   const [picked, setPicked] = useState<Selection | null>(null);
-  const [mode, setMode] = useState<'arrange' | 'recompose'>('arrange');
+  const [mode, setMode] = useState<'arrange' | 'expand' | 'recompose'>('arrange');
   const [chosen, setChosen] = useState<number | null>(null);
   const [stage, setStage] = useState('Study');
   const previousStage = useRef('Study');
   const [zoom, setZoom] = useState(.8);
   const [inspectorOpen, setInspectorOpen] = useState(true);
   const [expanded, setExpanded] = useState(false);
+  const [reordering, setReordering] = useState(false);
   const [layers, setLayers] = useState({ sections: true, chords: true, marks: true });
   const [navigationHost, setNavigationHost] = useState<HTMLElement | null>(null);
   const [actionHost, setActionHost] = useState<HTMLDivElement | null>(null);
   const [drawError, setDrawError] = useState<string | null>(null);
   const scoreView = useRef<ScoreViewHandle>(null);
+  const resetStepScroll = () => {
+    const pane = document.querySelector<HTMLElement>('.inspector-scroll');
+    if (pane) { pane.scrollTop = 0; pane.scrollTo?.({ top: 0, behavior: 'auto' }); }
+    if (window.matchMedia?.('(max-width: 760px)').matches) document.querySelector('.composer-inspector')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
   const changeStage = (name: string) => {
-    setStage(name);
-    onStage(name);
-    if (previousStage.current !== name && window.matchMedia?.("(max-width: 760px)").matches) requestAnimationFrame(() => {
-      const target = name === 'Pick' ? '.idea-comparison' : name === 'Write' ? '.score-desk' : '.composer-inspector';
-      (document.querySelector(target) ?? document.querySelector('.composer-inspector'))?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
+    setStage(name); onStage(name);
+    if (previousStage.current !== name) requestAnimationFrame(resetStepScroll);
     previousStage.current = name;
   };
   const pendingAudition = useRef<{ index: number; beat: number; generation: object | null } | null>(null);
@@ -88,29 +90,31 @@ export function Workspace({ arranged, loaded, busy, demo, prepared, render, sour
   const attention = useMemo(() => attentionOf(arranged), [arranged.piece, arranged.answered, arranged.options, arranged.trying, arranged.tracks, arranged.tracksConfirmed]);
   const shownAttention = stage === 'Study' || stage === 'Setup' ? attention : attention.filter((a) => a.kind !== 'missing');
   const progress = useMemo(() => writingProgress(arranged), [arranged.options, arranged.trying]);
-  const plans = mode === 'recompose' ? (arranged.recompose.status === 'ready' && !arranged.recomposed ? arranged.recompose.plans : null) : arranged.options.status === 'ready' && !arranged.recomposed ? arranged.options.plans : null;
-  const generation = mode === 'arrange' ? (arranged.options.status === 'ready' ? arranged.options.input : null) : (arranged.recompose.status === 'ready' ? arranged.recompose.input : null);
+  const matchingOptions = arranged.options.status !== 'ready' || !arranged.options.input.intent || arranged.options.input.intent === mode;
+  const plans = mode === 'recompose' ? (arranged.recompose.status === 'ready' && !arranged.recomposed ? arranged.recompose.plans : null) : arranged.options.status === 'ready' && matchingOptions && !arranged.recomposed ? arranged.options.plans : null;
+  const generation = mode !== 'recompose' ? (arranged.options.status === 'ready' ? arranged.options.input : null) : (arranged.recompose.status === 'ready' ? arranged.recompose.input : null);
   const clearAudition = () => { waitingChoice.current = null; pendingAudition.current = null; if (auditionFrame.current !== null) cancelAnimationFrame(auditionFrame.current); };
   useEffect(() => {
     setChosen(null); clearAudition();
     if (generation && window.matchMedia?.("(max-width: 760px)").matches) requestAnimationFrame(() => document.querySelector('.idea-comparison')?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
   }, [mode, generation]);
-  const written = mode === 'arrange' && arranged.options.status === 'ready' ? Object.entries(arranged.options.notes).flatMap(([k, n]) => n.status === 'ready' ? [Number(k)] : []) : [];
-  const previewed = mode === 'arrange' && arranged.options.status === 'ready' ? Object.entries(arranged.options.notes).flatMap(([k, n]) => n.status === 'ready' && n.preview ? [Number(k)] : []) : [];
+  const written = mode !== 'recompose' && matchingOptions && arranged.options.status === 'ready' ? Object.entries(arranged.options.notes).flatMap(([k, n]) => n.status === 'ready' ? [Number(k)] : []) : [];
+  const previewed = mode !== 'recompose' && matchingOptions && arranged.options.status === 'ready' ? Object.entries(arranged.options.notes).flatMap(([k, n]) => n.status === 'ready' && n.preview ? [Number(k)] : []) : [];
   const marks = arranged.studyMarks && { ...arranged.studyMarks, sections: layers.sections ? arranged.studyMarks.sections : [], chords: layers.chords ? arranged.studyMarks.chords : [], passages: layers.marks ? arranged.studyMarks.passages : [] };
   const pick = (selection: Selection | null) => { clearAudition(); setPicked(selection); if (selection) { setInspectorOpen(true); if (window.matchMedia?.("(max-width: 760px)").matches) requestAnimationFrame(() => document.querySelector(".composer-inspector")?.scrollIntoView({ behavior: "smooth", block: "start" })); } };
   const choose = (index: number, audition = false) => {
+    if (mode !== 'recompose' && !matchingOptions) return;
     const beat = playhead.beat;
     clearAudition();
     setChosen(index);
     setPicked(null);
     setInspectorOpen(true);
     const notes = arranged.options.status === 'ready' ? arranged.options.notes[index] : null;
-    if (mode === 'arrange' && notes?.status === 'ready') {
+    if (mode !== 'recompose' && notes?.status === 'ready') {
       arranged.setTrying({ kind: 'option', index }, true);
       waitingChoice.current = null;
       if (audition) pendingAudition.current = { index, beat, generation };
-    } else if (mode === 'arrange') {
+    } else if (mode !== 'recompose') {
       waitingChoice.current = { index, generation };
       if (audition) { pendingAudition.current = { index, beat, generation }; if (notes?.status !== 'asking' && !demo) void arranged.askPreview(index); }
     }
@@ -163,20 +167,20 @@ export function Workspace({ arranged, loaded, busy, demo, prepared, render, sour
     const start = Math.max(0, Math.min(numbers.length - count, from + direction * count));
     selectRange(numbers[start]!, numbers[Math.min(start + count - 1, numbers.length - 1)]!);
   };
-  const candidate = arranged.recomposed ? 0 : mode === 'arrange' ? (arranged.trying?.kind === 'option' ? arranged.trying.index : chosen ?? written[0]) : undefined;
+  const candidate = arranged.recomposed ? 0 : mode !== 'recompose' ? (arranged.trying?.kind === 'option' ? arranged.trying.index : chosen ?? written[0]) : undefined;
   const switchable = candidate !== undefined && arranged.options.status === 'ready' && arranged.options.notes[candidate]?.status === 'ready' ? candidate : undefined;
-  const hasVersions = (mode === 'arrange' || !!arranged.recomposed) && arranged.options.status === 'ready' && Object.values(arranged.options.notes).some((n) => n.status === 'ready');
+  const hasVersions = matchingOptions && (mode !== 'recompose' || !!arranged.recomposed) && arranged.options.status === 'ready' && Object.values(arranged.options.notes).some((n) => n.status === 'ready');
   const writing = progress.find((p) => p.state === 'writing');
   return <div className={`workspace${inspectorOpen ? '' : ' inspector-hidden'}${expanded ? ' overview-expanded' : ''}`}>
     <nav className="workflow" aria-label="Composition workflow" ref={setNavigationHost}/>
     <div className="workspace-body">
       <main className="music-space">
         <div className="overview-shell">
-          <div className="overview-title"><span>Whole piece <span className="music-meta">{numbers.length} bars / {data?.rows.length ?? 0} tracks</span></span><div><button className="text-control" aria-expanded={expanded} onClick={() => setExpanded(!expanded)}>{expanded ? 'Compact overview' : 'Expand overview'}</button><button className="icon-control" aria-label={inspectorOpen ? 'Hide controls' : 'Show controls'} onClick={() => setInspectorOpen(!inspectorOpen)}>{inspectorOpen ? <PanelRightClose size={16}/> : <PanelRightOpen size={16}/>}</button></div></div>
+          <div className="overview-title"><span>Whole piece <span className="music-meta">{numbers.length} bars / {data?.rows.length ?? 0} tracks</span></span><div>{stage === "Study" && <button className="text-control" aria-expanded={reordering} onClick={() => setReordering(!reordering)}>Reorder sections</button>}<button className="text-control" aria-expanded={expanded} onClick={() => setExpanded(!expanded)}>{expanded ? 'Compact overview' : 'Expand overview'}</button><button className="icon-control" aria-label={inspectorOpen ? 'Hide controls' : 'Show controls'} onClick={() => setInspectorOpen(!inspectorOpen)}>{inspectorOpen ? <PanelRightClose size={16}/> : <PanelRightOpen size={16}/>}</button></div></div>
           <div className="overview-scroll">{data && arranged.view && <PieceView data={data} sections={arranged.sections} moments={arranged.moments} selected={arranged.view} focus={arranged.focus} solo={arranged.solo} instrumentOf={arranged.instrumentOf} hasNew={arranged.trying?.kind === 'option'} render={render} onSelect={(bar) => { clearAudition(); arranged.select(bar); }} onSelectRange={selectRange} onFocus={arranged.setFocus} onSolo={arranged.toggleSolo} onBeat={(beat) => scoreView.current?.showPlaying(cursor(beat))} attention={shownAttention} forms={arranged.study.status === 'ready' ? arranged.study.answer.sections : []} progress={progress} picked={picked} onPick={pick}/>}</div>
-          {stage === 'Study' && <SectionRail arranged={arranged} onTrial={() => { clearAudition(); setPicked(null); }}/>}
+          {stage === 'Study' && reordering && <SectionRail arranged={arranged} onTrial={() => { clearAudition(); setPicked(null); }}/>}
         </div>
-        {data && <Compare data={data} sections={arranged.sections} orders={stage === 'Study' && arranged.options.status === 'none' ? arranged.orders.filter((o) => o.index !== -1) : []} ordered={arranged.trying?.kind === 'structure' ? arranged.trying.index : null} onOrder={(index) => { clearAudition(); setPicked(null); arranged.setTrying(index === null ? null : { kind: 'structure', index }); }} onKeepOrder={() => { clearAudition(); setPicked(null); arranged.keep(); }} plans={stage === 'Pick' ? plans : null} recompose={mode === 'recompose'} chosen={chosen} onChoose={(index) => choose(index)} onAudition={(index) => choose(index, true)} compact written={written} previewed={previewed} onPreview={demo ? undefined : (index) => void arranged.askPreview(index)} busy={busy} onShowBars={selectRange}/>}
+        {data && <Compare data={data} sections={arranged.sections} orders={[]} ordered={arranged.trying?.kind === 'structure' ? arranged.trying.index : null} onOrder={(index) => { clearAudition(); setPicked(null); arranged.setTrying(index === null ? null : { kind: 'structure', index }); }} onKeepOrder={() => { clearAudition(); setPicked(null); arranged.keep(); }} plans={stage === 'Pick' ? plans : null} recompose={mode === 'recompose'} chosen={chosen} onChoose={(index) => choose(index)} onAudition={(index) => choose(index, true)} compact written={written} previewed={previewed} onPreview={demo ? undefined : (index) => void arranged.askPreview(index)} busy={busy} onShowBars={selectRange}/>}
         <section className="score-desk" aria-label="Notation">
           <div className="score-toolbar">
             <div className="passage-controls"><span>Bars</span><select aria-label="First visible bar" value={arranged.view?.from ?? numbers[0] ?? ''} onChange={(e) => selectRange(e.target.value, numbers.indexOf(e.target.value) > numbers.indexOf(arranged.view?.to ?? '') ? e.target.value : arranged.view!.to)}>{numbers.map((n) => <option key={n}>{n}</option>)}</select><span>to</span><select aria-label="Last visible bar" value={arranged.view?.to ?? numbers.at(-1) ?? ''} onChange={(e) => selectRange(numbers.indexOf(e.target.value) < numbers.indexOf(arranged.view?.from ?? '') ? e.target.value : arranged.view!.from, e.target.value)}>{numbers.map((n) => <option key={n}>{n}</option>)}</select><button className="icon-control" aria-label="Previous passage" disabled={arranged.view?.from === numbers[0]} onClick={() => shift(-1)}><ChevronLeft size={15}/></button><button className="icon-control" aria-label="Next passage" disabled={arranged.view?.to === numbers.at(-1)} onClick={() => shift(1)}><ChevronRight size={15}/></button><button className="text-control" onClick={() => { if (numbers.length) { clearAudition(); arranged.selectRange(numbers[0]!, numbers.at(-1)!); setPicked(null); } }}>All bars</button></div>
@@ -187,7 +191,7 @@ export function Workspace({ arranged, loaded, busy, demo, prepared, render, sour
           <div className="score-status" role="status"><span>{writing ? `Writing bars ${writing.from} to ${writing.to}` : sourceNote || (render ? 'Playing the saved instrument bounce' : 'Select a passage to explore or change it')}</span><span>{picked?.kind === 'bars' ? `Selected bar ${picked.from}${picked.to !== picked.from ? ` to ${picked.to}` : ''}` : 'Space to play / Escape to close'}</span></div>
         </section>
       </main>
-      <aside className="composer-inspector" aria-label="Composition controls"><div className="inspector-topline"><span>{picked ? 'Your selection' : stage === 'Setup' ? 'Your direction' : stage === 'Pick' ? 'Your choice' : stage === 'Export' ? 'Your score' : 'Composition'}</span><button className="icon-control" aria-label="Hide controls" onClick={() => setInspectorOpen(false)}><PanelRightClose size={16}/></button></div><div className="inspector-scroll"><ArrangePanel initialSetup={initialSetup} arranged={arranged} busy={busy} demo={demo} prepared={prepared} onStage={changeStage} selection={picked} attention={attention} onPick={pick} onMode={(next) => { if (next !== mode) { clearAudition(); setMode(next); if (!arranged.recomposed) arranged.setTrying(null, true); } }} chosenPlan={chosen} onChoosePlan={(index) => { clearAudition(); setChosen(index); }} navigationHost={navigationHost} actionHost={actionHost} comparisonHosted onNavigate={() => { clearAudition(); setPicked(null); setInspectorOpen(true); if (window.matchMedia?.("(max-width: 760px)").matches) requestAnimationFrame(() => document.querySelector(".composer-inspector")?.scrollIntoView({ behavior: "smooth", block: "start" })); }}/></div><div className="inspector-action" ref={setActionHost}/></aside>
+      <aside className="composer-inspector" aria-label="Composition controls"><div className="inspector-topline"><span>{picked ? 'Your selection' : stage === 'Setup' ? 'Your direction' : stage === 'Pick' ? 'Your choice' : stage === 'Export' ? 'Your score' : 'Composition'}</span><button className="icon-control" aria-label="Hide controls" onClick={() => setInspectorOpen(false)}><PanelRightClose size={16}/></button></div><div className="inspector-scroll"><ArrangePanel initialSetup={initialSetup} arranged={arranged} busy={busy} demo={demo} prepared={prepared} onStage={changeStage} selection={picked} attention={attention} onPick={pick} onMode={(next) => { if (next !== mode) { clearAudition(); setMode(next); if (!arranged.recomposed) arranged.setTrying(null, true); } }} chosenPlan={chosen} onChoosePlan={(index) => { clearAudition(); setChosen(index); }} navigationHost={navigationHost} actionHost={actionHost} comparisonHosted onNavigate={() => { clearAudition(); setPicked(null); setInspectorOpen(true); requestAnimationFrame(resetStepScroll); }}/></div><div className="inspector-action" ref={setActionHost}/></aside>
     </div>
   </div>;
 }

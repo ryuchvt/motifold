@@ -1,3 +1,4 @@
+import sampleUrl from '../test-fixtures/Sample_sketch.mid?url';
 // The selected piano performance and its already saved bar reading. No model is contacted here.
 import { parseScore } from '../score';
 import savedBars from '../test-fixtures/sample-sketch-bars.json';
@@ -17,4 +18,10 @@ export async function sketchPreview(bytes: Uint8Array) {
   if (!reading.place.every(Number.isFinite)) throw new Error('The saved sample bars could not be read.');
   const xmlText = scoreOfReading(played, attacks, reading, 'Sample sketch');
   return { fileName: SAMPLE_FILE, xmlText, score: parseScore(xmlText) };
+}
+
+export async function openSampleSketch() {
+  const response = await fetch(sampleUrl);
+  if (!response.ok) throw new Error('The piano sketch could not be opened.');
+  return sketchPreview(new Uint8Array(await response.arrayBuffer()));
 }

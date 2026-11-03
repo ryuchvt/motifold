@@ -100,6 +100,7 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
   /** The composer has looked at the track guesses and said they're right. */
   const [tracksConfirmed, setTracksConfirmed] = useState(false);
   const studyTurn = useRef(0);
+  const studySource = useRef<{ input: StudyScoreInput; parts: Part[] } | null>(null);
   /** What the composer says each track is, by the name Muse Spark knows it by. */
   const [tracks, setTracks] = useState<Record<string, string>>({});
   /** What they answered, by question. */
@@ -148,6 +149,7 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     setGone([]);
     setPiece({ status: "none" });
     studyTurn.current++;
+    studySource.current = null;
     setStudy({ status: "none" });
     setTracks({});
     setAnswered({});
@@ -216,6 +218,9 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
   /** The score under them has changed, so nothing still on its way may land on it. */
   const dropAsked = () => {
     turn.current++;
+    studyTurn.current++;
+    studySource.current = null;
+    setStudy({ status: "none" });
     setPiece((now) => (now.status === "asking" ? { status: "none" } : now));
     setPlaced((now) => (now.status === "asking" ? { status: "none" } : now));
     setFitting("none");
@@ -227,12 +232,24 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     setGone((now) => (now.includes(id) ? now.filter((p) => p !== id) : [...now, id]));
   };
 
+  const askStudy = async () => {
+    const source = studySource.current;
+    if (!source) return;
+    const now = ++studyTurn.current;
+    setStudy({ status: 'asking' });
+    const reply = await askSpark('study_score', source.input);
+    if (studyTurn.current !== now || studySource.current !== source) return;
+    const answer = reply.status === 'ok' ? reply.answer as StudyScoreAnswer : undefined;
+    setStudy(answer && [answer.sections, answer.harmony, answer.moments].every(Array.isArray) ? { status: 'ready', answer, written: source.input.written, parts: source.parts } : { status: 'unavailable' });
+  };
+
   const askPiece = async () => {
     if (!base || !mine) return;
     const now = ++turn.current;
     setPiece({ status: "asking" });
     const input = pieceInput(base.score, mine, span.from, span.to);
-    const studied = ++studyTurn.current;
+    studyTurn.current++;
+    studySource.current = null;
     // The parts its note numbers count through: every part only when that's what was sent, because a big score falls back to one line (review F4).
     const line = soundsAtAll(mine) ? mine : (base.score.parts.find(soundsAtAll) ?? mine);
     const parts = wholeScoreInput(base.score, span.from, span.to) ? wholeScoreParts(base.score)! : [line];
@@ -241,11 +258,9 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     if (turn.current !== now) return;
     // The study comes after the reading, which every later step needs, so it can never take the credit the reading would have had (review F3),
     // and only once there's a reading to show it beside.
-    const study = async () => {
-      const r = await askSpark("study_score", input);
-      if (studyTurn.current !== studied) return;
-      const answer = r.status === "ok" ? (r.answer as StudyScoreAnswer | undefined) : undefined;
-      setStudy(answer && [answer.sections, answer.harmony, answer.moments].every(Array.isArray) ? { status: "ready", answer, written: input.written, parts } : { status: "unavailable" });
+    const study = () => {
+      studySource.current = { input, parts };
+      return askStudy();
     };
     const ready = (answer: PieceReading, saved: boolean) => {
       const lines = input.lines ?? [];
@@ -302,7 +317,7 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
   }, [piece, roles, placed, base]);
 
   /** Their notes on the instruments they chose. Always from what they wrote, so it can be asked again. */
-  const askPlaced = async (chosen: string[], words: string, tuneOnly = false) => {
+  const askPlaced = async (chosen: string[], words: string, tuneOnly = false, intent?: "arrange" | "expand") => {
     if (!source || !part || piece.status !== "ready") return;
     const now = ++turn.current;
     setTrying(null);
@@ -311,7 +326,7 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     const instruments = inScoreOrder(chosen);
     const from = split ? (wholeScoreParts(source.score)?.[0] ?? source.score.parts[0]!) : part;
     const written = split ? pieceInput(source.score, from, 0, from.measures.length - 1) : pieceInput(source.score, part, range.from, range.to);
-    const input: DistributeInput = { ...written, instruments, roles, answers, ...(tuneOnly ? { tuneOnly: true } : {}), ask: words.trim() || null, tracks: (written.lines ?? []).flatMap((line) => (tracks[line]?.trim() ? [{ line, instrument: tracks[line]!.trim() }] : [])) };
+    const input: DistributeInput = { ...written, instruments, roles, answers, ...(intent ? { intent } : {}), ...(tuneOnly ? { tuneOnly: true } : {}), ask: words.trim() || null, tracks: (written.lines ?? []).flatMap((line) => (tracks[line]?.trim() ? [{ line, instrument: tracks[line]!.trim() }] : [])) };
     const reply = await askSpark("distribute", input);
     if (turn.current !== now) return;
     const ready = (answer: DistributeAnswer, onto: string[], saved: boolean) => {
@@ -341,7 +356,7 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     setPlaced({ ...placed, check: { ...placed.check, together: [] } });
   };
 
-  const askOptions = async (words: string, moreBars: number, where: ArrangeInput["where"]) => {
+  const askOptions = async (words: string, moreBars: number, where: ArrangeInput["where"], intent?: "arrange" | "expand") => {
     if (!base || !mine) return;
     const now = ++turn.current;
     setTrying(null);
@@ -352,9 +367,10 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     // A moment past the last bar needs the bars to get there.
     const moments = placeCues(cues, base.score);
     const needed = Math.min(32, barsToReach(moments, base.score));
-    const going = where === "inside" && needed ? "both" : where;
+    const going = intent === "arrange" ? "inside" : where === "inside" && needed ? "both" : where;
     const input = arrangeInput(base.score, mine, span.from, span.to, words, going === "inside" ? 0 : Math.max(moreBars, needed), reading, {
       instruments: instruments?.length ? instruments : null,
+      ...(intent ? { intent } : {}),
       where: going,
       answers,
       tracks: lines.flatMap((line) => (tracks[line]?.trim() ? [{ line, instrument: tracks[line]!.trim() }] : [])),
@@ -795,6 +811,7 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     if (trying?.kind === "structure") {
       setPiece({ status: "none" });
       studyTurn.current++;
+      studySource.current = null;
       setStudy({ status: "none" });
       setPlaced({ status: "none" });
       setHandOrder([]);
@@ -914,6 +931,7 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     instrumentOf: (label: string) => tracks[label] ?? "",
     kept: !!kept,
     askPiece,
+    askStudy,
     askPlaced,
     splitPlaced,
     askOptions,

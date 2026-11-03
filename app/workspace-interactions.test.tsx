@@ -96,6 +96,7 @@ it('a form trial preserves all source notes and cancels back to the exact origin
   const screen = await setup();
   const original = screen.now.shown;
   await click(screen.host, 'A note in bar 3');
+  await click(screen.host, 'Reorder sections');
   await click(screen.host, 'Move section 1 later');
   expect(screen.now.trying).toEqual({ kind: 'structure', index: -1 });
   expect(screen.host.querySelector('.inspector')).toBeNull();
