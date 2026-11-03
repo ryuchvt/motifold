@@ -51,3 +51,13 @@ it('loads shared plus the selected recipe only and never falls through to an API
   expect(await askSpark('arrange',{chosen:'B'})).toEqual({status:'fallback',reason:'not-prepared'});
   expect(fetcher.mock.calls.map(x=>x[0])).toEqual(['/demo/sample-sketch/shared.json','/demo/sample-sketch/strings.json']);
 });
+
+it('keeps a complete promoted pair independent of a different older shared reading',async()=>{
+  const current={...piece,tutorial:{...piece.tutorial!,completeOptions:[0,1] as (0|1)[]},runs:piece.runs.map(run=>({...run,selfContained:true}))};
+  const reply={status:'ok',answer:{reading:'fresh exact take'},cached:false};
+  const fetcher=vi.fn(async(url:string)=>{if(url==='/demo/sample-sketch/strings.json')return Response.json([{shape:'read_piece',input:{},reply,ms:0,thinking:[],model:'local-test',version:'local-test'}]);throw Error(`Older shared reading must not load: ${url}`)});vi.stubGlobal('fetch',fetcher);
+  expect(recordedDemoIndex({recorded:'2026-11-04',pieces:[current]})).not.toBeNull();
+  startDemo(current,'2026-11-04');expect(await askSpark('read_piece',{})).toEqual(reply);
+  expect(fetcher.mock.calls.map(row=>row[0])).toEqual(['/demo/sample-sketch/strings.json']);
+  expect(recordedDemoIndex({recorded:'2026-11-04',pieces:[{...current,tutorial:{...current.tutorial,completeOptions:[0,0]}}]})).toBeNull();
+});

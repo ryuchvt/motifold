@@ -11,7 +11,7 @@ export interface DemoRecipe {
   freedom?: number;
   length?: number;
 }
-export interface DemoRun { key: string; mode: DemoRecipe["intent"]; ensemble?: string; mood: string; freedom?: number; length?: number; render?: string; renderPlan?: string }
+export interface DemoRun { key: string; mode: DemoRecipe["intent"]; ensemble?: string; mood: string; freedom?: number; length?: number; render?: string; renderPlan?: string; selfContained?: boolean }
 /** An outcome is addressable only after its real recording and exported files have been checked. */
 export interface DemoOutcome {
   id: string;
@@ -48,7 +48,7 @@ export interface DemoPiece {
   guide: string[];
   runs: DemoRun[];
   catalog?: string;
-  tutorial?: { runKey: string; acceptedLabel: string; rawNoteCount?: number; acceptedNoteCount?: number };
+  tutorial?: { runKey: string; acceptedLabel: string; rawNoteCount?: number; acceptedNoteCount?: number; completeOptions?: (0 | 1)[] };
 }
 export interface DemoIndex {
   recorded: string;
@@ -97,9 +97,10 @@ export function recordedDemoIndex(value: unknown): DemoIndex | null {
     if (piece.catalog !== undefined && !localAsset(piece.catalog)) return false;
     if (!Array.isArray(piece.guide) || piece.guide.length === 0 || !piece.guide.every(text) || !Array.isArray(piece.runs) || piece.runs.length === 0) return false;
     const keys = new Set<string>();
-    if (!piece.runs.every((run: unknown) => { if (!object(run) || !fileKey(run.key) || keys.has(run.key) || !intent(run.mode) || typeof run.mood !== "string" || !optionalFreedom(run.freedom) || (run.ensemble !== undefined && !text(run.ensemble)) || (run.length !== undefined && !validCount(run.length)) || (run.render !== undefined && !localAsset(run.render)) || (run.renderPlan !== undefined && !text(run.renderPlan))) return false; keys.add(run.key); return true; })) return false;
+    if (!piece.runs.every((run: unknown) => { if (!object(run) || !fileKey(run.key) || keys.has(run.key) || !intent(run.mode) || typeof run.mood !== "string" || !optionalFreedom(run.freedom) || (run.ensemble !== undefined && !text(run.ensemble)) || (run.length !== undefined && !validCount(run.length)) || (run.render !== undefined && !localAsset(run.render)) || (run.renderPlan !== undefined && !text(run.renderPlan)) || (run.selfContained !== undefined && typeof run.selfContained !== "boolean")) return false; keys.add(run.key); return true; })) return false;
     const tutorial = piece.tutorial;
     if (tutorial !== undefined && !(object(tutorial) && fileKey(tutorial.runKey) && keys.has(tutorial.runKey) && text(tutorial.acceptedLabel) && (tutorial.rawNoteCount === undefined || validCount(tutorial.rawNoteCount)) && (tutorial.acceptedNoteCount === undefined || validCount(tutorial.acceptedNoteCount)))) return false;
+    if (object(tutorial) && tutorial.completeOptions !== undefined && (!Array.isArray(tutorial.completeOptions) || tutorial.completeOptions.length < 1 || tutorial.completeOptions.length > 2 || new Set(tutorial.completeOptions).size !== tutorial.completeOptions.length || !tutorial.completeOptions.every(option => option === 0 || option === 1))) return false;
     const selected = piece.runs.find((run: unknown) => object(run) && run.key === (object(tutorial) ? tutorial.runKey : (piece.runs as Record<string, unknown>[])[0]?.key)) as Record<string, unknown> | undefined;
     return !!selected && selected.mode === recipe.intent && (selected.ensemble === undefined || selected.ensemble === recipe.ensemble) && moodName(selected.mood) === moodName(recipe.mood) && (selected.freedom === undefined || selected.freedom === recipe.freedom) && (selected.length === undefined || selected.length === recipe.length);
   });
@@ -170,7 +171,7 @@ export function startDemo(piece: DemoPiece, recorded: string, runKey = piece.tut
   const current = () => session === generation;
   // A tutorial selects one exact recipe. Other takes cannot silently conflict with or answer it.
   const run = piece.runs.find(item => item.key === runKey);
-  const files = [`/demo/${piece.id}/shared.json`, ...(run ? [`/demo/${piece.id}/${run.key}.json`] : [])];
+  const files = [...(run?.selfContained ? [] : [`/demo/${piece.id}/shared.json`]), ...(run ? [`/demo/${piece.id}/${run.key}.json`] : [])];
   const calls = Promise.all(files.map(load)).then(groups => groups.flat());
   const transport: Transport = async (shape, input, think, timing) => {
     const key = recordedRequestKey(shape, input);
