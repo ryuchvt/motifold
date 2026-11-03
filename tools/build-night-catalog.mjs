@@ -21,6 +21,17 @@ const reasonOf = error => error?.code ? 'Captured files are missing or unreadabl
 const write = (file, bytes) => { mkdirSync(dirname(file), { recursive: true }); writeFileSync(`${file}.tmp`, bytes); renameSync(`${file}.tmp`, file); };
 const answerOf = reply => { const { cached, model, version, ...answer } = reply; return answer; };
 const identity = call => stable({ shape: call.shape, input: call.input, version: call.version, model: call.model });
+/** Optional display metadata, copied from an authenticated selected plan without interpreting its chords. */
+function plannedHarmony(plan) {
+  if (!Array.isArray(plan?.why)) return undefined;
+  const spans = [], text = (value, limit) => typeof value === 'string' && !!value.trim() && value.length <= limit && !/[\u0000-\u001f\u007f]/.test(value);
+  for (const span of plan.why) {
+    if (span?.chords === undefined || typeof span.chords === 'string' && !span.chords.trim()) continue;
+    if (!text(span?.from, 12) || !text(span?.to, 12) || !text(span?.chords, 400)) return undefined;
+    spans.push({ from: span.from, to: span.to, chords: span.chords });
+  }
+  return spans.length && spans.length <= 40 ? spans : undefined;
+}
 const PHASES = { 'read-study': ['read_piece', 'study_score'], layout: ['distribute'], 'layout-range-repair': ['distribute'], plan: ['plan_options', 'plan_recompose'], 'a-preview': ['arrange'], 'b-preview': ['arrange'], 'a-full': ['arrange', 'write_theme'], 'b-full': ['arrange', 'write_theme'] };
 for (const label of ['a', 'b']) for (const ordinal of [1, 2]) PHASES[`${label}-note-range-repair-${ordinal}`] = ['arrange'];
 
@@ -301,6 +312,8 @@ export function buildCatalog({ repo, input, output, receipts, readers, templates
       else {
         const url = `${base}/${id}`;
         Object.assign(entry, { xml: `${url}/score.musicxml`, midi: `${url}/all-parts.mid`, zip: `${url}/arrangement.zip`, run: `${url}/run.json`, xmlSha256: sha(held.files['score.musicxml']), midiSha256: sha(held.files['all-parts.mid']) });
+        const harmony = plannedHarmony(held.summary.plan);
+        if (harmony) entry.planHarmony = harmony;
         const manifest = { id, recipe, option, plan: held.summary.plan.name, status: 'complete', verified: held.inspection, placement: held.placement, advisoryClashes: held.advisoryClashes, audio: { status: 'not-rendered', expectedFile: 'audio/render.wav' }, provenance: 'Actual successful Meta calls. The recorded stages may include cold retries. No uninterrupted live session is claimed.' };
         const assets = { ...held.files, 'arrangement.zip': held.archive, 'run.json': json(held.calls), 'manifest.json': json(manifest), 'audio/README.txt': strToU8('No DAW bounce is available yet. Put the real render.wav here after rendering this exact score.\n'), 'render-checklist.txt': strToU8('No rendered audio is included.\nImport all-parts.mid into your DAW at bar 1. Keep its tempo and metre map.\nLoad licensed instruments for each part. Check the advisory clashes by ear.\nRender audio/render.wav and verify that it follows this exact score.\n') };
         for (const [name, data] of Object.entries(assets)) {

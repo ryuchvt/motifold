@@ -329,12 +329,17 @@ it('publishes only a verified A, leaves203 entries disabled, and preserves the o
   const index = readFileSync('public/demo/index.json'); writeFileSync(join(repo, 'public/demo/index.json'), index);
   const x = fixture(); mkdirSync(join(input, x.caseId), { recursive: true });
   writeFileSync(join(input, x.caseId, 'a.zip'), archive); writeFileSync(join(input, x.caseId, 'a-summary.json'), JSON.stringify(x.summary));
+  // Failed captures must not expose even a plausible-looking plan annotation.
+  writeFileSync(join(input, x.caseId, 'b.zip'), archive);
+  writeFileSync(join(input, x.caseId, 'b-summary.json'), JSON.stringify({ ...x.summary, label: 'B', chosen: 1, plan: { ...x.summary.plan, why: [{ from: '1', to: '8', chords: 'Rejected plan text' }] }, check: { ...x.summary.check, unreadable: 1 }, zip: { file: `${x.caseId}/b.zip`, sha256: hash(archive) } }));
   writeFileSync(join(input, x.caseId, 'summary.json'), JSON.stringify({ recipe, status: 'failed', error: 'The batch stopped before B completed.' }));
   const before = hash(readFileSync(join(publicFolder, 'arrange-neutral.json')));
   const result = buildCatalog({ repo, input, output, receipts: x.receipts, readers, templates: TEMPLATES, publish: true });
   expect(result.catalog.outcomes).toHaveLength(204);
   expect(result.report).toMatchObject({ complete: 1, completePairs: 0, failedOrIncomplete: 1, unrecorded: 202 });
   expect(result.catalog.outcomes.filter(item => item.status !== 'complete').every(item => !item.xml && !item.midi && !item.zip && !item.run)).toBe(true);
+  expect(result.catalog.outcomes.filter(item => item.status !== 'complete').every(item => !('planHarmony' in item))).toBe(true);
+  expect(result.catalog.outcomes.find(item => item.id === `${recipe.id}-a`).planHarmony).toEqual(x.summary.plan.why.filter(span => span.chords?.trim()).map(({ from, to, chords }) => ({ from, to, chords })));
   expect(hash(readFileSync(join(publicFolder, 'arrange-neutral.json')))).toBe(before);
   expect(JSON.parse(readFileSync(join(repo, 'public/demo/index.json'))).pieces[0].runs).toEqual(JSON.parse(index).pieces[0].runs);
   const pack = unzipSync(result.pack);
@@ -353,6 +358,16 @@ it('publishes only a verified A, leaves203 entries disabled, and preserves the o
   expect(strFromU8(pack['source/render-checklist.txt'])).toContain('Nearby attacks are grouped and note durations are interpreted');
   expect(Object.keys(pack).some(name => /\.(wav|mp3|flac)$/.test(name))).toBe(false);
   expect(JSON.stringify(JSON.parse(strFromU8(pack['manifest.json'])))).not.toContain('charged_micros');
+  const silentPlan = { ...structuredClone(x.summary.plan), why: x.summary.plan.why.map((span, index) => ({ ...span, chords: index % 2 ? '   ' : undefined })) };
+  x.summary.plan = silentPlan;
+  x.receipts.find(row => row.shape === 'plan_options').reply.answer.options[0] = silentPlan;
+  for (const row of x.receipts.filter(row => row.shape === 'arrange' && row.input.chosen.name === silentPlan.name)) row.input.chosen = silentPlan;
+  writeFileSync(join(input, x.caseId, 'a-summary.json'), JSON.stringify(x.summary));
+  const silent = buildCatalog({ repo, input, output: join(folder, 'silent-report'), receipts: x.receipts, readers, templates: TEMPLATES });
+  const silentA = silent.catalog.outcomes.find(item => item.id === `${recipe.id}-a`);
+  expect(silentA.status).toBe('complete'); expect(silentA).not.toHaveProperty('planHarmony');
+  expect(silentA.xmlSha256).toBe(result.catalog.outcomes.find(item => item.id === silentA.id).xmlSha256);
+  expect(silentA.midiSha256).toBe(result.catalog.outcomes.find(item => item.id === silentA.id).midiSha256);
 });
 
 it('retains pending and uncertain reservations in the private budget report without counting old untagged calls twice', () => {
@@ -374,9 +389,18 @@ it('promotes only a verified same-case full A/B pair into a self-contained tutor
   for (const name of ['sample-sketch.musicxml', 'Sample_sketch.mid', 'shared.json', 'arrange-neutral.json', 'neutral-strings-a.zip']) writeFileSync(join(sourceFolder, name), readFileSync(`public/demo/sample-sketch/${name}`));
   const oldIndex = JSON.parse(readFileSync('public/demo/index.json'));
   writeFileSync(join(repo, 'public/demo/index.json'), JSON.stringify(oldIndex));
-  const x = fixture(), aZip = sourceOnly(x), layout = x.receipts.find(row => row.shape === 'distribute');
+  const x = fixture();
+  const aChords = ['  Dm | A7sus4  ', undefined, '', '   ', 'F / C | Gm(add9)', 'Dm pedal'];
+  const aPlan = { ...structuredClone(x.summary.plan), why: x.summary.plan.why.map((span, index) => ({ ...span, chords: aChords[index] })) };
+  x.summary.plan = aPlan;
+  x.receipts.find(row => row.shape === 'plan_options').reply.answer.options[0] = aPlan;
+  for (const row of x.receipts.filter(row => row.shape === 'arrange' && row.input.chosen.name === aPlan.name)) row.input.chosen = aPlan;
+  const aZip = sourceOnly(x), layout = x.receipts.find(row => row.shape === 'distribute');
   const placement = arrange.placeNotes(source, layout.input, layout.reply.answer, recipe.instruments, false), baseXml = arrange.scoreOfParts(source, layout.input, placement.parts), base = parseScore(baseXml);
-  const bPlan = publicCalls.find(call => call.shape === 'plan_options').reply.answer.options[1];
+  const originalB = publicCalls.find(call => call.shape === 'plan_options').reply.answer.options[1];
+  const bChords = ['C pedal / Am', '  ', undefined, 'F | Gsus4', '', undefined];
+  const bPlan = { ...structuredClone(originalB), why: originalB.why.map((span, index) => ({ ...span, chords: bChords[index] })) };
+  x.receipts.find(row => row.shape === 'plan_options').reply.answer.options[1] = bPlan;
   const bRows = x.receipts.filter(row => row.shape === 'arrange' && row.input.chosen.name === x.summary.plan.name).map((row, i) => ({ ...structuredClone(row), attemptId: `local-b-${i}`, captureCase: `${x.caseId}-b-full`, input: { ...structuredClone(row.input), chosen: bPlan } }));
   const bCheck = arrange.checkOption({ ...bPlan, adds: [] }, base, bRows[0].input), bZip = arrange.packageFiles(arrange.withOption(baseXml, base, bCheck), bCheck, 'Local B orchestration');
   const common = x.summary.requests.filter(request => request.shape !== 'arrange');
@@ -387,6 +411,18 @@ it('promotes only a verified same-case full A/B pair into a self-contained tutor
   }
   const result = buildCatalog({ repo, input, output, receipts: [...x.receipts, ...bRows], readers, templates: TEMPLATES, publish: true });
   expect(result.report).toMatchObject({ complete: 2, completePairs: 1 });
+  const planned = plan => plan.why.filter(span => span.chords?.trim()).map(({ from, to, chords }) => ({ from, to, chords }));
+  const aEntry = result.catalog.outcomes.find(item => item.id === `${recipe.id}-a`), bEntry = result.catalog.outcomes.find(item => item.id === `${recipe.id}-b`);
+  expect(aEntry.planHarmony).toEqual(planned(aPlan)); expect(bEntry.planHarmony).toEqual(planned(bPlan));
+  expect(aEntry.planHarmony).not.toEqual(bEntry.planHarmony);
+  expect(aEntry.planHarmony[0]).toEqual({ from: '1', to: '8', chords: '  Dm | A7sus4  ' });
+  expect(bEntry.planHarmony[1]).toEqual({ from: '14', to: '20', chords: 'F | Gsus4' });
+  for (const [entry, bytes] of [[aEntry, aZip], [bEntry, bZip]]) {
+    const files = unzipSync(bytes), folder = join(sourceFolder, 'outcomes', entry.id);
+    expect(new Uint8Array(readFileSync(join(folder, 'arrangement.zip')))).toEqual(bytes);
+    for (const [name, data] of Object.entries(files).filter(([name]) => /\.(musicxml|mid)$/.test(name))) expect(new Uint8Array(readFileSync(join(folder, name))), name).toEqual(data);
+    expect(entry.xmlSha256).toBe(hash(files['score.musicxml'])); expect(entry.midiSha256).toBe(hash(files['all-parts.mid']));
+  }
   const piece = JSON.parse(readFileSync(join(repo, 'public/demo/index.json'))).pieces[0];
   expect(piece.tutorial).toMatchObject({ runKey: 'guided-neutral-strings', completeOptions: [0, 1], rawNoteCount: 117, acceptedNoteCount: 114 });
   expect(piece.runs).toContainEqual({ key: 'guided-neutral-strings', mode: 'arrange', ensemble: 'String orchestra', mood: 'Neutral', selfContained: true });
