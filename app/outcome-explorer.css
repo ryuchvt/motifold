@@ -24,3 +24,14 @@
 /* This toolbar sits on the light score paper, not on the dark workspace. */
 .explorer-score .score-toolbar .button { color:var(--pencil); border-color:#635e554d; background:transparent; }
 .explorer-score .score-toolbar .button:hover { background:#5e5b560c; }
+
+/* Exact plan text stays beside the score, without assigning symbols to notes. */
+.explorer-harmony { flex:none; max-height:180px; overflow:auto; padding:10px 14px; border-bottom:1px solid #635e5533; color:var(--pencil); background:#efede6; font-size:12px; line-height:1.5; }
+.explorer-harmony p { display:flex; flex-wrap:wrap; gap:4px 12px; margin:0; }
+.explorer-harmony p span { color:#645f57; }
+.explorer-harmony dl { display:grid; gap:5px; margin:7px 0 0; }
+.explorer-harmony dl>div { display:grid; grid-template-columns:100px minmax(0,1fr); gap:8px; }
+.explorer-harmony dt { font-weight:600; }
+.explorer-harmony dd { margin:0; white-space:pre-wrap; overflow-wrap:anywhere; }
+@media(max-width:760px) { .explorer-harmony dl>div { grid-template-columns:minmax(0,1fr); gap:1px; } }
+.studio .explorer-harmony strong { color:var(--pencil); }

@@ -12,6 +12,8 @@ export interface DemoRecipe {
   length?: number;
 }
 export interface DemoRun { key: string; mode: DemoRecipe["intent"]; ensemble?: string; mood: string; freedom?: number; length?: number; render?: string; renderPlan?: string; selfContained?: boolean }
+/** Exact free-text harmony from the selected recorded plan, not an analysis of its notes. */
+export interface DemoPlanHarmony { from: string; to: string; chords: string }
 /** An outcome is addressable only after its real recording and exported files have been checked. */
 export interface DemoOutcome {
   id: string;
@@ -36,6 +38,8 @@ export interface DemoOutcome {
   /** The exact exported score used for this DAW render, not merely a similarly named plan. */
   renderXmlSha256?: string;
   renderCredit?: string;
+  /** Authenticated chosen-plan spans. Keep the full text and range without allocating individual chords to bars. */
+  planHarmony?: DemoPlanHarmony[];
 }
 export interface DemoCatalog { version: 1; pieceId: string; recorded: string; outcomes: DemoOutcome[] }
 export interface DemoPiece {
@@ -68,6 +72,8 @@ const intent = (value: unknown) => value === "arrange" || value === "expand" || 
 const optionalFreedom = (value: unknown) => value === undefined || (Number.isInteger(value) && Number(value) >= 1 && Number(value) <= 5);
 const validCount = (value: unknown) => Number.isInteger(value) && Number(value) > 0 && Number(value) <= 1024;
 const hash = (value: unknown) => value === undefined || (typeof value === "string" && /^[a-f0-9]{64}$/.test(value));
+const harmonyText = (value: unknown, max: number) => text(value) && value.length <= max && !/[\u0000-\u001f\u007f]/.test(value);
+const planHarmony = (value: unknown) => Array.isArray(value) && value.length <= 40 && value.every(span => object(span) && Object.keys(span).length === 3 && harmonyText(span.from, 12) && harmonyText(span.to, 12) && harmonyText(span.chords, 400));
 const moodName = (value: unknown) => { const name = String(value ?? "").trim().toLowerCase(); return name === "neutral" ? "" : name; };
 
 export function recordedDemoCatalog(value: unknown, pieceId: string): DemoCatalog | null {
@@ -79,6 +85,7 @@ export function recordedDemoCatalog(value: unknown, pieceId: string): DemoCatalo
     if (!["xml", "midi", "zip", "run", "render"].every(key => item[key] === undefined || localAsset(item[key])) || !["xmlSha256", "midiSha256", "renderXmlSha256"].every(key => hash(item[key])) || (item.reason !== undefined && !text(item.reason)) || (item.renderCredit !== undefined && !text(item.renderCredit))) return null;
     if (item.status === "complete" && (!localAsset(item.xml) || !localAsset(item.midi) || !localAsset(item.zip))) return null;
     if (item.status === "preview" && !localAsset(item.xml)) return null;
+    if (item.planHarmony !== undefined && (item.status !== "complete" || typeof item.xmlSha256 !== "string" || !planHarmony(item.planHarmony))) return null;
     ids.add(item.id);
   }
   return value as unknown as DemoCatalog;

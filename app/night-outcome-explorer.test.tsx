@@ -127,3 +127,62 @@ it.each([
   expect(screen.host.querySelector('.explorer-downloads')).not.toBeNull();
   expect(screen.fetcher.mock.calls.map(row=>row[0])).toEqual([piece.catalog,a.xml,recompose.xml]);
 });
+
+it('shows only whole planned spans matching the passage, clears old A while B loads, and never rewrites exports',async()=>{
+  const plannedA={...a,planHarmony:[{from:'1',to:'4',chords:'Cmaj7 | Fadd9'},{from:'9',to:'12',chords:'F♯m7 | B7, hold the last colour'}]};
+  const plannedB={...b,planHarmony:[{from:'9',to:'16',chords:'Dm9 | G13 / Cmaj7'}]};
+  const screen=await setup([plannedA,plannedB]);await ready(screen.host);
+  expect(screen.host.querySelector('.explorer-harmony')?.textContent).toContain("From this option’s recorded plan. Compare with the notes.");
+  expect(screen.host.querySelector('.explorer-harmony')?.textContent).toContain('Bars 1 to 4Cmaj7 | Fadd9');
+  expect(screen.host.querySelector('.explorer-harmony')?.textContent).not.toContain('F♯m7');
+  await change(screen.host,'First recorded bar','9');
+  expect(screen.host.querySelector('.explorer-harmony')?.textContent).toContain('Bars 9 to 12F♯m7 | B7, hold the last colour');
+  expect(screen.host.querySelector('.explorer-harmony')?.textContent).not.toContain('Cmaj7 | Fadd9');
+  let release!:(response:Response)=>void;const held=new Promise<Response>(done=>{release=done});
+  const originalFetch=screen.fetcher.getMockImplementation()!;
+  screen.fetcher.mockImplementation(async url=>url===b.xml?held:originalFetch(url));
+  await pick(screen.host,'Local B');
+  expect(screen.host.querySelector('.explorer-harmony')).toBeNull();expect(screen.host.querySelector('.explorer-downloads')).toBeNull();
+  await act(async()=>release(new Response(xmlB)));await ready(screen.host,'Local B');
+  expect(screen.host.querySelector('.explorer-harmony')?.textContent).toContain('Bars 9 to 16Dm9 | G13 / Cmaj7');
+  expect(screen.host.querySelector('.explorer-harmony')?.textContent).not.toContain('F♯m7');
+  expect(screen.host.querySelector('.explorer-downloads a')?.getAttribute('href')).toBe(b.zip);
+  expect(screen.fetcher.mock.calls.map(row=>row[0])).toEqual([piece.catalog,a.xml,b.xml]);
+  expect(plannedA.xmlSha256).toBe(hash(original));expect(plannedB.xmlSha256).toBe(hash(xmlB));
+  expect(boundOutcomeRender({...plannedB,render:'/demo/sample-sketch/exact.wav',renderXmlSha256:hash(xmlB)},hash(xmlB))).toBe('/demo/sample-sketch/exact.wav');
+});
+
+it('keeps B planned harmony when an old A score finishes late and removes it for unavailable choices',async()=>{
+  const plannedA={...a,planHarmony:[{from:'1',to:'8',chords:'A-only progression'}]},plannedB={...b,planHarmony:[{from:'1',to:'8',chords:'B-only progression'}]};
+  const missing={...a,id:'expand-missing',runKey:'expand-neutral',intent:'expand' as const,bars:40,status:'unavailable' as const,xml:undefined,midi:undefined,zip:undefined};
+  let release!:(response:Response)=>void;const held=new Promise<Response>(done=>{release=done});
+  const screen=await setup([plannedA,plannedB,missing],held);
+  await vi.waitFor(()=>expect(screen.fetcher).toHaveBeenCalledWith(a.xml,expect.anything()));
+  await pick(screen.host,'Local B');await ready(screen.host,'Local B');
+  await act(async()=>release(new Response(original)));
+  expect(screen.host.querySelector('.explorer-harmony')?.textContent).toContain('B-only progression');
+  expect(screen.host.querySelector('.explorer-harmony')?.textContent).not.toContain('A-only progression');
+  await change(screen.host,'Recorded direction','expand');
+  expect(screen.host.querySelector('.explorer-harmony')).toBeNull();expect(screen.host.querySelector('.explorer-downloads')).toBeNull();
+  expect(screen.fetcher.mock.calls.map(row=>row[0])).toEqual([piece.catalog,a.xml,b.xml]);
+});
+
+it('keeps legacy outcomes without harmony metadata usable and does not guess missing or ambiguous spans',async()=>{
+  const screen=await setup([{...a,planHarmony:[{from:'missing',to:'8',chords:'Never place this by guessing'}]},b]);await ready(screen.host);
+  expect(screen.host.querySelector('.explorer-harmony')?.textContent).toContain('planned bar labels cannot be matched');
+  expect(screen.host.querySelector('.explorer-harmony')?.textContent).not.toContain('Never place this by guessing');
+  await pick(screen.host,'Local B');await ready(screen.host,'Local B');
+  expect(screen.host.querySelector('.explorer-harmony')).toBeNull();expect(screen.host.querySelector('.explorer-downloads')).not.toBeNull();
+  expect(screen.fetcher.mock.calls.map(row=>row[0])).toEqual([piece.catalog,a.xml,b.xml]);
+});
+
+it('shows no falsely located progression when the exported score repeats a printed bar label',async()=>{
+  const duplicateXml=original.replaceAll('<measure number="2">','<measure number="1">');
+  expect(duplicateXml).not.toBe(original);
+  const supplied={...a,xmlSha256:hash(duplicateXml),planHarmony:[{from:'1',to:'8',chords:'An ambiguous-span progression'}]};
+  const screen=await setup([supplied],Promise.resolve(new Response(duplicateXml)));await ready(screen.host);
+  expect(screen.host.querySelector('.explorer-harmony')?.textContent).toContain('planned bar labels cannot be matched');
+  expect(screen.host.querySelector('.explorer-harmony')?.textContent).not.toContain('An ambiguous-span progression');
+  expect(screen.host.querySelector('.explorer-downloads a')?.getAttribute('href')).toBe(a.zip);
+  expect(screen.fetcher.mock.calls.map(row=>row[0])).toEqual([piece.catalog,a.xml]);
+});
