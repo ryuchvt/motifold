@@ -458,6 +458,9 @@ export function Studio() {
                   if (mode === "arrange" && notes?.status === "ready") arranged.setTrying({ kind: "option", index });
                 }}
                 written={writtenPlans}
+                previewed={arranged.options.status === "ready" && mode === "arrange" ? Object.entries(arranged.options.notes).flatMap(([k, n]) => (n.status === "ready" && n.preview ? [Number(k)] : [])) : []}
+                onPreview={access === "demo" ? undefined : (index) => void arranged.askPreview(index)}
+                busy={thinking}
                 onShowBars={(from, to) => {
                   arranged.selectRange(from, to);
                   setPicked({ kind: "bars", from, to });

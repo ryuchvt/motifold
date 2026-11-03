@@ -883,7 +883,11 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
                         )}
                       </div>
                     )}
-                    {these?.status === "ready" && these.changed && !these.writing ? (
+                    {these?.status === "ready" && these.preview && !these.changed && !these.writing ? (
+                      <button className="button small primary" disabled={busy} onClick={() => write(index, "arrange")}>
+                        Write the rest of this one
+                      </button>
+                    ) : these?.status === "ready" && these.changed && !these.writing ? (
                       <button className="button small primary" disabled={busy} onClick={() => write(index, "arrange")}>
                         Write again with these chords
                       </button>
@@ -931,7 +935,15 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
             </button>
           )}
           {notes?.status === "ready" && notes.writing && <p className="arrange-said">Writing {barsWords(notes.writing.from, notes.writing.to).toLowerCase()}, section {notes.writing.done + 1} of {notes.writing.of}.</p>}
-          {done && !!notes.missing?.length && (
+          {done && notes.preview && (
+            <>
+              <p className="arrange-said">A preview of the first section. The rest is written when you choose this plan.</p>
+              <button className="button primary arrange-go" disabled={busy} onClick={() => write(shownAt!, "arrange")}>
+                Write the rest
+              </button>
+            </>
+          )}
+          {done && !notes.preview && !!notes.missing?.length && (
             <>
               <p className="arrange-hit">{notes.missing.map((m) => barsWords(m.from, m.to)).join(", ")} didn't finish.</p>
               <button className="button small" disabled={busy} onClick={() => write(shownAt!, "arrange")}>
@@ -990,7 +1002,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
               )}
             </>
           )}
-          {done && next(5)}
+          {done && !notes.preview && next(5)}
           <button className="arrange-quiet" onClick={() => setStep(3)}>
             Choose another plan
           </button>

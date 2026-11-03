@@ -35,7 +35,7 @@ export type PlacedState =
   | { status: "ready"; answer: DistributeAnswer; check: PlacedCheck; instruments: string[]; chosen: string[]; saved: boolean };
 
 /** The notes of one option, written only once the composer has chosen it. */
-export type OptionNotes = { status: "asking" } | { status: "unfinished" } | { status: "unavailable" } | { status: "ready"; writing?: { from: string; to: string; done: number; of: number }; missing?: { from: string; to: string }[]; again?: { seed: WriteInput["seed"] | null; theme: ThemeAnswer["lines"] }; adds: WriteAnswer["adds"]; check: OptionCheck; changed?: boolean };
+export type OptionNotes = { status: "asking" } | { status: "unfinished" } | { status: "unavailable" } | { status: "ready"; writing?: { from: string; to: string; done: number; of: number }; missing?: { from: string; to: string }[]; again?: { seed: WriteInput["seed"] | null; theme: ThemeAnswer["lines"] }; adds: WriteAnswer["adds"]; check: OptionCheck; changed?: boolean; preview?: boolean };
 
 export type OptionsState =
   | { status: "none" }
@@ -384,8 +384,14 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     await writeNotes(base, options.input, options.plans[index]!, index, options.saved, again?.seed ?? null, again?.theme ?? [], unfinished);
   };
 
+  /** The first section of a plan, to hear before choosing it. Choosing it writes the rest from there. */
+  const askPreview = async (index: number) => {
+    if (!base || options.status !== "ready" || options.notes[index]) return;
+    await writeNotes(base, options.input, options.plans[index]!, index, options.saved, null, [], null, true);
+  };
+
   /** Writes a plan a section at a time, so a failure loses only that section, and what's written shows up as it's written. Coming back for what's unfinished asks only for those sections, and whatever is on the score stays. */
-  const writeNotes = async (page: Page, input: ArrangeInput, plan: OptionPlan, index: number, isSaved: boolean, seed: WriteInput["seed"] | null, theme: ThemeAnswer["lines"] = [], unfinished: { adds: WriteAnswer["adds"]; missing: { from: string; to: string }[] } | null = null) => {
+  const writeNotes = async (page: Page, input: ArrangeInput, plan: OptionPlan, index: number, isSaved: boolean, seed: WriteInput["seed"] | null, theme: ThemeAnswer["lines"] = [], unfinished: { adds: WriteAnswer["adds"]; missing: { from: string; to: string }[] } | null = null, onlyFirst = false) => {
     const now = turn.current;
     const setNotes = (notes: OptionNotes) => setOptions((state) => (state.status === "ready" && state.input === input ? { ...state, notes: { ...state.notes, [index]: notes } } : state));
     const written = (adds: WriteAnswer["adds"], progress: Pick<Extract<OptionNotes, { status: "ready" }>, "writing" | "missing" | "again"> = {}) => {
@@ -402,7 +408,13 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     let adds: WriteAnswer["adds"] = unfinished?.adds ?? [];
     const missing: { from: string; to: string }[] = [];
     let last: { status: "fallback"; reason: string } | null = null;
+    // A preview stops after the first section, and the rest is left to write when the composer chooses it.
+    const rest: { from: string; to: string }[] = [];
     for (const [k, window] of windows.entries()) {
+      if (onlyFirst && k > 0) {
+        rest.push(...windows.slice(k).flatMap((w) => (w ? [w] : [])));
+        break;
+      }
       if ((k || unfinished) && adds.length && window) written(adds, { writing: { ...window, done: already + k, of: sections.length } });
       const before = window ? bars[bars.indexOf(window.from) - 1] : undefined;
       const earlier = adds.filter((a) => a.bar === before).map((a) => `${a.part}: ${a.events}`).join(" / ");
@@ -424,7 +436,10 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
       }
     }
     if (unfinished) adds = [...adds].sort((a, b) => bars.indexOf(a.bar) - bars.indexOf(b.bar));
-    if (adds.length) return written(adds, missing.length ? { missing, again: { seed, theme } } : {});
+    if (adds.length) {
+      if (rest.length) return setNotes({ status: "ready", adds, check: checkOption({ ...plan, adds }, page.score, input), missing: [...missing, ...rest], again: { seed, theme }, preview: true });
+      return written(adds, missing.length ? { missing, again: { seed, theme } } : {});
+    }
     const saved = isSaved ? await savedOf() : null;
     if (turn.current !== now) return;
     const kept = saved?.notes?.[index];
@@ -801,6 +816,7 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     splitPlaced,
     askOptions,
     askNotes,
+    askPreview,
     setChords,
     lastAsk: moodKey,
     recompose,

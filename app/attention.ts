@@ -47,7 +47,7 @@ export function attentionOf(arranged: Pick<Arranged, "piece" | "answered" | "opt
   if (options.status === "ready" && trying?.kind === "option") {
     const notes = options.notes[trying.index];
     if (notes?.status === "ready") {
-      for (const m of notes.missing ?? []) out.push({ id: `unfinished:${m.from}`, kind: "unfinished", from: m.from, to: m.to, label: `${barsWords(m.from, m.to)} didn't finish`, detail: "This section didn't come back. It can be written again on its own.", index: trying.index });
+      for (const m of notes.preview ? [] : (notes.missing ?? [])) out.push({ id: `unfinished:${m.from}`, kind: "unfinished", from: m.from, to: m.to, label: `${barsWords(m.from, m.to)} didn't finish`, detail: "This section didn't come back. It can be written again on its own.", index: trying.index });
     }
   }
   return out;
@@ -71,7 +71,8 @@ export function writingProgress(arranged: Pick<Arranged, "options" | "trying">):
     // Before the first section comes back, it's the first that's being written.
     if (notes.status === "asking") return { ...w, state: w === windows[0] ? ("writing" as const) : ("queued" as const) };
     if (notes.status !== "ready") return { ...w, state: "unfinished" as const };
-    if (notes.missing?.some((m) => overlaps(m, w))) return { ...w, state: "unfinished" as const };
+    // A preview's later sections aren't unfinished: they're waiting for the composer to choose it.
+    if (notes.missing?.some((m) => overlaps(m, w))) return { ...w, state: notes.preview ? ("queued" as const) : ("unfinished" as const) };
     if (notes.writing) {
       if (overlaps(notes.writing, w)) return { ...w, state: "writing" as const };
       return { ...w, state: at(w.from) < at(notes.writing.from) ? ("written" as const) : ("queued" as const) };

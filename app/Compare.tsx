@@ -20,11 +20,14 @@ export function Compare(props: {
   recompose: boolean;
   chosen: number | null;
   onChoose: (index: number) => void;
-  /** Which plans have notes already. */
+  /** Which plans have notes already, and which of those are only a first-section preview. */
   written: number[];
+  previewed: number[];
+  onPreview?: (index: number) => void;
+  busy: boolean;
   onShowBars: (from: string, to: string) => void;
 }) {
-  const { data, sections, orders, ordered, onOrder, onKeepOrder, plans, recompose, chosen, onChoose, written, onShowBars } = props;
+  const { data, sections, orders, ordered, onOrder, onKeepOrder, plans, recompose, chosen, onChoose, written, previewed, onPreview, busy, onShowBars } = props;
   const [shut, setShut] = useState<Record<string, boolean>>({});
   const kind = plans && plans.length ? "plans" : orders.length > 1 ? "orders" : null;
   if (!kind) return null;
@@ -44,7 +47,7 @@ export function Compare(props: {
       {!isShut && kind === "plans" && (
         <div className="compare-plans">
           {plans!.map((plan, index) => (
-            <PlanCard key={plan.name} plan={plan} index={index} data={recompose ? null : data} sections={recompose ? [] : sections} chosen={chosen === index} written={written.includes(index)} onChoose={() => onChoose(index)} onShowBars={recompose ? undefined : onShowBars} recompose={recompose} />
+            <PlanCard key={plan.name} plan={plan} index={index} data={recompose ? null : data} sections={recompose ? [] : sections} chosen={chosen === index} written={written.includes(index)} previewed={previewed.includes(index)} onPreview={recompose || !onPreview ? undefined : () => onPreview(index)} busy={busy} onChoose={() => onChoose(index)} onShowBars={recompose ? undefined : onShowBars} recompose={recompose} />
           ))}
         </div>
       )}
@@ -52,8 +55,8 @@ export function Compare(props: {
   );
 }
 
-function PlanCard(props: { plan: OptionPlan | RecomposePlan; index: number; data: PieceData | null; sections: { from: string; to: string; name: string }[]; chosen: boolean; written: boolean; onChoose: () => void; onShowBars?: (from: string, to: string) => void; recompose: boolean }) {
-  const { plan, data, sections, chosen, written, onChoose, onShowBars, recompose } = props;
+function PlanCard(props: { plan: OptionPlan | RecomposePlan; index: number; data: PieceData | null; sections: { from: string; to: string; name: string }[]; chosen: boolean; written: boolean; previewed: boolean; onPreview?: () => void; busy: boolean; onChoose: () => void; onShowBars?: (from: string, to: string) => void; recompose: boolean }) {
+  const { plan, data, sections, chosen, written, previewed, onPreview, busy, onChoose, onShowBars, recompose } = props;
   // The composer's bars give the scale. A new piece has only its own, so its stretches set it.
   const numbers = data?.bars.map((b) => b.number) ?? [];
   const lastNew = Math.max(1, ...plan.why.map((w) => Number(w.to) || 0));
@@ -77,7 +80,7 @@ function PlanCard(props: { plan: OptionPlan | RecomposePlan; index: number; data
     <article className={`plan-card${chosen ? " on" : ""}`}>
       <header>
         <strong>{plan.name}</strong>
-        {written && <span className="plan-tag">Written</span>}
+        {written && <span className="plan-tag">{previewed ? "Preview" : "Written"}</span>}
         <button className={`button small${chosen ? " primary" : ""}`} aria-pressed={chosen} onClick={onChoose}>
           {chosen ? "Chosen" : "Choose"}
         </button>
@@ -121,7 +124,14 @@ function PlanCard(props: { plan: OptionPlan | RecomposePlan; index: number; data
           })}
         </div>
       </div>
-      <p className="plan-note">{written ? "Its notes are written. Choose it to see them on the score." : "No notes yet: these are the plan's chords and ideas on your bars. Notes are written when you choose it."}</p>
+      <p className="plan-note">
+        {previewed ? "Its first section is written. Choose it to hear that on the score, then write the rest." : written ? "Its notes are written. Choose it to see them on the score." : "No notes yet: these are the plan's chords and ideas on your bars. Notes are written when you choose it."}
+      </p>
+      {!written && onPreview && (
+        <button className="plan-preview" disabled={busy} onClick={onPreview}>
+          Preview its first section · one call, a minute or two
+        </button>
+      )}
     </article>
   );
 }
