@@ -1,6 +1,6 @@
 // A call shape is one kind of Spark call, fixed on the server: its effort, caps, deadline, schema and
 // the check its answer must pass. The browser sends typed facts, never a prompt (TECH §9).
-import { CHORDS_ON_A_TUNE, FREEDOM, FREE_HARMONY, FROM_THE_SOURCE, ORNAMENT, RECOMPOSING, TEXTURE, TUNE_FIRST, VARIATION, CINEMATIC, CLASSICAL_HARMONY, COLOUR_HARMONY, COLOUR_INSTRUMENTS, COUNTERLINES, DYNAMICS, FILM_HARMONY, FORM_AND_DEVELOPMENT, MOODS, NAMING_CHORDS, NAMING_LEVELS, ONE_LINE_SKETCH, THEIR_HARMONY, ORCHESTRA, PIANO_TO_ORCHESTRA, PIANO_WRITING, PICTURE, READING_A_SCORE, REAL_LINES, WRITING_THE_CHORDS } from "./brain";
+import { CHORDS_ON_A_TUNE, FREEDOM, HARMONIC_MOTION, MODULATION, FREE_HARMONY, FROM_THE_SOURCE, ORNAMENT, RECOMPOSING, TEXTURE, TUNE_FIRST, VARIATION, CINEMATIC, CLASSICAL_HARMONY, COLOUR_HARMONY, COLOUR_INSTRUMENTS, COUNTERLINES, DYNAMICS, FILM_HARMONY, FORM_AND_DEVELOPMENT, MOODS, NAMING_CHORDS, NAMING_LEVELS, ONE_LINE_SKETCH, THEIR_HARMONY, ORCHESTRA, PIANO_TO_ORCHESTRA, PIANO_WRITING, PICTURE, READING_A_SCORE, REAL_LINES, WRITING_THE_CHORDS } from "./brain";
 import type { Effort } from "./spark";
 
 import { lineFacts } from "./lineFacts";
@@ -491,7 +491,7 @@ const TIMED = "If the composer gives timed moments, the music is for picture and
  */
 export const planOptions: Shape<ArrangeInput> = {
   name: "plan_options",
-  version: "plan-options-7",
+  version: "plan-options-8",
   effort: "high",
   // Reasoning counts here too.
   maxOutputTokens: 40000,
@@ -512,6 +512,8 @@ export const planOptions: Shape<ArrangeInput> = {
         input.source ? FROM_THE_SOURCE : THEIR_HARMONY,
         CLASSICAL_HARMONY,
         COLOUR_HARMONY,
+        HARMONIC_MOTION,
+        MODULATION,
         FREE_HARMONY,
         FILM_HARMONY,
         CINEMATIC,
@@ -581,7 +583,7 @@ export const RECOMPOSE_TIMES = ["2/4", "3/4", "4/4", "5/4", "6/8", "9/8", "12/8"
  */
 export const planRecompose: Shape<ArrangeInput> = {
   name: "plan_recompose",
-  version: "plan-recompose-2",
+  version: "plan-recompose-3",
   effort: "high",
   // Reasoning counts here too.
   maxOutputTokens: 40000,
@@ -607,6 +609,8 @@ export const planRecompose: Shape<ArrangeInput> = {
         FREE_HARMONY,
         CLASSICAL_HARMONY,
         COLOUR_HARMONY,
+        HARMONIC_MOTION,
+        MODULATION,
         FILM_HARMONY,
         CINEMATIC,
         MOODS,
@@ -674,7 +678,7 @@ export interface ThemeAnswer {
  */
 export const writeTheme: Shape<ThemeInput> = {
   name: "write_theme",
-  version: "write-theme-1",
+  version: "write-theme-2",
   effort: "high",
   // Reasoning counts here too.
   maxOutputTokens: 40000,
@@ -731,7 +735,7 @@ export const writeTheme: Shape<ThemeInput> = {
  */
 export const arrange: Shape<WriteInput> = {
   name: "arrange",
-  version: "arrange-12",
+  version: "arrange-13",
   effort: "medium",
   // Reasoning counts here too. One section at a time, so this is plenty.
   maxOutputTokens: 40000,
