@@ -10,9 +10,9 @@ I write to picture, so I often play an idea in with no click. A file like that h
 
 Give it your own Meta Model API key to try your own piece. The key stays in that browser tab, goes with each call and is never stored. The hosted site also lets anyone try one piece on my credit, with a limit per visitor and a limit a day, until that runs out.
 
-The free **Watch it work** door is waiting for the complete recorded walkthrough. It stays disabled until that path is verified and its index is published in `public/demo/`. A replay uses the same screens, spends no credit and keeps the real model, prompt version and elapsed time in each saved call. It follows one exact prepared direction. Changes without a recorded answer stop there and never become a paid call.
+The free **Watch it work** door opens the verified recorded walkthrough when its complete index is published in `public/demo/`. A replay uses the same screens, spends no credit and keeps the real model, prompt version and elapsed time in each saved call. It follows one exact prepared direction. Changes without a recorded answer stop there and never become a paid call.
 
-The source and its reading and harmony analysis are recorded. They use my exact `Sample_sketch.mid`, read as 24 bars of 3/4. The original MIDI has 117 notes. Its accepted notation reading has 114, because the existing import threshold excludes three very soft notes at velocities 1, 5 and 4. Those notes remain in the original MIDI download. The recorded walkthrough opens the exact accepted MusicXML directly, so it does not make a new bar-reading call. The recording checklist is in [DEMO.md](DEMO.md).
+The recorded path uses my exact `Sample_sketch.mid`, read as 24 bars of 3/4. It includes the reading, harmony analysis, String orchestra layout, two first-section previews and the complete selected A arrangement with its export. The original MIDI has 117 notes. Its accepted notation reading has 114, because the existing import threshold excludes three very soft notes at velocities 1, 5 and 4. Those notes remain in the original MIDI download. The recorded walkthrough opens the exact accepted MusicXML directly, so it does not make a new bar-reading call. The exact steps and capture history are in [DEMO.md](DEMO.md).
 
 ## What Muse Spark does
 

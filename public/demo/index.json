@@ -1,0 +1,45 @@
+{
+  "recorded": "2026-11-04",
+  "pieces": [
+    {
+      "id": "sample-sketch",
+      "name": "My piano sketch, arranged for strings",
+      "words": "I compare two ways to arrange my theme for strings, then finish A. This is a recorded walkthrough and uses no credit.",
+      "midi": "/demo/sample-sketch/Sample_sketch.mid",
+      "xml": "/demo/sample-sketch/sample-sketch.musicxml",
+      "recipe": {
+        "intent": "arrange",
+        "ensemble": "String orchestra",
+        "moreBars": 0,
+        "where": "inside",
+        "useMelodyOnly": false
+      },
+      "guide": [
+        "This is a recorded walkthrough and uses no credit.",
+        "In Study, confirm both Piano upper and Piano lower as Piano.",
+        "Skip all three questions. Leave the optional direction blank.",
+        "In Setup, use Arrange and String orchestra. Keep all source notes, stay neutral and add no bars.",
+        "Choose Create. Compare A, Held middle voices with repeat contrast, and B, Pulsed support with brief answers. Both have a recorded preview of bars 1 to 8.",
+        "Choose A and write the rest. A is complete across bars 1 to 24. B has only its first-section preview.",
+        "Export A directly while it is selected. Download MIDI includes the notation and separate part files. Other answers, settings or rewrites have no prepared reply."
+      ],
+      "runs": [
+        {
+          "key": "arrange-neutral",
+          "mode": "arrange",
+          "mood": ""
+        }
+      ],
+      "verifiedExport": {
+        "file": "/demo/sample-sketch/neutral-strings-a.zip",
+        "sha256": "452c77e4c1c5c9a45d1e4c9f58fe7be9ded8aa5b3a9cf958408ca752eeaecc78",
+        "plan": "Held middle voices with repeat contrast",
+        "parts": 5,
+        "bars": 24,
+        "notes": 211,
+        "sourceLayoutNotes": 169,
+        "newNotes": 42
+      }
+    }
+  ]
+}
