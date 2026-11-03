@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { parseScore, type Part, type Score } from "../score";
 import { newBarNumbers, type ArrangeInput, type DistributeAnswer, type DistributeInput, type FitAnswer, type FitInput, type OptionPlan, placedNotes, type PieceReading, type RecomposePlan, type ThemeAnswer, type ThemeInput, type PlanAnswer, type Settled, type StudyScoreAnswer, type StudyScoreInput, type WriteAnswer, type WriteInput } from "../server/shapes";
-import { arrangeInput, checkOption, emptyScore, motifSightings, withDoubles, writingWindows, chordTracks, dropParts, FADED, packageFiles, pieceInput, placeNotes, rolesAfter, scoreOfParts, scoreWithSplits, snap, onlyBars, whyText, withOption, withoutParts, withRoleColours, withStructure, type OptionCheck, type PlacedCheck, type RoleFocus } from "./arrange";
+import { arrangeInput, checkOption, emptyScore, motifSightings, withDoubles, writingWindows, chordTracks, dropParts, FADED, packageFiles, parseEvents, pieceInput, placeNotes, rolesAfter, scoreOfParts, scoreWithSplits, snap, onlyBars, whyText, withOption, withoutParts, withRoleColours, withStructure, type OptionCheck, type PlacedCheck, type RoleFocus } from "./arrange";
 import { barsToReach, placeCues, timeWords, type Cue } from "./cues";
 import { markersOf } from "./midi";
 import { instrumentFromName, inScoreOrder, ONE_NOTE_AT_A_TIME } from "./orchestra";
@@ -67,6 +67,38 @@ export type RecomposeState = { status: "none" } | { status: "asking" } | { statu
 /** The composer's sketch as text, for a call that writes from it but doesn't have it on the score. */
 export function sourceText(input: Pick<ArrangeInput, "written" | "lines">): string {
   return input.written.map((w) => `Bar ${w.bar}: ${w.at ? placedNotes(w, input.lines) : w.notes}`).join(" / ").replace(/[\u0000-\u001f]/g, " ").slice(0, 16000);
+}
+
+/** A successful transport reply is not enough to spend on its orchestration. */
+function usableTheme(answer: unknown, score: Score): ThemeAnswer["lines"] | null {
+  const lines = (answer as Partial<ThemeAnswer> | null)?.lines;
+  if (!Array.isArray(lines) || !lines.length) return null;
+  const bars = score.parts[0]?.measures ?? [];
+  const voices = new Map<string, { start: number; end: number }[]>();
+  let hasTune = false;
+  for (const line of lines) {
+    if (!line || !["tune", "countermelody", "bass"].includes(line.role) || typeof line.bar !== "string" || typeof line.events !== "string") return null;
+    const bar = bars.find((bar) => bar.number === line.bar);
+    const parsed = parseEvents(line.events);
+    if (!bar || parsed.unreadable || !parsed.events.length) return null;
+    const length = bar.length / score.ticksPerQuarter;
+    // Parsing snaps for notation. Do not let that rounding hide an out-of-bar
+    // release in the actual answer supplied to the next model call.
+    for (const token of line.events.trim().split(/\s+/)) {
+      const timing = /@([0-9.]+)\+([0-9.]+)$/.exec(token)!;
+      if (Number(timing[1]) + Number(timing[2]) > length + 1e-8) return null;
+    }
+    const key = `${line.role}:${line.bar}`;
+    const previous = voices.get(key) ?? [];
+    for (const event of parsed.events) {
+      const end = event.start + event.length;
+      if (event.names.length !== 1 || event.names.some((name) => noteHeight(name)! < 0 || noteHeight(name)! > 127) || event.start < 0 || end > length || previous.some((other) => event.start < other.end && other.start < end)) return null;
+      previous.push({ start: event.start, end });
+    }
+    voices.set(key, previous);
+    if (line.role === "tune") hasTune = true;
+  }
+  return hasTune ? lines : null;
 }
 
 /** The bars a motif comes from, as a line: the top note of each moment on the upper staff, because a piano's lower hand isn't the tune. */
@@ -139,15 +171,19 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
   const [recomposed, setRecomposed] = useState<{ plan: RecomposePlan; heights: number[]; opening: number[]; tuneBars: number; bars: number } | null>(null);
   const [fixing, setFixing] = useState<"none" | "asking" | "unavailable">("none");
   const [fixingReason, setFixingReason] = useState<string | null>(null);
-  const [themeReason, setThemeReason] = useState<string | null>(null);
+  // A theme belongs to its original plan batch. It cannot replace a valid score
+  // or authorise orchestration until its actual notes have been checked.
+  const [themeJob, setThemeJob] = useState<{ status: "asking" | "unavailable"; owner: number; index: number; plan: RecomposePlan; reason?: string } | null>(null);
   const turn = useRef(0);
+  const themeWrite = themeJob?.owner === turn.current ? themeJob : null;
+  const themeReason = themeWrite?.status === "unavailable" ? themeWrite.reason ?? "malformed" : null;
 
   const clear = () => {
     setRecompose({ status: "none" });
     setRecomposed(null);
     setFixing("none");
     setFixingReason(null);
-    setThemeReason(null);
+    setThemeJob(null);
     turn.current++;
     setKept(null);
     setSplitting([]);
@@ -536,7 +572,7 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     if (!base || !mine) return;
     const now = ++turn.current;
     setRecompose({ status: "asking" });
-    setThemeReason(null);
+    setThemeJob(null);
     const lines = pieceInput(base.score, mine, span.from, span.to).lines ?? [];
     const reading = piece.status === "ready" && map ? { roles: map.roles.filter((r) => lines.includes(r.line)).slice(0, 200), missing: piece.answer.missing } : null;
     const input = { ...arrangeInput(base.score, mine, span.from, span.to, words, 0, reading, { instruments, where: "after", answers, freedom, tracks: lines.flatMap((line) => (tracks[line]?.trim() ? [{ line, instrument: tracks[line]!.trim() }] : [])) }), moreBars: length };
@@ -549,7 +585,8 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
   const writeRecomposed = async (index: number) => {
     if (recompose.status !== "ready") return;
     // At its closest a recomposition keeps the composer's key and metre, whatever it proposed.
-    const proposed = recompose.plans[index]!;
+    const proposed = recompose.plans[index];
+    if (!proposed || (themeWrite?.status === "asking" && themeWrite.index === index)) return;
     const asked = recompose.input;
     const plan = asked.freedom === 1 ? { ...proposed, fifths: asked.fifths ?? proposed.fifths, time: asked.time ?? proposed.time } : proposed;
     const instruments = asked.instruments ?? [];
@@ -562,19 +599,24 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     const viewed = ++displayTurn.current;
     const heights = motifHeights(asked, plan.motif.from, plan.motif.to);
     const opening = motifHeights(asked, asked.written[0]!.bar, asked.written[Math.min(1, asked.written.length - 1)]!.bar).slice(0, 3);
+    setThemeJob({ status: "asking", owner: now, index, plan });
+    const composed = await askSpark("write_theme", { ...asked, chosen: plan } satisfies ThemeInput);
+    if (turn.current !== now) return;
+    const lines = composed.status === "ok" ? usableTheme(composed.answer, page.score) : null;
+    if (!lines) {
+      setThemeJob({ status: "unavailable", owner: now, index, plan, reason: composed.status === "fallback" ? composed.reason : "malformed" });
+      return;
+    }
+    // Only an accepted theme can start the dependent paid accompaniment call.
+    // Until this point the previous score, option notes and export stay intact.
+    setThemeJob(null);
     setKept(page);
     setPlaced({ status: "none" });
     setOff([]);
     setOffBars([]);
-    setRecomposed({ plan, heights, opening, tuneBars: 0, bars: length });
+    setRecomposed({ plan, heights, opening, tuneBars: new Set(lines.filter((l) => l.role === "tune").map((l) => l.bar)).size, bars: length });
     const input = arrangeInput(page.score, page.score.parts[0]!, 0, length - 1, asked.ask, 0, null, { instruments, where: "inside", answers: asked.answers, freedom: asked.freedom });
     setOptions({ status: "ready", plans: [plan], input, notes: {}, saved: false });
-    setThemeReason(null);
-    const composed = await askSpark("write_theme", { ...asked, chosen: plan } satisfies ThemeInput);
-    if (turn.current !== now) return;
-    setThemeReason(composed.status === "fallback" ? composed.reason : null);
-    const lines = composed.status === "ok" ? (composed.answer as ThemeAnswer).lines : [];
-    setRecomposed({ plan, heights, opening, tuneBars: new Set(lines.filter((l) => l.role === "tune").map((l) => l.bar)).size, bars: length });
     const tune = sourceText(asked).slice(0, 16000);
     await writeNotes(page, input, plan, 0, false, { tune, motif: `${plan.motif.what} From bars ${plan.motif.from} to ${plan.motif.to}.` }, lines, null, false, chosen, viewed);
   };
@@ -963,6 +1005,7 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     fixing,
     fixingReason,
     themeReason,
+    themeWrite,
     askFix,
     freedomOf: recompose.status === "ready" ? recompose.input.freedom : undefined,
     keep,

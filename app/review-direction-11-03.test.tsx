@@ -28,7 +28,7 @@ async function setup(workspace = false, demo = false) {
     const answer = shape === "read_piece" ? { summary: "A local sketch", sections: [], roles: [], questions: [], structures: [], missing: [], thin: [] }
       : shape === "plan_options" ? { options: ["A", "B"].map((letter) => ({ name: `${input.intent ?? (input.moreBars > 0 ? "expand" : "arrange")} ${letter}`, idea: "An answer", why: [{ from: "1", to: "12", what: "An answer", principle: "Use source material" }] })) }
       : shape === "plan_recompose" ? { options: [{ name: "A fresh recomposition", idea: "A new phrase from the source", why: [{ from: "1", to: "8", what: "A new phrase", principle: "Develop the source" }], motif: { from: "1", to: "1", what: "Opening" }, fifths: 0, time: "4/4", qpm: 90 }] }
-      : shape === "write_theme" ? { lines: [] }
+      : shape === "write_theme" ? { lines: [{ bar: "1", role: "tune", events: "C5@0+1" }] }
       : shape === "arrange" ? { adds: [{ part: "Oboe", bar: input.window.from, events: "C5@0+1" }], doubles: [] }
       : shape === "distribute" ? { idea: "The same line", plan: [{ from: "1", to: "12", line: "Flute", voice: "all", part: input.instruments[0], octave: 0, why: "Keep the source on the selected player" }] } : null;
     return answer ? { status: "ok", cached: false, answer } : { status: "fallback", reason: "not-prepared" };
@@ -154,7 +154,7 @@ it("does not present previous Expand plans as the new neutral Arrange choice", a
 
 it("does not enable exporting an empty new score after recomposition failed to write any notes", async () => {
   const screen = await setup();
-  setTransport(async (shape) => shape === "plan_recompose" ? { status: "ok", cached: false, answer: { options: [{ name: "Local recomposition", idea: "A new phrase", why: [{ from: "1", to: "8", what: "A new phrase", principle: "Develop source material" }], motif: { from: "1", to: "1", what: "Opening" }, fifths: 0, time: "4/4", qpm: 90 }] } } : { status: "fallback", reason: "empty" });
+  setTransport(async (shape) => shape === "plan_recompose" ? { status: "ok", cached: false, answer: { options: [{ name: "Local recomposition", idea: "A new phrase", why: [{ from: "1", to: "8", what: "A new phrase", principle: "Develop source material" }], motif: { from: "1", to: "1", what: "Opening" }, fifths: 0, time: "4/4", qpm: 90 }] } } : shape === "write_theme" ? { status: "ok", cached: false, answer: { lines: [{ bar: "1", role: "tune", events: "C5@0+1" }] } } : { status: "fallback", reason: "empty" });
   await act(() => screen.now.askRecompose("", 8, ["Flute"]));
   await act(() => screen.now.writeRecomposed(0));
   expect(screen.now.standing!.parts.every((part) => part.notes.every((note) => note.rest))).toBe(true);

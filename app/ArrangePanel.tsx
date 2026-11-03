@@ -429,6 +429,20 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
     </button>
   );
 
+  if (mode === "recompose" && current === 4 && arranged.themeWrite) {
+    const theme = arranged.themeWrite;
+    return <div className="reading arrange">{steps}
+      <h2 className="arrange-title">{theme.status === "asking" ? "Writing the new melody" : "The new melody did not finish"}</h2>
+      <p className="arrange-said">{theme.plan.name}. {theme.status === "asking" ? "The accompaniment waits for a usable melody." : "No accompaniment was requested. Your previous score is still available to play and export."}</p>
+      <FailureReason reason={arranged.themeReason} onExplore={onExplore}/>
+      {theme.status === "unavailable" && <p className="spark-note">Try again sends a separate request and may use credit. It does not resume the previous call.</p>}
+      {action(<div className="arrange-actions">
+        {theme.status === "unavailable" && <button className="button primary arrange-go" disabled={busy} onClick={() => void arranged.writeRecomposed(theme.index)}>Try melody again</button>}
+        <button className="button" onClick={() => go(3)}>Back to plans</button>
+      </div>)}
+    </div>;
+  }
+
   if (mode === "recompose" && current === 4 && !arranged.recomposed) {
     const hasPlans = arranged.recompose.status === "ready" || arranged.recompose.status === "asking";
     return <div className="reading arrange">{steps}
@@ -688,7 +702,6 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
     <div className="reading arrange">
       {steps}
       {notes?.status === "ready" && notes.reason && <FailureReason reason={notes.reason} onExplore={onExplore}/>}
-      {arranged.themeReason && <><p className="spark-note">The new melody did not finish. The available score is still here.</p><FailureReason reason={arranged.themeReason} onExplore={onExplore}/></>}
       {current === 3 && mode !== "recompose" && placed.status === "ready" && placementHasProblems(placed.check) && <div className="arrange-hit" role="alert">
         <strong>{canSuggestRangeRepair(placed.check) ? "Check the instrument ranges" : "Check the instrument placement"}</strong>
         <p>Planning is paused. Review these placement checks before writing plans.</p>

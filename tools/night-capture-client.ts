@@ -46,7 +46,7 @@ function notes(now: Arranged, index: number, full: boolean) {
 }
 const diagnostic = (now: Arranged) => ({
   piece: now.piece, studyStatus: now.study.status, tracks: now.tracks, confirmed: now.tracksConfirmed,
-  placed: now.placed, recompose: now.recompose, recomposed: now.recomposed,
+  placed: now.placed, recompose: now.recompose, recomposed: now.recomposed, themeWrite: now.themeWrite, themeReason: now.themeReason,
   options: now.options, trying: now.trying,
 });
 
@@ -134,6 +134,10 @@ export async function runNightRecipe(recipe: NightRecipe, current: () => Arrange
       fail(plans.status === 'ready' && plans.plans.length === 2, 'Recomposition plans unavailable');
       for (const [index, label] of [[0, 'a'], [1, 'b']] as const) {
         await step(`${label}-full`, () => current().writeRecomposed(index));
+        // A failed B theme deliberately leaves A playable. It cannot be captured
+        // under B's name. Fixed freedom2 keeps the exact chosen plan object.
+        fail(!current().themeWrite, 'Theme unavailable or still pending');
+        fail(current().recomposed?.plan === plans.plans[index] && options(current()).plans[0] === plans.plans[index], 'Selected recomposition does not own this theme');
         // Each recomposition becomes the sole active option at index zero.
         await exportOutcome(label, 0);
       }

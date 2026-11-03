@@ -158,7 +158,7 @@ it('a recomposition goes back for its missing section with its motif and tune st
   vi.stubGlobal('fetch', async (url: string, init: RequestInit) => {
     const raw = JSON.parse(init.body as string).input;
     if (url.endsWith('plan_recompose')) return reply('ok', { answer: { options: [{ name: 'New', idea: 'Grows from the opening', why: [{ from: '1', to: '8', what: 'First', principle: 'Grow' }, { from: '9', to: '16', what: 'Second', principle: 'Answer' }], motif: { from: '1', to: '1', what: 'The opening rises' }, fifths: 0, time: '4/4', qpm: 80 }] } });
-    if (url.endsWith('write_theme')) return reply('ok', { answer: { lines: [] } });
+    if (url.endsWith('write_theme')) return reply('ok', { answer: { lines: [{ bar: "1", role: "tune", events: "C5@0+1" }] } });
     if (!url.endsWith('arrange')) throw new Error('Unexpected request');
     const asked = raw as WriteInput;
     seeds.push(asked.seed);

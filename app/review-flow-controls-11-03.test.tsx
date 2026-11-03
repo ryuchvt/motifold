@@ -36,7 +36,7 @@ function setup(partial = false) {
     }
     const planAnswer = partial ? { options: plans.map((p: any) => ({ ...p, why: p.why.map((w: any) => ({ ...w, chords: "C | G" })) })) } : saved.plan.answer;
     const answer = shape === "read_piece" ? saved.read.answer : shape === "plan_options" ? planAnswer : shape === "plan_recompose" ? { options: [composed, { ...composed, name: "A second new piece" }] }
-      : shape === "write_theme" ? { lines: [] } : shape === "arrange" ? { adds: [{ part: "Viola", bar: input.window?.from ?? "1", events: "C4@0+1", dyn: "mf" }], doubles: [] } : null;
+      : shape === "write_theme" ? { lines: [{ bar: "1", role: "tune", events: "C5@0+1" }] } : shape === "arrange" ? { adds: [{ part: "Viola", bar: input.window?.from ?? "1", events: "C4@0+1", dyn: "mf" }], doubles: [] } : null;
     return new Response(JSON.stringify(answer ? { status: "ok", answer } : { status: "fallback", reason: "no-key" }));
   });
   let arranged!: Arranged;

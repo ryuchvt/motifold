@@ -32,7 +32,7 @@ it('enumerates102 unique recipes and204 outcomes in the approved priority order'
   expect(NIGHT_RECIPES.filter(item => item.intent === 'recompose')).toHaveLength(90);
 });
 
-async function setup(failure?: 'notes' | 'theme' | 'zero-adds' | 'grouped-theme' | 'range-fixed' | 'range-repeat' | 'range-fallback' | 'range-other-flags' | 'layout-fallback') {
+async function setup(failure?: 'notes' | 'theme' | 'zero-adds' | 'grouped-theme' | 'range-fixed' | 'range-repeat' | 'range-fallback' | 'range-other-flags' | 'layout-fallback' | 'b-empty-theme' | 'b-invalid-theme') {
   vi.stubGlobal('crypto', webcrypto);
   vi.stubGlobal('fetch', vi.fn(() => { throw Error('No real network is allowed'); }));
   const requests: { shape: string; input: any }[] = [];
@@ -55,7 +55,8 @@ async function setup(failure?: 'notes' | 'theme' | 'zero-adds' | 'grouped-theme'
     }
     if (shape === 'plan_options') return { status: 'ok', cached: false, answer: { options: plans(false, asked.moreBars > 0) } };
     if (shape === 'plan_recompose') return { status: 'ok', cached: false, answer: { options: plans(true, false) } };
-    if (shape === 'write_theme') return failure === 'theme' ? { status: 'fallback', reason: 'failed' } : { status: 'ok', cached: false, answer: { lines: Array.from({ length: 32 }, (_, index) => ({ role: 'tune', bar: String(index + 1), events: 'C5@0+3' })) } };
+    if (shape === 'write_theme' && asked.chosen.name === 'Synthetic B' && (failure === 'b-empty-theme' || failure === 'b-invalid-theme')) return { status: 'ok', cached: false, answer: { lines: failure === 'b-empty-theme' ? [] : [{ role: 'tune', bar: '1', events: 'invalid@0+3' }] } };
+    if (shape === 'write_theme') return failure === 'theme'  ? { status: 'fallback', reason: 'failed' } : { status: 'ok', cached: false, answer: { lines: Array.from({ length: 32 }, (_, index) => ({ role: 'tune', bar: String(index + 1), events: 'C5@0+3' })) } };
     if (shape === 'arrange') {
       if (failure === 'notes') return { status: 'fallback', reason: 'budget' };
       if (failure === 'zero-adds') return { status: 'ok', cached: false, answer: { adds: [], doubles: [] } };
@@ -113,6 +114,43 @@ it('captures two real-hook recompositions from their own plans at active option 
   expect(requests.filter(call => call.shape === 'write_theme').map(call => call.input.chosen.name)).toEqual(['Synthetic A', 'Synthetic B']);
   expect(requests.filter(call => call.shape === 'arrange').every(call => call.input.seed.theme.includes('tune: C5@0+3'))).toBe(true);
   expect(files.get('a-score.musicxml')).not.toEqual(files.get('b-score.musicxml'));
+});
+
+it.each(['b-empty-theme', 'b-invalid-theme'] as const)('retains verified A after an ok-but-unusable B theme without arranging or exporting B: %s', async failure => {
+  const { current, io, files, requests } = await setup(failure);
+  const recipe = NIGHT_RECIPES.find(item => item.intent === 'recompose' && item.ensemble === 'String orchestra' && item.mood === 'Neutral')!;
+  const result = await runNightRecipe(recipe, current, io, `failed-${failure}`);
+  expect(result.status).toBe('failed'); expect(result.error).toBe('Theme unavailable or still pending');
+  expect(result.outcomes).toHaveLength(1);
+  expect(requests.filter(call => call.shape === 'write_theme').map(call => call.input.chosen.name)).toEqual(['Synthetic A', 'Synthetic B']);
+  expect(requests.filter(call => call.shape === 'arrange')).toHaveLength(4);
+  expect(requests.filter(call => call.shape === 'arrange').every(call => call.input.chosen.name === 'Synthetic A')).toBe(true);
+  expect(files.has('a.zip')).toBe(true); expect(files.has('a-summary.json')).toBe(true);
+  expect(files.has('b.zip')).toBe(false); expect(files.has('b-summary.json')).toBe(false);
+  expect(current().themeWrite).toMatchObject({ status: 'unavailable', index: 1, reason: 'malformed', plan: { name: 'Synthetic B' } });
+  expect(current().recomposed?.plan.name).toBe('Synthetic A');
+  const failureFile = JSON.parse(strFromU8(files.get('failure.json')!));
+  expect(failureFile.diagnostic.themeWrite).toMatchObject({ status: 'unavailable', index: 1, reason: 'malformed' });
+  // The user can still export every byte of the accepted A payloads.
+  const retained = unzipSync(await captureHookDownload(() => current().download()));
+  const accepted = unzipSync(files.get('a.zip')!);
+  expect(Object.keys(retained)).toEqual(Object.keys(accepted));
+  for (const name of Object.keys(accepted)) expect(retained[name]).toEqual(accepted[name]);
+  expect(fetch).not.toHaveBeenCalled();
+});
+
+it('rejects a stale A snapshot as B even when its theme status is clear', async () => {
+  const { current, io, files } = await setup();
+  const recipe = NIGHT_RECIPES.find(item => item.intent === 'recompose' && item.ensemble === 'String orchestra' && item.mood === 'Neutral')!;
+  let prior: Arranged | null = null, usePrior = false;
+  const invoke = io.invoke, phase = io.phase;
+  io.phase = (caseId, value) => { if (value === 'b-full') prior = current(); phase(caseId, value); };
+  io.invoke = async action => { await invoke(action); if (prior) usePrior = true; };
+  const result = await runNightRecipe(recipe, () => usePrior ? prior! : current(), io, 'wrong-plan-snapshot');
+  expect(result.status).toBe('failed'); expect(result.error).toBe('Selected recomposition does not own this theme');
+  expect(files.has('a.zip')).toBe(true); expect(files.has('b.zip')).toBe(false);
+  expect(current().recomposed?.plan.name).toBe('Synthetic B');
+  expect(fetch).not.toHaveBeenCalled();
 });
 
 it('fresh multiwindow recomposition keeps player-grouped reply order and supplies the theme as context rather than pre-added notes', async () => {

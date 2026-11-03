@@ -25,7 +25,7 @@ function setup() {
     if (shape === "study_score") return okay({ sections: [], harmony: [], moments: [] });
     if (shape === "plan_options") return okay({ options: [{ name: "One", idea: "A flute answer", why: [{ from: input.written[0].bar, to: input.written.at(-1).bar, what: "An answer", principle: "Support the source" }] }] });
     if (shape === "plan_recompose") return okay({ options: [{ name: "Reshaped", idea: "The whole melody", why: [{ from: "1", to: String(input.moreBars), what: "A new treatment", principle: "Retain the melody" }], motif: { from: "1", to: "1", what: "The opening" }, fifths: 0, time: "4/4", qpm: 90 }] });
-    if (shape === "write_theme") return okay({ lines: [] });
+    if (shape === "write_theme") return okay({ lines: [{ bar: "1", role: "tune", events: "C5@0+1" }] });
     if (shape === "arrange") {
       if (quotaAfterFirstWindow && calls.filter(c => c.shape === "arrange").length > 1) return { status: "fallback", reason: "quota" };
       return okay({ adds: [{ part: "Flute", bar: input.window?.from ?? "1", events: "C5@0+1", dyn: "mf" }], doubles: [] });
