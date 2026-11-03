@@ -1227,3 +1227,9 @@ button.door-card:hover {
 .studio .stage:not(:hover) .stage-readout {
   visibility: hidden;
 }
+
+/* A pencil mark can be hovered for what it means. The rest of the pencil still leaves the notes alone. */
+.studio .sheet [data-explained] {
+  pointer-events: auto;
+  cursor: help;
+}

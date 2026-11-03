@@ -108,6 +108,15 @@ export function Studio() {
   const writingNow = progress.find((w) => w.state === "writing");
   // The plan whose notes can be switched on and off on the score.
   const switchable = arranged.options.status === "ready" ? (arranged.trying?.kind === "option" ? arranged.trying.index : Object.entries(arranged.options.notes).find(([, n]) => n.status === "ready")?.[0]) : undefined;
+  // Escape puts the inspector away, from anywhere.
+  useEffect(() => {
+    if (!picked) return;
+    const away = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setPicked(null);
+    };
+    window.addEventListener("keydown", away);
+    return () => window.removeEventListener("keydown", away);
+  }, [picked]);
   // A picked marker that's been dealt with goes back to the overview.
   useEffect(() => {
     if (picked?.kind === "attention" && !attention.some((a) => a.id === picked.id)) setPicked(null);

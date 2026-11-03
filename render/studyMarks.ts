@@ -123,6 +123,8 @@ function firstNotes(drawn: DrawnScore, partId: string | null): Map<number, numbe
  * its letter and what it does, exact notes circled with a note beside them, and the chord and numeral under the notes.
  * None of it takes a tap away from the notes. Null clears it.
  */
+const ROLE_WORDS: Record<string, string> = { tonic: "home", predominant: "leading to the dominant", dominant: "wants to go home", bridge: "carries on into the next chord" };
+
 export function paintStudyMarks(drawn: DrawnScore, marks: StudyMarks | null): void {
   const backend = drawn.osmd.Drawer?.Backends?.[0] as { getSvgElement?: () => SVGElement } | undefined;
   const svg = backend?.getSvgElement?.();
@@ -148,6 +150,13 @@ export function paintStudyMarks(drawn: DrawnScore, marks: StudyMarks | null): vo
     for (const [key, value] of Object.entries(attributes)) el.setAttribute(key, String(value));
     group.appendChild(el);
     return el;
+  };
+  /** What a mark means, read by hovering it or by a screen reader. */
+  const explain = (el: Element, words: string) => {
+    const title = document.createElementNS(SVG_NS, "title");
+    title.textContent = words;
+    el.appendChild(title);
+    el.setAttribute("data-explained", "");
   };
   /** Words broken to fit, measured in this kind of writing. */
   const wrap = (kind: string, words: string, width: number) => {
@@ -215,6 +224,7 @@ export function paintStudyMarks(drawn: DrawnScore, marks: StudyMarks | null): vo
     const y = below(bar, box);
     const tone = doubtful ? "pp-study-doubtful" : `pp-role-${role}`;
     const written = write(x, y, `chord ${tone}`, chord);
+    explain(written, `${chord}${numeral && numeral !== "?" && numeral !== "pass" ? `, ${numeral}` : ""}${ROLE_WORDS[role] ? `: ${ROLE_WORDS[role]}` : ""}${doubtful ? ". The code couldn't find enough of this chord's notes here." : ""}`);
     chordEnds.set(box.y, x + (written.getComputedTextLength?.() ?? chord.length * 8));
     if (numeral && numeral !== "?" && numeral !== "pass") write(x, y + LINE, `numeral ${tone}`, numeral);
   }
@@ -273,7 +283,7 @@ export function paintStudyMarks(drawn: DrawnScore, marks: StudyMarks | null): vo
     const wide = circled.length > MOST_CIRCLED;
     for (const p of pieces) {
       if (!wide) {
-        shape("rect", `passage ${inTone}`, { x: p.x0 - 5, y: p.y0 - 4, width: p.x1 - p.x0 + 10, height: p.y1 - p.y0 + 8, rx: 10 });
+        explain(shape("rect", `passage ${inTone}`, { x: p.x0 - 5, y: p.y0 - 4, width: p.x1 - p.x0 + 10, height: p.y1 - p.y0 + 8, rx: 10 }), words);
         continue;
       }
       // Under the staff on one staff. With more than one that's under the others too, so it goes under its own notes.

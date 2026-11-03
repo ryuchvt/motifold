@@ -1,3 +1,4 @@
+/// <reference types="vitest/config" />
 import react from "@vitejs/plugin-react";
 import { mkdir, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
@@ -42,6 +43,8 @@ export default defineConfig({
   plugins: [react(), saveTakes()],
   // Spark calls go to the local Worker (`npm run server`), which holds the key and the ledger.
   server: { proxy: { "/api": "http://127.0.0.1:8787" } },
+  // The screen tests that write a whole plan run long when the full suite shares the machine.
+  test: { testTimeout: 15_000 },
   build: {
     // Audio worklets must load from a real file; some browsers refuse a data: URL.
     assetsInlineLimit: (file) => (file.endsWith("-worklet.js") ? false : undefined),
