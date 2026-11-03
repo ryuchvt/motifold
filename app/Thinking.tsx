@@ -5,6 +5,7 @@ import { onSpark, type SparkEvent } from "./spark";
 const STAGES: Record<string, { what: string; usually: string }> = {
   read_bars: { what: "Finding the bars from your notes", usually: "about a minute" },
   read_piece: { what: "Reading who has the tune and what's missing", usually: "about a minute" },
+  study_score: { what: "Studying the form and the harmony", usually: "a minute or two" },
   distribute: { what: "Laying your notes on the instruments", usually: "about a minute" },
   plan_options: { what: "Choosing chords and form, bar by bar", usually: "about two minutes" },
   plan_recompose: { what: "Composing a new piece from your motif", usually: "about two minutes" },

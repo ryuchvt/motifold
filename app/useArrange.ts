@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { parseScore, type Part, type Score } from "../score";
-import { newBarNumbers, type ArrangeInput, type DistributeAnswer, type DistributeInput, type FitAnswer, type FitInput, type OptionPlan, placedNotes, type PieceReading, type RecomposePlan, type ThemeAnswer, type ThemeInput, type PlanAnswer, type Settled, type StudyScoreInput, type WriteAnswer, type WriteInput } from "../server/shapes";
+import { newBarNumbers, type ArrangeInput, type DistributeAnswer, type DistributeInput, type FitAnswer, type FitInput, type OptionPlan, placedNotes, type PieceReading, type RecomposePlan, type ThemeAnswer, type ThemeInput, type PlanAnswer, type Settled, type StudyScoreAnswer, type StudyScoreInput, type WriteAnswer, type WriteInput } from "../server/shapes";
 import { arrangeInput, checkOption, emptyScore, motifSightings, withDoubles, writingWindows, chordTracks, dropParts, FADED, packageFiles, pieceInput, placeNotes, rolesAfter, scoreOfParts, scoreWithSplits, snap, onlyBars, whyText, withOption, withoutParts, withRoleColours, withStructure, type OptionCheck, type PlacedCheck, type RoleFocus } from "./arrange";
 import { barsToReach, placeCues, timeWords, type Cue } from "./cues";
 import { markersOf } from "./midi";
@@ -8,10 +8,18 @@ import { instrumentFromName, inScoreOrder, ONE_NOTE_AT_A_TIME } from "./orchestr
 import { pieceData } from "./pieceData";
 import { askSpark } from "./spark";
 import { noteHeight } from "./notes";
-import { scoreLines, wholeScoreParts } from "./scoreInput";
+import { scoreLines, soundsAtAll, wholeScoreParts } from "./scoreInput";
+import { marksOnPage, studyMarksOf } from "./ScoreStudy";
 
 /** What's new on the page. Checked against every role's colour, for colour-blind readers too. */
 export const NEW_NOTES = "#a8329b";
+
+/** The study of the sketch: its form and harmony, asked with the reading and drawn on the score. `parts` are the ones its note numbers count through. */
+export type StudyState =
+  | { status: "none" }
+  | { status: "asking" }
+  | { status: "unavailable" }
+  | { status: "ready"; answer: StudyScoreAnswer; written: StudyScoreInput["written"]; parts: Part[] };
 
 export type PieceState =
   | { status: "none" }
@@ -87,6 +95,8 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
   /** Parts the composer has deleted. They can come back until the next step. */
   const [gone, setGone] = useState<string[]>([]);
   const [piece, setPiece] = useState<PieceState>({ status: "none" });
+  const [study, setStudy] = useState<StudyState>({ status: "none" });
+  const studyTurn = useRef(0);
   /** What the composer says each track is, by the name Muse Spark knows it by. */
   const [tracks, setTracks] = useState<Record<string, string>>({});
   /** What they answered, by question. */
@@ -126,6 +136,8 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     setSplitting([]);
     setGone([]);
     setPiece({ status: "none" });
+    studyTurn.current++;
+    setStudy({ status: "none" });
     setTracks({});
     setAnswered({});
     setPlaced({ status: "none" });
@@ -204,6 +216,15 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     const now = ++turn.current;
     setPiece({ status: "asking" });
     const input = pieceInput(base.score, mine, span.from, span.to);
+    // The study goes at the same time, on the same notes, and doesn't hold up the reading.
+    const studied = ++studyTurn.current;
+    const parts = wholeScoreParts(base.score) ?? [soundsAtAll(mine) ? mine : (base.score.parts.find(soundsAtAll) ?? mine)];
+    setStudy({ status: "asking" });
+    void askSpark("study_score", input).then((r) => {
+      if (studyTurn.current !== studied) return;
+      const answer = r.status === "ok" ? (r.answer as StudyScoreAnswer | undefined) : undefined;
+      setStudy(answer && [answer.sections, answer.harmony, answer.moments].every(Array.isArray) ? { status: "ready", answer, written: input.written, parts } : { status: "unavailable" });
+    });
     const reply = await askSpark("read_piece", input);
     if (turn.current !== now) return;
     const ready = (answer: PieceReading, saved: boolean) => {
@@ -610,6 +631,8 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     // A new order renumbers the bars, so the old reading no longer points at anything.
     if (trying?.kind === "structure") {
       setPiece({ status: "none" });
+      studyTurn.current++;
+      setStudy({ status: "none" });
       setPlaced({ status: "none" });
       setHandOrder([]);
       setFitted([]);
@@ -642,8 +665,20 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     URL.revokeObjectURL(link.href);
   };
 
+  const studyMarks = useMemo(() => {
+    if (study.status !== "ready" || trying || kept || !base || !page) return null;
+    const marks = studyMarksOf(study.answer, study.written, study.parts);
+    if (!view) return marks;
+    const measures = base.score.parts[0]?.measures ?? [];
+    const [from, to] = [measures.findIndex((m) => m.number === view.from), measures.findIndex((m) => m.number === view.to)];
+    return from < 0 || to < from ? null : marksOnPage(marks, page.score, from, to);
+  }, [study, trying, kept, base, page, view]);
+
   return {
     piece,
+    study,
+    /** The study in pencil on the composer's own score. Not on anything new or kept, whose notes it never read. */
+    studyMarks,
     map,
     roles: map?.roles ?? [],
     tracks,

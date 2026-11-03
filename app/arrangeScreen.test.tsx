@@ -3,7 +3,7 @@ import { act } from "react";
 import { createRoot } from "react-dom/client";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { parseScore } from "../score";
-import type { DistributeAnswer, FitAnswer, PieceReading, PlanAnswer, WriteAnswer } from "../server/shapes";
+import type { DistributeAnswer, FitAnswer, PieceReading, PlanAnswer, StudyScoreAnswer, WriteAnswer } from "../server/shapes";
 import { midiFile, pieceInput, ROLE_COLOURS } from "./arrange";
 import { ArrangePanel, StretchHead } from "./ArrangePanel";
 import { PieceView } from "./PieceView";
@@ -47,7 +47,13 @@ const plan: DistributeAnswer = {
 
 const reply = (status: string, body: object = {}) => ({ ok: true, json: async () => ({ status, ...body }) }) as Response;
 const fit: FitAnswer = { structures: [{ name: "Tune on time", why: "Lands it", order: [{ from: "2", to: "2" }] }] };
-const answers: Record<string, object> = { read_piece: reading, distribute: plan, plan_options: plans, fit_form: fit };
+const study: StudyScoreAnswer = {
+  overview: "Two bars that rise a step.",
+  sections: [{ from: "1", to: "1", form: "A", name: "Call", mood: "open", what: "The tune starts" }, { from: "2", to: "2", form: "A'", name: "Reply", mood: "calm", what: "A step higher" }],
+  harmony: [{ from: "1", to: "1", note: 1, chord: "C", numeral: "I" }, { from: "2", to: "2", note: 1, chord: "Dm", numeral: "ii" }],
+  moments: [{ bar: "1", note: 1, toBar: "2", toNote: 1, kind: "sequence", what: "Same shape, a step up" }],
+};
+const answers: Record<string, object> = { read_piece: reading, study_score: study, distribute: plan, plan_options: plans, fit_form: fit };
 /** Muse Spark's answer to each question, with the notes of whichever option was chosen. */
 const spark = (url: string, init?: RequestInit) => {
   const shape = url.split("/").pop()!;
@@ -93,7 +99,8 @@ describe("the arranger's two steps", () => {
   it("reads first and writes nothing until asked, then builds on that reading", async () => {
     const calls: { shape: string; input: Record<string, unknown> }[] = [];
     vi.stubGlobal("fetch", async (url: string, init: RequestInit) => {
-      calls.push({ shape: url.split("/").pop()!, input: JSON.parse(init.body as string).input });
+      // The study goes with the reading, and has its own test.
+      if (!url.endsWith("study_score")) calls.push({ shape: url.split("/").pop()!, input: JSON.parse(init.body as string).input });
       return spark(url, init);
     });
     const screen = setUp();
@@ -507,6 +514,44 @@ describe("writing to picture", () => {
     await act(() => screen.arranged.importMarkers(new File([bytes as BlobPart], "markers.mid")));
     expect(screen.arranged.cues).toEqual([]);
     expect(screen.arranged.markerNote).toBe("That file has no markers in it.");
+  });
+});
+
+describe("the study", () => {
+  it("reads the form and harmony with the reading, shows it in Study and writes it on the composer's own score only", async () => {
+    const asked: string[] = [];
+    vi.stubGlobal("fetch", async (url: string, init?: RequestInit) => {
+      asked.push(url.split("/").pop()!);
+      return spark(url, init);
+    });
+    const screen = setUp();
+    await press(screen.host, "Read my score");
+    expect(asked).toEqual(["study_score", "read_piece"]);
+    await press(screen.host, "Looks right");
+    await press(screen.host, "Skip this");
+    expect(screen.host.textContent).toContain("Two bars that rise a step.");
+    expect(screen.host.textContent).toContain("2 bars, 1 idea");
+    expect(screen.host.textContent).toContain("2 of the 2 chords it named pass a limited check");
+    act(() => screen.arranged.selectRange("1", "2"));
+    const marks = screen.arranged.studyMarks!;
+    expect(marks.sections.map((s) => s.form)).toEqual(["A", "A'"]);
+    expect(marks.chords.map((c) => c.chord)).toEqual(["C", "Dm"]);
+    expect(marks.passages).toHaveLength(1);
+    await act(() => screen.arranged.askOptions("", 4, "both"));
+    await act(() => screen.arranged.askNotes(0));
+    expect(screen.arranged.studyMarks).toBeNull();
+  });
+
+  it("moves its marks onto a page of only some bars", async () => {
+    vi.stubGlobal("fetch", async (url: string, init?: RequestInit) => spark(url, init));
+    const screen = setUp();
+    await act(() => screen.arranged.askPiece());
+    act(() => screen.arranged.selectRange("2", "2"));
+    const marks = screen.arranged.studyMarks!;
+    expect(marks.sections).toMatchObject([{ form: "A'", from: 0, to: 0 }]);
+    expect(marks.chords).toMatchObject([{ chord: "Dm", bar: 0 }]);
+    // Half of the sequence is off the page, so it isn't drawn at all.
+    expect(marks.passages).toEqual([]);
   });
 });
 

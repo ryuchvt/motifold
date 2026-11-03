@@ -13,7 +13,7 @@ export const POOLS: Pool[] = [
     dailyMicros: 15_000_000,
     opensAt: null,
     closesAt: null,
-    perVisitor: { read_bars: 2, read_piece: 2, distribute: 2, plan_options: 2, plan_recompose: 1, write_theme: 1, arrange: 10, fit_form: 2 },
+    perVisitor: { read_bars: 2, read_piece: 2, study_score: 2, distribute: 2, plan_options: 2, plan_recompose: 1, write_theme: 1, arrange: 10, fit_form: 2 },
   },
   // A visitor's own Meta key, which is their money and never ours. Counted so the ledger works the same, with no real limit.
   { id: "own", capMicros: 100_000_000_000, dailyMicros: null, opensAt: null, closesAt: null, perVisitor: {} },

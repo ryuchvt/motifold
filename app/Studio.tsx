@@ -381,7 +381,7 @@ export function Studio() {
                     +
                   </button>
                 </span>
-                <ScoreView ref={view} xmlText={onPage.xmlText} noTitle score={onPage.score} zoom={zoom} highlights={[]} noteMarks={NO_MARKS} onTap={NO_TAP} onDrawn={() => {}} />
+                <ScoreView ref={view} xmlText={onPage.xmlText} noTitle score={onPage.score} zoom={zoom} highlights={[]} noteMarks={NO_MARKS} studyMarks={arranged.studyMarks} onTap={NO_TAP} onDrawn={() => {}} />
               </section>
             )}
           </main>

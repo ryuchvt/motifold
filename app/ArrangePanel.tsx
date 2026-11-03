@@ -3,6 +3,7 @@ import type { ArrangeInput, PieceReading } from "../server/shapes";
 import { checkWords, placedWords, planGaps, sentences } from "./arrange";
 import { cueHits, cueWords, orderHits, parseTime, placeCues } from "./cues";
 import { inScoreOrder, instrumentFromName, PICKABLE, TEMPLATES, TRACK_CHOICES } from "./orchestra";
+import { StudyMap, StudyWords } from "./ScoreStudy";
 import type { Arranged, Stretch } from "./useArrange";
 
 const orderWords = (order: Stretch[]) => order.map((o, k) => (k ? barsWords(o.from, o.to).toLowerCase() : barsWords(o.from, o.to))).join(", then ");
@@ -179,7 +180,7 @@ const MOODS = ["Sad", "Tender", "Hopeful", "Dreamy", "Pastoral", "Wonder", "Stor
 const sameChoice = (placed: { instruments: string[]; chosen: string[] }) => [...placed.instruments].sort().join("|") === [...placed.chosen].sort().join("|");
 
 export function ArrangePanel({ arranged, busy, demo = false, prepared = [] }: { arranged: Arranged; busy: boolean; demo?: boolean; prepared?: { key: string; mode: "arrange" | "recompose"; mood: string }[] }) {
-  const { piece, chords, splitting, toggleSplit, splitAll, tracks, setTrack, answered, answer, placed, options, trying, setTrying, off, togglePart, offBars, putBackBars, remaining, allParts, gone, toggleGone, handOrder, setHandOrder, bars, cues, roles, standing, structures, fitting, askFit, kept, askPiece, askPlaced, splitPlaced, askOptions, askNotes, keep, startAgain, download, reachesEnd, wholeScore, selectRange } = arranged;
+  const { piece, study, chords, splitting, toggleSplit, splitAll, tracks, setTrack, answered, answer, placed, options, trying, setTrying, off, togglePart, offBars, putBackBars, remaining, allParts, gone, toggleGone, handOrder, setHandOrder, bars, cues, roles, standing, structures, fitting, askFit, kept, askPiece, askPlaced, splitPlaced, askOptions, askNotes, keep, startAgain, download, reachesEnd, wholeScore, selectRange } = arranged;
   /** The step on screen, counted from Study. */
   const [step, setStep] = useState(1);
   /** The furthest step the composer has gone to. Steps past it are named but can't be opened yet. */
@@ -370,6 +371,16 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [] }: { 
         ) : (
           <>
             <h2 className="arrange-title">What I hear</h2>
+            {study.status === "ready" ? (
+              <>
+                <StudyMap answer={study.answer} written={study.written} onBar={(bar) => arranged.select(bar)} />
+                <StudyWords answer={study.answer} written={study.written} />
+              </>
+            ) : study.status === "asking" ? (
+              <p className="spark-note">Studying the form and the harmony. This takes a minute or two, and it goes on the score when it's done.</p>
+            ) : study.status === "unavailable" ? (
+              <p className="spark-note">Muse Spark couldn't study the form and harmony this time.</p>
+            ) : null}
             <p className="arrange-said">{reading.summary}</p>
             {reading.missing.length > 0 && <p className="spark-note">What's missing</p>}
             <ul className="arrange-lines">
