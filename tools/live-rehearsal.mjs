@@ -1,4 +1,4 @@
-// One local browser, the real Worker, and its existing ledger. The server key stays in the Worker. Headers are never recorded.
+// Local browser pages, the real Worker, and its existing ledger. The server key stays in the Worker. Headers are never recorded.
 // Defaults to unarmed. Start only after the coordinated live go-ahead and a fresh production build.
 import { createServer as httpServer, request as httpRequest } from 'node:http';
 import { mkdirSync, readFileSync, writeFileSync, appendFileSync, existsSync, realpathSync, openSync, closeSync, unlinkSync, renameSync } from 'node:fs';
@@ -66,15 +66,16 @@ export function approvedRun(file, balance, profile = RECORDING_PROFILES.rehearsa
   return { owned, persist, snapshot: () => saved };
 }
 
-/** Serial release means each next request sees the previous request's actual settlement or retained reservation. */
+/** Every admission accounts for actual settlements and all retained or provisional reservations. */
 export function createGuard({ upstream, ledger, shapes, reserve, ceilingMicros = 5_000_000, armed = false, record = () => {}, owned = new Map(), persist = () => {}, afterSettled, continueSettledFailures = false, requireCaptureCase = false, waveWidth = 1 }) {
   upstream = localOrigin(upstream);
-  if (![1, 2].includes(waveWidth)) throw Error('Wave width must be 1 or 2');
-  if (waveWidth === 2 && (typeof afterSettled !== 'function' || typeof ledger.snapshot !== 'function')) throw Error('Two-request waves require owned Worker isolation and atomic ledger snapshots');
+  if (![1, 2, 4].includes(waveWidth)) throw Error('Wave width must be 1, 2 or 4');
+  const concurrent = waveWidth > 1;
+  if (concurrent && (typeof afterSettled !== 'function' || typeof ledger.snapshot !== 'function')) throw Error('Concurrent waves require owned Worker isolation and atomic ledger snapshots');
   let chain = Promise.resolve();
   let stopped = false;
   let activeWave = null;
-  const terminal = (entry) => { if (waveWidth === 2 && activeWave?.id === entry.waveId) activeWave.seal(); };
+  const terminal = (entry) => { if (concurrent && activeWave && activeWave.id === entry.waveId) activeWave.seal(); };
   const exposure = () => [...owned].reduce((sum, [id, pending]) => sum + (ledger.attempt(id) ? attemptExposure(ledger.attempt(id)) : pending.noCharge ? 0 : pending.reservation), 0);
   // The readonly snapshot prevents a row appearing between balance and attempt reads from
   // disappearing from both sums. A reservation not visible in SQLite is still fully owned here.
@@ -90,6 +91,7 @@ export function createGuard({ upstream, ledger, shapes, reserve, ceilingMicros =
     return budgetDecision({ ...snapshot.balance, committedMicros: snapshot.balance.committedMicros + provisional, todayMicros: snapshot.balance.todayMicros + provisional }, committed, reservation, ceilingMicros);
   };
   const block = (response, entry, reason) => {
+    terminal(entry);
     const reply = { status: 'fallback', reason: reason === 'session-ceiling' || reason.endsWith('ceiling') ? 'budget' : reason };
     record({ ...entry, sent: false, blocked: reason, reply, sessionExposureMicros: exposure() });
     response.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
@@ -145,7 +147,7 @@ export function createGuard({ upstream, ledger, shapes, reserve, ceilingMicros =
           const settledFailure = continueSettledFailures && reply?.status === 'fallback' && ['failed', 'rejected'].includes(reply.reason) && row?.state === 'settled' && Number.isSafeInteger(row.charged_micros) && row.charged_micros >= 0;
           if (!reply || (reply.status === 'fallback' && !['bad-input', 'disabled', 'busy', 'empty', 'daily', 'visitor'].includes(reply.reason) && !settledFailure)) stopped = true;
           if (afterSettled && !stopped && ((reply?.status === 'ok' && !cached) || settledFailure)) {
-            if ((!settledFailure && reply.cached !== false) || row?.state !== 'settled' || (waveWidth === 2 && (!Number.isSafeInteger(row.charged_micros) || row.charged_micros < 0))) {
+            if ((!settledFailure && reply.cached !== false) || row?.state !== 'settled' || (concurrent && (!Number.isSafeInteger(row.charged_micros) || row.charged_micros < 0))) {
               stopped = true;
               record({ kind: 'worker-isolation', phase: 'blocked-missing-settlement', attemptId: entry.attemptId });
             } else isolation = { attemptId: entry.attemptId, shape: entry.shape };
@@ -176,9 +178,9 @@ export function createGuard({ upstream, ledger, shapes, reserve, ceilingMicros =
     response.on('error', () => {});
     if (body) target.end(body); else request.pipe(target);
   });
-  // A second request can join while the first is still in flight. The wave seals when full
-  // or when either request finishes, and drains completely before one owned-runtime restart.
-  // GETs wait behind the wave; they cannot prevent its second request from joining.
+  // Further requests can join while the wave is still in flight. It seals when full
+  // or at its first terminal result, and drains completely before one owned-runtime restart.
+  // GETs wait behind the wave; they cannot prevent the remaining paid slots from joining.
   const queue = [];
   let draining = false, scheduled = false, nextWave = 0;
   const schedule = () => {
@@ -223,9 +225,12 @@ export function createGuard({ upstream, ledger, shapes, reserve, ceilingMicros =
         const wave = activeWave = { id: waveId, jobs: [], results: [], sealed: false, complete: new Promise(done => { seal = done; }), seal() { if (!this.sealed) { this.sealed = true; seal(); } } };
         record({ kind: 'worker-wave', phase: 'releasing', waveId, capacity: waveWidth });
         joinWave(wave, first);
-        // A queued GET cannot obstruct the other page's paid request for this still-open wave.
-        const paid = queue.findIndex(job => job.kind === 'paid');
-        if (paid >= 0 && !wave.sealed && !stopped) joinWave(wave, queue.splice(paid, 1)[0]);
+        // A queued GET cannot obstruct paid requests for this still-open wave.
+        while (!wave.sealed && !stopped && wave.jobs.length < waveWidth) {
+          const paid = queue.findIndex(job => job.kind === 'paid');
+          if (paid < 0) break;
+          joinWave(wave, queue.splice(paid, 1)[0]);
+        }
         await wave.complete;
         const results = await Promise.all(wave.results);
         activeWave = null;
@@ -257,7 +262,7 @@ export function createGuard({ upstream, ledger, shapes, reserve, ceilingMicros =
     const route = /^\/api\/spark\/([a-z_]+)$/.exec(url.pathname);
     if (!route) {
       if (url.pathname.startsWith('/api/') && !(['/api/ledger', '/api/access'].includes(url.pathname) && request.method === 'GET')) return block(response, {}, 'unknown-route');
-      if (waveWidth === 2) {
+      if (concurrent) {
         if (request.method !== 'GET') return block(response, {}, 'unknown-route');
         return enqueue('get', () => forward(request, response), response);
       }
@@ -272,7 +277,7 @@ export function createGuard({ upstream, ledger, shapes, reserve, ceilingMicros =
     const captureCase = request.headers['x-motifold-record-case'];
     const entry = { at: new Date().toISOString(), shape: route[1], attemptId: input.attemptId, input: input.input, ...(typeof captureCase === 'string' && /^[a-z0-9-]{1,120}$/.test(captureCase) ? { captureCase } : {}) };
     const operation = async (wave) => {
-      if (waveWidth === 2 && wave) Object.assign(entry, wave);
+      if (concurrent && wave) Object.assign(entry, wave);
       if (response.destroyed || request.aborted) { record({ ...entry, sent: false, blocked: 'browser-left-before-release', sessionExposureMicros: exposure() }); return; }
       if (!armed) return block(response, entry, 'rehearsal-unarmed');
       if (stopped) return block(response, entry, 'rehearsal-stopped');
@@ -281,14 +286,14 @@ export function createGuard({ upstream, ledger, shapes, reserve, ceilingMicros =
       if (request.method !== 'POST' || !/^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/.test(entry.attemptId ?? '') || !shapes[entry.shape]) return block(response, entry, 'bad-input');
       if (owned.has(entry.attemptId) || ledger.attempt(entry.attemptId)) return block(response, entry, 'reused-attempt-id');
       const reservation = reserve(shapes[entry.shape].maxOutputTokens);
-      const reason = waveWidth === 2 ? waveBudget(reservation) : budgetDecision(ledger.balance(), exposure(), reservation, ceilingMicros);
+      const reason = concurrent ? waveBudget(reservation) : budgetDecision(ledger.balance(), exposure(), reservation, ceilingMicros);
       if (reason) return block(response, entry, reason);
       owned.set(entry.attemptId, { reservation, noCharge: false });
       persist(); // Durable before the HTTP request can reach the Worker or Meta.
       record({ ...entry, sent: 'releasing', reservationMicros: reservation, sessionExposureMicros: exposure(), balance: ledger.balance() });
       return await forward(request, response, body, { ...entry, reservationMicros: reservation });
     };
-    if (waveWidth === 2) return enqueue('paid', operation, response, entry);
+    if (concurrent) return enqueue('paid', operation, response, entry);
     chain = chain.then(operation).catch((error) => { stopped = true; block(response, entry, 'guard-error'); record({ kind: 'guard-error', message: error.message }); });
   };
   const server = httpServer((request, response) => { void handle(request, response).catch(() => { stopped = true; if (!response.destroyed) { response.writeHead(400); response.end('The local request could not be read. Further calls are blocked.'); } }); });
@@ -366,7 +371,7 @@ export function ownedWorker({ launch, ready, isDown, onUnexpectedExit, exitTimeo
 async function main() {
   const args = process.argv.slice(2);
   if (args.includes('--help')) {
-    console.log('After a fresh production build:\nnode tools/live-rehearsal.mjs --repo <repo> --start-worker --armed --isolate-settled [--profile rehearsal|night-204] [--wave-width 1|2] [--out <receipts directory>]\nProfiles are explicit approvals, not fresh allowances on restart. rehearsal retains its $5 ceiling. night-204 retains the separately approved $23 batch ceiling and $44.048076 cumulative dev cap. Existing holds, the $100 public pool and the $1 personal reserve are preserved.\nThe night profile may proceed after a charged, settled rejection; it never retries a request. Unknown charges stop the guard.\nWave width defaults to 1. Width 2 is optional for night-204 with owned isolation: a second page may join while the first request is still in flight. Both must finish before a single restart, and no request joins after the first finishes. This is a local capture option, not a production network fix.\nWithout --armed, all model requests are refused.');
+    console.log('After a fresh production build:\nnode tools/live-rehearsal.mjs --repo <repo> --start-worker --armed --isolate-settled [--profile rehearsal|night-204] [--wave-width 1|2|4] [--out <receipts directory>]\nProfiles are explicit approvals, not fresh allowances on restart. rehearsal retains its $5 ceiling. night-204 retains the separately approved $23 batch ceiling and $44.048076 cumulative dev cap. Existing holds, the $100 public pool and the $1 personal reserve are preserved.\nThe night profile may proceed after a charged, settled rejection; it never retries a request. Unknown charges stop the guard.\nWave width defaults to 1. Widths 2 and 4 are optional for night-204 with owned isolation: more pages may join until capacity or the first terminal result. All released calls must finish before a single restart. This is a local capture option, not a production network fix.\nWithout --armed, all model requests are refused.');
     return;
   }
   const value = (name, fallback) => { const at = args.indexOf(name); return at < 0 ? fallback : args[at + 1]; };
@@ -378,7 +383,7 @@ async function main() {
   const isolate = args.includes('--isolate-settled');
   if (isolate && !args.includes('--start-worker')) throw Error('--isolate-settled requires the guard-owned --start-worker');
   const waveWidth = Number(value('--wave-width', '1'));
-  if (![1, 2].includes(waveWidth) || (waveWidth === 2 && (!isolate || profileName !== 'night-204'))) throw Error('--wave-width 2 requires the approved night-204 profile and --start-worker --isolate-settled');
+  if (![1, 2, 4].includes(waveWidth) || (waveWidth > 1 && (!isolate || profileName !== 'night-204'))) throw Error('--wave-width 2 or 4 requires the approved night-204 profile and --start-worker --isolate-settled');
   const port = Number(value('--port', '8788'));
   if (!Number.isInteger(port) || port < 1024 || port > 65535 || port === Number(new URL(upstream).port)) throw Error('Invalid guard port');
   const shared = resolve(process.env.HOME, '.config/phasecraft/motifold-dev-ledger');

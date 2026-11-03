@@ -24,10 +24,10 @@ function ledgerFor(rows, changes = {}) {
   return ledger;
 }
 const opts = (upstream, ledger, change = {}) => ({ upstream, ledger, shapes: { arrange: { maxOutputTokens: 40_000 } }, reserve: () => reservation, ceilingMicros: 23_000_000, armed: true, waveWidth: 2, afterSettled: async () => {}, ...change });
-async function heldUpstream(rows, events) {
+async function heldUpstream(rows, events, getGate) {
   const pending = [];
   const url = await listen(createServer(async (request, response) => {
-    if (request.url === '/api/ledger') { events.push('get'); response.end('{}'); return; }
+    if (request.url === '/api/ledger') { if (getGate) { events.push('get-wait'); await getGate; } events.push('get'); response.end('{}'); return; }
     const chunks = []; for await (const chunk of request) chunks.push(chunk);
     const { attemptId } = JSON.parse(Buffer.concat(chunks));
     const index = pending.length;
@@ -153,7 +153,7 @@ it.each(['session', 'pool', 'daily'])('counts the first absent-row provisional r
   expect((await Promise.all(replies.map(reply => reply.json()))).map(reply => reply.status).sort()).toEqual(['fallback', 'ok']);
 });
 
-it('retains the same approved23 ceiling and a prior missing-row hold across a wave-guard restart', async () => {
+it.each([2, 4])('retains the same approved23 ceiling and a prior missing-row hold across a width%i guard restart', async waveWidth => {
   const folder = mkdtempSync(join(tmpdir(), 'motifold-wave-approved-'));
   try {
     const profile = recordingProfile('night-204'), file = join(folder, 'approved.json');
@@ -161,7 +161,7 @@ it('retains the same approved23 ceiling and a prior missing-row hold across a wa
     first.owned.set(randomUUID(), { reservation: 22_000_000, noCharge: false }); first.persist();
     const resumed = approvedRun(file, base, profile); let sent = 0;
     const upstream = await listen(createServer((_request, response) => { sent++; response.end('{}'); }));
-    const guard = createGuard(opts(upstream, ledgerFor(new Map()), { owned: resumed.owned, persist: resumed.persist }));
+    const guard = createGuard(opts(upstream, ledgerFor(new Map()), { waveWidth, owned: resumed.owned, persist: resumed.persist }));
     expect(await (await post(await listen(guard.server))).json()).toMatchObject({ reason: 'budget' });
     expect(sent).toBe(0); expect(guard.exposure()).toBe(22_000_000); expect(resumed.snapshot().ceilingMicros).toBe(23_000_000);
   } finally { rmSync(folder, { recursive: true, force: true }); }
@@ -209,9 +209,153 @@ it('takes a coherent readonly SQLite snapshot and never changes any existing att
   } finally { ledger?.close(); db.close(); rmSync(folder, { recursive: true, force: true }); }
 });
 
-it('refuses wave widths above2 or waves without atomic accounting and owned isolation', () => {
+it('permits only widths1/2/4 and requires atomic accounting and owned isolation for concurrent waves', () => {
   const ledger = ledgerFor(new Map());
   expect(() => createGuard(opts('http://127.0.0.1:8790', ledger, { waveWidth: 3 }))).toThrow('Wave width');
-  expect(() => createGuard(opts('http://127.0.0.1:8790', { balance: ledger.balance, attempt: ledger.attempt }))).toThrow('atomic');
-  expect(() => createGuard(opts('http://127.0.0.1:8790', ledger, { afterSettled: undefined }))).toThrow('isolation');
+  expect(() => createGuard(opts('http://127.0.0.1:8790', ledger, { waveWidth: 5 }))).toThrow('Wave width');
+  for (const width of [2, 4]) {
+    expect(() => createGuard(opts('http://127.0.0.1:8790', { balance: ledger.balance, attempt: ledger.attempt }, { waveWidth: width }))).toThrow('atomic');
+    expect(() => createGuard(opts('http://127.0.0.1:8790', ledger, { waveWidth: width, afterSettled: undefined }))).toThrow('isolation');
+  }
+});
+
+it('fills four already queued paid slots, drains all four before one restart, and holds GETs and a fifth call behind it', async () => {
+  const rows = new Map(), events = [], records = [];
+  let releaseGet, releaseRestart, restarts = 0, received = 0, getReceived = 0;
+  const getGate = new Promise(done => { releaseGet = done; }), restartGate = new Promise(done => { releaseRestart = done; });
+  const upstream = await heldUpstream(rows, events, getGate);
+  const guard = createGuard(opts(upstream.url, ledgerFor(rows), { waveWidth: 4, record: entry => records.push(entry), afterSettled: async () => {
+    restarts++; events.push(`restart-start-${restarts}`);
+    if (restarts === 1) await restartGate;
+    events.push(`restart-ready-${restarts}`);
+  } }));
+  guard.server.on('request', request => { if (request.url.startsWith('/api/spark/')) request.once('end', () => { received++; }); else if (request.url === '/api/ledger') getReceived++; });
+  const origin = await listen(guard.server), bootstrap = fetch(`${origin}/api/ledger`);
+  await until(() => events.includes('get-wait'));
+  const ids = Array.from({ length: 4 }, () => randomUUID()), calls = ids.map(id => post(origin, id));
+  const callOf = job => calls[ids.indexOf(job.attemptId)];
+  await until(() => received === 4);
+  expect(upstream.pending).toHaveLength(0);
+  releaseGet(); await (await bootstrap).text();
+  await until(() => upstream.pending.length === 4);
+  expect(guard.exposure()).toBe(4 * reservation);
+  const queuedGet = fetch(`${origin}/api/ledger`);
+  await until(() => getReceived === 2);
+  const fifth = post(origin);
+  for (const index of [2, 0, 3]) { const job = upstream.pending[index]; job.finish(); await (await callOf(job)).text(); }
+  expect(restarts).toBe(0); expect(upstream.pending).toHaveLength(4);
+  expect(events.filter(event => event === 'get')).toHaveLength(1);
+  upstream.pending[1].finish(); await (await callOf(upstream.pending[1])).text();
+  await until(() => restarts === 1);
+  expect(upstream.pending).toHaveLength(4); expect(events).not.toContain('restart-ready-1');
+  releaseRestart(); await (await queuedGet).text(); await until(() => upstream.pending.length === 5);
+  expect(events.lastIndexOf('get')).toBeGreaterThan(events.indexOf('restart-ready-1'));
+  expect(events.indexOf('start-4')).toBeGreaterThan(events.lastIndexOf('get'));
+  upstream.pending[4].finish(); await (await fifth).text();
+  await until(() => records.filter(entry => entry.kind === 'worker-wave' && entry.phase === 'drained').length === 2);
+  expect(restarts).toBe(2);
+  expect(records.filter(entry => entry.kind === 'worker-wave' && entry.phase === 'drained').map(entry => entry.size)).toEqual([4, 1]);
+  expect(records.filter(entry => entry.sent === 'releasing').map(entry => [entry.waveId, entry.waveSlot, entry.waveCapacity])).toEqual([[1, 0, 4], [1, 1, 4], [1, 2, 4], [1, 3, 4], [2, 0, 4]]);
+});
+
+it('admits third and fourth late streams to an open wave despite a queued GET', async () => {
+  const rows = new Map(), events = []; let now = Date.now();
+  vi.spyOn(Date, 'now').mockImplementation(() => now);
+  const upstream = await heldUpstream(rows, events);
+  const guard = createGuard(opts(upstream.url, ledgerFor(rows), { waveWidth: 4, afterSettled: async () => events.push('restart') }));
+  const origin = await listen(guard.server), calls = [post(origin)];
+  await until(() => upstream.pending.length === 1);
+  const get = fetch(`${origin}/api/ledger`);
+  for (let size = 2; size <= 4; size++) { now += 4000; calls.push(post(origin)); await until(() => upstream.pending.length === size); }
+  expect(events).not.toContain('get'); expect(events).not.toContain('restart');
+  upstream.pending.forEach(job => job.finish());
+  await Promise.all(calls.map(async call => (await call).text())); await (await get).text();
+  expect(events.filter(event => event === 'restart')).toHaveLength(1);
+  expect(events.indexOf('get')).toBeGreaterThan(events.indexOf('restart'));
+});
+
+it('seals a partly filled four-slot wave at a terminal SSE result before body closure', async () => {
+  const rows = new Map(), events = []; let closeFirst, sent = 0;
+  const upstream = await listen(createServer(async (request, response) => {
+    const chunks = []; for await (const chunk of request) chunks.push(chunk);
+    const { attemptId } = JSON.parse(Buffer.concat(chunks)); sent++;
+    rows.set(attemptId, { state: 'settled', reserved_micros: reservation, charged_micros: 1000 });
+    if (sent === 1) {
+      response.writeHead(200, { 'Content-Type': 'text/event-stream' });
+      response.write('data: {"kind":"result","result":{"status":"ok","cached":false,"answer":{}}}\n\n');
+      closeFirst = () => response.end();
+    } else response.end(JSON.stringify({ status: 'ok', cached: false, answer: {} }));
+  }));
+  const guard = createGuard(opts(upstream, ledgerFor(rows), { waveWidth: 4, afterSettled: async () => events.push('restart') }));
+  const origin = await listen(guard.server), first = await post(origin), reader = first.body.getReader();
+  expect(new TextDecoder().decode((await reader.read()).value)).toContain('"kind":"result"');
+  const later = [post(origin), post(origin), post(origin)];
+  await new Promise(done => setTimeout(done, 25)); expect(sent).toBe(1); expect(events).toEqual([]);
+  closeFirst(); while (!(await reader.read()).done) {}
+  await Promise.all(later.map(async call => (await call).text()));
+  expect(sent).toBe(4); expect(events[0]).toBe('restart');
+});
+
+it('freezes after one unknown result and drains the other three released calls without restarting or admitting a fifth', async () => {
+  const rows = new Map(), events = [];
+  const upstream = await heldUpstream(rows, events);
+  const guard = createGuard(opts(upstream.url, ledgerFor(rows), { waveWidth: 4, afterSettled: async () => events.push('restart') }));
+  const origin = await listen(guard.server), ids = Array.from({ length: 4 }, () => randomUUID()), calls = ids.map(id => post(origin, id));
+  const callOf = job => calls[ids.indexOf(job.attemptId)];
+  await until(() => upstream.pending.length === 4);
+  upstream.pending[0].finish({ status: 'fallback', reason: 'network' }); await (await callOf(upstream.pending[0])).text();
+  const fifth = post(origin);
+  await new Promise(done => setTimeout(done, 25)); expect(upstream.pending).toHaveLength(4); expect(events).not.toContain('restart');
+  for (const index of [3, 1, 2]) { const job = upstream.pending[index]; job.finish(); await (await callOf(job)).text(); }
+  expect(await (await fifth).json()).toMatchObject({ reason: 'rehearsal-stopped' });
+  expect(upstream.pending).toHaveLength(4); expect(events).not.toContain('restart');
+  expect(guard.exposure()).toBe(reservation + 3000);
+  expect(rows.get(upstream.pending[0].attemptId)).toMatchObject({ state: 'uncertain', reserved_micros: reservation });
+});
+
+it.each(['session', 'pool', 'daily'])('counts all three absent-row holds before rejecting the fourth release against the %s cap', async cap => {
+  const rows = new Map(), records = [], sent = [], finishes = [];
+  const changes = cap === 'pool' ? { capMicros: base.committedMicros + 3 * reservation + 1 } : cap === 'daily' ? { dailyMicros: 3 * reservation + 1 } : {};
+  const upstream = await listen(createServer(async (request, response) => {
+    const chunks = []; for await (const chunk of request) chunks.push(chunk);
+    const { attemptId } = JSON.parse(Buffer.concat(chunks)); sent.push(attemptId);
+    finishes.push(() => { rows.set(attemptId, { state: 'settled', reserved_micros: reservation, charged_micros: 1000 }); response.end(JSON.stringify({ status: 'ok', cached: false, answer: {} })); });
+  }));
+  const owned = new Map();
+  const guard = createGuard(opts(upstream, ledgerFor(rows, changes), { waveWidth: 4, owned, ceilingMicros: cap === 'session' ? 3 * reservation + 1 : 23_000_000, record: entry => records.push(entry) }));
+  const origin = await listen(guard.server), calls = Array.from({ length: 4 }, () => post(origin));
+  await until(() => sent.length === 3 && records.some(entry => entry.sent === false));
+  expect(rows.size).toBe(0); expect(owned.size).toBe(3); expect(guard.exposure()).toBe(3 * reservation);
+  expect(records.find(entry => entry.sent === false).blocked).toBe(`${cap}-ceiling`);
+  finishes.forEach(finish => finish());
+  const replies = await Promise.all(calls.map(async call => (await call).json()));
+  expect(replies.map(reply => reply.status).sort()).toEqual(['fallback', 'ok', 'ok', 'ok']);
+});
+
+it.each([2, 4])('handles a local refusal outside a width%i wave without stopping the next valid request', async waveWidth => {
+  const rows = new Map(), events = [];
+  const upstream = await heldUpstream(rows, events);
+  const guard = createGuard(opts(upstream.url, ledgerFor(rows), { waveWidth }));
+  const origin = await listen(guard.server);
+  expect(await (await fetch(`${origin}/api/not-allowed`)).json()).toMatchObject({ reason: 'unknown-route' });
+  expect(upstream.pending).toHaveLength(0); expect(guard.exposure()).toBe(0);
+  const next = post(origin); await until(() => upstream.pending.length === 1);
+  upstream.pending[0].finish(); expect(await (await next).json()).toMatchObject({ status: 'ok' });
+});
+
+it('seals at a local terminal refusal before admitting another queued job to the same wave', async () => {
+  const rows = new Map(), events = [], records = []; let releaseGet, received = 0;
+  const gate = new Promise(done => { releaseGet = done; });
+  const upstream = await heldUpstream(rows, events, gate);
+  const guard = createGuard(opts(upstream.url, ledgerFor(rows), { waveWidth: 4, armed: false, record: entry => records.push(entry) }));
+  guard.server.on('request', request => { if (request.url.startsWith('/api/spark/')) request.once('end', () => { received++; }); });
+  const origin = await listen(guard.server), bootstrap = fetch(`${origin}/api/ledger`);
+  await until(() => events.includes('get-wait'));
+  const calls = Array.from({ length: 4 }, () => post(origin)); await until(() => received === 4);
+  releaseGet(); await (await bootstrap).text();
+  const replies = await Promise.all(calls.map(async call => (await call).json()));
+  expect(replies.every(reply => reply.reason === 'rehearsal-unarmed')).toBe(true);
+  expect(upstream.pending).toHaveLength(0); expect(guard.exposure()).toBe(0);
+  await until(() => records.filter(entry => entry.kind === 'worker-wave' && entry.phase === 'drained').length === 4);
+  expect(records.filter(entry => entry.kind === 'worker-wave' && entry.phase === 'drained').map(entry => entry.size)).toEqual([1, 1, 1, 1]);
 });

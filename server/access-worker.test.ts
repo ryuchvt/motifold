@@ -34,7 +34,7 @@ it("supports a stage quota check but never selects the dev pool on a hosted host
   await worker.fetch(request("?shape=arrange"), { ...x.env, MODE: "dev" }, ctx);
   expect(x.access.mock.calls[0]![0]).toMatchObject({ pool: "public", shape: "arrange", reserveMicros: 1_480_720 });
   await worker.fetch(new Request("http://127.0.0.1/api/access"), { ...x.env, MODE: "dev" }, ctx);
-  expect(x.access.mock.calls[1]![0]).toMatchObject({ pool: "dev", visitor: "local" });
+  expect(x.access.mock.calls[1]![0]).toMatchObject({ pool: "dev", visitor: "local", slots: 4 });
 });
 
 it("fails closed on missing service configuration, unavailable ledger, invalid shape or method", async () => {
