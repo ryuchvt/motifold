@@ -2940,12 +2940,44 @@
       "ensemble": "Full orchestra",
       "mood": "Pastoral",
       "option": 0,
-      "name": "Full orchestra A",
+      "name": "Meadow Light",
       "bars": 32,
       "sourceBars": 24,
       "freedom": 2,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/recompose-pastoral-full-orchestra-a/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/recompose-pastoral-full-orchestra-a/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/recompose-pastoral-full-orchestra-a/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/recompose-pastoral-full-orchestra-a/run.json",
+      "xmlSha256": "8a66da4014245221da37335a70cf8a9315c4ec9e6b2afc7ef76dd22c04915f14",
+      "midiSha256": "6edf3e057837e8218ef43fa178d81d2cc1fd5463ada556eda4e3bd8c26a1f019",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "4",
+          "chords": "Cadd9 | Am7 | Fmaj9 | Csus4 C"
+        },
+        {
+          "from": "5",
+          "to": "12",
+          "chords": "C | F C/E | Dm G | C | G/B | C F | Dsus4 D | G"
+        },
+        {
+          "from": "13",
+          "to": "20",
+          "chords": "Am7 | Fmaj7 | C/E | F G | Em7 | Am7 | Dm7 G7 | C"
+        },
+        {
+          "from": "21",
+          "to": "28",
+          "chords": "Fmaj9 | Em7 | Am7 | Dm G | C/E F | C D | Gsus4 G | C"
+        },
+        {
+          "from": "29",
+          "to": "32",
+          "chords": "F | C/E | F G | C"
+        }
+      ]
     },
     {
       "id": "recompose-pastoral-full-orchestra-b",
@@ -2954,12 +2986,44 @@
       "ensemble": "Full orchestra",
       "mood": "Pastoral",
       "option": 1,
-      "name": "Full orchestra B",
+      "name": "High Pasture",
       "bars": 32,
       "sourceBars": 24,
       "freedom": 2,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/recompose-pastoral-full-orchestra-b/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/recompose-pastoral-full-orchestra-b/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/recompose-pastoral-full-orchestra-b/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/recompose-pastoral-full-orchestra-b/run.json",
+      "xmlSha256": "eb672485d3282ad3bdf4b38b5470b3512177c35d4ff5337ba282dff0952dae1a",
+      "midiSha256": "cc7f8e36c14f90234fa35e977007852847848a46f5efde9a108313cd331f310f",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "4",
+          "chords": "Am9 | Em7/B | Fmaj7 | Dm7 E7"
+        },
+        {
+          "from": "5",
+          "to": "12",
+          "chords": "Am7 | Em7 | F | Em | Fmaj7 | Em7 Dm7 | E7 | Am"
+        },
+        {
+          "from": "13",
+          "to": "20",
+          "chords": "F | Em7 | Dm7 | C/E | Fmaj7 | G | C | G/B"
+        },
+        {
+          "from": "21",
+          "to": "28",
+          "chords": "C | Dm7 G | C | F | C/E | F D | G | C"
+        },
+        {
+          "from": "29",
+          "to": "32",
+          "chords": "F | Dm7 G7 | C | C"
+        }
+      ]
     },
     {
       "id": "recompose-wonder-full-orchestra-a",
@@ -2968,12 +3032,44 @@
       "ensemble": "Full orchestra",
       "mood": "Wonder",
       "option": 0,
-      "name": "Full orchestra A",
+      "name": "Lydian Daybreak",
       "bars": 32,
       "sourceBars": 24,
       "freedom": 2,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/recompose-wonder-full-orchestra-a/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/recompose-wonder-full-orchestra-a/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/recompose-wonder-full-orchestra-a/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/recompose-wonder-full-orchestra-a/run.json",
+      "xmlSha256": "1ae39508769b6e211e626671f63b9e47c8e405ec23eb62d6fee22f9764746444",
+      "midiSha256": "292d7edb32bf2ccedabf0fc70b5132bc912c6111ee9b785f8ac961173b9c06a8",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "4",
+          "chords": "Cmaj9 | Dadd9/C | Fmaj7#11 | Gadd9 G/B"
+        },
+        {
+          "from": "5",
+          "to": "12",
+          "chords": "Cmaj9 | Fmaj7#11 | Am9 | Dm9 | Gadd9 | Cmaj9 | G9sus | C/G"
+        },
+        {
+          "from": "13",
+          "to": "20",
+          "chords": "Cmaj9 | Dm9 | Em7 | Fmaj7 | G6 | Fmaj9 | Em7 | Cmaj9"
+        },
+        {
+          "from": "21",
+          "to": "28",
+          "chords": "Cmaj9 | G9sus | Cmaj9 | Fmaj7 | Gadd9 | Am9 | Em7 | C"
+        },
+        {
+          "from": "29",
+          "to": "32",
+          "chords": "Fmaj7#11 | Dadd9/C | Cmaj9 Am9 | Cmaj9"
+        }
+      ]
     },
     {
       "id": "recompose-wonder-full-orchestra-b",
@@ -2982,12 +3078,44 @@
       "ensemble": "Full orchestra",
       "mood": "Wonder",
       "option": 1,
-      "name": "Full orchestra B",
+      "name": "Starlight Ascent",
       "bars": 32,
       "sourceBars": 24,
       "freedom": 2,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/recompose-wonder-full-orchestra-b/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/recompose-wonder-full-orchestra-b/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/recompose-wonder-full-orchestra-b/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/recompose-wonder-full-orchestra-b/run.json",
+      "xmlSha256": "13d499b237304ec58b71bca2bd2d69089c7b1d91df855bf4a32f3062dbc8f0cf",
+      "midiSha256": "8ccaf3bd26103ead5cc794833154b249cff2b794872200bb032fb940adccb8ef",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "4",
+          "chords": "Am9 | Fmaj9 | Cadd9/E | Dadd9"
+        },
+        {
+          "from": "5",
+          "to": "12",
+          "chords": "Am9 | Fmaj9 | Cadd9 | Dm9 | Em7 | Fmaj7#11/C | G9sus | Em7"
+        },
+        {
+          "from": "13",
+          "to": "20",
+          "chords": "Am9 | Bbmaj9 | Cadd9/G | F6/9 | Em7 | Fmaj9 | Cmaj9/G | Am"
+        },
+        {
+          "from": "21",
+          "to": "28",
+          "chords": "Cadd9 | D9sus | Am9 | Fmaj9 | Em7 | Am9 | Cadd9 | C"
+        },
+        {
+          "from": "29",
+          "to": "32",
+          "chords": "Dm9 | G13 | C6 Fmaj9 | C6"
+        }
+      ]
     },
     {
       "id": "recompose-storybook-full-orchestra-a",
@@ -2996,12 +3124,39 @@
       "ensemble": "Full orchestra",
       "mood": "Storybook",
       "option": 0,
-      "name": "Full orchestra A",
+      "name": "Lantern Parade",
       "bars": 32,
       "sourceBars": 24,
       "freedom": 2,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/recompose-storybook-full-orchestra-a/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/recompose-storybook-full-orchestra-a/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/recompose-storybook-full-orchestra-a/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/recompose-storybook-full-orchestra-a/run.json",
+      "xmlSha256": "a2b582abfd1c0490adc825ec845156b9b68aab6541fd12e6f3223bbca2405a8b",
+      "midiSha256": "263d200588b6ea87e6fa7ea68f9b82dfa973cb28011205a3f60d8cc2aecc5bc8",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "8",
+          "chords": "C C#dim7 | Dm7 G7 | C G/B | F G7 | C G/B | Dm Bb | Em A7 | Am C7"
+        },
+        {
+          "from": "9",
+          "to": "16",
+          "chords": "Dm G7 | C C#dim7 | C G/B | Dm7b5 G7 | C G | F Bb | G G7 | Dm G7"
+        },
+        {
+          "from": "17",
+          "to": "24",
+          "chords": "Em A7 | F A7 | C Am7 | F Fm | C G/B | D7 G7 | G Cmaj7 | F G7"
+        },
+        {
+          "from": "25",
+          "to": "32",
+          "chords": "Am D7 | C G7 | C A7 | Dm G7 | C Fm | Dm G7 | F G7 | C"
+        }
+      ]
     },
     {
       "id": "recompose-storybook-full-orchestra-b",
@@ -3010,12 +3165,39 @@
       "ensemble": "Full orchestra",
       "mood": "Storybook",
       "option": 1,
-      "name": "Full orchestra B",
+      "name": "Clockmaker's Storybook",
       "bars": 32,
       "sourceBars": 24,
       "freedom": 2,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/recompose-storybook-full-orchestra-b/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/recompose-storybook-full-orchestra-b/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/recompose-storybook-full-orchestra-b/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/recompose-storybook-full-orchestra-b/run.json",
+      "xmlSha256": "3a86f38703b2f339e8ba34d462f215ea593dc383e6ebc5643006252de7c54a71",
+      "midiSha256": "58368f4caa32c7018aef9bd4b17f9fb81e37dcee0f91f3c4d886be3275ffed05",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "8",
+          "chords": "F F#dim7 | Gm C7 | F Bb | D7 G7 | Am Em | Dm Bb | Am Em | F Bb"
+        },
+        {
+          "from": "9",
+          "to": "16",
+          "chords": "C D7 | F C | Bb C | Em A7 | Am Em | F Bb7 | C Em | F"
+        },
+        {
+          "from": "17",
+          "to": "24",
+          "chords": "G D/F# | Dm Db | C A7 | F D7 | Am F | Bb Bdim7 | C G | Dm E7"
+        },
+        {
+          "from": "25",
+          "to": "32",
+          "chords": "C Cmaj7 | F G7 | Am C | F G | Am D7 | Dm G7 | F Bb | G7 C"
+        }
+      ]
     },
     {
       "id": "recompose-playful-full-orchestra-a",
@@ -3024,12 +3206,39 @@
       "ensemble": "Full orchestra",
       "mood": "Playful",
       "option": 0,
-      "name": "Full orchestra A",
+      "name": "Pocket Parade",
       "bars": 32,
       "sourceBars": 24,
       "freedom": 2,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/recompose-playful-full-orchestra-a/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/recompose-playful-full-orchestra-a/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/recompose-playful-full-orchestra-a/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/recompose-playful-full-orchestra-a/run.json",
+      "xmlSha256": "d11dad87f07bc18f75af5f994895857a01c128eea178c81ed71d5126c94dcf88",
+      "midiSha256": "ad536cfb7856420bef83b0374025e9b3982fc1de320c3a2adbe7ab82ea1df947",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "8",
+          "chords": "D7 | G7 | C7 | F G7 | A7 | D7 G7 | A7 | Dm G7"
+        },
+        {
+          "from": "9",
+          "to": "16",
+          "chords": "G E7 | Am A7 | Dm D7 | G7 | A7 | Bb F/A | C G/B | F D7"
+        },
+        {
+          "from": "17",
+          "to": "24",
+          "chords": "G E7 | Dm G7 | G E7 | C E7 | F | Bb Bdim7 | F/A G/B | C"
+        },
+        {
+          "from": "25",
+          "to": "32",
+          "chords": "G D7 | C A7 | Dm G7 | C | F | Dm G7 | F Fm | G7 C"
+        }
+      ]
     },
     {
       "id": "recompose-playful-full-orchestra-b",
@@ -3038,12 +3247,39 @@
       "ensemble": "Full orchestra",
       "mood": "Playful",
       "option": 1,
-      "name": "Full orchestra B",
+      "name": "Marble March",
       "bars": 32,
       "sourceBars": 24,
       "freedom": 2,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/recompose-playful-full-orchestra-b/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/recompose-playful-full-orchestra-b/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/recompose-playful-full-orchestra-b/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/recompose-playful-full-orchestra-b/run.json",
+      "xmlSha256": "63aaa3f6f2fe2428d955519f869bbd531c79f60ef30c403de4867bc55747b57b",
+      "midiSha256": "c67cb1edf63aad16f25ef86f609a37050b98c730163f6cabfb1ea250682b237c",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "8",
+          "chords": "Em7 A7 | Bb7 | Am7 D7 | Dm Db7 | C | Fmaj7 | Dm Ab7 | Eb G7"
+        },
+        {
+          "from": "9",
+          "to": "16",
+          "chords": "Em7 A7 | Dm Db7 | C | F Ab7 | G | Dm | C | F G7"
+        },
+        {
+          "from": "17",
+          "to": "24",
+          "chords": "Am7 | Fm Bb7 | C | F | Em7 D7 | F E7 | Am D7 | C"
+        },
+        {
+          "from": "25",
+          "to": "32",
+          "chords": "Am D7 | G E7 | F D7 | C A7 | Dm G7 | C A7 | Dm G7 | C"
+        }
+      ]
     },
     {
       "id": "recompose-heroic-full-orchestra-a",

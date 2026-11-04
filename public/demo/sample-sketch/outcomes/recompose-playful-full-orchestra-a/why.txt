@@ -1,0 +1,14 @@
+Pocket Parade: Pocket Parade
+
+Playful wind parade keeps whole C tune in order over secondary dominants, pizz strings and harp sparkle.
+
+Bars 1 to 8. Flutes vamp, Oboe takes tune, pizz violins, harp bubbles. Secondary dominants tilt plain C tune playful. Chords: D7 | G7 | C7 | F G7 | A7 | D7 G7 | A7 | Dm G7 Level: mp growing to mf
+Bars 9 to 16. Clarinet leads tune, bassoons walk, violas answer, glockenspiel ticks. Quick changes push phrase, bass walks contrary. Chords: G E7 | Am A7 | Dm D7 | G7 | A7 | Bb F/A | C G/B | F D7 Level: mf playful with swells
+Bars 17 to 24. Violins take high tune, horns echo, harp sweeps, cellos sing bass. Contrary bass brightens minor-to-major lift. Chords: G E7 | Dm G7 | G E7 | C E7 | F | Bb Bdim7 | F/A G/B | C Level: mf growing to f
+Bars 25 to 32. Full winds answer fragments, timpani stamps, strings pizz close. Strong V-I finally earns playful arrival. Chords: G D7 | C A7 | Dm G7 | C | F | Dm G7 | F Fm | G7 C Level: f falling to mp
+
+785 new notes. The code checked each one against what's sounding and the range of its instrument.
+68 long notes sit a semitone from something else sounding. That can be a good suspension or a slip, so check by ear: Violin I B4 in bar 1, Oboe 1 B4 in bar 3, Violin I C5 in bar 3, Violin I F4 in bar 6 and 64 more.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your own notes are as you wrote them.

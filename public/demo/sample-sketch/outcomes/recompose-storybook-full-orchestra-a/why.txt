@@ -1,0 +1,14 @@
+Lantern Parade: Lantern Parade
+
+Whole tune parades in order over new storybook chords with passing diminished and playful wind answers.
+
+Bars 1 to 8. Flutes sing tune, violins pizz, harp ripples. Light layers keep tune forward and clear. Chords: C C#dim7 | Dm7 G7 | C G/B | F G7 | C G/B | Dm Bb | Em A7 | Am C7 Level: pp growing to mf
+Bars 9 to 16. Oboes take tune, clarinets echo, violas rock. Echo builds phrase without covering tune. Chords: Dm G7 | C C#dim7 | C G/B | Dm7b5 G7 | C G | F Bb | G G7 | Dm G7 Level: mf swelling to f
+Bars 17 to 24. Violins lift tune high, Glockenspiel sparkles, Timpani pulses. Widening register lifts to one peak. Chords: Em A7 | F A7 | C Am7 | F Fm | C G/B | D7 G7 | G Cmaj7 | F G7 Level: f holding to ff
+Bars 25 to 32. Flutes return head, harp sweeps, strings settle. Gentle surprise then firm close. Chords: Am D7 | C G7 | C A7 | Dm G7 | C Fm | Dm G7 | F G7 | C Level: mf fading to pp
+
+681 new notes. The code checked each one against what's sounding and the range of its instrument.
+52 long notes sit a semitone from something else sounding. That can be a good suspension or a slip, so check by ear: Viola C4 in bar 2, Flute 1 E4 in bar 6, Cello Bb2 in bar 6, Viola B3 in bar 6 and 48 more.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your own notes are as you wrote them.

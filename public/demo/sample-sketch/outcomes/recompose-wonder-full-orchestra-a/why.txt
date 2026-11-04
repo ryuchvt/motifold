@@ -1,0 +1,15 @@
+Lydian Daybreak: Lydian Daybreak
+
+A quiet Lydian daybreak: full lullaby tune over floating pedals, answers between winds and strings, one late glow then rest.
+
+Bars 1 to 4. Harp arpeggios, held strings, Glockenspiel sparkle, no tune yet. Soft sustain over pedal leaves air for wonder entry. Chords: Cmaj9 | Dadd9/C | Fmaj7#11 | Gadd9 G/B Level: pp growing to mp
+Bars 5 to 12. Flute 1 tune, Oboe 2 answer, Harp rocking, Violin I halo, Cello bass. Tune high and thin over moving middleground and pedal. Chords: Cmaj9 | Fmaj7#11 | Am9 | Dm9 | Gadd9 | Cmaj9 | G9sus | C/G Level: mp swelling to mf
+Bars 13 to 20. Oboe 1 tune, Clarinet 1 counterline, Viola rocking, Horns sustain, Bassoon bass. Contrasting colour answers repeat, bass sings contrary motion. Chords: Cmaj9 | Dm9 | Em7 | Fmaj7 | G6 | Fmaj9 | Em7 | Cmaj9 Level: mf growing to f
+Bars 21 to 28. Violin I-II tune octave, Horns counter, Timpani pedal, Harp sweeps, low strings bass. Late single climax with widening register then release. Chords: Cmaj9 | G9sus | Cmaj9 | Fmaj7 | Gadd9 | Am9 | Em7 | C Level: f falling to mp
+Bars 29 to 32. Flute 2 and Glockenspiel echo head, Harp harmonics, strings sustain. Plagal close rests after arrival, wonder lingers. Chords: Fmaj7#11 | Dadd9/C | Cmaj9 Am9 | Cmaj9 Level: pp dying to ppp
+
+463 new notes. The code checked each one against what's sounding and the range of its instrument.
+32 long notes sit a semitone from something else sounding. That can be a good suspension or a slip, so check by ear: Flute 1 F4 in bar 6, Oboe 2 E4 in bar 6, Violin I C6 in bar 6, Flute 1 F4 in bar 11 and 28 more.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your own notes are as you wrote them.

@@ -1,0 +1,14 @@
+Marble March: Marble March
+
+Cheeky string-brass march carries whole tune over pedals, tritone sidesteps and snare chatter.
+
+Bars 1 to 8. Violin I states tune, viola ostinato, cello pedals, snare taps. Pedal plus sidesteps shadow plain harmonisation. Chords: Em7 A7 | Bb7 | Am7 D7 | Dm Db7 | C | Fmaj7 | Dm Ab7 | Eb G7 Level: mp with bounce
+Bars 9 to 16. Trumpets echo tune, horns walk bass, bassoons bounce, bass drum nudges. Tritone approaches delay dominant playfully. Chords: Em7 A7 | Dm Db7 | C | F Ab7 | G | Dm | C | F G7 Level: mf growing to f
+Bars 17 to 24. Violins high tune, trombones punctuate, harp arpeggiates, tuba grounds. Wide spacing keeps tune clear over brass. Chords: Am7 | Fm Bb7 | C | F | Em7 D7 | F E7 | Am D7 | C Level: f held bright
+Bars 25 to 32. Piccolo decorates fragments, cymbals crash, strings and timpani land. Sequenced lift saves strongest cadence last. Chords: Am D7 | G E7 | F D7 | C A7 | Dm G7 | C A7 | Dm G7 | C Level: f falling to pp
+
+598 new notes. The code checked each one against what's sounding and the range of its instrument.
+25 long notes sit a semitone from something else sounding. That can be a good suspension or a slip, so check by ear: Violin I B4 in bar 1, Violin II Bb4 in bar 1, Viola B3 in bar 8, Trumpet 2 C#4 in bar 9 and 21 more.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your own notes are as you wrote them.

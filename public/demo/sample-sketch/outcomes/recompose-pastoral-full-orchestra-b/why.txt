@@ -1,0 +1,15 @@
+High Pasture: High Pasture
+
+Tender string-led pastoral with high tune answered by horns, open fifths and slow modal light.
+
+Bars 1 to 4. Violas cellos rocking, bassoon pedal, harp broken chords. Minor-tinged rocking suspends home. Chords: Am9 | Em7/B | Fmaj7 | Dm7 E7 Level: ppp growing to pp
+Bars 5 to 12. Violin I tune, violin II tenths, double bass steps. Bass sings stepwise against tune. Chords: Am7 | Em7 | F | Em | Fmaj7 | Em7 Dm7 | E7 | Am Level: pp swelling to mp
+Bars 13 to 20. Horn 1 tune, oboes answer, timpani roots, harp runs. Mid registers blend, texture thins for dialogue. Chords: F | Em7 | Dm7 | C/E | Fmaj7 | G | C | G/B Level: mp growing to mf
+Bars 21 to 28. Trumpets punctuate, violins high tune, trombones warm chords. Adds brass outward for single peak. Chords: C | Dm7 G | C | F | C/E | F D | G | C Level: mf growing to ff
+Bars 29 to 32. Flutes and glockenspiel tail, cellos hold, harp harmonics. Thin texture lets ending breathe. Chords: F | Dm7 G7 | C | C Level: mf dying to pp
+
+350 new notes. The code checked each one against what's sounding and the range of its instrument.
+10 long notes sit a semitone from something else sounding. That can be a good suspension or a slip, so check by ear: Violin I F4 in bar 8, Viola E3 in bar 8, Horn 1 E4 in bar 13, Horn 1 B4 in bar 13 and 6 more.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your own notes are as you wrote them.

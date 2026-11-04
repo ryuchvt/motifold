@@ -1,0 +1,14 @@
+Clockmaker's Storybook: Clockmaker's Storybook
+
+Whole tune in order over plagal storybook chords, low winds sing, strings rock gently.
+
+Bars 1 to 8. Bassoons hum head, horns pad, harp rocks. Soft low colours prepare tune entry. Chords: F F#dim7 | Gm C7 | F Bb | D7 G7 | Am Em | Dm Bb | Am Em | F Bb Level: pp staying soft
+Bars 9 to 16. Oboe sings tune, clarinet answers, viola ostinato. Moving middle sustains without covering. Chords: C D7 | F C | Bb C | Em A7 | Am Em | F Bb7 | C Em | F Level: p growing to mf
+Bars 17 to 24. Violins lift tune, cello walks, flute echoes. Distant chord colours surprise then pull. Chords: G D/F# | Dm Db | C A7 | F D7 | Am F | Bb Bdim7 | C G | Dm E7 Level: mf growing to f
+Bars 25 to 32. Horns answer head, strings hold, Glockenspiel lights close. Plagal close gives gentle final rest. Chords: C Cmaj7 | F G7 | Am C | F G | Am D7 | Dm G7 | F Bb | G7 C Level: mf fading to pp
+
+368 new notes. The code checked each one against what's sounding and the range of its instrument.
+8 long notes sit a semitone from something else sounding. That can be a good suspension or a slip, so check by ear: Oboe 1 F4 in bar 12, Clarinet 1 E4 in bar 12, Bassoon 2 E3 in bar 12, Cello F#2 in bar 17 and 4 more.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your own notes are as you wrote them.

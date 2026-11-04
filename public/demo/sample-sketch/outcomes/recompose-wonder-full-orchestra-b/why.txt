@@ -1,0 +1,15 @@
+Starlight Ascent: Starlight Ascent
+
+Night ascent: same lullaby over relative-minor shadows and mediant light, rising from bassoons to horns and violins.
+
+Bars 1 to 4. Bassoons and Viola pedal, Horn 1 sigh, Harp harmonics, no full tune. Low sustain and rising bass prepare wonder ascent. Chords: Am9 | Fmaj9 | Cadd9/E | Dadd9 Level: ppp growing to mp
+Bars 5 to 12. Clarinet 1 tune, Bassoon counter, Horns sustain, Cello rocking, Double Bass pedal. Major tune over relative minor darkens then lightens. Chords: Am9 | Fmaj9 | Cadd9 | Dm9 | Em7 | Fmaj7#11/C | G9sus | Em7 Level: mp growing to mf
+Bars 13 to 20. Horn 1 tune, Flute 1 echo, Violin II rocking, Trombone 1 pedal, Harp arpeggios. Phrase travels winds to strings with quickening chords. Chords: Am9 | Bbmaj9 | Cadd9/G | F6/9 | Em7 | Fmaj9 | Cmaj9/G | Am Level: mf growing to f
+Bars 21 to 28. Trumpet 1 and Violin I tune, Glockenspiel shine, Timpani roots, Cello bass singing. Added brass widens top for single late arrival. Chords: Cadd9 | D9sus | Am9 | Fmaj9 | Em7 | Am9 | Cadd9 | C Level: f falling to mp
+Bars 29 to 32. Horn 2 head echo, Harp sweep, Viola-Cello sustain, Triangle light. Strong perfect cadence earns home after wandering. Chords: Dm9 | G13 | C6 Fmaj9 | C6 Level: mp dying to pp
+
+501 new notes. The code checked each one against what's sounding and the range of its instrument.
+24 long notes sit a semitone from something else sounding. That can be a good suspension or a slip, so check by ear: Clarinet 1 F4 in bar 6, Bassoon 1 E4 in bar 6, Horn 1 C4 in bar 10, Horn 2 F3 in bar 10 and 20 more.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your own notes are as you wrote them.

@@ -1,0 +1,15 @@
+Meadow Light: Meadow Light
+
+Pastoral waltz for winds and strings keeping full tune in order over warm rocking harmony to answer repeat.
+
+Bars 1 to 4. Harp arpeggios, horns pedal, violas rocking thirds. Holds home while establishing lilting pastoral motion. Chords: Cadd9 | Am7 | Fmaj9 | Csus4 C Level: pp growing to p
+Bars 5 to 12. Oboe 1 tune, flute echoes, cellos stepwise bass. Tune forward, bass in contrary motion. Chords: C | F C/E | Dm G | C | G/B | C F | Dsus4 D | G Level: p swelling to mf
+Bars 13 to 20. Violin I takes tune, clarinets answer, harp flows. Passes tune colour, keeps three moving layers. Chords: Am7 | Fmaj7 | C/E | F G | Em7 | Am7 | Dm7 G7 | C Level: mf easing to mp
+Bars 21 to 28. Flute 1 high tune, horns counterline, basses open fifths. Builds late climax then settles. Chords: Fmaj9 | Em7 | Am7 | Dm G | C/E F | C D | Gsus4 G | C Level: mp growing to f
+Bars 29 to 32. Oboe and violin echo tail, harp harmonics, low strings hold. Plagal close rests after arrival. Chords: F | C/E | F G | C Level: p dying to pp
+
+567 new notes. The code checked each one against what's sounding and the range of its instrument.
+35 long notes sit a semitone from something else sounding. That can be a good suspension or a slip, so check by ear: Viola B3 in bar 4, Horn 1 C4 in bar 4, Oboe 1 F4 in bar 6, Viola E4 in bar 6 and 31 more.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your own notes are as you wrote them.
