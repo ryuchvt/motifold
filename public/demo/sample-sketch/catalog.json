@@ -3288,12 +3288,39 @@
       "ensemble": "Full orchestra",
       "mood": "Heroic",
       "option": 0,
-      "name": "Full orchestra A",
+      "name": "Heroic Fanfare Reshaping",
       "bars": 32,
       "sourceBars": 24,
       "freedom": 2,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/recompose-heroic-full-orchestra-a/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/recompose-heroic-full-orchestra-a/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/recompose-heroic-full-orchestra-a/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/recompose-heroic-full-orchestra-a/run.json",
+      "xmlSha256": "30c5735bfd4e688298f06a484f663eb2a7b0e332a29bf68ed92b72a3001ec466",
+      "midiSha256": "cd446d20eca4308b1ad1cc525308c9f7b0903cb8fc07191ba6aabcfc77a07112",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "8",
+          "chords": "Bb | C | C | Bb | C | F | G | C"
+        },
+        {
+          "from": "9",
+          "to": "16",
+          "chords": "F | C | Am | Bb | C/E | F | G | Dm"
+        },
+        {
+          "from": "17",
+          "to": "24",
+          "chords": "G | C | C | Bb | C | F | G | Am G"
+        },
+        {
+          "from": "25",
+          "to": "32",
+          "chords": "C | C | F | Bb | C | G | C | C"
+        }
+      ]
     },
     {
       "id": "recompose-heroic-full-orchestra-b",
@@ -3302,12 +3329,39 @@
       "ensemble": "Full orchestra",
       "mood": "Heroic",
       "option": 1,
-      "name": "Full orchestra B",
+      "name": "String-led Hopeful Ascent",
       "bars": 32,
       "sourceBars": 24,
       "freedom": 2,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/recompose-heroic-full-orchestra-b/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/recompose-heroic-full-orchestra-b/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/recompose-heroic-full-orchestra-b/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/recompose-heroic-full-orchestra-b/run.json",
+      "xmlSha256": "4c469f011baec214bb22b6a7c70a06cf455a7a8c722935fa644fa28d9bbfaf66",
+      "midiSha256": "98c3c7b34f3c80413f3251d367f0f49bfd5350a5c9ff9d5ea6356463e39e6964",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "8",
+          "chords": "Em | G | Em | F | C/E | Dm | Em | G"
+        },
+        {
+          "from": "9",
+          "to": "16",
+          "chords": "Dm G | C | C | Dm | Em | F G | G | Am"
+        },
+        {
+          "from": "17",
+          "to": "24",
+          "chords": "Em | F | C | F | Am | Dm | G | C/E F"
+        },
+        {
+          "from": "25",
+          "to": "32",
+          "chords": "Am G | C | F | C/E | Dm G | C | F G | C"
+        }
+      ]
     },
     {
       "id": "recompose-epic-full-orchestra-a",
@@ -3316,12 +3370,44 @@
       "ensemble": "Full orchestra",
       "mood": "Epic",
       "option": 0,
-      "name": "Full orchestra A",
+      "name": "Ashen Ascent",
       "bars": 32,
       "sourceBars": 24,
       "freedom": 2,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/recompose-epic-full-orchestra-a/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/recompose-epic-full-orchestra-a/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/recompose-epic-full-orchestra-a/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/recompose-epic-full-orchestra-a/run.json",
+      "xmlSha256": "cf415c5c9748cf373d22d7fd9b4c5f4aba6ca70b03b7c0c51a08695b94fc623a",
+      "midiSha256": "699693ce73949b2f8c637c6caf9969973e76f215a1ac1f1bb3d55d89aac720c0",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "4",
+          "chords": "Am | F | G | Am"
+        },
+        {
+          "from": "5",
+          "to": "12",
+          "chords": "Am | F | Am | F | G | Am | G | C"
+        },
+        {
+          "from": "13",
+          "to": "20",
+          "chords": "Em | F | Am | F | G | Dm | Em | C"
+        },
+        {
+          "from": "21",
+          "to": "28",
+          "chords": "Am | F | F | Dm | G | Am | C | Am E"
+        },
+        {
+          "from": "29",
+          "to": "32",
+          "chords": "F | G | Am | Am"
+        }
+      ]
     },
     {
       "id": "recompose-epic-full-orchestra-b",
@@ -3330,12 +3416,44 @@
       "ensemble": "Full orchestra",
       "mood": "Epic",
       "option": 1,
-      "name": "Full orchestra B",
+      "name": "Bright Bastion",
       "bars": 32,
       "sourceBars": 24,
       "freedom": 2,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/recompose-epic-full-orchestra-b/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/recompose-epic-full-orchestra-b/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/recompose-epic-full-orchestra-b/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/recompose-epic-full-orchestra-b/run.json",
+      "xmlSha256": "a3f4df63218219aca6610fd16427b041a7418af9bb0268505a63ed9b22520181",
+      "midiSha256": "f68eae3ec4775c4daeda88fc517036f297dd2130644a2470101298af054545a2",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "4",
+          "chords": "C | Bb F | C | G"
+        },
+        {
+          "from": "5",
+          "to": "12",
+          "chords": "C | Bb | C | Dm | G | C | F | G"
+        },
+        {
+          "from": "13",
+          "to": "20",
+          "chords": "C | F | Em | F | G | F | C | Ab"
+        },
+        {
+          "from": "21",
+          "to": "28",
+          "chords": "C | Bb | Ab | F | G | F | C | C G"
+        },
+        {
+          "from": "29",
+          "to": "32",
+          "chords": "F | Bb | C | C"
+        }
+      ]
     },
     {
       "id": "recompose-pulse-full-orchestra-a",
@@ -3349,7 +3467,7 @@
       "sourceBars": 24,
       "freedom": 2,
       "status": "unavailable",
-      "reason": "Not recorded."
+      "reason": "New-note range failure is not eligible for bounded repair"
     },
     {
       "id": "recompose-pulse-full-orchestra-b",
@@ -3363,7 +3481,7 @@
       "sourceBars": 24,
       "freedom": 2,
       "status": "unavailable",
-      "reason": "Not recorded."
+      "reason": "New-note range failure is not eligible for bounded repair"
     },
     {
       "id": "recompose-action-full-orchestra-a",
@@ -3372,12 +3490,44 @@
       "ensemble": "Full orchestra",
       "mood": "Action",
       "option": 0,
-      "name": "Full orchestra A",
+      "name": "Low Engine Chase",
       "bars": 32,
       "sourceBars": 24,
       "freedom": 2,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/recompose-action-full-orchestra-a/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/recompose-action-full-orchestra-a/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/recompose-action-full-orchestra-a/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/recompose-action-full-orchestra-a/run.json",
+      "xmlSha256": "d3ad245b0f52363f4cd7186d7bd4cfbfccf7fc5bd53eecdf34207a5ebf105448",
+      "midiSha256": "4e753af4bb3121d9865e92e1932ade678bbe19bef0b9e7beb7136c9f34b82862",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "4",
+          "chords": "Am | Am | F | G"
+        },
+        {
+          "from": "5",
+          "to": "12",
+          "chords": "Am | Dm | Am | Dm | Em7 | Am | G | C"
+        },
+        {
+          "from": "13",
+          "to": "20",
+          "chords": "Am | Bb | Am | F | G | Dm | Em7 | C"
+        },
+        {
+          "from": "21",
+          "to": "28",
+          "chords": "C | F | C | F | G | F G | C | C"
+        },
+        {
+          "from": "29",
+          "to": "32",
+          "chords": "F | G | C | C"
+        }
+      ]
     },
     {
       "id": "recompose-action-full-orchestra-b",
@@ -3386,12 +3536,39 @@
       "ensemble": "Full orchestra",
       "mood": "Action",
       "option": 1,
-      "name": "Full orchestra B",
+      "name": "High Wire Pursuit",
       "bars": 32,
       "sourceBars": 24,
       "freedom": 2,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/recompose-action-full-orchestra-b/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/recompose-action-full-orchestra-b/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/recompose-action-full-orchestra-b/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/recompose-action-full-orchestra-b/run.json",
+      "xmlSha256": "1056f378f2c4c15d008b3fb84f2e6e768ffa09a737163f1353306e051b270d11",
+      "midiSha256": "6174b890c6abe9be6f9b347bd8407a9cf2af34aa4ab8ca08a93e731ba052ec9f",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "8",
+          "chords": "Em | Db | Em | Dm | G | C | G | C"
+        },
+        {
+          "from": "9",
+          "to": "16",
+          "chords": "Em | Db | Em | F | G | Dm | G | C"
+        },
+        {
+          "from": "17",
+          "to": "24",
+          "chords": "Am | Db | Am | F | G | F | Em | C"
+        },
+        {
+          "from": "25",
+          "to": "32",
+          "chords": "F | G | Am | G | F | G | C | C"
+        }
+      ]
     },
     {
       "id": "recompose-tense-full-orchestra-a",
@@ -3400,12 +3577,44 @@
       "ensemble": "Full orchestra",
       "mood": "Tense",
       "option": 0,
-      "name": "Full orchestra A",
+      "name": "Held Breath over C Pedal",
       "bars": 32,
       "sourceBars": 24,
       "freedom": 2,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/recompose-tense-full-orchestra-a/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/recompose-tense-full-orchestra-a/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/recompose-tense-full-orchestra-a/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/recompose-tense-full-orchestra-a/run.json",
+      "xmlSha256": "58616eab10092e3ff9beed9dbc24335ec5ee60de215a35669a97d0333f95a066",
+      "midiSha256": "d87ee959912faccee5f265b196434be9b71d69660fef2c87849b3a953895b984",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "4",
+          "chords": "Cm/C | Bdim7/C | Abmaj7/C | G7b9/C"
+        },
+        {
+          "from": "5",
+          "to": "12",
+          "chords": "Cm | Fm6/C | Cm(maj7)/C | Fm7b5/C | G7b9/C | Abmaj7/C | Fm7/C G7b9/C | G7b9/C"
+        },
+        {
+          "from": "13",
+          "to": "20",
+          "chords": "Cm | Fm7/C | Cm/G | Fm/Ab | Cm/G | Ab | Fm7 G7b9 | G7"
+        },
+        {
+          "from": "21",
+          "to": "28",
+          "chords": "Am | Bb6 | Am/C | Cdim7 | D7/F# | Cm/G | Bb/F Fm/Ab | G7b9"
+        },
+        {
+          "from": "29",
+          "to": "32",
+          "chords": "Cm | Fm7b5 Ab7 | Cm/G G7b9 | Cm"
+        }
+      ]
     },
     {
       "id": "recompose-tense-full-orchestra-b",
@@ -3414,12 +3623,44 @@
       "ensemble": "Full orchestra",
       "mood": "Tense",
       "option": 1,
-      "name": "Full orchestra B",
+      "name": "Lament Descent in C Minor",
       "bars": 32,
       "sourceBars": 24,
       "freedom": 2,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/recompose-tense-full-orchestra-b/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/recompose-tense-full-orchestra-b/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/recompose-tense-full-orchestra-b/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/recompose-tense-full-orchestra-b/run.json",
+      "xmlSha256": "24c33361db61e9c75f6f1ab58c0f51f8be59efd06b7a5a5996342817c8d4a9ca",
+      "midiSha256": "c0c91d5ce89358150db9f8d9e681be071af8a573842144ea9ccc037412318df2",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "4",
+          "chords": "Cm | Fm7b5/Bb | Bbm7 Eb7 | G7b9"
+        },
+        {
+          "from": "5",
+          "to": "12",
+          "chords": "Cm | Cm/Bb | Ab | Ab/G | Fm/F Ebdim7/F | Ab/Eb | Bb/D G7/D | G7"
+        },
+        {
+          "from": "13",
+          "to": "20",
+          "chords": "Cm | Fm | Bb7 Eb | Ab | Cm/Eb | Fm Db7 | Fm Bb7 | Eb G7"
+        },
+        {
+          "from": "21",
+          "to": "28",
+          "chords": "Cm | Db6/Ab | Cm/Bb Bdim7/Bb | Fm/A | Bb7/Ab Eb7/G | Ab E7/G# | Db/F Fm/Ab | G7b9"
+        },
+        {
+          "from": "29",
+          "to": "32",
+          "chords": "Cm | Fm7b5/Gb | G7b9 | Cm"
+        }
+      ]
     },
     {
       "id": "recompose-dark-full-orchestra-a",
@@ -3433,7 +3674,7 @@
       "sourceBars": 24,
       "freedom": 2,
       "status": "unavailable",
-      "reason": "Not recorded."
+      "reason": "Capture stopped"
     },
     {
       "id": "recompose-dark-full-orchestra-b",
@@ -3447,7 +3688,7 @@
       "sourceBars": 24,
       "freedom": 2,
       "status": "unavailable",
-      "reason": "Not recorded."
+      "reason": "Capture stopped"
     },
     {
       "id": "recompose-neutral-woodwind-quintet-a",

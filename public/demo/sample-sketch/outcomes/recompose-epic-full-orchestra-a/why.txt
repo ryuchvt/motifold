@@ -1,0 +1,15 @@
+Ashen Ascent: Ashen Ascent
+
+Whole C tune turned Aeolian epic over driving low ostinato, rising to late brass climax.
+
+Bars 1 to 4. Cello Double Bass pedal, Viola ostinato, Horn 1 Horn 2 pad, Timpani pulses. Low pedal and added layers build expectation for tune. Chords: Am | F | G | Am Level: pp growing to mp
+Bars 5 to 12. Cello tune, Viola counterline, Violin I Violin II pulses, Bassoon 1 Horn 1 sustain, Harp arpeggios. Tune low with moving middle keeps foreground clear. Chords: Am | F | Am | F | G | Am | G | C Level: mp rising to mf
+Bars 13 to 20. Horn 1 Horn 2 tune, Violin I answer, Trombone 1 Trombone 2 pedal, Snare Drum Bass Drum punctuate. Passing tune to horns changes colour before climax. Chords: Em | F | Am | F | G | Dm | Em | C Level: mf growing to f
+Bars 21 to 28. Trumpet 1 Violin I tune octave, Horn 3 Horn 4 counterline, Trombone 1 Trombone 2 Tuba bass, Cymbals Timpani hits. Full tutti and high register make single late peak. Chords: Am | F | F | Dm | G | Am | C | Am E Level: f staying to ff
+Bars 29 to 32. Trombone 1 Trombone 2 Horn 1 chorale, Violin I Viola sustain, Harp, Bass Drum Timpani close. Plagal close after climax rests after arrival. Chords: F | G | Am | Am Level: ff falling to pp
+
+525 new notes. The code checked each one against what's sounding and the range of its instrument.
+14 long notes sit a semitone from something else sounding. That can be a good suspension or a slip, so check by ear: Cello B4 in bar 5, Violin II C5 in bar 5, Violin II C5 in bar 5, Cello B4 in bar 7 and 10 more.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your own notes are as you wrote them.

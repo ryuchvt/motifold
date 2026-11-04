@@ -1,0 +1,14 @@
+String-led Hopeful Ascent: String-led Hopeful Ascent
+
+Strings carry whole tune over rising bass toward major, winds answer, brass reserved for late heroic arrival.
+
+Bars 1 to 8. Violas cellos ostinato, violins carry tune, bassoons pedal. Repeating figure changes with harmony underneath. Chords: Em | G | Em | F | C/E | Dm | Em | G Level: p growing to mf
+Bars 9 to 16. Oboes clarinets answer violins, harp arpeggiates, horns sustain. Thin colours keep middle clear for tune. Chords: Dm G | C | C | Dm | Em | F G | G | Am Level: mf steady then swelling
+Bars 17 to 24. Flutes violins share tune, trombones pedal, timpani roots. Pedal suspends while chords change above. Chords: Em | F | C | F | Am | Dm | G | C/E F Level: mf growing to f
+Bars 25 to 32. Trumpets horns join strings, snare bass drum punctuate close. Brass held back crowns single climax. Chords: Am G | C | F | C/E | Dm G | C | F G | C Level: f growing to ff
+
+595 new notes. The code checked each one against what's sounding and the range of its instrument.
+23 long notes sit a semitone from something else sounding. That can be a good suspension or a slip, so check by ear: Violin I F4 in bar 2, Violin I F4 in bar 7, Viola E3 in bar 2, Viola E3 in bar 7 and 19 more.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your own notes are as you wrote them.

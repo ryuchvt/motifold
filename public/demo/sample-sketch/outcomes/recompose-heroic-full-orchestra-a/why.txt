@@ -1,0 +1,14 @@
+Heroic Fanfare Reshaping: Heroic Fanfare Reshaping
+
+Brass-led heroic march keeps whole tune in order over Mixolydian flat-seventh colour and driving low pulse.
+
+Bars 1 to 8. Trombones tuba timpani fanfare, horns carry tune, strings pulse. Firm bass and open fifths establish heroic arrival. Chords: Bb | C | C | Bb | C | F | G | C Level: mf growing to f
+Bars 9 to 16. Trumpets answer horns, violins arpeggiate, cellos basses walk. Contrary bass against tune shapes phrase. Chords: F | C | Am | Bb | C/E | F | G | Dm Level: f settling to mf
+Bars 17 to 24. Piccolo flutes double tune, violas counter, harp glockenspiel lift. High doubling widens register toward climax. Chords: G | C | C | Bb | C | F | G | Am G Level: mf growing to ff
+Bars 25 to 32. Full brass strings timpani cymbals crown tune, bass drum hits. Tutti layers added slowly for one arrival. Chords: C | C | F | Bb | C | G | C | C Level: ff falling to f
+
+1010 new notes. The code checked each one against what's sounding and the range of its instrument.
+56 long notes sit a semitone from something else sounding. That can be a good suspension or a slip, so check by ear: Horn 1 E4 in bar 1, Horn 1 B4 in bar 1, Horn 2 Bb3 in bar 1, Horn 1 F4 in bar 2 and 52 more.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your own notes are as you wrote them.

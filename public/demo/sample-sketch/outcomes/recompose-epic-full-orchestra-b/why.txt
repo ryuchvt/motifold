@@ -1,0 +1,15 @@
+Bright Bastion: Bright Bastion
+
+Whole tune kept major in Mixolydian light, harp lift with wind answers to brass summit.
+
+Bars 1 to 4. Horn 1 Horn 2 fanfare, Flute 1 Harp arpeggios, Cello Double Bass pedal, Glockenspiel shines. Bright pedal with modal flat seventh sets wonder. Chords: C | Bb F | C | G Level: mp growing to mf
+Bars 5 to 12. Flute 1 Oboe 1 tune, Clarinet 1 Bassoon 1 rocking, Viola Cello pizz, Harp broken chords. Light middle leaves thin oboe tune forward. Chords: C | Bb | C | Dm | G | C | F | G Level: mf staying to mf
+Bars 13 to 20. Violin I Violin II tune, Viola counterline, Horn 1 Horn 2 sustain, Bassoon 2 bass, Timpani roots. Borrowed flat sixth colours phrase before lift. Chords: C | F | Em | F | G | F | C | Ab Level: mf growing to f
+Bars 21 to 28. Trumpet 1 Trombone 1 tune, Horn 1 Horn 2 answer, Violin I runs, Harp sweeps, Cymbals Bass Drum hits. Brass triads with no pad sound heroic. Chords: C | Bb | Ab | F | G | F | C | C G Level: f rising to ff
+Bars 29 to 32. Piccolo Glockenspiel top, Violin I Viola hold, Harp arpeggio, Timpani tonic. Strong perfect close earns final arrival. Chords: F | Bb | C | C Level: ff falling to pp
+
+605 new notes. The code checked each one against what's sounding and the range of its instrument.
+17 long notes sit a semitone from something else sounding. That can be a good suspension or a slip, so check by ear: Horn 1 B4 in bar 1, Horn 1 B4 in bar 3, Viola Eb4 in bar 6, Viola Bb3 in bar 11 and 13 more.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your own notes are as you wrote them.

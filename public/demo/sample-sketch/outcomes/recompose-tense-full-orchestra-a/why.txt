@@ -1,0 +1,15 @@
+Held Breath over C Pedal: Held Breath over C Pedal
+
+Whole C-major tune over grinding C pedal with borrowed minor colour, thin tense layers building to late brass climax.
+
+Bars 1 to 4. Cellos basses bassoons hold C pedal, violas tap G-B rhythm, harp harmonics. Pedal suspends time, soft dissonance creates dread. Chords: Cm/C | Bdim7/C | Abmaj7/C | G7b9/C Level: pp to p, tense hold
+Bars 5 to 12. Oboe tune, clarinet answers, violins tremolo, low pedal continues. Tune sings over static bass, clashes hurt on purpose. Chords: Cm | Fm6/C | Cm(maj7)/C | Fm7b5/C | G7b9/C | Abmaj7/C | Fm7/C G7b9/C | G7b9/C Level: p growing to mf
+Bars 13 to 20. Violin I takes tune, viola counterline, horns swell, timpani roots. Counterline moves when tune holds, builds pressure. Chords: Cm | Fm7/C | Cm/G | Fm/Ab | Cm/G | Ab | Fm7 G7b9 | G7 Level: mf growing to f
+Bars 21 to 28. Trumpets double violins tune, trombones pedal, snare punctuates. Brass without pad cuts through, peak arrives late. Chords: Am | Bb6 | Am/C | Cdim7 | D7/F# | Cm/G | Bb/F Fm/Ab | G7b9 Level: f to ff, single peak
+Bars 29 to 32. Strings harmonics fade, harp sweep, bass drum hit ends. Hush after hit lets arrival feel earned. Chords: Cm | Fm7b5 Ab7 | Cm/G G7b9 | Cm Level: ff dying to pp
+
+573 new notes. The code checked each one against what's sounding and the range of its instrument.
+73 long notes sit a semitone from something else sounding. That can be a good suspension or a slip, so check by ear: Viola Db4 in bar 2, Bassoon 1 C3 in bar 2, Bassoon 2 C3 in bar 2, Oboe 1 E4 in bar 5 and 69 more.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your own notes are as you wrote them.

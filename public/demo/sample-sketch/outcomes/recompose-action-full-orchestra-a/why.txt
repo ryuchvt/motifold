@@ -1,0 +1,15 @@
+Low Engine Chase: Low Engine Chase
+
+Full C-major tune over driving minor-inflected engine; low ostinato powers three chases to high brass arrival.
+
+Bars 1 to 4. Cello Double Bass ostinato, Viola answer, Timpani roots. Ostinato engine frees tune entry over waiting dominant. Chords: Am | Am | F | G Level: mp driving to mf
+Bars 5 to 12. Violin I tune, Horn 1 counterline, Cello engine. Relative minor darkens major tune for chase tension. Chords: Am | Dm | Am | Dm | Em7 | Am | G | C Level: mf driving to f
+Bars 13 to 20. Violin II tune, Trumpet 1 punctuates, Harp lifts. Borrowed flat-seven surprises repeat without losing drive. Chords: Am | Bb | Am | F | G | Dm | Em7 | C Level: f driving to ff
+Bars 21 to 28. Trumpet 1 Horn 1 tune, Trombone 1 pedal, Snare Drum hits. Brass unison widens register for single late peak. Chords: C | F | C | F | G | F G | C | C Level: ff held for climax
+Bars 29 to 32. Violin I Trombone 1 cadence, Timpani Bass Drum confirm. Strong perfect cadence earns arrival after tension. Chords: F | G | C | C Level: ff falling to f
+
+523 new notes. The code checked each one against what's sounding and the range of its instrument.
+9 long notes sit a semitone from something else sounding. That can be a good suspension or a slip, so check by ear: Viola F4 in bar 1, Viola C4 in bar 7, Horn 1 C4 in bar 11, Violin II B3 in bar 11 and 5 more.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your own notes are as you wrote them.

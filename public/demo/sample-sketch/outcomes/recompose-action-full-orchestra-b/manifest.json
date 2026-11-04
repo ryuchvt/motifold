@@ -1,0 +1,242 @@
+{
+  "id": "recompose-action-full-orchestra-b",
+  "recipe": {
+    "id": "recompose-action-full-orchestra",
+    "intent": "recompose",
+    "ensemble": "Full orchestra",
+    "instruments": [
+      "Piccolo",
+      "Flute 1",
+      "Flute 2",
+      "Oboe 1",
+      "Oboe 2",
+      "Clarinet 1",
+      "Clarinet 2",
+      "Bassoon 1",
+      "Bassoon 2",
+      "Horn 1",
+      "Horn 2",
+      "Horn 3",
+      "Horn 4",
+      "Trumpet 1",
+      "Trumpet 2",
+      "Trumpet 3",
+      "Trombone 1",
+      "Trombone 2",
+      "Bass Trombone",
+      "Tuba",
+      "Timpani",
+      "Glockenspiel",
+      "Snare Drum",
+      "Bass Drum",
+      "Cymbals",
+      "Harp",
+      "Violin I",
+      "Violin II",
+      "Viola",
+      "Cello",
+      "Double Bass"
+    ],
+    "mood": "Action",
+    "bars": 32,
+    "moreBars": 32,
+    "where": "after",
+    "tuneOnly": false,
+    "freedom": 2
+  },
+  "option": 1,
+  "plan": "High Wire Pursuit",
+  "status": "complete",
+  "verified": {
+    "sha256": "90f1be84361c8b1f443fa0002b474ced9f4bed7d53ef1b647a2a2b6f7910425c",
+    "files": 19,
+    "parts": [
+      {
+        "name": "Piccolo",
+        "bars": 32
+      },
+      {
+        "name": "Flute 1",
+        "bars": 32
+      },
+      {
+        "name": "Flute 2",
+        "bars": 32
+      },
+      {
+        "name": "Oboe 1",
+        "bars": 32
+      },
+      {
+        "name": "Oboe 2",
+        "bars": 32
+      },
+      {
+        "name": "Clarinet 1",
+        "bars": 32
+      },
+      {
+        "name": "Clarinet 2",
+        "bars": 32
+      },
+      {
+        "name": "Bassoon 1",
+        "bars": 32
+      },
+      {
+        "name": "Bassoon 2",
+        "bars": 32
+      },
+      {
+        "name": "Horn 1",
+        "bars": 32
+      },
+      {
+        "name": "Horn 2",
+        "bars": 32
+      },
+      {
+        "name": "Horn 3",
+        "bars": 32
+      },
+      {
+        "name": "Horn 4",
+        "bars": 32
+      },
+      {
+        "name": "Trumpet 1",
+        "bars": 32
+      },
+      {
+        "name": "Trumpet 2",
+        "bars": 32
+      },
+      {
+        "name": "Trumpet 3",
+        "bars": 32
+      },
+      {
+        "name": "Trombone 1",
+        "bars": 32
+      },
+      {
+        "name": "Trombone 2",
+        "bars": 32
+      },
+      {
+        "name": "Bass Trombone",
+        "bars": 32
+      },
+      {
+        "name": "Tuba",
+        "bars": 32
+      },
+      {
+        "name": "Timpani",
+        "bars": 32
+      },
+      {
+        "name": "Glockenspiel",
+        "bars": 32
+      },
+      {
+        "name": "Snare Drum",
+        "bars": 32
+      },
+      {
+        "name": "Bass Drum",
+        "bars": 32
+      },
+      {
+        "name": "Cymbals",
+        "bars": 32
+      },
+      {
+        "name": "Harp",
+        "bars": 32
+      },
+      {
+        "name": "Violin I",
+        "bars": 32
+      },
+      {
+        "name": "Violin II",
+        "bars": 32
+      },
+      {
+        "name": "Viola",
+        "bars": 32
+      },
+      {
+        "name": "Cello",
+        "bars": 32
+      },
+      {
+        "name": "Double Bass",
+        "bars": 32
+      }
+    ],
+    "tracks": 15,
+    "notes": 323,
+    "ppq": 480,
+    "scoreAndMidiAgree": true
+  },
+  "placement": null,
+  "advisoryClashes": [
+    {
+      "bar": "1",
+      "part": "Viola",
+      "name": "B3"
+    },
+    {
+      "bar": "3",
+      "part": "Viola",
+      "name": "B3"
+    },
+    {
+      "bar": "5",
+      "part": "Viola",
+      "name": "B3"
+    },
+    {
+      "bar": "1",
+      "part": "Harp",
+      "name": "B2"
+    },
+    {
+      "bar": "3",
+      "part": "Harp",
+      "name": "B2"
+    },
+    {
+      "bar": "5",
+      "part": "Harp",
+      "name": "B2"
+    },
+    {
+      "bar": "23",
+      "part": "Trombone 1",
+      "name": "C4"
+    },
+    {
+      "bar": "23",
+      "part": "Timpani",
+      "name": "B2"
+    },
+    {
+      "bar": "28",
+      "part": "Trombone 1",
+      "name": "B3"
+    },
+    {
+      "bar": "28",
+      "part": "Bass Drum",
+      "name": "C4"
+    }
+  ],
+  "audio": {
+    "status": "not-rendered",
+    "expectedFile": "audio/render.wav"
+  },
+  "provenance": "Actual successful Meta calls. The recorded stages may include cold retries. No uninterrupted live session is claimed."
+}

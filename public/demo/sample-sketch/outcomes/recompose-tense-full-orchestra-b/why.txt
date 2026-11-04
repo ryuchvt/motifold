@@ -1,0 +1,15 @@
+Lament Descent in C Minor: Lament Descent in C Minor
+
+Whole tune turned to C minor over falling lament bass, rocking mediants and delayed dominants, dark pulsing ostinato.
+
+Bars 1 to 4. Violas cellos pulse Eb-D, bassoons hold Bb, triangle lights. Low ostinato engines tension, high sustain floats. Chords: Cm | Fm7b5/Bb | Bbm7 Eb7 | G7b9 Level: ppp to pp, holding back
+Bars 5 to 12. Clarinet low tune, cello lament bass, harp broken chords. Bass sings contrary to tune, thirds above. Chords: Cm | Cm/Bb | Ab | Ab/G | Fm/F Ebdim7/F | Ab/Eb | Bb/D G7/D | G7 Level: pp growing to mp
+Bars 13 to 20. Flute takes tune, oboe counterline, horns pedal fifths. Ideas pass winds to strings, texture changes. Chords: Cm | Fm | Bb7 Eb | Ab | Cm/Eb | Fm Db7 | Fm Bb7 | Eb G7 Level: mp growing to mf
+Bars 21 to 28. Violin II tune high, trombones chorale, timpani fifths drive. Neapolitan weight pushes to dominant wait. Chords: Cm | Db6/Ab | Cm/Bb Bdim7/Bb | Fm/A | Bb7/Ab Eb7/G | Ab E7/G# | Db/F Fm/Ab | G7b9 Level: mf to ff, one climax
+Bars 29 to 32. Low strings die away, glockenspiel echoes B-G tail. Long dominant pedal makes ear wait. Chords: Cm | Fm7b5/Gb | G7b9 | Cm Level: ff falling to ppp
+
+542 new notes. The code checked each one against what's sounding and the range of its instrument.
+55 long notes sit a semitone from something else sounding. That can be a good suspension or a slip, so check by ear: Violin II Eb5 in bar 1, Double Bass Eb3 in bar 3, Bassoon 2 Bb4 in bar 4, Violin II B5 in bar 4 and 51 more.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your own notes are as you wrote them.

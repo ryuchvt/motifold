@@ -1,0 +1,6009 @@
+[
+  {
+    "shape": "read_piece",
+    "input": {
+      "piece": {
+        "title": "Sample sketch",
+        "composer": null,
+        "instrument": "Piano upper and Piano lower"
+      },
+      "fifths": 0,
+      "time": "3/4",
+      "written": [
+        {
+          "bar": "1",
+          "notes": "E4 C3 B3 B4 G4 B3",
+          "rhythm": "1 0.5 2 1.5 0.5x2",
+          "at": "0 0 0.5 1 2.5 2.5",
+          "staves": "1 2 2 1 1 2",
+          "held": "6",
+          "measure": 0
+        },
+        {
+          "bar": "2",
+          "notes": "F4 C3 A3 F3",
+          "rhythm": "3 0.5x2 2",
+          "at": "0 0 0.5 1",
+          "staves": "1 2 2 2",
+          "measure": 1
+        },
+        {
+          "bar": "3",
+          "notes": "E4 C3 B3 B4 G4 B3",
+          "rhythm": "1 0.5 2 1.5 0.5x2",
+          "at": "0 0 0.5 1 2.5 2.5",
+          "staves": "1 2 2 1 1 2",
+          "held": "6",
+          "measure": 2
+        },
+        {
+          "bar": "4",
+          "notes": "A4 C3 A3 F4 A3",
+          "rhythm": "1 0.5 2x2 0.5",
+          "at": "0 0 0.5 1 2.5",
+          "staves": "1 2 2 1 2",
+          "held": "5",
+          "measure": 3
+        },
+        {
+          "bar": "5",
+          "notes": "G4 D3 B3 D5 B4 B3",
+          "rhythm": "1 0.5 2 1.5 0.5x2",
+          "at": "0 0 0.5 1 2.5 2.5",
+          "staves": "1 2 2 1 1 2",
+          "held": "6",
+          "measure": 4
+        },
+        {
+          "bar": "6",
+          "notes": "C5 C3 B3 E4 B3",
+          "rhythm": "1 0.5 2x2 0.5",
+          "at": "0 0 0.5 1 2.5",
+          "staves": "1 2 2 1 2",
+          "held": "5",
+          "measure": 5
+        },
+        {
+          "bar": "7",
+          "notes": "F4 C3 A3 G4 A3",
+          "rhythm": "1 0.5 2x2 0.5",
+          "at": "0 0 0.5 1 2.5",
+          "staves": "1 2 2 1 2",
+          "held": "5",
+          "measure": 6
+        },
+        {
+          "bar": "8",
+          "notes": "G4 C3 C4 G3 G3",
+          "rhythm": "3 0.5x2 2 0.5",
+          "at": "0 0 0 0.5 2.5",
+          "staves": "1 2 2 2 2",
+          "held": "1 5",
+          "measure": 7
+        },
+        {
+          "bar": "9",
+          "notes": "E4 C3 B3 B4 G4 B3",
+          "rhythm": "1 0.5 2 1.5 0.5x2",
+          "at": "0 0 0.5 1 2.5 2.5",
+          "staves": "1 2 2 1 1 2",
+          "held": "6",
+          "measure": 8
+        },
+        {
+          "bar": "10",
+          "notes": "F4 C3 A3 A3",
+          "rhythm": "3 0.5 2 0.5",
+          "at": "0 0 0.5 2.5",
+          "staves": "1 2 2 2",
+          "held": "4",
+          "measure": 9
+        },
+        {
+          "bar": "11",
+          "notes": "E4 C3 G3 B4 G4 G3",
+          "rhythm": "1 0.5 2 1x2 0.5",
+          "at": "0 0 0.5 1 2 2.5",
+          "staves": "1 2 2 1 1 2",
+          "held": "6",
+          "measure": 10
+        },
+        {
+          "bar": "12",
+          "notes": "F4 A4 C3 A3 F3 C5",
+          "rhythm": "2x2 0.5x2 2 1",
+          "at": "0 0 0 0.5 1 2",
+          "staves": "1 1 2 2 2 1",
+          "measure": 11
+        },
+        {
+          "bar": "13",
+          "notes": "D5 G4 D3 B3 B3 B4 G4",
+          "rhythm": "2x2 0.5x2 2 0.5x2",
+          "at": "0 0 0 0.5 1 2 2.5",
+          "staves": "1 1 2 2 2 1 1",
+          "measure": 12
+        },
+        {
+          "bar": "14",
+          "notes": "A4 C3 A3 F4 A3",
+          "rhythm": "1 0.5 2x2 0.5",
+          "at": "0 0 0.5 1 2.5",
+          "staves": "1 2 2 1 2",
+          "held": "5",
+          "measure": 13
+        },
+        {
+          "bar": "15",
+          "notes": "G4 D3 B3 D5 B4 B3",
+          "rhythm": "1 0.5 2 1.5 0.5x2",
+          "at": "0 0 0.5 1 2.5 2.5",
+          "staves": "1 2 2 1 1 2",
+          "held": "6",
+          "measure": 14
+        },
+        {
+          "bar": "16",
+          "notes": "C5 C3 G3 E5 G3",
+          "rhythm": "1 0.5 2x2 0.5",
+          "at": "0 0 0.5 1 2.5",
+          "staves": "1 2 2 1 2",
+          "held": "5",
+          "measure": 15
+        },
+        {
+          "bar": "17",
+          "notes": "E5 C4 G4 C6 G5 G4",
+          "rhythm": "1 0.5 2 1.5 0.5x2",
+          "at": "0 0 0.5 1 2.5 2.5",
+          "staves": "1 2 2 1 1 2",
+          "held": "6",
+          "measure": 16
+        },
+        {
+          "bar": "18",
+          "notes": "F5 C4 A4 C5",
+          "rhythm": "3 0.5x2 2",
+          "at": "0 0 0.5 1",
+          "staves": "1 2 2 2",
+          "measure": 17
+        },
+        {
+          "bar": "19",
+          "notes": "E5 C4 G4 C6 G5 G4",
+          "rhythm": "1 0.5 2 1.5 0.5x2",
+          "at": "0 0 0.5 1 2.5 2.5",
+          "staves": "1 2 2 1 1 2",
+          "held": "6",
+          "measure": 18
+        },
+        {
+          "bar": "20",
+          "notes": "A5 C4 A4 C5",
+          "rhythm": "3 0.5x2 2",
+          "at": "0 0 0.5 1",
+          "staves": "1 2 2 2",
+          "measure": 19
+        },
+        {
+          "bar": "21",
+          "notes": "G5 D6 D4 G4 D6 G5 B5 G4",
+          "rhythm": "1x2 0.5 2 1.5x2 0.5x2",
+          "at": "0 0 0 0.5 1 1 2.5 2.5",
+          "staves": "1 1 2 2 1 1 1 2",
+          "held": "8",
+          "measure": 20
+        },
+        {
+          "bar": "22",
+          "notes": "C6 C4 G4 G5 A5 G4",
+          "rhythm": "1 0.5 2 1x2 0.5",
+          "at": "0 0 0.5 1 2 2.5",
+          "staves": "1 2 2 1 1 2",
+          "held": "6",
+          "measure": 21
+        },
+        {
+          "bar": "23",
+          "notes": "E5 C4 G4 G5 G4 D5",
+          "rhythm": "1 0.5 1.5 2 0.25 0.75",
+          "at": "0 0 0.5 1 2 2.25",
+          "staves": "1 2 2 1 2 2",
+          "held": "5",
+          "measure": 22
+        },
+        {
+          "bar": "24",
+          "notes": "C5 C3 G3 C4 D4 C5 E4",
+          "rhythm": "2 0.5x3 1.5 0.5x2",
+          "at": "0 0 0.5 1 1.5 2 2.5",
+          "staves": "1 2 2 2 2 1 1",
+          "held": "6",
+          "measure": 23
+        }
+      ],
+      "returns": [
+        {
+          "from": "14",
+          "to": "16",
+          "likeFrom": "4",
+          "likeTo": "6",
+          "changed": 1,
+          "line": "Piano upper"
+        },
+        {
+          "from": "6",
+          "to": "7",
+          "likeFrom": "3",
+          "likeTo": "4",
+          "changed": 0,
+          "line": "Piano lower"
+        },
+        {
+          "from": "9",
+          "to": "10",
+          "likeFrom": "3",
+          "likeTo": "4",
+          "changed": 0,
+          "line": "Piano lower"
+        },
+        {
+          "from": "14",
+          "to": "15",
+          "likeFrom": "4",
+          "likeTo": "5",
+          "changed": 0,
+          "line": "Piano lower"
+        },
+        {
+          "from": "19",
+          "to": "20",
+          "likeFrom": "17",
+          "likeTo": "18",
+          "changed": 0,
+          "line": "Piano lower"
+        }
+      ],
+      "lines": [
+        "Piano upper",
+        "Piano lower"
+      ]
+    },
+    "reply": {
+      "status": "ok",
+      "answer": {
+        "missing": [
+          {
+            "from": "1",
+            "to": "10",
+            "what": "Literal repeat with no contrast",
+            "why": "Same phrase three times stalls"
+          },
+          {
+            "from": "17",
+            "to": "23",
+            "what": "Low octave left empty",
+            "why": "Bass up high loses weight"
+          },
+          {
+            "from": "12",
+            "to": "24",
+            "what": "Octave shift only change",
+            "why": "Idea never develops further"
+          },
+          {
+            "from": "23",
+            "to": "24",
+            "what": "No clear final cadence",
+            "why": "Ends on unstable D"
+          }
+        ],
+        "questions": [
+          {
+            "ask": "Is the held middle note a second tune?",
+            "choices": [
+              {
+                "label": "Holding note",
+                "role": "pedal"
+              },
+              {
+                "label": "Second tune",
+                "role": "countermelody"
+              },
+              {
+                "label": "Chord filler",
+                "role": "harmony"
+              }
+            ],
+            "from": "1",
+            "line": "Piano lower",
+            "to": "7"
+          },
+          {
+            "ask": "Are the added thirds part of the tune?",
+            "choices": [
+              {
+                "label": "Tune thirds",
+                "role": "melody"
+              },
+              {
+                "label": "Backing thirds",
+                "role": "harmony"
+              }
+            ],
+            "from": "12",
+            "line": "Piano upper",
+            "to": "13"
+          },
+          {
+            "ask": "Does the piece end on bar 24?",
+            "choices": [
+              {
+                "label": "Ends here",
+                "role": ""
+              },
+              {
+                "label": "Leads onward",
+                "role": ""
+              }
+            ],
+            "from": "24",
+            "line": "Piano lower",
+            "to": "24"
+          }
+        ],
+        "roles": [
+          {
+            "from": "1",
+            "line": "Piano upper",
+            "of": "",
+            "role": "melody",
+            "to": "24",
+            "why": "Sings stepwise shape above"
+          },
+          {
+            "from": "1",
+            "line": "Piano lower",
+            "of": "",
+            "role": "bass",
+            "to": "24",
+            "why": "Strong-beat roots fix harmony"
+          }
+        ],
+        "sections": [
+          {
+            "from": "1",
+            "name": "First phrase",
+            "to": "8"
+          },
+          {
+            "from": "9",
+            "name": "Varied repeat",
+            "to": "16"
+          },
+          {
+            "from": "17",
+            "name": "High ending",
+            "to": "24"
+          }
+        ],
+        "structures": [
+          {
+            "name": "Cut middle repeat",
+            "order": [
+              {
+                "from": "1",
+                "to": "8"
+              },
+              {
+                "from": "17",
+                "to": "24"
+              }
+            ],
+            "why": "Cut literal repeat for contrast"
+          },
+          {
+            "name": "High intro low end",
+            "order": [
+              {
+                "from": "17",
+                "to": "24"
+              },
+              {
+                "from": "1",
+                "to": "8"
+              }
+            ],
+            "why": "Resolves high tension quietly"
+          }
+        ],
+        "summary": "Melody in Piano upper bars 1-24; no independent countermelody, lower supplies bass and held harmony.",
+        "thin": [
+          {
+            "from": "12",
+            "line": "Piano upper",
+            "to": "12",
+            "why": "Lower third already in bass"
+          },
+          {
+            "from": "21",
+            "line": "Piano upper",
+            "to": "21",
+            "why": "D octave already below"
+          }
+        ],
+        "tracks": [
+          {
+            "instrument": "Piano",
+            "line": "Piano upper",
+            "sure": true,
+            "why": "Upper tune register and phrasing"
+          },
+          {
+            "instrument": "Piano",
+            "line": "Piano lower",
+            "sure": true,
+            "why": "Low bass notes and chords"
+          }
+        ]
+      },
+      "sources": [],
+      "cached": false
+    },
+    "ms": 101600,
+    "thinking": [
+      {
+        "at": 4572,
+        "text": "Analyzing the musical sketch by transcribing bars 1-4, identifying piano upper and lower tracks in C major/A minor 3/4 time to extract roles, sections, and structures."
+      },
+      {
+        "at": 8309,
+        "text": "Extending the transcription through bar 21 and noting octave shifts and chordal voicings."
+      },
+      {
+        "at": 16176,
+        "text": "Extending the transcription to bar 24 and analyzing voice leading and chord progression for key identification."
+      },
+      {
+        "at": 25043,
+        "text": "Reconciling the three-voice texture to resolve the ambiguous harmony and key inference."
+      },
+      {
+        "at": 33222,
+        "text": "Mapping chord labels to the three-voice texture across bars to confirm the harmonic progression."
+      },
+      {
+        "at": 42406,
+        "text": "Resolving the cadence structure and texture changes across the eight-bar period and later sections."
+      },
+      {
+        "at": 50680,
+        "text": "Assigning single-track roles to multi-note spans and distinguishing melody from octave doubling."
+      },
+      {
+        "at": 57846,
+        "text": "Resolving single-track role conflicts by prioritizing bass over harmony for the lower part."
+      },
+      {
+        "at": 65786,
+        "text": "Assigning roles per track and drafting plain-word sections for the full bar range."
+      },
+      {
+        "at": 73352,
+        "text": "Evaluating whether a two-track reduction can omit a separate harmony role while covering bass and pedal functions."
+      }
+    ],
+    "version": "read-piece-5",
+    "model": "muse-spark-1.3",
+    "usage": {
+      "inputTokens": 4300,
+      "cachedTokens": 0,
+      "outputTokens": 11178
+    }
+  },
+  {
+    "shape": "study_score",
+    "input": {
+      "piece": {
+        "title": "Sample sketch",
+        "composer": null,
+        "instrument": "Piano upper and Piano lower"
+      },
+      "fifths": 0,
+      "time": "3/4",
+      "written": [
+        {
+          "bar": "1",
+          "notes": "E4 C3 B3 B4 G4 B3",
+          "rhythm": "1 0.5 2 1.5 0.5x2",
+          "at": "0 0 0.5 1 2.5 2.5",
+          "staves": "1 2 2 1 1 2",
+          "held": "6",
+          "measure": 0
+        },
+        {
+          "bar": "2",
+          "notes": "F4 C3 A3 F3",
+          "rhythm": "3 0.5x2 2",
+          "at": "0 0 0.5 1",
+          "staves": "1 2 2 2",
+          "measure": 1
+        },
+        {
+          "bar": "3",
+          "notes": "E4 C3 B3 B4 G4 B3",
+          "rhythm": "1 0.5 2 1.5 0.5x2",
+          "at": "0 0 0.5 1 2.5 2.5",
+          "staves": "1 2 2 1 1 2",
+          "held": "6",
+          "measure": 2
+        },
+        {
+          "bar": "4",
+          "notes": "A4 C3 A3 F4 A3",
+          "rhythm": "1 0.5 2x2 0.5",
+          "at": "0 0 0.5 1 2.5",
+          "staves": "1 2 2 1 2",
+          "held": "5",
+          "measure": 3
+        },
+        {
+          "bar": "5",
+          "notes": "G4 D3 B3 D5 B4 B3",
+          "rhythm": "1 0.5 2 1.5 0.5x2",
+          "at": "0 0 0.5 1 2.5 2.5",
+          "staves": "1 2 2 1 1 2",
+          "held": "6",
+          "measure": 4
+        },
+        {
+          "bar": "6",
+          "notes": "C5 C3 B3 E4 B3",
+          "rhythm": "1 0.5 2x2 0.5",
+          "at": "0 0 0.5 1 2.5",
+          "staves": "1 2 2 1 2",
+          "held": "5",
+          "measure": 5
+        },
+        {
+          "bar": "7",
+          "notes": "F4 C3 A3 G4 A3",
+          "rhythm": "1 0.5 2x2 0.5",
+          "at": "0 0 0.5 1 2.5",
+          "staves": "1 2 2 1 2",
+          "held": "5",
+          "measure": 6
+        },
+        {
+          "bar": "8",
+          "notes": "G4 C3 C4 G3 G3",
+          "rhythm": "3 0.5x2 2 0.5",
+          "at": "0 0 0 0.5 2.5",
+          "staves": "1 2 2 2 2",
+          "held": "1 5",
+          "measure": 7
+        },
+        {
+          "bar": "9",
+          "notes": "E4 C3 B3 B4 G4 B3",
+          "rhythm": "1 0.5 2 1.5 0.5x2",
+          "at": "0 0 0.5 1 2.5 2.5",
+          "staves": "1 2 2 1 1 2",
+          "held": "6",
+          "measure": 8
+        },
+        {
+          "bar": "10",
+          "notes": "F4 C3 A3 A3",
+          "rhythm": "3 0.5 2 0.5",
+          "at": "0 0 0.5 2.5",
+          "staves": "1 2 2 2",
+          "held": "4",
+          "measure": 9
+        },
+        {
+          "bar": "11",
+          "notes": "E4 C3 G3 B4 G4 G3",
+          "rhythm": "1 0.5 2 1x2 0.5",
+          "at": "0 0 0.5 1 2 2.5",
+          "staves": "1 2 2 1 1 2",
+          "held": "6",
+          "measure": 10
+        },
+        {
+          "bar": "12",
+          "notes": "F4 A4 C3 A3 F3 C5",
+          "rhythm": "2x2 0.5x2 2 1",
+          "at": "0 0 0 0.5 1 2",
+          "staves": "1 1 2 2 2 1",
+          "measure": 11
+        },
+        {
+          "bar": "13",
+          "notes": "D5 G4 D3 B3 B3 B4 G4",
+          "rhythm": "2x2 0.5x2 2 0.5x2",
+          "at": "0 0 0 0.5 1 2 2.5",
+          "staves": "1 1 2 2 2 1 1",
+          "measure": 12
+        },
+        {
+          "bar": "14",
+          "notes": "A4 C3 A3 F4 A3",
+          "rhythm": "1 0.5 2x2 0.5",
+          "at": "0 0 0.5 1 2.5",
+          "staves": "1 2 2 1 2",
+          "held": "5",
+          "measure": 13
+        },
+        {
+          "bar": "15",
+          "notes": "G4 D3 B3 D5 B4 B3",
+          "rhythm": "1 0.5 2 1.5 0.5x2",
+          "at": "0 0 0.5 1 2.5 2.5",
+          "staves": "1 2 2 1 1 2",
+          "held": "6",
+          "measure": 14
+        },
+        {
+          "bar": "16",
+          "notes": "C5 C3 G3 E5 G3",
+          "rhythm": "1 0.5 2x2 0.5",
+          "at": "0 0 0.5 1 2.5",
+          "staves": "1 2 2 1 2",
+          "held": "5",
+          "measure": 15
+        },
+        {
+          "bar": "17",
+          "notes": "E5 C4 G4 C6 G5 G4",
+          "rhythm": "1 0.5 2 1.5 0.5x2",
+          "at": "0 0 0.5 1 2.5 2.5",
+          "staves": "1 2 2 1 1 2",
+          "held": "6",
+          "measure": 16
+        },
+        {
+          "bar": "18",
+          "notes": "F5 C4 A4 C5",
+          "rhythm": "3 0.5x2 2",
+          "at": "0 0 0.5 1",
+          "staves": "1 2 2 2",
+          "measure": 17
+        },
+        {
+          "bar": "19",
+          "notes": "E5 C4 G4 C6 G5 G4",
+          "rhythm": "1 0.5 2 1.5 0.5x2",
+          "at": "0 0 0.5 1 2.5 2.5",
+          "staves": "1 2 2 1 1 2",
+          "held": "6",
+          "measure": 18
+        },
+        {
+          "bar": "20",
+          "notes": "A5 C4 A4 C5",
+          "rhythm": "3 0.5x2 2",
+          "at": "0 0 0.5 1",
+          "staves": "1 2 2 2",
+          "measure": 19
+        },
+        {
+          "bar": "21",
+          "notes": "G5 D6 D4 G4 D6 G5 B5 G4",
+          "rhythm": "1x2 0.5 2 1.5x2 0.5x2",
+          "at": "0 0 0 0.5 1 1 2.5 2.5",
+          "staves": "1 1 2 2 1 1 1 2",
+          "held": "8",
+          "measure": 20
+        },
+        {
+          "bar": "22",
+          "notes": "C6 C4 G4 G5 A5 G4",
+          "rhythm": "1 0.5 2 1x2 0.5",
+          "at": "0 0 0.5 1 2 2.5",
+          "staves": "1 2 2 1 1 2",
+          "held": "6",
+          "measure": 21
+        },
+        {
+          "bar": "23",
+          "notes": "E5 C4 G4 G5 G4 D5",
+          "rhythm": "1 0.5 1.5 2 0.25 0.75",
+          "at": "0 0 0.5 1 2 2.25",
+          "staves": "1 2 2 1 2 2",
+          "held": "5",
+          "measure": 22
+        },
+        {
+          "bar": "24",
+          "notes": "C5 C3 G3 C4 D4 C5 E4",
+          "rhythm": "2 0.5x3 1.5 0.5x2",
+          "at": "0 0 0.5 1 1.5 2 2.5",
+          "staves": "1 2 2 2 2 1 1",
+          "held": "6",
+          "measure": 23
+        }
+      ],
+      "returns": [
+        {
+          "from": "14",
+          "to": "16",
+          "likeFrom": "4",
+          "likeTo": "6",
+          "changed": 1,
+          "line": "Piano upper"
+        },
+        {
+          "from": "6",
+          "to": "7",
+          "likeFrom": "3",
+          "likeTo": "4",
+          "changed": 0,
+          "line": "Piano lower"
+        },
+        {
+          "from": "9",
+          "to": "10",
+          "likeFrom": "3",
+          "likeTo": "4",
+          "changed": 0,
+          "line": "Piano lower"
+        },
+        {
+          "from": "14",
+          "to": "15",
+          "likeFrom": "4",
+          "likeTo": "5",
+          "changed": 0,
+          "line": "Piano lower"
+        },
+        {
+          "from": "19",
+          "to": "20",
+          "likeFrom": "17",
+          "likeTo": "18",
+          "changed": 0,
+          "line": "Piano lower"
+        }
+      ],
+      "lines": [
+        "Piano upper",
+        "Piano lower"
+      ]
+    },
+    "reply": {
+      "status": "ok",
+      "answer": {
+        "harmony": [
+          {
+            "chord": "Em/B",
+            "from": "1",
+            "note": 1,
+            "numeral": "iii",
+            "to": "1"
+          },
+          {
+            "chord": "F",
+            "from": "2",
+            "note": 1,
+            "numeral": "IV",
+            "to": "2"
+          },
+          {
+            "chord": "Em/B",
+            "from": "3",
+            "note": 1,
+            "numeral": "iii",
+            "to": "3"
+          },
+          {
+            "chord": "F/A",
+            "from": "4",
+            "note": 1,
+            "numeral": "IV",
+            "to": "4"
+          },
+          {
+            "chord": "G/B",
+            "from": "5",
+            "note": 1,
+            "numeral": "V",
+            "to": "5"
+          },
+          {
+            "chord": "C/B",
+            "from": "6",
+            "note": 1,
+            "numeral": "I",
+            "to": "6"
+          },
+          {
+            "chord": "F/A",
+            "from": "7",
+            "note": 1,
+            "numeral": "IV",
+            "to": "7"
+          },
+          {
+            "chord": "C/G",
+            "from": "8",
+            "note": 1,
+            "numeral": "I",
+            "to": "8"
+          },
+          {
+            "chord": "Em/B",
+            "from": "9",
+            "note": 1,
+            "numeral": "iii",
+            "to": "9"
+          },
+          {
+            "chord": "F/A",
+            "from": "10",
+            "note": 1,
+            "numeral": "IV",
+            "to": "10"
+          },
+          {
+            "chord": "C/G",
+            "from": "11",
+            "note": 1,
+            "numeral": "I",
+            "to": "11"
+          },
+          {
+            "chord": "F",
+            "from": "12",
+            "note": 1,
+            "numeral": "IV",
+            "to": "12"
+          },
+          {
+            "chord": "G/B",
+            "from": "13",
+            "note": 1,
+            "numeral": "V",
+            "to": "13"
+          },
+          {
+            "chord": "F/A",
+            "from": "14",
+            "note": 1,
+            "numeral": "IV",
+            "to": "14"
+          },
+          {
+            "chord": "G/B",
+            "from": "15",
+            "note": 1,
+            "numeral": "V",
+            "to": "15"
+          },
+          {
+            "chord": "C/G",
+            "from": "16",
+            "note": 1,
+            "numeral": "I",
+            "to": "16"
+          },
+          {
+            "chord": "C/G",
+            "from": "17",
+            "note": 1,
+            "numeral": "I",
+            "to": "17"
+          },
+          {
+            "chord": "F/C",
+            "from": "18",
+            "note": 1,
+            "numeral": "IV",
+            "to": "18"
+          },
+          {
+            "chord": "C/G",
+            "from": "19",
+            "note": 1,
+            "numeral": "I",
+            "to": "19"
+          },
+          {
+            "chord": "F/C",
+            "from": "20",
+            "note": 1,
+            "numeral": "IV",
+            "to": "20"
+          },
+          {
+            "chord": "G",
+            "from": "21",
+            "note": 1,
+            "numeral": "V",
+            "to": "21"
+          },
+          {
+            "chord": "C/G",
+            "from": "22",
+            "note": 1,
+            "numeral": "I",
+            "to": "22"
+          },
+          {
+            "chord": "C/G",
+            "from": "23",
+            "note": 1,
+            "numeral": "I",
+            "to": "23"
+          },
+          {
+            "chord": "C",
+            "from": "24",
+            "note": 1,
+            "numeral": "I",
+            "to": "24"
+          }
+        ],
+        "moments": [
+          {
+            "bar": "3",
+            "kind": "cadence",
+            "note": 5,
+            "toBar": "4",
+            "toNote": 1,
+            "what": "Step up reaches F close"
+          },
+          {
+            "bar": "5",
+            "kind": "dominant",
+            "note": 1,
+            "toBar": "6",
+            "toNote": 1,
+            "what": "G pulls toward C"
+          },
+          {
+            "bar": "5",
+            "kind": "leading-tone",
+            "note": 5,
+            "toBar": "6",
+            "toNote": 1,
+            "what": "B pulls up to C"
+          },
+          {
+            "bar": "7",
+            "kind": "cadence",
+            "note": 4,
+            "toBar": "8",
+            "toNote": 1,
+            "what": "Held G settles on C"
+          },
+          {
+            "bar": "11",
+            "kind": "cadence",
+            "note": 5,
+            "toBar": "12",
+            "toNote": 1,
+            "what": "Step down lands on F"
+          },
+          {
+            "bar": "12",
+            "kind": "bridge",
+            "note": 6,
+            "toBar": "13",
+            "toNote": 1,
+            "what": "C lifts into G drive"
+          },
+          {
+            "bar": "15",
+            "kind": "cadence",
+            "note": 4,
+            "toBar": "16",
+            "toNote": 1,
+            "what": "D steps down to C"
+          },
+          {
+            "bar": "15",
+            "kind": "leading-tone",
+            "note": 5,
+            "toBar": "16",
+            "toNote": 1,
+            "what": "B pulls up to C"
+          },
+          {
+            "bar": "15",
+            "kind": "dominant",
+            "note": 1,
+            "toBar": "16",
+            "toNote": 1,
+            "what": "G wants home to C"
+          },
+          {
+            "bar": "18",
+            "kind": "together",
+            "note": 1,
+            "toBar": "18",
+            "toNote": 4,
+            "what": "Upper and lower meet on F"
+          },
+          {
+            "bar": "19",
+            "kind": "cadence",
+            "note": 5,
+            "toBar": "20",
+            "toNote": 1,
+            "what": "Step up lands on F"
+          },
+          {
+            "bar": "21",
+            "kind": "climax",
+            "note": 2,
+            "toBar": "21",
+            "toNote": 2,
+            "what": "Highest D tops the drive"
+          },
+          {
+            "bar": "21",
+            "kind": "leading-tone",
+            "note": 7,
+            "toBar": "22",
+            "toNote": 1,
+            "what": "High B pulls to C"
+          },
+          {
+            "bar": "21",
+            "kind": "dominant",
+            "note": 1,
+            "toBar": "22",
+            "toNote": 1,
+            "what": "High G seeks home"
+          },
+          {
+            "bar": "23",
+            "kind": "bridge",
+            "note": 6,
+            "toBar": "24",
+            "toNote": 1,
+            "what": "D steps down to home"
+          },
+          {
+            "bar": "23",
+            "kind": "cadence",
+            "note": 4,
+            "toBar": "24",
+            "toNote": 1,
+            "what": "Fall to lasting C close"
+          },
+          {
+            "bar": "24",
+            "kind": "together",
+            "note": 1,
+            "toBar": "24",
+            "toNote": 2,
+            "what": "Staves land together on C"
+          }
+        ],
+        "overview": "Low swaying tune over held bass moves between Em, F, G and C, returning varied then sung high before closing home.",
+        "sections": [
+          {
+            "form": "A",
+            "from": "1",
+            "mood": "wandering",
+            "name": "Low opening",
+            "to": "4",
+            "what": "Upper sways over held bass toward F"
+          },
+          {
+            "form": "B",
+            "from": "5",
+            "mood": "settling",
+            "name": "First arrival",
+            "to": "8",
+            "what": "Lift to G then fall to rest on C"
+          },
+          {
+            "form": "A'",
+            "from": "9",
+            "mood": "remembering",
+            "name": "Low return",
+            "to": "12",
+            "what": "Same sway varied at close toward F"
+          },
+          {
+            "form": "B'",
+            "from": "13",
+            "mood": "pressing",
+            "name": "Middle return",
+            "to": "16",
+            "what": "G and F trade before settling on C"
+          },
+          {
+            "form": "A''",
+            "from": "17",
+            "mood": "soaring",
+            "name": "High song",
+            "to": "20",
+            "what": "Low sway sung high above steady bass"
+          },
+          {
+            "form": "B''",
+            "from": "21",
+            "mood": "resolving",
+            "name": "Closing ascent",
+            "to": "24",
+            "what": "Climb to top then fall to lasting C"
+          }
+        ]
+      },
+      "sources": [],
+      "cached": false
+    },
+    "ms": 134219,
+    "thinking": [
+      {
+        "at": 4861,
+        "text": "Analyzing a 24-bar C major piano sketch to map notes to sections, harmony, and moments for JSON output."
+      },
+      {
+        "at": 7142,
+        "text": "Mapping chord candidates across bars 1-7 while resolving ambiguous passing tones and inversions."
+      },
+      {
+        "at": 14021,
+        "text": "Extending the chord mapping to bars 8-20 and inferring the C-major progression."
+      },
+      {
+        "at": 21391,
+        "text": "Mapping the 24-bar structure into labeled sections and assigning form letters."
+      },
+      {
+        "at": 28969,
+        "text": "Refining the section labels to A/B families and drafting harmony labels per bar."
+      },
+      {
+        "at": 36124,
+        "text": "Collapsing consecutive identical chords into bar ranges to reduce the 24 entries."
+      },
+      {
+        "at": 42667,
+        "text": "Resolving bass-note slash inversions and pedal tones to keep bar-level chord entries."
+      },
+      {
+        "at": 49397,
+        "text": "Extending slash-inversion mapping to pedal tones and refining Roman-numeral notation for inversions."
+      },
+      {
+        "at": 56911,
+        "text": "Resolving slash-chord notation against the string-only numeral schema and descending bass line."
+      },
+      {
+        "at": 63199,
+        "text": "Adding landing and cadence moments to align with the slash-chord and numeral labels."
+      }
+    ],
+    "version": "study-score-m1",
+    "model": "muse-spark-1.3",
+    "usage": {
+      "inputTokens": 3701,
+      "cachedTokens": 0,
+      "outputTokens": 18104
+    }
+  },
+  {
+    "shape": "plan_recompose",
+    "input": {
+      "piece": {
+        "title": "Sample sketch",
+        "composer": null,
+        "instrument": "Piano upper and Piano lower"
+      },
+      "fifths": 0,
+      "time": "3/4",
+      "written": [
+        {
+          "bar": "1",
+          "notes": "E4 C3 B3 B4 G4 B3",
+          "rhythm": "1 0.5 2 1.5 0.5x2",
+          "at": "0 0 0.5 1 2.5 2.5",
+          "staves": "1 2 2 1 1 2",
+          "held": "6",
+          "measure": 0
+        },
+        {
+          "bar": "2",
+          "notes": "F4 C3 A3 F3",
+          "rhythm": "3 0.5x2 2",
+          "at": "0 0 0.5 1",
+          "staves": "1 2 2 2",
+          "measure": 1
+        },
+        {
+          "bar": "3",
+          "notes": "E4 C3 B3 B4 G4 B3",
+          "rhythm": "1 0.5 2 1.5 0.5x2",
+          "at": "0 0 0.5 1 2.5 2.5",
+          "staves": "1 2 2 1 1 2",
+          "held": "6",
+          "measure": 2
+        },
+        {
+          "bar": "4",
+          "notes": "A4 C3 A3 F4 A3",
+          "rhythm": "1 0.5 2x2 0.5",
+          "at": "0 0 0.5 1 2.5",
+          "staves": "1 2 2 1 2",
+          "held": "5",
+          "measure": 3
+        },
+        {
+          "bar": "5",
+          "notes": "G4 D3 B3 D5 B4 B3",
+          "rhythm": "1 0.5 2 1.5 0.5x2",
+          "at": "0 0 0.5 1 2.5 2.5",
+          "staves": "1 2 2 1 1 2",
+          "held": "6",
+          "measure": 4
+        },
+        {
+          "bar": "6",
+          "notes": "C5 C3 B3 E4 B3",
+          "rhythm": "1 0.5 2x2 0.5",
+          "at": "0 0 0.5 1 2.5",
+          "staves": "1 2 2 1 2",
+          "held": "5",
+          "measure": 5
+        },
+        {
+          "bar": "7",
+          "notes": "F4 C3 A3 G4 A3",
+          "rhythm": "1 0.5 2x2 0.5",
+          "at": "0 0 0.5 1 2.5",
+          "staves": "1 2 2 1 2",
+          "held": "5",
+          "measure": 6
+        },
+        {
+          "bar": "8",
+          "notes": "G4 C3 C4 G3 G3",
+          "rhythm": "3 0.5x2 2 0.5",
+          "at": "0 0 0 0.5 2.5",
+          "staves": "1 2 2 2 2",
+          "held": "1 5",
+          "measure": 7
+        },
+        {
+          "bar": "9",
+          "notes": "E4 C3 B3 B4 G4 B3",
+          "rhythm": "1 0.5 2 1.5 0.5x2",
+          "at": "0 0 0.5 1 2.5 2.5",
+          "staves": "1 2 2 1 1 2",
+          "held": "6",
+          "measure": 8
+        },
+        {
+          "bar": "10",
+          "notes": "F4 C3 A3 A3",
+          "rhythm": "3 0.5 2 0.5",
+          "at": "0 0 0.5 2.5",
+          "staves": "1 2 2 2",
+          "held": "4",
+          "measure": 9
+        },
+        {
+          "bar": "11",
+          "notes": "E4 C3 G3 B4 G4 G3",
+          "rhythm": "1 0.5 2 1x2 0.5",
+          "at": "0 0 0.5 1 2 2.5",
+          "staves": "1 2 2 1 1 2",
+          "held": "6",
+          "measure": 10
+        },
+        {
+          "bar": "12",
+          "notes": "F4 A4 C3 A3 F3 C5",
+          "rhythm": "2x2 0.5x2 2 1",
+          "at": "0 0 0 0.5 1 2",
+          "staves": "1 1 2 2 2 1",
+          "measure": 11
+        },
+        {
+          "bar": "13",
+          "notes": "D5 G4 D3 B3 B3 B4 G4",
+          "rhythm": "2x2 0.5x2 2 0.5x2",
+          "at": "0 0 0 0.5 1 2 2.5",
+          "staves": "1 1 2 2 2 1 1",
+          "measure": 12
+        },
+        {
+          "bar": "14",
+          "notes": "A4 C3 A3 F4 A3",
+          "rhythm": "1 0.5 2x2 0.5",
+          "at": "0 0 0.5 1 2.5",
+          "staves": "1 2 2 1 2",
+          "held": "5",
+          "measure": 13
+        },
+        {
+          "bar": "15",
+          "notes": "G4 D3 B3 D5 B4 B3",
+          "rhythm": "1 0.5 2 1.5 0.5x2",
+          "at": "0 0 0.5 1 2.5 2.5",
+          "staves": "1 2 2 1 1 2",
+          "held": "6",
+          "measure": 14
+        },
+        {
+          "bar": "16",
+          "notes": "C5 C3 G3 E5 G3",
+          "rhythm": "1 0.5 2x2 0.5",
+          "at": "0 0 0.5 1 2.5",
+          "staves": "1 2 2 1 2",
+          "held": "5",
+          "measure": 15
+        },
+        {
+          "bar": "17",
+          "notes": "E5 C4 G4 C6 G5 G4",
+          "rhythm": "1 0.5 2 1.5 0.5x2",
+          "at": "0 0 0.5 1 2.5 2.5",
+          "staves": "1 2 2 1 1 2",
+          "held": "6",
+          "measure": 16
+        },
+        {
+          "bar": "18",
+          "notes": "F5 C4 A4 C5",
+          "rhythm": "3 0.5x2 2",
+          "at": "0 0 0.5 1",
+          "staves": "1 2 2 2",
+          "measure": 17
+        },
+        {
+          "bar": "19",
+          "notes": "E5 C4 G4 C6 G5 G4",
+          "rhythm": "1 0.5 2 1.5 0.5x2",
+          "at": "0 0 0.5 1 2.5 2.5",
+          "staves": "1 2 2 1 1 2",
+          "held": "6",
+          "measure": 18
+        },
+        {
+          "bar": "20",
+          "notes": "A5 C4 A4 C5",
+          "rhythm": "3 0.5x2 2",
+          "at": "0 0 0.5 1",
+          "staves": "1 2 2 2",
+          "measure": 19
+        },
+        {
+          "bar": "21",
+          "notes": "G5 D6 D4 G4 D6 G5 B5 G4",
+          "rhythm": "1x2 0.5 2 1.5x2 0.5x2",
+          "at": "0 0 0 0.5 1 1 2.5 2.5",
+          "staves": "1 1 2 2 1 1 1 2",
+          "held": "8",
+          "measure": 20
+        },
+        {
+          "bar": "22",
+          "notes": "C6 C4 G4 G5 A5 G4",
+          "rhythm": "1 0.5 2 1x2 0.5",
+          "at": "0 0 0.5 1 2 2.5",
+          "staves": "1 2 2 1 1 2",
+          "held": "6",
+          "measure": 21
+        },
+        {
+          "bar": "23",
+          "notes": "E5 C4 G4 G5 G4 D5",
+          "rhythm": "1 0.5 1.5 2 0.25 0.75",
+          "at": "0 0 0.5 1 2 2.25",
+          "staves": "1 2 2 1 2 2",
+          "held": "5",
+          "measure": 22
+        },
+        {
+          "bar": "24",
+          "notes": "C5 C3 G3 C4 D4 C5 E4",
+          "rhythm": "2 0.5x3 1.5 0.5x2",
+          "at": "0 0 0.5 1 1.5 2 2.5",
+          "staves": "1 2 2 2 2 1 1",
+          "held": "6",
+          "measure": 23
+        }
+      ],
+      "returns": [
+        {
+          "from": "14",
+          "to": "16",
+          "likeFrom": "4",
+          "likeTo": "6",
+          "changed": 1,
+          "line": "Piano upper"
+        },
+        {
+          "from": "6",
+          "to": "7",
+          "likeFrom": "3",
+          "likeTo": "4",
+          "changed": 0,
+          "line": "Piano lower"
+        },
+        {
+          "from": "9",
+          "to": "10",
+          "likeFrom": "3",
+          "likeTo": "4",
+          "changed": 0,
+          "line": "Piano lower"
+        },
+        {
+          "from": "14",
+          "to": "15",
+          "likeFrom": "4",
+          "likeTo": "5",
+          "changed": 0,
+          "line": "Piano lower"
+        },
+        {
+          "from": "19",
+          "to": "20",
+          "likeFrom": "17",
+          "likeTo": "18",
+          "changed": 0,
+          "line": "Piano lower"
+        }
+      ],
+      "lines": [
+        "Piano upper",
+        "Piano lower"
+      ],
+      "moreBars": 32,
+      "ask": "The mood I want: action.",
+      "reading": {
+        "roles": [
+          {
+            "from": "1",
+            "line": "Piano upper",
+            "of": "",
+            "role": "melody",
+            "to": "24",
+            "why": "Sings stepwise shape above"
+          },
+          {
+            "from": "1",
+            "line": "Piano lower",
+            "of": "",
+            "role": "bass",
+            "to": "24",
+            "why": "Strong-beat roots fix harmony"
+          }
+        ],
+        "missing": [
+          {
+            "from": "1",
+            "to": "10",
+            "what": "Literal repeat with no contrast",
+            "why": "Same phrase three times stalls"
+          },
+          {
+            "from": "17",
+            "to": "23",
+            "what": "Low octave left empty",
+            "why": "Bass up high loses weight"
+          },
+          {
+            "from": "12",
+            "to": "24",
+            "what": "Octave shift only change",
+            "why": "Idea never develops further"
+          },
+          {
+            "from": "23",
+            "to": "24",
+            "what": "No clear final cadence",
+            "why": "Ends on unstable D"
+          }
+        ]
+      },
+      "instruments": [
+        "Piccolo",
+        "Flute 1",
+        "Flute 2",
+        "Oboe 1",
+        "Oboe 2",
+        "Clarinet 1",
+        "Clarinet 2",
+        "Bassoon 1",
+        "Bassoon 2",
+        "Horn 1",
+        "Horn 2",
+        "Horn 3",
+        "Horn 4",
+        "Trumpet 1",
+        "Trumpet 2",
+        "Trumpet 3",
+        "Trombone 1",
+        "Trombone 2",
+        "Bass Trombone",
+        "Tuba",
+        "Timpani",
+        "Glockenspiel",
+        "Snare Drum",
+        "Bass Drum",
+        "Cymbals",
+        "Harp",
+        "Violin I",
+        "Violin II",
+        "Viola",
+        "Cello",
+        "Double Bass"
+      ],
+      "where": "after",
+      "tracks": [
+        {
+          "line": "Piano upper",
+          "instrument": "Piano"
+        },
+        {
+          "line": "Piano lower",
+          "instrument": "Piano"
+        }
+      ],
+      "answers": [],
+      "cues": [],
+      "freedom": 2
+    },
+    "reply": {
+      "status": "ok",
+      "answer": {
+        "options": [
+          {
+            "fifths": 0,
+            "idea": "Full C-major tune over driving minor-inflected engine; low ostinato powers three chases to high brass arrival.",
+            "motif": {
+              "from": "1",
+              "to": "2",
+              "what": "E-B-G flick to held F"
+            },
+            "name": "Low Engine Chase",
+            "qpm": 144,
+            "time": "3/4",
+            "why": [
+              {
+                "chords": "Am | Am | F | G",
+                "dynamics": "mp driving to mf",
+                "from": "1",
+                "principle": "Ostinato engine frees tune entry over waiting dominant",
+                "to": "4",
+                "variation": "engine states motif rhythm",
+                "what": "Cello Double Bass ostinato, Viola answer, Timpani roots"
+              },
+              {
+                "chords": "Am | Dm | Am | Dm | Em7 | Am | G | C",
+                "dynamics": "mf driving to f",
+                "from": "5",
+                "principle": "Relative minor darkens major tune for chase tension",
+                "to": "12",
+                "variation": "whole tune stated over minor",
+                "what": "Violin I tune, Horn 1 counterline, Cello engine"
+              },
+              {
+                "chords": "Am | Bb | Am | F | G | Dm | Em7 | C",
+                "dynamics": "f driving to ff",
+                "from": "13",
+                "principle": "Borrowed flat-seven surprises repeat without losing drive",
+                "to": "20",
+                "variation": "repeat varied with flat-seven colour",
+                "what": "Violin II tune, Trumpet 1 punctuates, Harp lifts"
+              },
+              {
+                "chords": "C | F | C | F | G | F G | C | C",
+                "dynamics": "ff held for climax",
+                "from": "21",
+                "principle": "Brass unison widens register for single late peak",
+                "to": "28",
+                "variation": "high octave over quickening harmony",
+                "what": "Trumpet 1 Horn 1 tune, Trombone 1 pedal, Snare Drum hits"
+              },
+              {
+                "chords": "F | G | C | C",
+                "dynamics": "ff falling to f",
+                "from": "29",
+                "principle": "Strong perfect cadence earns arrival after tension",
+                "to": "32",
+                "variation": "tail fragmented to firm close",
+                "what": "Violin I Trombone 1 cadence, Timpani Bass Drum confirm"
+              }
+            ]
+          },
+          {
+            "fifths": 0,
+            "idea": "Tune from downbeat over tritone-coloured pedals; harp and upper winds drive, brass answers unevenly to final tonic.",
+            "motif": {
+              "from": "5",
+              "to": "6",
+              "what": "G-D-B climb to C-E lift"
+            },
+            "name": "High Wire Pursuit",
+            "qpm": 152,
+            "time": "3/4",
+            "why": [
+              {
+                "chords": "Em | Db | Em | Dm | G | C | G | C",
+                "dynamics": "mf driving forward",
+                "from": "1",
+                "principle": "Pedal suspends tune while ostinato keeps motion",
+                "to": "8",
+                "variation": "tune at pitch over minor pedal",
+                "what": "Horn 1 tune, Viola Harp ostinato, Snare Drum drives"
+              },
+              {
+                "chords": "Em | Db | Em | F | G | Dm | G | C",
+                "dynamics": "f growing to ff",
+                "from": "9",
+                "principle": "Flat-two against tune creates action unease",
+                "to": "16",
+                "variation": "repeat with flat-two tension",
+                "what": "Oboe 1 Clarinet 1 tune, Cello answers, Cymbals mark"
+              },
+              {
+                "chords": "Am | Db | Am | F | G | F | Em | C",
+                "dynamics": "ff held with surges",
+                "from": "17",
+                "principle": "High sustain over low pedal widens space",
+                "to": "24",
+                "variation": "high tune over darkened minors",
+                "what": "Flute 1 Violin I tune, Trombone 1 punctuates, Timpani pedal"
+              },
+              {
+                "chords": "F | G | Am | G | F | G | C | C",
+                "dynamics": "ff falling to f",
+                "from": "25",
+                "principle": "Quicker changes drive final perfect close",
+                "to": "32",
+                "variation": "fragments sequenced to arrival",
+                "what": "Trumpet 1 Trombone 1 cadence, Bass Drum Timpani hits"
+              }
+            ]
+          }
+        ]
+      },
+      "sources": [],
+      "cached": false
+    },
+    "ms": 79761,
+    "thinking": [
+      {
+        "at": 4279,
+        "text": "Evaluating two 32-bar reshaped arrangement options while preserving source key and metre unless required, and defining action-oriented orchestration devices."
+      },
+      {
+        "at": 6497,
+        "text": "Finalizing 32-bar structure and motif labels while keeping key and metre consistent."
+      },
+      {
+        "at": 13129,
+        "text": "Mapping orchestration constraints to the instrument list and defining five 32-bar segments with harmony-first options."
+      },
+      {
+        "at": 19921,
+        "text": "Extending the harmony plan with a 32-bar 3/4 structure and non-plain chord choices for the first bars."
+      },
+      {
+        "at": 27648,
+        "text": "Extending the harmony with a falling-fifths sequence and borrowed bVII for contrast."
+      },
+      {
+        "at": 35833,
+        "text": "Switching to an alternate harmony with chromatic mediants and a pedal point for the action orchestration."
+      },
+      {
+        "at": 43485,
+        "text": "Mapping bar-level harmony and motif treatment while enforcing format and word limits."
+      },
+      {
+        "at": 50149,
+        "text": "Drafting two JSON options with instrument names, dynamics, and word-limited fields."
+      },
+      {
+        "at": 57155,
+        "text": "Finalizing the second JSON option with distinct motif bars, tempo, and stretch ranges."
+      },
+      {
+        "at": 64119,
+        "text": "Validating the fourth stretch against schema enums, word limits, and additionalProperties constraints."
+      }
+    ],
+    "version": "plan-recompose-5",
+    "model": "muse-spark-1.3",
+    "usage": {
+      "inputTokens": 8356,
+      "cachedTokens": 8305,
+      "outputTokens": 10518
+    }
+  },
+  {
+    "shape": "write_theme",
+    "input": {
+      "piece": {
+        "title": "Sample sketch",
+        "composer": null,
+        "instrument": "Piano upper and Piano lower"
+      },
+      "fifths": 0,
+      "time": "3/4",
+      "written": [
+        {
+          "bar": "1",
+          "notes": "E4 C3 B3 B4 G4 B3",
+          "rhythm": "1 0.5 2 1.5 0.5x2",
+          "at": "0 0 0.5 1 2.5 2.5",
+          "staves": "1 2 2 1 1 2",
+          "held": "6",
+          "measure": 0
+        },
+        {
+          "bar": "2",
+          "notes": "F4 C3 A3 F3",
+          "rhythm": "3 0.5x2 2",
+          "at": "0 0 0.5 1",
+          "staves": "1 2 2 2",
+          "measure": 1
+        },
+        {
+          "bar": "3",
+          "notes": "E4 C3 B3 B4 G4 B3",
+          "rhythm": "1 0.5 2 1.5 0.5x2",
+          "at": "0 0 0.5 1 2.5 2.5",
+          "staves": "1 2 2 1 1 2",
+          "held": "6",
+          "measure": 2
+        },
+        {
+          "bar": "4",
+          "notes": "A4 C3 A3 F4 A3",
+          "rhythm": "1 0.5 2x2 0.5",
+          "at": "0 0 0.5 1 2.5",
+          "staves": "1 2 2 1 2",
+          "held": "5",
+          "measure": 3
+        },
+        {
+          "bar": "5",
+          "notes": "G4 D3 B3 D5 B4 B3",
+          "rhythm": "1 0.5 2 1.5 0.5x2",
+          "at": "0 0 0.5 1 2.5 2.5",
+          "staves": "1 2 2 1 1 2",
+          "held": "6",
+          "measure": 4
+        },
+        {
+          "bar": "6",
+          "notes": "C5 C3 B3 E4 B3",
+          "rhythm": "1 0.5 2x2 0.5",
+          "at": "0 0 0.5 1 2.5",
+          "staves": "1 2 2 1 2",
+          "held": "5",
+          "measure": 5
+        },
+        {
+          "bar": "7",
+          "notes": "F4 C3 A3 G4 A3",
+          "rhythm": "1 0.5 2x2 0.5",
+          "at": "0 0 0.5 1 2.5",
+          "staves": "1 2 2 1 2",
+          "held": "5",
+          "measure": 6
+        },
+        {
+          "bar": "8",
+          "notes": "G4 C3 C4 G3 G3",
+          "rhythm": "3 0.5x2 2 0.5",
+          "at": "0 0 0 0.5 2.5",
+          "staves": "1 2 2 2 2",
+          "held": "1 5",
+          "measure": 7
+        },
+        {
+          "bar": "9",
+          "notes": "E4 C3 B3 B4 G4 B3",
+          "rhythm": "1 0.5 2 1.5 0.5x2",
+          "at": "0 0 0.5 1 2.5 2.5",
+          "staves": "1 2 2 1 1 2",
+          "held": "6",
+          "measure": 8
+        },
+        {
+          "bar": "10",
+          "notes": "F4 C3 A3 A3",
+          "rhythm": "3 0.5 2 0.5",
+          "at": "0 0 0.5 2.5",
+          "staves": "1 2 2 2",
+          "held": "4",
+          "measure": 9
+        },
+        {
+          "bar": "11",
+          "notes": "E4 C3 G3 B4 G4 G3",
+          "rhythm": "1 0.5 2 1x2 0.5",
+          "at": "0 0 0.5 1 2 2.5",
+          "staves": "1 2 2 1 1 2",
+          "held": "6",
+          "measure": 10
+        },
+        {
+          "bar": "12",
+          "notes": "F4 A4 C3 A3 F3 C5",
+          "rhythm": "2x2 0.5x2 2 1",
+          "at": "0 0 0 0.5 1 2",
+          "staves": "1 1 2 2 2 1",
+          "measure": 11
+        },
+        {
+          "bar": "13",
+          "notes": "D5 G4 D3 B3 B3 B4 G4",
+          "rhythm": "2x2 0.5x2 2 0.5x2",
+          "at": "0 0 0 0.5 1 2 2.5",
+          "staves": "1 1 2 2 2 1 1",
+          "measure": 12
+        },
+        {
+          "bar": "14",
+          "notes": "A4 C3 A3 F4 A3",
+          "rhythm": "1 0.5 2x2 0.5",
+          "at": "0 0 0.5 1 2.5",
+          "staves": "1 2 2 1 2",
+          "held": "5",
+          "measure": 13
+        },
+        {
+          "bar": "15",
+          "notes": "G4 D3 B3 D5 B4 B3",
+          "rhythm": "1 0.5 2 1.5 0.5x2",
+          "at": "0 0 0.5 1 2.5 2.5",
+          "staves": "1 2 2 1 1 2",
+          "held": "6",
+          "measure": 14
+        },
+        {
+          "bar": "16",
+          "notes": "C5 C3 G3 E5 G3",
+          "rhythm": "1 0.5 2x2 0.5",
+          "at": "0 0 0.5 1 2.5",
+          "staves": "1 2 2 1 2",
+          "held": "5",
+          "measure": 15
+        },
+        {
+          "bar": "17",
+          "notes": "E5 C4 G4 C6 G5 G4",
+          "rhythm": "1 0.5 2 1.5 0.5x2",
+          "at": "0 0 0.5 1 2.5 2.5",
+          "staves": "1 2 2 1 1 2",
+          "held": "6",
+          "measure": 16
+        },
+        {
+          "bar": "18",
+          "notes": "F5 C4 A4 C5",
+          "rhythm": "3 0.5x2 2",
+          "at": "0 0 0.5 1",
+          "staves": "1 2 2 2",
+          "measure": 17
+        },
+        {
+          "bar": "19",
+          "notes": "E5 C4 G4 C6 G5 G4",
+          "rhythm": "1 0.5 2 1.5 0.5x2",
+          "at": "0 0 0.5 1 2.5 2.5",
+          "staves": "1 2 2 1 1 2",
+          "held": "6",
+          "measure": 18
+        },
+        {
+          "bar": "20",
+          "notes": "A5 C4 A4 C5",
+          "rhythm": "3 0.5x2 2",
+          "at": "0 0 0.5 1",
+          "staves": "1 2 2 2",
+          "measure": 19
+        },
+        {
+          "bar": "21",
+          "notes": "G5 D6 D4 G4 D6 G5 B5 G4",
+          "rhythm": "1x2 0.5 2 1.5x2 0.5x2",
+          "at": "0 0 0 0.5 1 1 2.5 2.5",
+          "staves": "1 1 2 2 1 1 1 2",
+          "held": "8",
+          "measure": 20
+        },
+        {
+          "bar": "22",
+          "notes": "C6 C4 G4 G5 A5 G4",
+          "rhythm": "1 0.5 2 1x2 0.5",
+          "at": "0 0 0.5 1 2 2.5",
+          "staves": "1 2 2 1 1 2",
+          "held": "6",
+          "measure": 21
+        },
+        {
+          "bar": "23",
+          "notes": "E5 C4 G4 G5 G4 D5",
+          "rhythm": "1 0.5 1.5 2 0.25 0.75",
+          "at": "0 0 0.5 1 2 2.25",
+          "staves": "1 2 2 1 2 2",
+          "held": "5",
+          "measure": 22
+        },
+        {
+          "bar": "24",
+          "notes": "C5 C3 G3 C4 D4 C5 E4",
+          "rhythm": "2 0.5x3 1.5 0.5x2",
+          "at": "0 0 0.5 1 1.5 2 2.5",
+          "staves": "1 2 2 2 2 1 1",
+          "held": "6",
+          "measure": 23
+        }
+      ],
+      "returns": [
+        {
+          "from": "14",
+          "to": "16",
+          "likeFrom": "4",
+          "likeTo": "6",
+          "changed": 1,
+          "line": "Piano upper"
+        },
+        {
+          "from": "6",
+          "to": "7",
+          "likeFrom": "3",
+          "likeTo": "4",
+          "changed": 0,
+          "line": "Piano lower"
+        },
+        {
+          "from": "9",
+          "to": "10",
+          "likeFrom": "3",
+          "likeTo": "4",
+          "changed": 0,
+          "line": "Piano lower"
+        },
+        {
+          "from": "14",
+          "to": "15",
+          "likeFrom": "4",
+          "likeTo": "5",
+          "changed": 0,
+          "line": "Piano lower"
+        },
+        {
+          "from": "19",
+          "to": "20",
+          "likeFrom": "17",
+          "likeTo": "18",
+          "changed": 0,
+          "line": "Piano lower"
+        }
+      ],
+      "lines": [
+        "Piano upper",
+        "Piano lower"
+      ],
+      "moreBars": 32,
+      "ask": "The mood I want: action.",
+      "reading": {
+        "roles": [
+          {
+            "from": "1",
+            "line": "Piano upper",
+            "of": "",
+            "role": "melody",
+            "to": "24",
+            "why": "Sings stepwise shape above"
+          },
+          {
+            "from": "1",
+            "line": "Piano lower",
+            "of": "",
+            "role": "bass",
+            "to": "24",
+            "why": "Strong-beat roots fix harmony"
+          }
+        ],
+        "missing": [
+          {
+            "from": "1",
+            "to": "10",
+            "what": "Literal repeat with no contrast",
+            "why": "Same phrase three times stalls"
+          },
+          {
+            "from": "17",
+            "to": "23",
+            "what": "Low octave left empty",
+            "why": "Bass up high loses weight"
+          },
+          {
+            "from": "12",
+            "to": "24",
+            "what": "Octave shift only change",
+            "why": "Idea never develops further"
+          },
+          {
+            "from": "23",
+            "to": "24",
+            "what": "No clear final cadence",
+            "why": "Ends on unstable D"
+          }
+        ]
+      },
+      "instruments": [
+        "Piccolo",
+        "Flute 1",
+        "Flute 2",
+        "Oboe 1",
+        "Oboe 2",
+        "Clarinet 1",
+        "Clarinet 2",
+        "Bassoon 1",
+        "Bassoon 2",
+        "Horn 1",
+        "Horn 2",
+        "Horn 3",
+        "Horn 4",
+        "Trumpet 1",
+        "Trumpet 2",
+        "Trumpet 3",
+        "Trombone 1",
+        "Trombone 2",
+        "Bass Trombone",
+        "Tuba",
+        "Timpani",
+        "Glockenspiel",
+        "Snare Drum",
+        "Bass Drum",
+        "Cymbals",
+        "Harp",
+        "Violin I",
+        "Violin II",
+        "Viola",
+        "Cello",
+        "Double Bass"
+      ],
+      "where": "after",
+      "tracks": [
+        {
+          "line": "Piano upper",
+          "instrument": "Piano"
+        },
+        {
+          "line": "Piano lower",
+          "instrument": "Piano"
+        }
+      ],
+      "answers": [],
+      "cues": [],
+      "freedom": 2,
+      "chosen": {
+        "fifths": 0,
+        "idea": "Full C-major tune over driving minor-inflected engine; low ostinato powers three chases to high brass arrival.",
+        "motif": {
+          "from": "1",
+          "to": "2",
+          "what": "E-B-G flick to held F"
+        },
+        "name": "Low Engine Chase",
+        "qpm": 144,
+        "time": "3/4",
+        "why": [
+          {
+            "chords": "Am | Am | F | G",
+            "dynamics": "mp driving to mf",
+            "from": "1",
+            "principle": "Ostinato engine frees tune entry over waiting dominant",
+            "to": "4",
+            "variation": "engine states motif rhythm",
+            "what": "Cello Double Bass ostinato, Viola answer, Timpani roots"
+          },
+          {
+            "chords": "Am | Dm | Am | Dm | Em7 | Am | G | C",
+            "dynamics": "mf driving to f",
+            "from": "5",
+            "principle": "Relative minor darkens major tune for chase tension",
+            "to": "12",
+            "variation": "whole tune stated over minor",
+            "what": "Violin I tune, Horn 1 counterline, Cello engine"
+          },
+          {
+            "chords": "Am | Bb | Am | F | G | Dm | Em7 | C",
+            "dynamics": "f driving to ff",
+            "from": "13",
+            "principle": "Borrowed flat-seven surprises repeat without losing drive",
+            "to": "20",
+            "variation": "repeat varied with flat-seven colour",
+            "what": "Violin II tune, Trumpet 1 punctuates, Harp lifts"
+          },
+          {
+            "chords": "C | F | C | F | G | F G | C | C",
+            "dynamics": "ff held for climax",
+            "from": "21",
+            "principle": "Brass unison widens register for single late peak",
+            "to": "28",
+            "variation": "high octave over quickening harmony",
+            "what": "Trumpet 1 Horn 1 tune, Trombone 1 pedal, Snare Drum hits"
+          },
+          {
+            "chords": "F | G | C | C",
+            "dynamics": "ff falling to f",
+            "from": "29",
+            "principle": "Strong perfect cadence earns arrival after tension",
+            "to": "32",
+            "variation": "tail fragmented to firm close",
+            "what": "Violin I Trombone 1 cadence, Timpani Bass Drum confirm"
+          }
+        ]
+      }
+    },
+    "reply": {
+      "status": "ok",
+      "answer": {
+        "lines": [
+          {
+            "bar": "1",
+            "events": "E4@0+0.5 B4@0.5+0.5 G4@1+0.5 F4@1.5+1.5",
+            "role": "tune"
+          },
+          {
+            "bar": "1",
+            "events": "A2@0+0.5 A2@0.5+0.5 A2@1+0.5 A2@1.5+0.5 A2@2+0.5 E3@2.5+0.5",
+            "role": "bass"
+          },
+          {
+            "bar": "2",
+            "events": "E4@0+0.5 B4@0.5+0.5 G4@1+0.5 A4@1.5+1.5",
+            "role": "tune"
+          },
+          {
+            "bar": "2",
+            "events": "C4@1.5+0.5 D4@2+0.5 E4@2.5+0.5",
+            "role": "countermelody"
+          },
+          {
+            "bar": "2",
+            "events": "A2@0+0.5 A2@0.5+0.5 A2@1+0.5 A2@1.5+0.5 G2@2+0.5 A2@2.5+0.5",
+            "role": "bass"
+          },
+          {
+            "bar": "3",
+            "events": "E4@0+0.5 B4@0.5+0.5 G4@1+0.5 F4@1.5+1.5",
+            "role": "tune"
+          },
+          {
+            "bar": "3",
+            "events": "F3@1.5+0.5 G3@2+0.5 A3@2.5+0.5",
+            "role": "countermelody"
+          },
+          {
+            "bar": "3",
+            "events": "F2@0+0.5 F2@0.5+0.5 F2@1+0.5 F2@1.5+0.5 F2@2+0.5 C3@2.5+0.5",
+            "role": "bass"
+          },
+          {
+            "bar": "4",
+            "events": "D4@0+0.5 E4@0.5+0.5 F4@1+0.5 G4@1.5+1.5",
+            "role": "tune"
+          },
+          {
+            "bar": "4",
+            "events": "G3@0+1 A3@1+1 B3@2+1",
+            "role": "countermelody"
+          },
+          {
+            "bar": "4",
+            "events": "G2@0+0.5 G2@0.5+0.5 G2@1+0.5 G2@1.5+0.5 G2@2+0.5 D3@2.5+0.5",
+            "role": "bass"
+          },
+          {
+            "bar": "5",
+            "events": "E4@0+1 B4@1+1.5 G4@2.5+0.5",
+            "role": "tune"
+          },
+          {
+            "bar": "5",
+            "events": "A2@0+0.5 A2@0.5+0.5 E3@1+0.5 E3@1.5+0.5 A2@2+0.5 A2@2.5+0.5",
+            "role": "bass"
+          },
+          {
+            "bar": "6",
+            "events": "F4@0+3",
+            "role": "tune"
+          },
+          {
+            "bar": "6",
+            "events": "A3@0+1 C4@1+1 D4@2+1",
+            "role": "countermelody"
+          },
+          {
+            "bar": "6",
+            "events": "D3@0+0.5 D3@0.5+0.5 A2@1+0.5 A2@1.5+0.5 D3@2+0.5 D3@2.5+0.5",
+            "role": "bass"
+          },
+          {
+            "bar": "7",
+            "events": "E4@0+1 B4@1+1.5 G4@2.5+0.5",
+            "role": "tune"
+          },
+          {
+            "bar": "7",
+            "events": "A2@0+0.5 E3@0.5+0.5 A2@1+0.5 E3@1.5+0.5 C3@2+0.5 B2@2.5+0.5",
+            "role": "bass"
+          },
+          {
+            "bar": "8",
+            "events": "A4@0+1 F4@1+2",
+            "role": "tune"
+          },
+          {
+            "bar": "8",
+            "events": "D4@1+0.5 C4@1.5+0.5 D4@2+1",
+            "role": "countermelody"
+          },
+          {
+            "bar": "8",
+            "events": "D2@0+1 F2@1+1 G2@2+1",
+            "role": "bass"
+          },
+          {
+            "bar": "9",
+            "events": "G4@0+1 D5@1+1.5 B4@2.5+0.5",
+            "role": "tune"
+          },
+          {
+            "bar": "9",
+            "events": "E2@0+0.5 E2@0.5+0.5 B2@1+0.5 B2@1.5+0.5 E3@2+0.5 D3@2.5+0.5",
+            "role": "bass"
+          },
+          {
+            "bar": "10",
+            "events": "C5@0+1 G4@1+1 E4@2+1",
+            "role": "tune"
+          },
+          {
+            "bar": "10",
+            "events": "E3@0+3",
+            "role": "countermelody"
+          },
+          {
+            "bar": "10",
+            "events": "A2@0+1 C3@1+1 E3@2+1",
+            "role": "bass"
+          },
+          {
+            "bar": "11",
+            "events": "F4@0+1 G4@1+2",
+            "role": "tune"
+          },
+          {
+            "bar": "11",
+            "events": "A3@1+0.5 B3@1.5+0.5 C4@2+1",
+            "role": "countermelody"
+          },
+          {
+            "bar": "11",
+            "events": "G2@0+0.5 G2@0.5+0.5 D3@1+0.5 D3@1.5+0.5 G2@2+0.5 B2@2.5+0.5",
+            "role": "bass"
+          },
+          {
+            "bar": "12",
+            "events": "G4@0+2 A4@2+0.5 G4@2.5+0.5",
+            "role": "tune"
+          },
+          {
+            "bar": "12",
+            "events": "E4@0+1 D4@1+1 C4@2+1",
+            "role": "countermelody"
+          },
+          {
+            "bar": "12",
+            "events": "C3@0+0.5 G2@0.5+0.5 C3@1+0.5 G2@1.5+0.5 C3@2+1",
+            "role": "bass"
+          },
+          {
+            "bar": "13",
+            "events": "E4@0+1 B4@1+1 G4@2+1",
+            "role": "tune"
+          },
+          {
+            "bar": "13",
+            "events": "A2@0+0.5 A2@0.5+0.5 E3@1+0.5 E3@1.5+0.5 A2@2+0.5 A2@2.5+0.5",
+            "role": "bass"
+          },
+          {
+            "bar": "14",
+            "events": "F4@0+3",
+            "role": "tune"
+          },
+          {
+            "bar": "14",
+            "events": "Bb3@0+1 D4@1+1 C4@2+1",
+            "role": "countermelody"
+          },
+          {
+            "bar": "14",
+            "events": "Bb2@0+0.5 Bb2@0.5+0.5 F3@1+0.5 F3@1.5+0.5 Bb2@2+0.5 Bb2@2.5+0.5",
+            "role": "bass"
+          },
+          {
+            "bar": "15",
+            "events": "E4@0+1 B4@1+1 G4@2+1",
+            "role": "tune"
+          },
+          {
+            "bar": "15",
+            "events": "A2@0+1 E3@1+1 A2@2+1",
+            "role": "bass"
+          },
+          {
+            "bar": "16",
+            "events": "A4@0+1 C5@1+2",
+            "role": "tune"
+          },
+          {
+            "bar": "16",
+            "events": "A3@0+1 G3@1+2",
+            "role": "countermelody"
+          },
+          {
+            "bar": "16",
+            "events": "F2@0+1 C3@1+1 F2@2+1",
+            "role": "bass"
+          },
+          {
+            "bar": "17",
+            "events": "D5@0+1 B4@1+1 G4@2+1",
+            "role": "tune"
+          },
+          {
+            "bar": "17",
+            "events": "G2@0+0.5 G2@0.5+0.5 D3@1+1 G2@2+1",
+            "role": "bass"
+          },
+          {
+            "bar": "18",
+            "events": "A4@0+1 F4@1+2",
+            "role": "tune"
+          },
+          {
+            "bar": "18",
+            "events": "E4@1+0.5 D4@1.5+0.5 C4@2+1",
+            "role": "countermelody"
+          },
+          {
+            "bar": "18",
+            "events": "D3@0+1 F3@1+1 E3@2+1",
+            "role": "bass"
+          },
+          {
+            "bar": "19",
+            "events": "G4@0+1 D5@1+1.5 B4@2.5+0.5",
+            "role": "tune"
+          },
+          {
+            "bar": "19",
+            "events": "E2@0+0.5 E2@0.5+0.5 B2@1+1 E2@2+1",
+            "role": "bass"
+          },
+          {
+            "bar": "20",
+            "events": "C6@0+1 G5@1+1 E5@2+1",
+            "role": "tune"
+          },
+          {
+            "bar": "20",
+            "events": "E4@0+3",
+            "role": "countermelody"
+          },
+          {
+            "bar": "20",
+            "events": "C3@0+1 G2@1+1 C3@2+1",
+            "role": "bass"
+          },
+          {
+            "bar": "21",
+            "events": "E5@0+1 C6@1+1.5 G5@2.5+0.5",
+            "role": "tune"
+          },
+          {
+            "bar": "21",
+            "events": "C3@0+0.5 C3@0.5+0.5 G2@1+0.5 G2@1.5+0.5 C3@2+0.5 G2@2.5+0.5",
+            "role": "bass"
+          },
+          {
+            "bar": "22",
+            "events": "F5@0+2.5 G5@2.5+0.5",
+            "role": "tune"
+          },
+          {
+            "bar": "22",
+            "events": "A4@0+1 G4@1+1 A4@2+1",
+            "role": "countermelody"
+          },
+          {
+            "bar": "22",
+            "events": "F2@0+1 C3@1+1 F2@2+1",
+            "role": "bass"
+          },
+          {
+            "bar": "23",
+            "events": "E5@0+1 C6@1+1.5 G5@2.5+0.5",
+            "role": "tune"
+          },
+          {
+            "bar": "23",
+            "events": "C3@0+3",
+            "role": "bass"
+          },
+          {
+            "bar": "24",
+            "events": "A5@0+3",
+            "role": "tune"
+          },
+          {
+            "bar": "24",
+            "events": "C5@0+1 Bb4@1+1 A4@2+1",
+            "role": "countermelody"
+          },
+          {
+            "bar": "24",
+            "events": "F2@0+3",
+            "role": "bass"
+          },
+          {
+            "bar": "25",
+            "events": "D6@0+1 C6@1+1 B5@2+1",
+            "role": "tune"
+          },
+          {
+            "bar": "25",
+            "events": "G2@0+1 D3@1+1 G2@2+1",
+            "role": "bass"
+          },
+          {
+            "bar": "26",
+            "events": "C6@0+1 G5@1+1 A5@2+1",
+            "role": "tune"
+          },
+          {
+            "bar": "26",
+            "events": "A4@0+1 G4@1+1 F4@2+1",
+            "role": "countermelody"
+          },
+          {
+            "bar": "26",
+            "events": "F2@0+0.5 A2@0.5+0.5 C3@1+0.5 D3@1.5+0.5 G2@2+1",
+            "role": "bass"
+          },
+          {
+            "bar": "27",
+            "events": "E5@0+1 G5@1+2",
+            "role": "tune"
+          },
+          {
+            "bar": "27",
+            "events": "C5@0+1 D5@1+1 E5@2+1",
+            "role": "countermelody"
+          },
+          {
+            "bar": "27",
+            "events": "C3@0+1 E3@1+1 G3@2+1",
+            "role": "bass"
+          },
+          {
+            "bar": "28",
+            "events": "C5@0+1 G4@1+1 E4@2+1",
+            "role": "tune"
+          },
+          {
+            "bar": "28",
+            "events": "E4@0+3",
+            "role": "countermelody"
+          },
+          {
+            "bar": "28",
+            "events": "C3@0+3",
+            "role": "bass"
+          },
+          {
+            "bar": "29",
+            "events": "F4@0+1 G4@1+1 A4@2+1",
+            "role": "tune"
+          },
+          {
+            "bar": "29",
+            "events": "A3@0+1 G3@1+1 F3@2+1",
+            "role": "countermelody"
+          },
+          {
+            "bar": "29",
+            "events": "F2@0+1 C3@1+1 F2@2+1",
+            "role": "bass"
+          },
+          {
+            "bar": "30",
+            "events": "G4@0+1 A4@1+1 B4@2+1",
+            "role": "tune"
+          },
+          {
+            "bar": "30",
+            "events": "G3@0+1 F3@1+1 D3@2+1",
+            "role": "countermelody"
+          },
+          {
+            "bar": "30",
+            "events": "G2@0+1 D3@1+1 G2@2+1",
+            "role": "bass"
+          },
+          {
+            "bar": "31",
+            "events": "C5@0+2 G4@2+1",
+            "role": "tune"
+          },
+          {
+            "bar": "31",
+            "events": "E4@0+1 D4@1+1 C4@2+1",
+            "role": "countermelody"
+          },
+          {
+            "bar": "31",
+            "events": "C3@0+1 G2@1+1 C3@2+1",
+            "role": "bass"
+          },
+          {
+            "bar": "32",
+            "events": "C5@0+3",
+            "role": "tune"
+          },
+          {
+            "bar": "32",
+            "events": "C3@0+1 G2@1+1 C2@2+1",
+            "role": "bass"
+          }
+        ]
+      },
+      "sources": [],
+      "cached": false
+    },
+    "ms": 111501,
+    "thinking": [
+      {
+        "at": 5168,
+        "text": "Parsing the source tune from piano bars 1-24 and mapping it to 3/4 time across 32 bars for tune, countermelody, and bass."
+      },
+      {
+        "at": 8706,
+        "text": "Assigning source bars 1-24 to new bars 5-28 and resolving the bar 12 chord to a single melody note."
+      },
+      {
+        "at": 18839,
+        "text": "Extracting the highest pitch per onset to build a single-line melody while preserving order and recognizability."
+      },
+      {
+        "at": 27132,
+        "text": "Mapping chord progression and voice-leading constraints to three-line arrangement across 32 bars."
+      },
+      {
+        "at": 51645,
+        "text": "Extending the three-line arrangement with bass and counterpoint voicings for bars 6 through 12."
+      },
+      {
+        "at": 62569,
+        "text": "Extending the arrangement with varied counterpoint and bass lines for bars 13 through 20."
+      },
+      {
+        "at": 72246,
+        "text": "Transcribing bars 22 through 28 with voice-leading and bass motion adjustments."
+      },
+      {
+        "at": 86530,
+        "text": "Completing the JSON structure for bars 29 through 32 with voice-leading and bass motion."
+      }
+    ],
+    "version": "write-theme-5",
+    "model": "muse-spark-1.3",
+    "usage": {
+      "inputTokens": 4652,
+      "cachedTokens": 1777,
+      "outputTokens": 14581
+    }
+  },
+  {
+    "shape": "arrange",
+    "input": {
+      "piece": {
+        "title": "Low Engine Chase",
+        "composer": null,
+        "instrument": "Piccolo"
+      },
+      "fifths": 0,
+      "time": "3/4",
+      "written": [
+        {
+          "bar": "1",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 0
+        },
+        {
+          "bar": "2",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 1
+        },
+        {
+          "bar": "3",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 2
+        },
+        {
+          "bar": "4",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 3
+        },
+        {
+          "bar": "5",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 4
+        },
+        {
+          "bar": "6",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 5
+        },
+        {
+          "bar": "7",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 6
+        },
+        {
+          "bar": "8",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 7
+        },
+        {
+          "bar": "9",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 8
+        },
+        {
+          "bar": "10",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 9
+        },
+        {
+          "bar": "11",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 10
+        },
+        {
+          "bar": "12",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 11
+        },
+        {
+          "bar": "13",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 12
+        },
+        {
+          "bar": "14",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 13
+        },
+        {
+          "bar": "15",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 14
+        },
+        {
+          "bar": "16",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 15
+        },
+        {
+          "bar": "17",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 16
+        },
+        {
+          "bar": "18",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 17
+        },
+        {
+          "bar": "19",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 18
+        },
+        {
+          "bar": "20",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 19
+        },
+        {
+          "bar": "21",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 20
+        },
+        {
+          "bar": "22",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 21
+        },
+        {
+          "bar": "23",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 22
+        },
+        {
+          "bar": "24",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 23
+        },
+        {
+          "bar": "25",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 24
+        },
+        {
+          "bar": "26",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 25
+        },
+        {
+          "bar": "27",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 26
+        },
+        {
+          "bar": "28",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 27
+        },
+        {
+          "bar": "29",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 28
+        },
+        {
+          "bar": "30",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 29
+        },
+        {
+          "bar": "31",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 30
+        },
+        {
+          "bar": "32",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 31
+        }
+      ],
+      "returns": [],
+      "lines": [
+        "Piccolo"
+      ],
+      "moreBars": 0,
+      "ask": "The mood I want: action.",
+      "reading": null,
+      "instruments": [
+        "Piccolo",
+        "Flute 1",
+        "Flute 2",
+        "Oboe 1",
+        "Oboe 2",
+        "Clarinet 1",
+        "Clarinet 2",
+        "Bassoon 1",
+        "Bassoon 2",
+        "Horn 1",
+        "Horn 2",
+        "Horn 3",
+        "Horn 4",
+        "Trumpet 1",
+        "Trumpet 2",
+        "Trumpet 3",
+        "Trombone 1",
+        "Trombone 2",
+        "Bass Trombone",
+        "Tuba",
+        "Timpani",
+        "Glockenspiel",
+        "Snare Drum",
+        "Bass Drum",
+        "Cymbals",
+        "Harp",
+        "Violin I",
+        "Violin II",
+        "Viola",
+        "Cello",
+        "Double Bass"
+      ],
+      "where": "inside",
+      "tracks": [],
+      "answers": [],
+      "cues": [],
+      "freedom": 2,
+      "chosen": {
+        "fifths": 0,
+        "idea": "Full C-major tune over driving minor-inflected engine; low ostinato powers three chases to high brass arrival.",
+        "motif": {
+          "from": "1",
+          "to": "2",
+          "what": "E-B-G flick to held F"
+        },
+        "name": "Low Engine Chase",
+        "qpm": 144,
+        "time": "3/4",
+        "why": [
+          {
+            "chords": "Am | Am | F | G",
+            "dynamics": "mp driving to mf",
+            "from": "1",
+            "principle": "Ostinato engine frees tune entry over waiting dominant",
+            "to": "4",
+            "variation": "engine states motif rhythm",
+            "what": "Cello Double Bass ostinato, Viola answer, Timpani roots"
+          },
+          {
+            "chords": "Am | Dm | Am | Dm | Em7 | Am | G | C",
+            "dynamics": "mf driving to f",
+            "from": "5",
+            "principle": "Relative minor darkens major tune for chase tension",
+            "to": "12",
+            "variation": "whole tune stated over minor",
+            "what": "Violin I tune, Horn 1 counterline, Cello engine"
+          },
+          {
+            "chords": "Am | Bb | Am | F | G | Dm | Em7 | C",
+            "dynamics": "f driving to ff",
+            "from": "13",
+            "principle": "Borrowed flat-seven surprises repeat without losing drive",
+            "to": "20",
+            "variation": "repeat varied with flat-seven colour",
+            "what": "Violin II tune, Trumpet 1 punctuates, Harp lifts"
+          },
+          {
+            "chords": "C | F | C | F | G | F G | C | C",
+            "dynamics": "ff held for climax",
+            "from": "21",
+            "principle": "Brass unison widens register for single late peak",
+            "to": "28",
+            "variation": "high octave over quickening harmony",
+            "what": "Trumpet 1 Horn 1 tune, Trombone 1 pedal, Snare Drum hits"
+          },
+          {
+            "chords": "F | G | C | C",
+            "dynamics": "ff falling to f",
+            "from": "29",
+            "principle": "Strong perfect cadence earns arrival after tension",
+            "to": "32",
+            "variation": "tail fragmented to firm close",
+            "what": "Violin I Trombone 1 cadence, Timpani Bass Drum confirm"
+          }
+        ]
+      },
+      "window": {
+        "from": "1",
+        "to": "4"
+      },
+      "seed": {
+        "tune": "Bar 1: Piano upper 1:E4@0+1 4:B4@1+1.5 5:G4@2.5+0.5 | Piano lower 2:C3@0+0.5 3:B3@0.5+2 6:B3~@2.5+0.5 / Bar 2: Piano upper 1:F4@0+3 | Piano lower 2:C3@0+0.5 3:A3@0.5+0.5 4:F3@1+2 / Bar 3: Piano upper 1:E4@0+1 4:B4@1+1.5 5:G4@2.5+0.5 | Piano lower 2:C3@0+0.5 3:B3@0.5+2 6:B3~@2.5+0.5 / Bar 4: Piano upper 1:A4@0+1 4:F4@1+2 | Piano lower 2:C3@0+0.5 3:A3@0.5+2 5:A3~@2.5+0.5 / Bar 5: Piano upper 1:G4@0+1 4:D5@1+1.5 5:B4@2.5+0.5 | Piano lower 2:D3@0+0.5 3:B3@0.5+2 6:B3~@2.5+0.5 / Bar 6: Piano upper 1:C5@0+1 4:E4@1+2 | Piano lower 2:C3@0+0.5 3:B3@0.5+2 5:B3~@2.5+0.5 / Bar 7: Piano upper 1:F4@0+1 4:G4@1+2 | Piano lower 2:C3@0+0.5 3:A3@0.5+2 5:A3~@2.5+0.5 / Bar 8: Piano upper 1:G4~@0+3 | Piano lower 2:C3@0+0.5 3:C4@0+0.5 4:G3@0.5+2 5:G3~@2.5+0.5 / Bar 9: Piano upper 1:E4@0+1 4:B4@1+1.5 5:G4@2.5+0.5 | Piano lower 2:C3@0+0.5 3:B3@0.5+2 6:B3~@2.5+0.5 / Bar 10: Piano upper 1:F4@0+3 | Piano lower 2:C3@0+0.5 3:A3@0.5+2 4:A3~@2.5+0.5 / Bar 11: Piano upper 1:E4@0+1 4:B4@1+1 5:G4@2+1 | Piano lower 2:C3@0+0.5 3:G3@0.5+2 6:G3~@2.5+0.5 / Bar 12: Piano upper 1:F4@0+2 2:A4@0+2 6:C5@2+1 | Piano lower 3:C3@0+0.5 4:A3@0.5+0.5 5:F3@1+2 / Bar 13: Piano upper 1:D5@0+2 2:G4@0+2 6:B4@2+0.5 7:G4@2.5+0.5 | Piano lower 3:D3@0+0.5 4:B3@0.5+0.5 5:B3@1+2 / Bar 14: Piano upper 1:A4@0+1 4:F4@1+2 | Piano lower 2:C3@0+0.5 3:A3@0.5+2 5:A3~@2.5+0.5 / Bar 15: Piano upper 1:G4@0+1 4:D5@1+1.5 5:B4@2.5+0.5 | Piano lower 2:D3@0+0.5 3:B3@0.5+2 6:B3~@2.5+0.5 / Bar 16: Piano upper 1:C5@0+1 4:E5@1+2 | Piano lower 2:C3@0+0.5 3:G3@0.5+2 5:G3~@2.5+0.5 / Bar 17: Piano upper 1:E5@0+1 4:C6@1+1.5 5:G5@2.5+0.5 | Piano lower 2:C4@0+0.5 3:G4@0.5+2 6:G4~@2.5+0.5 / Bar 18: Piano upper 1:F5@0+3 | Piano lower 2:C4@0+0.5 3:A4@0.5+0.5 4:C5@1+2 / Bar 19: Piano upper 1:E5@0+1 4:C6@1+1.5 5:G5@2.5+0.5 | Piano lower 2:C4@0+0.5 3:G4@0.5+2 6:G4~@2.5+0.5 / Bar 20: Piano upper 1:A5@0+3 | Piano lower 2:C4@0+0.5 3:A4@0.5+0.5 4:C5@1+2 / Bar 21: Piano upper 1:G5@0+1 2:D6@0+1 5:D6@1+1.5 6:G5@1+1.5 7:B5@2.5+0.5 | Piano lower 3:D4@0+0.5 4:G4@0.5+2 8:G4~@2.5+0.5 / Bar 22: Piano upper 1:C6@0+1 4:G5@1+1 5:A5@2+1 | Piano lower 2:C4@0+0.5 3:G4@0.5+2 6:G4~@2.5+0.5 / Bar 23: Piano upper 1:E5@0+1 4:G5@1+2 | Piano lower 2:C4@0+0.5 3:G4@0.5+1.5 5:G4~@2+0.25 6:D5@2.25+0.75 / Bar 24: Piano upper 1:C5@0+2 6:C5~@2+0.5 7:E4@2.5+0.5 | Piano lower 2:C3@0+0.5 3:G3@0.5+0.5 4:C4@1+0.5 5:D4@1.5+1.5",
+        "motif": "E-B-G flick to held F From bars 1 to 2.",
+        "theme": "Bar 1 tune: E4@0+0.5 B4@0.5+0.5 G4@1+0.5 F4@1.5+1.5 / Bar 1 bass: A2@0+0.5 A2@0.5+0.5 A2@1+0.5 A2@1.5+0.5 A2@2+0.5 E3@2.5+0.5 / Bar 2 tune: E4@0+0.5 B4@0.5+0.5 G4@1+0.5 A4@1.5+1.5 / Bar 2 countermelody: C4@1.5+0.5 D4@2+0.5 E4@2.5+0.5 / Bar 2 bass: A2@0+0.5 A2@0.5+0.5 A2@1+0.5 A2@1.5+0.5 G2@2+0.5 A2@2.5+0.5 / Bar 3 tune: E4@0+0.5 B4@0.5+0.5 G4@1+0.5 F4@1.5+1.5 / Bar 3 countermelody: F3@1.5+0.5 G3@2+0.5 A3@2.5+0.5 / Bar 3 bass: F2@0+0.5 F2@0.5+0.5 F2@1+0.5 F2@1.5+0.5 F2@2+0.5 C3@2.5+0.5 / Bar 4 tune: D4@0+0.5 E4@0.5+0.5 F4@1+0.5 G4@1.5+1.5 / Bar 4 countermelody: G3@0+1 A3@1+1 B3@2+1 / Bar 4 bass: G2@0+0.5 G2@0.5+0.5 G2@1+0.5 G2@1.5+0.5 G2@2+0.5 D3@2.5+0.5"
+      }
+    },
+    "reply": {
+      "status": "ok",
+      "answer": {
+        "adds": [
+          {
+            "art": "",
+            "bar": "1",
+            "dyn": "mp",
+            "events": "E4@0+0.5 B4@0.5+0.5 G4@1+0.5 F4@1.5+1.5",
+            "part": "Viola",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "2",
+            "dyn": "mp",
+            "events": "E4@0+0.5 B4@0.5+0.5 G4@1+0.5 A4@1.5+1.5 C4@1.5+0.5 D4@2+0.5 E4@2.5+0.5",
+            "part": "Viola",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "3",
+            "dyn": "mp<mf",
+            "events": "E4@0+0.5 B4@0.5+0.5 G4@1+0.5 F4@1.5+1.5 F3@1.5+0.5 G3@2+0.5 A3@2.5+0.5",
+            "part": "Viola",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "4",
+            "dyn": "mf",
+            "events": "D4@0+0.5 E4@0.5+0.5 F4@1+0.5 G4@1.5+1.5 G3@0+1 A3@1+1 B3@2+1",
+            "part": "Viola",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "1",
+            "dyn": "p",
+            "events": "A2@0+0.5 A2@0.5+0.5 A2@1+0.5 A2@1.5+0.5 A2@2+0.5 E3@2.5+0.5",
+            "part": "Cello",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "2",
+            "dyn": "p",
+            "events": "A2@0+0.5 A2@0.5+0.5 A2@1+0.5 A2@1.5+0.5 G2@2+0.5 A2@2.5+0.5",
+            "part": "Cello",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "3",
+            "dyn": "p<mp",
+            "events": "F2@0+0.5 F2@0.5+0.5 F2@1+0.5 F2@1.5+0.5 F2@2+0.5 C3@2.5+0.5",
+            "part": "Cello",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "4",
+            "dyn": "mp",
+            "events": "G2@0+0.5 G2@0.5+0.5 G2@1+0.5 G2@1.5+0.5 G2@2+0.5 D3@2.5+0.5",
+            "part": "Cello",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "1",
+            "dyn": "p",
+            "events": "A2@0+3",
+            "part": "Timpani",
+            "role": "pedal"
+          },
+          {
+            "art": "",
+            "bar": "2",
+            "dyn": "p",
+            "events": "A2@0+3",
+            "part": "Timpani",
+            "role": "pedal"
+          },
+          {
+            "art": "",
+            "bar": "3",
+            "dyn": "p<mp",
+            "events": "F2@0+3",
+            "part": "Timpani",
+            "role": "pedal"
+          },
+          {
+            "art": "",
+            "bar": "4",
+            "dyn": "mp",
+            "events": "G2@0+3",
+            "part": "Timpani",
+            "role": "pedal"
+          }
+        ],
+        "doubles": [
+          {
+            "from": "1",
+            "octave": -1,
+            "of": "Cello",
+            "part": "Double Bass",
+            "to": "4"
+          }
+        ]
+      },
+      "sources": [],
+      "cached": false
+    },
+    "ms": 93995,
+    "thinking": [
+      {
+        "at": 2711,
+        "text": "Mapping composed music parts to instruments per the bar 1-4 plan while resolving the missing tune assignment."
+      },
+      {
+        "at": 5566,
+        "text": "Resolving the tune instrument assignment within the named orchestration constraints."
+      },
+      {
+        "at": 13554,
+        "text": "Resolving the instrument assignment conflict by separating the tune, bass, and countermelody across the four named parts."
+      },
+      {
+        "at": 32395,
+        "text": "Evaluating double-stop feasibility for the viola part and ruling out wide-interval chords."
+      },
+      {
+        "at": 41230,
+        "text": "Resolving instrument assignment by doubling the bass line and deferring the countermelody due to range conflicts."
+      },
+      {
+        "at": 50314,
+        "text": "Validating instrument ranges and role conflicts to finalize the note-for-note assignment."
+      },
+      {
+        "at": 61545,
+        "text": "Evaluating whether to keep both low strings on ostinato or reassign the countermelody to another part."
+      },
+      {
+        "at": 72990,
+        "text": "Finalizing the viola double-stop voicing and assigning timpani pedal roots to complete the texture."
+      },
+      {
+        "at": 83440,
+        "text": "Assigning dynamics and roles to parts while validating event timing and schema constraints."
+      }
+    ],
+    "version": "arrange-16",
+    "model": "muse-spark-1.3",
+    "usage": {
+      "inputTokens": 7235,
+      "cachedTokens": 3825,
+      "outputTokens": 9605
+    }
+  },
+  {
+    "shape": "arrange",
+    "input": {
+      "piece": {
+        "title": "Low Engine Chase",
+        "composer": null,
+        "instrument": "Piccolo"
+      },
+      "fifths": 0,
+      "time": "3/4",
+      "written": [
+        {
+          "bar": "1",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 0
+        },
+        {
+          "bar": "2",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 1
+        },
+        {
+          "bar": "3",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 2
+        },
+        {
+          "bar": "4",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 3
+        },
+        {
+          "bar": "5",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 4
+        },
+        {
+          "bar": "6",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 5
+        },
+        {
+          "bar": "7",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 6
+        },
+        {
+          "bar": "8",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 7
+        },
+        {
+          "bar": "9",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 8
+        },
+        {
+          "bar": "10",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 9
+        },
+        {
+          "bar": "11",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 10
+        },
+        {
+          "bar": "12",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 11
+        },
+        {
+          "bar": "13",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 12
+        },
+        {
+          "bar": "14",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 13
+        },
+        {
+          "bar": "15",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 14
+        },
+        {
+          "bar": "16",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 15
+        },
+        {
+          "bar": "17",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 16
+        },
+        {
+          "bar": "18",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 17
+        },
+        {
+          "bar": "19",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 18
+        },
+        {
+          "bar": "20",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 19
+        },
+        {
+          "bar": "21",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 20
+        },
+        {
+          "bar": "22",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 21
+        },
+        {
+          "bar": "23",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 22
+        },
+        {
+          "bar": "24",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 23
+        },
+        {
+          "bar": "25",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 24
+        },
+        {
+          "bar": "26",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 25
+        },
+        {
+          "bar": "27",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 26
+        },
+        {
+          "bar": "28",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 27
+        },
+        {
+          "bar": "29",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 28
+        },
+        {
+          "bar": "30",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 29
+        },
+        {
+          "bar": "31",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 30
+        },
+        {
+          "bar": "32",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 31
+        }
+      ],
+      "returns": [],
+      "lines": [
+        "Piccolo"
+      ],
+      "moreBars": 0,
+      "ask": "The mood I want: action.",
+      "reading": null,
+      "instruments": [
+        "Piccolo",
+        "Flute 1",
+        "Flute 2",
+        "Oboe 1",
+        "Oboe 2",
+        "Clarinet 1",
+        "Clarinet 2",
+        "Bassoon 1",
+        "Bassoon 2",
+        "Horn 1",
+        "Horn 2",
+        "Horn 3",
+        "Horn 4",
+        "Trumpet 1",
+        "Trumpet 2",
+        "Trumpet 3",
+        "Trombone 1",
+        "Trombone 2",
+        "Bass Trombone",
+        "Tuba",
+        "Timpani",
+        "Glockenspiel",
+        "Snare Drum",
+        "Bass Drum",
+        "Cymbals",
+        "Harp",
+        "Violin I",
+        "Violin II",
+        "Viola",
+        "Cello",
+        "Double Bass"
+      ],
+      "where": "inside",
+      "tracks": [],
+      "answers": [],
+      "cues": [],
+      "freedom": 2,
+      "chosen": {
+        "fifths": 0,
+        "idea": "Full C-major tune over driving minor-inflected engine; low ostinato powers three chases to high brass arrival.",
+        "motif": {
+          "from": "1",
+          "to": "2",
+          "what": "E-B-G flick to held F"
+        },
+        "name": "Low Engine Chase",
+        "qpm": 144,
+        "time": "3/4",
+        "why": [
+          {
+            "chords": "Am | Am | F | G",
+            "dynamics": "mp driving to mf",
+            "from": "1",
+            "principle": "Ostinato engine frees tune entry over waiting dominant",
+            "to": "4",
+            "variation": "engine states motif rhythm",
+            "what": "Cello Double Bass ostinato, Viola answer, Timpani roots"
+          },
+          {
+            "chords": "Am | Dm | Am | Dm | Em7 | Am | G | C",
+            "dynamics": "mf driving to f",
+            "from": "5",
+            "principle": "Relative minor darkens major tune for chase tension",
+            "to": "12",
+            "variation": "whole tune stated over minor",
+            "what": "Violin I tune, Horn 1 counterline, Cello engine"
+          },
+          {
+            "chords": "Am | Bb | Am | F | G | Dm | Em7 | C",
+            "dynamics": "f driving to ff",
+            "from": "13",
+            "principle": "Borrowed flat-seven surprises repeat without losing drive",
+            "to": "20",
+            "variation": "repeat varied with flat-seven colour",
+            "what": "Violin II tune, Trumpet 1 punctuates, Harp lifts"
+          },
+          {
+            "chords": "C | F | C | F | G | F G | C | C",
+            "dynamics": "ff held for climax",
+            "from": "21",
+            "principle": "Brass unison widens register for single late peak",
+            "to": "28",
+            "variation": "high octave over quickening harmony",
+            "what": "Trumpet 1 Horn 1 tune, Trombone 1 pedal, Snare Drum hits"
+          },
+          {
+            "chords": "F | G | C | C",
+            "dynamics": "ff falling to f",
+            "from": "29",
+            "principle": "Strong perfect cadence earns arrival after tension",
+            "to": "32",
+            "variation": "tail fragmented to firm close",
+            "what": "Violin I Trombone 1 cadence, Timpani Bass Drum confirm"
+          }
+        ]
+      },
+      "window": {
+        "from": "5",
+        "to": "12"
+      },
+      "earlier": "Viola: D4@0+0.5 E4@0.5+0.5 F4@1+0.5 G4@1.5+1.5 G3@0+1 A3@1+1 B3@2+1 / Cello: G2@0+0.5 G2@0.5+0.5 G2@1+0.5 G2@1.5+0.5 G2@2+0.5 D3@2.5+0.5 / Timpani: G2@0+3 / Double Bass: G1@0+0.5 G1@0.5+0.5 G1@1+0.5 G1@1.5+0.5 G1@2+0.5 D2@2.5+0.5",
+      "seed": {
+        "tune": "Bar 1: Piano upper 1:E4@0+1 4:B4@1+1.5 5:G4@2.5+0.5 | Piano lower 2:C3@0+0.5 3:B3@0.5+2 6:B3~@2.5+0.5 / Bar 2: Piano upper 1:F4@0+3 | Piano lower 2:C3@0+0.5 3:A3@0.5+0.5 4:F3@1+2 / Bar 3: Piano upper 1:E4@0+1 4:B4@1+1.5 5:G4@2.5+0.5 | Piano lower 2:C3@0+0.5 3:B3@0.5+2 6:B3~@2.5+0.5 / Bar 4: Piano upper 1:A4@0+1 4:F4@1+2 | Piano lower 2:C3@0+0.5 3:A3@0.5+2 5:A3~@2.5+0.5 / Bar 5: Piano upper 1:G4@0+1 4:D5@1+1.5 5:B4@2.5+0.5 | Piano lower 2:D3@0+0.5 3:B3@0.5+2 6:B3~@2.5+0.5 / Bar 6: Piano upper 1:C5@0+1 4:E4@1+2 | Piano lower 2:C3@0+0.5 3:B3@0.5+2 5:B3~@2.5+0.5 / Bar 7: Piano upper 1:F4@0+1 4:G4@1+2 | Piano lower 2:C3@0+0.5 3:A3@0.5+2 5:A3~@2.5+0.5 / Bar 8: Piano upper 1:G4~@0+3 | Piano lower 2:C3@0+0.5 3:C4@0+0.5 4:G3@0.5+2 5:G3~@2.5+0.5 / Bar 9: Piano upper 1:E4@0+1 4:B4@1+1.5 5:G4@2.5+0.5 | Piano lower 2:C3@0+0.5 3:B3@0.5+2 6:B3~@2.5+0.5 / Bar 10: Piano upper 1:F4@0+3 | Piano lower 2:C3@0+0.5 3:A3@0.5+2 4:A3~@2.5+0.5 / Bar 11: Piano upper 1:E4@0+1 4:B4@1+1 5:G4@2+1 | Piano lower 2:C3@0+0.5 3:G3@0.5+2 6:G3~@2.5+0.5 / Bar 12: Piano upper 1:F4@0+2 2:A4@0+2 6:C5@2+1 | Piano lower 3:C3@0+0.5 4:A3@0.5+0.5 5:F3@1+2 / Bar 13: Piano upper 1:D5@0+2 2:G4@0+2 6:B4@2+0.5 7:G4@2.5+0.5 | Piano lower 3:D3@0+0.5 4:B3@0.5+0.5 5:B3@1+2 / Bar 14: Piano upper 1:A4@0+1 4:F4@1+2 | Piano lower 2:C3@0+0.5 3:A3@0.5+2 5:A3~@2.5+0.5 / Bar 15: Piano upper 1:G4@0+1 4:D5@1+1.5 5:B4@2.5+0.5 | Piano lower 2:D3@0+0.5 3:B3@0.5+2 6:B3~@2.5+0.5 / Bar 16: Piano upper 1:C5@0+1 4:E5@1+2 | Piano lower 2:C3@0+0.5 3:G3@0.5+2 5:G3~@2.5+0.5 / Bar 17: Piano upper 1:E5@0+1 4:C6@1+1.5 5:G5@2.5+0.5 | Piano lower 2:C4@0+0.5 3:G4@0.5+2 6:G4~@2.5+0.5 / Bar 18: Piano upper 1:F5@0+3 | Piano lower 2:C4@0+0.5 3:A4@0.5+0.5 4:C5@1+2 / Bar 19: Piano upper 1:E5@0+1 4:C6@1+1.5 5:G5@2.5+0.5 | Piano lower 2:C4@0+0.5 3:G4@0.5+2 6:G4~@2.5+0.5 / Bar 20: Piano upper 1:A5@0+3 | Piano lower 2:C4@0+0.5 3:A4@0.5+0.5 4:C5@1+2 / Bar 21: Piano upper 1:G5@0+1 2:D6@0+1 5:D6@1+1.5 6:G5@1+1.5 7:B5@2.5+0.5 | Piano lower 3:D4@0+0.5 4:G4@0.5+2 8:G4~@2.5+0.5 / Bar 22: Piano upper 1:C6@0+1 4:G5@1+1 5:A5@2+1 | Piano lower 2:C4@0+0.5 3:G4@0.5+2 6:G4~@2.5+0.5 / Bar 23: Piano upper 1:E5@0+1 4:G5@1+2 | Piano lower 2:C4@0+0.5 3:G4@0.5+1.5 5:G4~@2+0.25 6:D5@2.25+0.75 / Bar 24: Piano upper 1:C5@0+2 6:C5~@2+0.5 7:E4@2.5+0.5 | Piano lower 2:C3@0+0.5 3:G3@0.5+0.5 4:C4@1+0.5 5:D4@1.5+1.5",
+        "motif": "E-B-G flick to held F From bars 1 to 2.",
+        "theme": "Bar 5 tune: E4@0+1 B4@1+1.5 G4@2.5+0.5 / Bar 5 bass: A2@0+0.5 A2@0.5+0.5 E3@1+0.5 E3@1.5+0.5 A2@2+0.5 A2@2.5+0.5 / Bar 6 tune: F4@0+3 / Bar 6 countermelody: A3@0+1 C4@1+1 D4@2+1 / Bar 6 bass: D3@0+0.5 D3@0.5+0.5 A2@1+0.5 A2@1.5+0.5 D3@2+0.5 D3@2.5+0.5 / Bar 7 tune: E4@0+1 B4@1+1.5 G4@2.5+0.5 / Bar 7 bass: A2@0+0.5 E3@0.5+0.5 A2@1+0.5 E3@1.5+0.5 C3@2+0.5 B2@2.5+0.5 / Bar 8 tune: A4@0+1 F4@1+2 / Bar 8 countermelody: D4@1+0.5 C4@1.5+0.5 D4@2+1 / Bar 8 bass: D2@0+1 F2@1+1 G2@2+1 / Bar 9 tune: G4@0+1 D5@1+1.5 B4@2.5+0.5 / Bar 9 bass: E2@0+0.5 E2@0.5+0.5 B2@1+0.5 B2@1.5+0.5 E3@2+0.5 D3@2.5+0.5 / Bar 10 tune: C5@0+1 G4@1+1 E4@2+1 / Bar 10 countermelody: E3@0+3 / Bar 10 bass: A2@0+1 C3@1+1 E3@2+1 / Bar 11 tune: F4@0+1 G4@1+2 / Bar 11 countermelody: A3@1+0.5 B3@1.5+0.5 C4@2+1 / Bar 11 bass: G2@0+0.5 G2@0.5+0.5 D3@1+0.5 D3@1.5+0.5 G2@2+0.5 B2@2.5+0.5 / Bar 12 tune: G4@0+2 A4@2+0.5 G4@2.5+0.5 / Bar 12 countermelody: E4@0+1 D4@1+1 C4@2+1 / Bar 12 bass: C3@0+0.5 G2@0.5+0.5 C3@1+0.5 G2@1.5+0.5 C3@2+1"
+      }
+    },
+    "reply": {
+      "status": "ok",
+      "answer": {
+        "adds": [
+          {
+            "art": "",
+            "bar": "5",
+            "dyn": "mf",
+            "events": "E4@0+1 B4@1+1.5 G4@2.5+0.5",
+            "part": "Violin I",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "5",
+            "dyn": "mp",
+            "events": "A2@0+0.5 A2@0.5+0.5 E3@1+0.5 E3@1.5+0.5 A2@2+0.5 A2@2.5+0.5",
+            "part": "Cello",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "5",
+            "dyn": "p",
+            "events": "A1@0+0.5 A1@0.5+0.5 E2@1+0.5 E2@1.5+0.5 A1@2+0.5 A1@2.5+0.5",
+            "part": "Double Bass",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "5",
+            "dyn": "p",
+            "events": "A3@0+3",
+            "part": "Viola",
+            "role": "harmony"
+          },
+          {
+            "art": "",
+            "bar": "5",
+            "dyn": "p",
+            "events": "A2@0+3",
+            "part": "Timpani",
+            "role": "pedal"
+          },
+          {
+            "art": "",
+            "bar": "6",
+            "dyn": "mf",
+            "events": "F4@0+3",
+            "part": "Violin I",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "6",
+            "dyn": "mp",
+            "events": "A3@0+1 C4@1+1 D4@2+1",
+            "part": "Horn 1",
+            "role": "countermelody"
+          },
+          {
+            "art": "",
+            "bar": "6",
+            "dyn": "mp",
+            "events": "D3@0+0.5 D3@0.5+0.5 A2@1+0.5 A2@1.5+0.5 D3@2+0.5 D3@2.5+0.5",
+            "part": "Cello",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "6",
+            "dyn": "p",
+            "events": "D2@0+0.5 D2@0.5+0.5 A1@1+0.5 A1@1.5+0.5 D2@2+0.5 D2@2.5+0.5",
+            "part": "Double Bass",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "6",
+            "dyn": "p",
+            "events": "A3@0+3",
+            "part": "Viola",
+            "role": "harmony"
+          },
+          {
+            "art": "",
+            "bar": "6",
+            "dyn": "p",
+            "events": "D4@0+3",
+            "part": "Violin II",
+            "role": "harmony"
+          },
+          {
+            "art": "",
+            "bar": "6",
+            "dyn": "p",
+            "events": "A2@0+3",
+            "part": "Timpani",
+            "role": "pedal"
+          },
+          {
+            "art": "",
+            "bar": "7",
+            "dyn": "mf",
+            "events": "E4@0+1 B4@1+1.5 G4@2.5+0.5",
+            "part": "Violin I",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "7",
+            "dyn": "mp",
+            "events": "A2@0+0.5 E3@0.5+0.5 A2@1+0.5 E3@1.5+0.5 C3@2+0.5 B2@2.5+0.5",
+            "part": "Cello",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "7",
+            "dyn": "p",
+            "events": "A1@0+0.5 E2@0.5+0.5 A1@1+0.5 E2@1.5+0.5 C2@2+0.5 B1@2.5+0.5",
+            "part": "Double Bass",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "7",
+            "dyn": "p",
+            "events": "C4@0+3",
+            "part": "Viola",
+            "role": "harmony"
+          },
+          {
+            "art": "",
+            "bar": "7",
+            "dyn": "p",
+            "events": "E4@0+3",
+            "part": "Violin II",
+            "role": "harmony"
+          },
+          {
+            "art": "",
+            "bar": "7",
+            "dyn": "p",
+            "events": "A2@0+3",
+            "part": "Timpani",
+            "role": "pedal"
+          },
+          {
+            "art": "",
+            "bar": "8",
+            "dyn": "mf",
+            "events": "A4@0+1 F4@1+2",
+            "part": "Violin I",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "8",
+            "dyn": "mp",
+            "events": "D4@1+0.5 C4@1.5+0.5 D4@2+1",
+            "part": "Horn 1",
+            "role": "countermelody"
+          },
+          {
+            "art": "",
+            "bar": "8",
+            "dyn": "mp",
+            "events": "D2@0+1 F2@1+1 G2@2+1",
+            "part": "Cello",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "8",
+            "dyn": "p",
+            "events": "D2@0+1 F2@1+1 G2@2+1",
+            "part": "Double Bass",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "8",
+            "dyn": "p",
+            "events": "D4@0+3",
+            "part": "Viola",
+            "role": "harmony"
+          },
+          {
+            "art": "",
+            "bar": "8",
+            "dyn": "p",
+            "events": "A3@0+3",
+            "part": "Violin II",
+            "role": "harmony"
+          },
+          {
+            "art": "",
+            "bar": "8",
+            "dyn": "p",
+            "events": "A2@0+3",
+            "part": "Timpani",
+            "role": "pedal"
+          },
+          {
+            "art": "",
+            "bar": "9",
+            "dyn": "mf",
+            "events": "G4@0+1 D5@1+1.5 B4@2.5+0.5",
+            "part": "Violin I",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "9",
+            "dyn": "mp",
+            "events": "E2@0+0.5 E2@0.5+0.5 B2@1+0.5 B2@1.5+0.5 E3@2+0.5 D3@2.5+0.5",
+            "part": "Cello",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "9",
+            "dyn": "p",
+            "events": "E1@0+0.5 E1@0.5+0.5 B1@1+0.5 B1@1.5+0.5 E2@2+0.5 D2@2.5+0.5",
+            "part": "Double Bass",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "9",
+            "dyn": "p",
+            "events": "E4@0+3",
+            "part": "Viola",
+            "role": "harmony"
+          },
+          {
+            "art": "",
+            "bar": "9",
+            "dyn": "p",
+            "events": "B3@0+3",
+            "part": "Violin II",
+            "role": "harmony"
+          },
+          {
+            "art": "",
+            "bar": "9",
+            "dyn": "p",
+            "events": "E2@0+3",
+            "part": "Timpani",
+            "role": "pedal"
+          },
+          {
+            "art": "",
+            "bar": "10",
+            "dyn": "mf",
+            "events": "C5@0+1 G4@1+1 E4@2+1",
+            "part": "Violin I",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "10",
+            "dyn": "mp",
+            "events": "E3@0+3",
+            "part": "Horn 1",
+            "role": "countermelody"
+          },
+          {
+            "art": "",
+            "bar": "10",
+            "dyn": "mp",
+            "events": "A2@0+1 C3@1+1 E3@2+1",
+            "part": "Cello",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "10",
+            "dyn": "p",
+            "events": "A1@0+1 C2@1+1 E2@2+1",
+            "part": "Double Bass",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "10",
+            "dyn": "p",
+            "events": "C4@0+3",
+            "part": "Viola",
+            "role": "harmony"
+          },
+          {
+            "art": "",
+            "bar": "10",
+            "dyn": "p",
+            "events": "E4@0+3",
+            "part": "Violin II",
+            "role": "harmony"
+          },
+          {
+            "art": "",
+            "bar": "10",
+            "dyn": "p",
+            "events": "E2@0+3",
+            "part": "Timpani",
+            "role": "pedal"
+          },
+          {
+            "art": "",
+            "bar": "11",
+            "dyn": "mf<f",
+            "events": "F4@0+1 G4@1+2",
+            "part": "Violin I",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "11",
+            "dyn": "mp<mf",
+            "events": "A3@1+0.5 B3@1.5+0.5 C4@2+1",
+            "part": "Horn 1",
+            "role": "countermelody"
+          },
+          {
+            "art": "",
+            "bar": "11",
+            "dyn": "mp<mf",
+            "events": "G2@0+0.5 G2@0.5+0.5 D3@1+0.5 D3@1.5+0.5 G2@2+0.5 B2@2.5+0.5",
+            "part": "Cello",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "11",
+            "dyn": "p<mp",
+            "events": "G1@0+0.5 G1@0.5+0.5 D2@1+0.5 D2@1.5+0.5 G1@2+0.5 B1@2.5+0.5",
+            "part": "Double Bass",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "11",
+            "dyn": "p<mp",
+            "events": "D4@0+3",
+            "part": "Viola",
+            "role": "harmony"
+          },
+          {
+            "art": "",
+            "bar": "11",
+            "dyn": "p",
+            "events": "B3@1+2",
+            "part": "Violin II",
+            "role": "harmony"
+          },
+          {
+            "art": "",
+            "bar": "11",
+            "dyn": "p",
+            "events": "G2@0+3",
+            "part": "Timpani",
+            "role": "pedal"
+          },
+          {
+            "art": "",
+            "bar": "12",
+            "dyn": "f",
+            "events": "G4@0+2 A4@2+0.5 G4@2.5+0.5",
+            "part": "Violin I",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "12",
+            "dyn": "mf",
+            "events": "E4@0+1 D4@1+1 C4@2+1",
+            "part": "Horn 1",
+            "role": "countermelody"
+          },
+          {
+            "art": "",
+            "bar": "12",
+            "dyn": "mf",
+            "events": "C3@0+0.5 G2@0.5+0.5 C3@1+0.5 G2@1.5+0.5 C3@2+1",
+            "part": "Cello",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "12",
+            "dyn": "mp",
+            "events": "C2@0+0.5 G1@0.5+0.5 C2@1+0.5 G1@1.5+0.5 C2@2+1",
+            "part": "Double Bass",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "12",
+            "dyn": "mp",
+            "events": "C4@0+3",
+            "part": "Viola",
+            "role": "harmony"
+          },
+          {
+            "art": "",
+            "bar": "12",
+            "dyn": "mp",
+            "events": "E4@0+3",
+            "part": "Violin II",
+            "role": "harmony"
+          },
+          {
+            "art": "",
+            "bar": "12",
+            "dyn": "mp",
+            "events": "C3@0+3",
+            "part": "Timpani",
+            "role": "pedal"
+          }
+        ],
+        "doubles": []
+      },
+      "sources": [],
+      "cached": false
+    },
+    "ms": 169209,
+    "thinking": [
+      {
+        "at": 4259,
+        "text": "Mapping tune, countermelody, and bass notes to instruments for bars 5-12 under layer constraints."
+      },
+      {
+        "at": 7289,
+        "text": "Expanding layering to add middleground and background parts within the instrument set and bar constraints."
+      },
+      {
+        "at": 15593,
+        "text": "Assigning remaining parts to fill harmony and rhythm while respecting range and dynamic constraints"
+      },
+      {
+        "at": 25612,
+        "text": "Extending orchestration by adding parts within range and dynamic constraints while avoiding octave violations."
+      },
+      {
+        "at": 36107,
+        "text": "Validating instrument ranges and role assignments while adjusting octave placement and dynamics for the bass and harmony parts."
+      },
+      {
+        "at": 45761,
+        "text": "Extending voicing to add sustained viola and violin II parts while keeping timpani within range."
+      },
+      {
+        "at": 55138,
+        "text": "Resolving inner-voice pitch choices to avoid dissonant intervals with the melody while staying in range."
+      },
+      {
+        "at": 67026,
+        "text": "Designing a single sustained pedal line for the accompaniment with stepwise voice leading across bars."
+      },
+      {
+        "at": 74741,
+        "text": "Extending the harmony by adding a second voice to complete the triad with the bass and viola."
+      },
+      {
+        "at": 85046,
+        "text": "Selecting consonant pitches for the second voice while avoiding register clashes with the melody."
+      }
+    ],
+    "version": "arrange-16",
+    "model": "muse-spark-1.3",
+    "usage": {
+      "inputTokens": 7666,
+      "cachedTokens": 3825,
+      "outputTokens": 17028
+    }
+  },
+  {
+    "shape": "arrange",
+    "input": {
+      "piece": {
+        "title": "Low Engine Chase",
+        "composer": null,
+        "instrument": "Piccolo"
+      },
+      "fifths": 0,
+      "time": "3/4",
+      "written": [
+        {
+          "bar": "1",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 0
+        },
+        {
+          "bar": "2",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 1
+        },
+        {
+          "bar": "3",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 2
+        },
+        {
+          "bar": "4",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 3
+        },
+        {
+          "bar": "5",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 4
+        },
+        {
+          "bar": "6",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 5
+        },
+        {
+          "bar": "7",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 6
+        },
+        {
+          "bar": "8",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 7
+        },
+        {
+          "bar": "9",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 8
+        },
+        {
+          "bar": "10",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 9
+        },
+        {
+          "bar": "11",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 10
+        },
+        {
+          "bar": "12",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 11
+        },
+        {
+          "bar": "13",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 12
+        },
+        {
+          "bar": "14",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 13
+        },
+        {
+          "bar": "15",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 14
+        },
+        {
+          "bar": "16",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 15
+        },
+        {
+          "bar": "17",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 16
+        },
+        {
+          "bar": "18",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 17
+        },
+        {
+          "bar": "19",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 18
+        },
+        {
+          "bar": "20",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 19
+        },
+        {
+          "bar": "21",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 20
+        },
+        {
+          "bar": "22",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 21
+        },
+        {
+          "bar": "23",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 22
+        },
+        {
+          "bar": "24",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 23
+        },
+        {
+          "bar": "25",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 24
+        },
+        {
+          "bar": "26",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 25
+        },
+        {
+          "bar": "27",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 26
+        },
+        {
+          "bar": "28",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 27
+        },
+        {
+          "bar": "29",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 28
+        },
+        {
+          "bar": "30",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 29
+        },
+        {
+          "bar": "31",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 30
+        },
+        {
+          "bar": "32",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 31
+        }
+      ],
+      "returns": [],
+      "lines": [
+        "Piccolo"
+      ],
+      "moreBars": 0,
+      "ask": "The mood I want: action.",
+      "reading": null,
+      "instruments": [
+        "Piccolo",
+        "Flute 1",
+        "Flute 2",
+        "Oboe 1",
+        "Oboe 2",
+        "Clarinet 1",
+        "Clarinet 2",
+        "Bassoon 1",
+        "Bassoon 2",
+        "Horn 1",
+        "Horn 2",
+        "Horn 3",
+        "Horn 4",
+        "Trumpet 1",
+        "Trumpet 2",
+        "Trumpet 3",
+        "Trombone 1",
+        "Trombone 2",
+        "Bass Trombone",
+        "Tuba",
+        "Timpani",
+        "Glockenspiel",
+        "Snare Drum",
+        "Bass Drum",
+        "Cymbals",
+        "Harp",
+        "Violin I",
+        "Violin II",
+        "Viola",
+        "Cello",
+        "Double Bass"
+      ],
+      "where": "inside",
+      "tracks": [],
+      "answers": [],
+      "cues": [],
+      "freedom": 2,
+      "chosen": {
+        "fifths": 0,
+        "idea": "Full C-major tune over driving minor-inflected engine; low ostinato powers three chases to high brass arrival.",
+        "motif": {
+          "from": "1",
+          "to": "2",
+          "what": "E-B-G flick to held F"
+        },
+        "name": "Low Engine Chase",
+        "qpm": 144,
+        "time": "3/4",
+        "why": [
+          {
+            "chords": "Am | Am | F | G",
+            "dynamics": "mp driving to mf",
+            "from": "1",
+            "principle": "Ostinato engine frees tune entry over waiting dominant",
+            "to": "4",
+            "variation": "engine states motif rhythm",
+            "what": "Cello Double Bass ostinato, Viola answer, Timpani roots"
+          },
+          {
+            "chords": "Am | Dm | Am | Dm | Em7 | Am | G | C",
+            "dynamics": "mf driving to f",
+            "from": "5",
+            "principle": "Relative minor darkens major tune for chase tension",
+            "to": "12",
+            "variation": "whole tune stated over minor",
+            "what": "Violin I tune, Horn 1 counterline, Cello engine"
+          },
+          {
+            "chords": "Am | Bb | Am | F | G | Dm | Em7 | C",
+            "dynamics": "f driving to ff",
+            "from": "13",
+            "principle": "Borrowed flat-seven surprises repeat without losing drive",
+            "to": "20",
+            "variation": "repeat varied with flat-seven colour",
+            "what": "Violin II tune, Trumpet 1 punctuates, Harp lifts"
+          },
+          {
+            "chords": "C | F | C | F | G | F G | C | C",
+            "dynamics": "ff held for climax",
+            "from": "21",
+            "principle": "Brass unison widens register for single late peak",
+            "to": "28",
+            "variation": "high octave over quickening harmony",
+            "what": "Trumpet 1 Horn 1 tune, Trombone 1 pedal, Snare Drum hits"
+          },
+          {
+            "chords": "F | G | C | C",
+            "dynamics": "ff falling to f",
+            "from": "29",
+            "principle": "Strong perfect cadence earns arrival after tension",
+            "to": "32",
+            "variation": "tail fragmented to firm close",
+            "what": "Violin I Trombone 1 cadence, Timpani Bass Drum confirm"
+          }
+        ]
+      },
+      "window": {
+        "from": "13",
+        "to": "20"
+      },
+      "earlier": "Violin I: G4@0+2 A4@2+0.5 G4@2.5+0.5 / Horn 1: E4@0+1 D4@1+1 C4@2+1 / Cello: C3@0+0.5 G2@0.5+0.5 C3@1+0.5 G2@1.5+0.5 C3@2+1 / Double Bass: C2@0+0.5 G1@0.5+0.5 C2@1+0.5 G1@1.5+0.5 C2@2+1 / Viola: C4@0+3 / Violin II: E4@0+3 / Timpani: C3@0+3",
+      "seed": {
+        "tune": "Bar 1: Piano upper 1:E4@0+1 4:B4@1+1.5 5:G4@2.5+0.5 | Piano lower 2:C3@0+0.5 3:B3@0.5+2 6:B3~@2.5+0.5 / Bar 2: Piano upper 1:F4@0+3 | Piano lower 2:C3@0+0.5 3:A3@0.5+0.5 4:F3@1+2 / Bar 3: Piano upper 1:E4@0+1 4:B4@1+1.5 5:G4@2.5+0.5 | Piano lower 2:C3@0+0.5 3:B3@0.5+2 6:B3~@2.5+0.5 / Bar 4: Piano upper 1:A4@0+1 4:F4@1+2 | Piano lower 2:C3@0+0.5 3:A3@0.5+2 5:A3~@2.5+0.5 / Bar 5: Piano upper 1:G4@0+1 4:D5@1+1.5 5:B4@2.5+0.5 | Piano lower 2:D3@0+0.5 3:B3@0.5+2 6:B3~@2.5+0.5 / Bar 6: Piano upper 1:C5@0+1 4:E4@1+2 | Piano lower 2:C3@0+0.5 3:B3@0.5+2 5:B3~@2.5+0.5 / Bar 7: Piano upper 1:F4@0+1 4:G4@1+2 | Piano lower 2:C3@0+0.5 3:A3@0.5+2 5:A3~@2.5+0.5 / Bar 8: Piano upper 1:G4~@0+3 | Piano lower 2:C3@0+0.5 3:C4@0+0.5 4:G3@0.5+2 5:G3~@2.5+0.5 / Bar 9: Piano upper 1:E4@0+1 4:B4@1+1.5 5:G4@2.5+0.5 | Piano lower 2:C3@0+0.5 3:B3@0.5+2 6:B3~@2.5+0.5 / Bar 10: Piano upper 1:F4@0+3 | Piano lower 2:C3@0+0.5 3:A3@0.5+2 4:A3~@2.5+0.5 / Bar 11: Piano upper 1:E4@0+1 4:B4@1+1 5:G4@2+1 | Piano lower 2:C3@0+0.5 3:G3@0.5+2 6:G3~@2.5+0.5 / Bar 12: Piano upper 1:F4@0+2 2:A4@0+2 6:C5@2+1 | Piano lower 3:C3@0+0.5 4:A3@0.5+0.5 5:F3@1+2 / Bar 13: Piano upper 1:D5@0+2 2:G4@0+2 6:B4@2+0.5 7:G4@2.5+0.5 | Piano lower 3:D3@0+0.5 4:B3@0.5+0.5 5:B3@1+2 / Bar 14: Piano upper 1:A4@0+1 4:F4@1+2 | Piano lower 2:C3@0+0.5 3:A3@0.5+2 5:A3~@2.5+0.5 / Bar 15: Piano upper 1:G4@0+1 4:D5@1+1.5 5:B4@2.5+0.5 | Piano lower 2:D3@0+0.5 3:B3@0.5+2 6:B3~@2.5+0.5 / Bar 16: Piano upper 1:C5@0+1 4:E5@1+2 | Piano lower 2:C3@0+0.5 3:G3@0.5+2 5:G3~@2.5+0.5 / Bar 17: Piano upper 1:E5@0+1 4:C6@1+1.5 5:G5@2.5+0.5 | Piano lower 2:C4@0+0.5 3:G4@0.5+2 6:G4~@2.5+0.5 / Bar 18: Piano upper 1:F5@0+3 | Piano lower 2:C4@0+0.5 3:A4@0.5+0.5 4:C5@1+2 / Bar 19: Piano upper 1:E5@0+1 4:C6@1+1.5 5:G5@2.5+0.5 | Piano lower 2:C4@0+0.5 3:G4@0.5+2 6:G4~@2.5+0.5 / Bar 20: Piano upper 1:A5@0+3 | Piano lower 2:C4@0+0.5 3:A4@0.5+0.5 4:C5@1+2 / Bar 21: Piano upper 1:G5@0+1 2:D6@0+1 5:D6@1+1.5 6:G5@1+1.5 7:B5@2.5+0.5 | Piano lower 3:D4@0+0.5 4:G4@0.5+2 8:G4~@2.5+0.5 / Bar 22: Piano upper 1:C6@0+1 4:G5@1+1 5:A5@2+1 | Piano lower 2:C4@0+0.5 3:G4@0.5+2 6:G4~@2.5+0.5 / Bar 23: Piano upper 1:E5@0+1 4:G5@1+2 | Piano lower 2:C4@0+0.5 3:G4@0.5+1.5 5:G4~@2+0.25 6:D5@2.25+0.75 / Bar 24: Piano upper 1:C5@0+2 6:C5~@2+0.5 7:E4@2.5+0.5 | Piano lower 2:C3@0+0.5 3:G3@0.5+0.5 4:C4@1+0.5 5:D4@1.5+1.5",
+        "motif": "E-B-G flick to held F From bars 1 to 2.",
+        "theme": "Bar 13 tune: E4@0+1 B4@1+1 G4@2+1 / Bar 13 bass: A2@0+0.5 A2@0.5+0.5 E3@1+0.5 E3@1.5+0.5 A2@2+0.5 A2@2.5+0.5 / Bar 14 tune: F4@0+3 / Bar 14 countermelody: Bb3@0+1 D4@1+1 C4@2+1 / Bar 14 bass: Bb2@0+0.5 Bb2@0.5+0.5 F3@1+0.5 F3@1.5+0.5 Bb2@2+0.5 Bb2@2.5+0.5 / Bar 15 tune: E4@0+1 B4@1+1 G4@2+1 / Bar 15 bass: A2@0+1 E3@1+1 A2@2+1 / Bar 16 tune: A4@0+1 C5@1+2 / Bar 16 countermelody: A3@0+1 G3@1+2 / Bar 16 bass: F2@0+1 C3@1+1 F2@2+1 / Bar 17 tune: D5@0+1 B4@1+1 G4@2+1 / Bar 17 bass: G2@0+0.5 G2@0.5+0.5 D3@1+1 G2@2+1 / Bar 18 tune: A4@0+1 F4@1+2 / Bar 18 countermelody: E4@1+0.5 D4@1.5+0.5 C4@2+1 / Bar 18 bass: D3@0+1 F3@1+1 E3@2+1 / Bar 19 tune: G4@0+1 D5@1+1.5 B4@2.5+0.5 / Bar 19 bass: E2@0+0.5 E2@0.5+0.5 B2@1+1 E2@2+1 / Bar 20 tune: C6@0+1 G5@1+1 E5@2+1 / Bar 20 countermelody: E4@0+3 / Bar 20 bass: C3@0+1 G2@1+1 C3@2+1"
+      }
+    },
+    "reply": {
+      "status": "ok",
+      "answer": {
+        "adds": [
+          {
+            "art": "",
+            "bar": "13",
+            "dyn": "f",
+            "events": "E4@0+1 B4@1+1 G4@2+1",
+            "part": "Violin II",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "13",
+            "dyn": "mf",
+            "events": "A2@0+0.5 A2@0.5+0.5 E3@1+0.5 E3@1.5+0.5 A2@2+0.5 A2@2.5+0.5",
+            "part": "Cello",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "13",
+            "dyn": "mf",
+            "events": "C4@0+3",
+            "part": "Viola",
+            "role": "pedal"
+          },
+          {
+            "art": "",
+            "bar": "13",
+            "dyn": "mp",
+            "events": "E4@1+0.5 E4@2+0.5",
+            "part": "Trumpet 1",
+            "role": "rhythm"
+          },
+          {
+            "art": "",
+            "bar": "13",
+            "dyn": "mp",
+            "events": "A3@0+1 C4@1+1 E4@2+1",
+            "part": "Harp",
+            "role": "figure"
+          },
+          {
+            "art": "",
+            "bar": "14",
+            "dyn": "f",
+            "events": "F4@0+3",
+            "part": "Violin II",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "14",
+            "dyn": "mf",
+            "events": "Bb2@0+0.5 Bb2@0.5+0.5 F3@1+0.5 F3@1.5+0.5 Bb2@2+0.5 Bb2@2.5+0.5",
+            "part": "Cello",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "14",
+            "dyn": "mf",
+            "events": "Bb3@0+1 D4@1+1 C4@2+1",
+            "part": "Viola",
+            "role": "countermelody"
+          },
+          {
+            "art": "",
+            "bar": "14",
+            "dyn": "mp",
+            "events": "D4@1+0.5 D4@2+0.5",
+            "part": "Trumpet 1",
+            "role": "rhythm"
+          },
+          {
+            "art": "",
+            "bar": "14",
+            "dyn": "mp",
+            "events": "Bb3@0+1 D4@1+1 F4@2+1",
+            "part": "Harp",
+            "role": "figure"
+          },
+          {
+            "art": "",
+            "bar": "15",
+            "dyn": "f",
+            "events": "E4@0+1 B4@1+1 G4@2+1",
+            "part": "Violin II",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "15",
+            "dyn": "mf",
+            "events": "A2@0+1 E3@1+1 A2@2+1",
+            "part": "Cello",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "15",
+            "dyn": "mf",
+            "events": "A3@0+3",
+            "part": "Viola",
+            "role": "pedal"
+          },
+          {
+            "art": "",
+            "bar": "15",
+            "dyn": "mp",
+            "events": "E4@1+0.5 E4@2+0.5",
+            "part": "Trumpet 1",
+            "role": "rhythm"
+          },
+          {
+            "art": "",
+            "bar": "15",
+            "dyn": "mp",
+            "events": "A3@0+1 C4@1+1 E4@2+1",
+            "part": "Harp",
+            "role": "figure"
+          },
+          {
+            "art": "",
+            "bar": "16",
+            "dyn": "f",
+            "events": "A4@0+1 C5@1+2",
+            "part": "Violin II",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "16",
+            "dyn": "mf",
+            "events": "F2@0+1 C3@1+1 F2@2+1",
+            "part": "Cello",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "16",
+            "dyn": "mf",
+            "events": "A3@0+1 G3@1+2",
+            "part": "Viola",
+            "role": "countermelody"
+          },
+          {
+            "art": "",
+            "bar": "16",
+            "dyn": "mp",
+            "events": "F4@1+0.5 A4@2+0.5",
+            "part": "Trumpet 1",
+            "role": "rhythm"
+          },
+          {
+            "art": "",
+            "bar": "16",
+            "dyn": "mp",
+            "events": "F3@0+1 A3@1+1 C4@2+1",
+            "part": "Harp",
+            "role": "figure"
+          },
+          {
+            "art": "",
+            "bar": "17",
+            "dyn": "f",
+            "events": "D5@0+1 B4@1+1 G4@2+1",
+            "part": "Violin II",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "17",
+            "dyn": "mf",
+            "events": "G2@0+0.5 G2@0.5+0.5 D3@1+1 G2@2+1",
+            "part": "Cello",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "17",
+            "dyn": "mf",
+            "events": "B3@0+3",
+            "part": "Viola",
+            "role": "pedal"
+          },
+          {
+            "art": "",
+            "bar": "17",
+            "dyn": "mf",
+            "events": "D4@1+0.5 B3@2+0.5",
+            "part": "Trumpet 1",
+            "role": "rhythm"
+          },
+          {
+            "art": "",
+            "bar": "17",
+            "dyn": "mp",
+            "events": "G3@0+1 B3@1+1 D4@2+1",
+            "part": "Harp",
+            "role": "figure"
+          },
+          {
+            "art": "",
+            "bar": "18",
+            "dyn": "f",
+            "events": "A4@0+1 F4@1+2",
+            "part": "Violin II",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "18",
+            "dyn": "mf",
+            "events": "D3@0+1 F3@1+1 E3@2+1",
+            "part": "Cello",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "18",
+            "dyn": "mf",
+            "events": "E4@1+0.5 D4@1.5+0.5 C4@2+1",
+            "part": "Viola",
+            "role": "countermelody"
+          },
+          {
+            "art": "",
+            "bar": "18",
+            "dyn": "mf",
+            "events": "D4@1+0.5 A3@2+0.5",
+            "part": "Trumpet 1",
+            "role": "rhythm"
+          },
+          {
+            "art": "",
+            "bar": "18",
+            "dyn": "mp",
+            "events": "D3@0+1 F3@1+1 A3@2+1",
+            "part": "Harp",
+            "role": "figure"
+          },
+          {
+            "art": "",
+            "bar": "19",
+            "dyn": "f<ff",
+            "events": "G4@0+1 D5@1+1.5 B4@2.5+0.5",
+            "part": "Violin II",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "19",
+            "dyn": "mf<f",
+            "events": "E2@0+0.5 E2@0.5+0.5 B2@1+1 E2@2+1",
+            "part": "Cello",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "19",
+            "dyn": "mf",
+            "events": "B3@0+3",
+            "part": "Viola",
+            "role": "pedal"
+          },
+          {
+            "art": "",
+            "bar": "19",
+            "dyn": "mf",
+            "events": "G4@1+0.5 G4@2+0.5",
+            "part": "Trumpet 1",
+            "role": "rhythm"
+          },
+          {
+            "art": "",
+            "bar": "19",
+            "dyn": "mp<mf",
+            "events": "E3@0+1 G3@1+1 B3@2+1",
+            "part": "Harp",
+            "role": "figure"
+          },
+          {
+            "art": "",
+            "bar": "20",
+            "dyn": "ff",
+            "events": "C6@0+1 G5@1+1 E5@2+1",
+            "part": "Violin II",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "20",
+            "dyn": "f",
+            "events": "C3@0+1 G2@1+1 C3@2+1",
+            "part": "Cello",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "20",
+            "dyn": "mf",
+            "events": "E4@0+3",
+            "part": "Viola",
+            "role": "countermelody"
+          },
+          {
+            "art": "",
+            "bar": "20",
+            "dyn": "mf",
+            "events": "E5@1+0.5 C5@2+0.5",
+            "part": "Trumpet 1",
+            "role": "rhythm"
+          },
+          {
+            "art": "",
+            "bar": "20",
+            "dyn": "mf",
+            "events": "C4@0+1 E4@1+1 G4@2+1",
+            "part": "Harp",
+            "role": "figure"
+          }
+        ],
+        "doubles": [
+          {
+            "from": "13",
+            "octave": -1,
+            "of": "Cello",
+            "part": "Double Bass",
+            "to": "20"
+          }
+        ]
+      },
+      "sources": [],
+      "cached": false
+    },
+    "ms": 162965,
+    "thinking": [
+      {
+        "at": 7548,
+        "text": "Mapping bars 13-20 to instruments and chords while respecting existing tune, bass, and countermelody lines."
+      },
+      {
+        "at": 9811,
+        "text": "Resolving which empty instruments to score for bars 13-20 while keeping existing tune, bass, and countermelody lines."
+      },
+      {
+        "at": 19068,
+        "text": "Mapping the tune, bass, and countermelody to the named Violin II, Trumpet 1, and Harp parts."
+      },
+      {
+        "at": 26733,
+        "text": "Assigning the tune, bass, and countermelody to instrument ranges while adding accompaniment layers."
+      },
+      {
+        "at": 34829,
+        "text": "Resolving instrument assignment for bass and countermelody against the named plan and range constraints."
+      },
+      {
+        "at": 44865,
+        "text": "Extending instrument mapping to include Viola for countermelody and Timpani for harmonic roots."
+      },
+      {
+        "at": 54438,
+        "text": "Validating octave transposition for Double Bass doubling against instrument bounds."
+      },
+      {
+        "at": 63415,
+        "text": "Resolving harp pedal conflict from mixed B natural and Bb across the stretch."
+      },
+      {
+        "at": 74244,
+        "text": "Extending the harp part to avoid B natural in bars 13 and 15 while scheduling the pedal change."
+      },
+      {
+        "at": 83897,
+        "text": "Assigning chord tones and dynamics for trumpet and viola while respecting octave doubling rules."
+      }
+    ],
+    "version": "arrange-16",
+    "model": "muse-spark-1.3",
+    "usage": {
+      "inputTokens": 7491,
+      "cachedTokens": 3825,
+      "outputTokens": 16031
+    }
+  },
+  {
+    "shape": "arrange",
+    "input": {
+      "piece": {
+        "title": "Low Engine Chase",
+        "composer": null,
+        "instrument": "Piccolo"
+      },
+      "fifths": 0,
+      "time": "3/4",
+      "written": [
+        {
+          "bar": "1",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 0
+        },
+        {
+          "bar": "2",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 1
+        },
+        {
+          "bar": "3",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 2
+        },
+        {
+          "bar": "4",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 3
+        },
+        {
+          "bar": "5",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 4
+        },
+        {
+          "bar": "6",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 5
+        },
+        {
+          "bar": "7",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 6
+        },
+        {
+          "bar": "8",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 7
+        },
+        {
+          "bar": "9",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 8
+        },
+        {
+          "bar": "10",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 9
+        },
+        {
+          "bar": "11",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 10
+        },
+        {
+          "bar": "12",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 11
+        },
+        {
+          "bar": "13",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 12
+        },
+        {
+          "bar": "14",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 13
+        },
+        {
+          "bar": "15",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 14
+        },
+        {
+          "bar": "16",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 15
+        },
+        {
+          "bar": "17",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 16
+        },
+        {
+          "bar": "18",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 17
+        },
+        {
+          "bar": "19",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 18
+        },
+        {
+          "bar": "20",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 19
+        },
+        {
+          "bar": "21",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 20
+        },
+        {
+          "bar": "22",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 21
+        },
+        {
+          "bar": "23",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 22
+        },
+        {
+          "bar": "24",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 23
+        },
+        {
+          "bar": "25",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 24
+        },
+        {
+          "bar": "26",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 25
+        },
+        {
+          "bar": "27",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 26
+        },
+        {
+          "bar": "28",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 27
+        },
+        {
+          "bar": "29",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 28
+        },
+        {
+          "bar": "30",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 29
+        },
+        {
+          "bar": "31",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 30
+        },
+        {
+          "bar": "32",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 31
+        }
+      ],
+      "returns": [],
+      "lines": [
+        "Piccolo"
+      ],
+      "moreBars": 0,
+      "ask": "The mood I want: action.",
+      "reading": null,
+      "instruments": [
+        "Piccolo",
+        "Flute 1",
+        "Flute 2",
+        "Oboe 1",
+        "Oboe 2",
+        "Clarinet 1",
+        "Clarinet 2",
+        "Bassoon 1",
+        "Bassoon 2",
+        "Horn 1",
+        "Horn 2",
+        "Horn 3",
+        "Horn 4",
+        "Trumpet 1",
+        "Trumpet 2",
+        "Trumpet 3",
+        "Trombone 1",
+        "Trombone 2",
+        "Bass Trombone",
+        "Tuba",
+        "Timpani",
+        "Glockenspiel",
+        "Snare Drum",
+        "Bass Drum",
+        "Cymbals",
+        "Harp",
+        "Violin I",
+        "Violin II",
+        "Viola",
+        "Cello",
+        "Double Bass"
+      ],
+      "where": "inside",
+      "tracks": [],
+      "answers": [],
+      "cues": [],
+      "freedom": 2,
+      "chosen": {
+        "fifths": 0,
+        "idea": "Full C-major tune over driving minor-inflected engine; low ostinato powers three chases to high brass arrival.",
+        "motif": {
+          "from": "1",
+          "to": "2",
+          "what": "E-B-G flick to held F"
+        },
+        "name": "Low Engine Chase",
+        "qpm": 144,
+        "time": "3/4",
+        "why": [
+          {
+            "chords": "Am | Am | F | G",
+            "dynamics": "mp driving to mf",
+            "from": "1",
+            "principle": "Ostinato engine frees tune entry over waiting dominant",
+            "to": "4",
+            "variation": "engine states motif rhythm",
+            "what": "Cello Double Bass ostinato, Viola answer, Timpani roots"
+          },
+          {
+            "chords": "Am | Dm | Am | Dm | Em7 | Am | G | C",
+            "dynamics": "mf driving to f",
+            "from": "5",
+            "principle": "Relative minor darkens major tune for chase tension",
+            "to": "12",
+            "variation": "whole tune stated over minor",
+            "what": "Violin I tune, Horn 1 counterline, Cello engine"
+          },
+          {
+            "chords": "Am | Bb | Am | F | G | Dm | Em7 | C",
+            "dynamics": "f driving to ff",
+            "from": "13",
+            "principle": "Borrowed flat-seven surprises repeat without losing drive",
+            "to": "20",
+            "variation": "repeat varied with flat-seven colour",
+            "what": "Violin II tune, Trumpet 1 punctuates, Harp lifts"
+          },
+          {
+            "chords": "C | F | C | F | G | F G | C | C",
+            "dynamics": "ff held for climax",
+            "from": "21",
+            "principle": "Brass unison widens register for single late peak",
+            "to": "28",
+            "variation": "high octave over quickening harmony",
+            "what": "Trumpet 1 Horn 1 tune, Trombone 1 pedal, Snare Drum hits"
+          },
+          {
+            "chords": "F | G | C | C",
+            "dynamics": "ff falling to f",
+            "from": "29",
+            "principle": "Strong perfect cadence earns arrival after tension",
+            "to": "32",
+            "variation": "tail fragmented to firm close",
+            "what": "Violin I Trombone 1 cadence, Timpani Bass Drum confirm"
+          }
+        ]
+      },
+      "window": {
+        "from": "21",
+        "to": "28"
+      },
+      "earlier": "Violin II: C6@0+1 G5@1+1 E5@2+1 / Cello: C3@0+1 G2@1+1 C3@2+1 / Viola: E4@0+3 / Trumpet 1: E5@1+0.5 C5@2+0.5 / Harp: C4@0+1 E4@1+1 G4@2+1 / Double Bass: C2@0+1 G1@1+1 C2@2+1",
+      "seed": {
+        "tune": "Bar 1: Piano upper 1:E4@0+1 4:B4@1+1.5 5:G4@2.5+0.5 | Piano lower 2:C3@0+0.5 3:B3@0.5+2 6:B3~@2.5+0.5 / Bar 2: Piano upper 1:F4@0+3 | Piano lower 2:C3@0+0.5 3:A3@0.5+0.5 4:F3@1+2 / Bar 3: Piano upper 1:E4@0+1 4:B4@1+1.5 5:G4@2.5+0.5 | Piano lower 2:C3@0+0.5 3:B3@0.5+2 6:B3~@2.5+0.5 / Bar 4: Piano upper 1:A4@0+1 4:F4@1+2 | Piano lower 2:C3@0+0.5 3:A3@0.5+2 5:A3~@2.5+0.5 / Bar 5: Piano upper 1:G4@0+1 4:D5@1+1.5 5:B4@2.5+0.5 | Piano lower 2:D3@0+0.5 3:B3@0.5+2 6:B3~@2.5+0.5 / Bar 6: Piano upper 1:C5@0+1 4:E4@1+2 | Piano lower 2:C3@0+0.5 3:B3@0.5+2 5:B3~@2.5+0.5 / Bar 7: Piano upper 1:F4@0+1 4:G4@1+2 | Piano lower 2:C3@0+0.5 3:A3@0.5+2 5:A3~@2.5+0.5 / Bar 8: Piano upper 1:G4~@0+3 | Piano lower 2:C3@0+0.5 3:C4@0+0.5 4:G3@0.5+2 5:G3~@2.5+0.5 / Bar 9: Piano upper 1:E4@0+1 4:B4@1+1.5 5:G4@2.5+0.5 | Piano lower 2:C3@0+0.5 3:B3@0.5+2 6:B3~@2.5+0.5 / Bar 10: Piano upper 1:F4@0+3 | Piano lower 2:C3@0+0.5 3:A3@0.5+2 4:A3~@2.5+0.5 / Bar 11: Piano upper 1:E4@0+1 4:B4@1+1 5:G4@2+1 | Piano lower 2:C3@0+0.5 3:G3@0.5+2 6:G3~@2.5+0.5 / Bar 12: Piano upper 1:F4@0+2 2:A4@0+2 6:C5@2+1 | Piano lower 3:C3@0+0.5 4:A3@0.5+0.5 5:F3@1+2 / Bar 13: Piano upper 1:D5@0+2 2:G4@0+2 6:B4@2+0.5 7:G4@2.5+0.5 | Piano lower 3:D3@0+0.5 4:B3@0.5+0.5 5:B3@1+2 / Bar 14: Piano upper 1:A4@0+1 4:F4@1+2 | Piano lower 2:C3@0+0.5 3:A3@0.5+2 5:A3~@2.5+0.5 / Bar 15: Piano upper 1:G4@0+1 4:D5@1+1.5 5:B4@2.5+0.5 | Piano lower 2:D3@0+0.5 3:B3@0.5+2 6:B3~@2.5+0.5 / Bar 16: Piano upper 1:C5@0+1 4:E5@1+2 | Piano lower 2:C3@0+0.5 3:G3@0.5+2 5:G3~@2.5+0.5 / Bar 17: Piano upper 1:E5@0+1 4:C6@1+1.5 5:G5@2.5+0.5 | Piano lower 2:C4@0+0.5 3:G4@0.5+2 6:G4~@2.5+0.5 / Bar 18: Piano upper 1:F5@0+3 | Piano lower 2:C4@0+0.5 3:A4@0.5+0.5 4:C5@1+2 / Bar 19: Piano upper 1:E5@0+1 4:C6@1+1.5 5:G5@2.5+0.5 | Piano lower 2:C4@0+0.5 3:G4@0.5+2 6:G4~@2.5+0.5 / Bar 20: Piano upper 1:A5@0+3 | Piano lower 2:C4@0+0.5 3:A4@0.5+0.5 4:C5@1+2 / Bar 21: Piano upper 1:G5@0+1 2:D6@0+1 5:D6@1+1.5 6:G5@1+1.5 7:B5@2.5+0.5 | Piano lower 3:D4@0+0.5 4:G4@0.5+2 8:G4~@2.5+0.5 / Bar 22: Piano upper 1:C6@0+1 4:G5@1+1 5:A5@2+1 | Piano lower 2:C4@0+0.5 3:G4@0.5+2 6:G4~@2.5+0.5 / Bar 23: Piano upper 1:E5@0+1 4:G5@1+2 | Piano lower 2:C4@0+0.5 3:G4@0.5+1.5 5:G4~@2+0.25 6:D5@2.25+0.75 / Bar 24: Piano upper 1:C5@0+2 6:C5~@2+0.5 7:E4@2.5+0.5 | Piano lower 2:C3@0+0.5 3:G3@0.5+0.5 4:C4@1+0.5 5:D4@1.5+1.5",
+        "motif": "E-B-G flick to held F From bars 1 to 2.",
+        "theme": "Bar 21 tune: E5@0+1 C6@1+1.5 G5@2.5+0.5 / Bar 21 bass: C3@0+0.5 C3@0.5+0.5 G2@1+0.5 G2@1.5+0.5 C3@2+0.5 G2@2.5+0.5 / Bar 22 tune: F5@0+2.5 G5@2.5+0.5 / Bar 22 countermelody: A4@0+1 G4@1+1 A4@2+1 / Bar 22 bass: F2@0+1 C3@1+1 F2@2+1 / Bar 23 tune: E5@0+1 C6@1+1.5 G5@2.5+0.5 / Bar 23 bass: C3@0+3 / Bar 24 tune: A5@0+3 / Bar 24 countermelody: C5@0+1 Bb4@1+1 A4@2+1 / Bar 24 bass: F2@0+3 / Bar 25 tune: D6@0+1 C6@1+1 B5@2+1 / Bar 25 bass: G2@0+1 D3@1+1 G2@2+1 / Bar 26 tune: C6@0+1 G5@1+1 A5@2+1 / Bar 26 countermelody: A4@0+1 G4@1+1 F4@2+1 / Bar 26 bass: F2@0+0.5 A2@0.5+0.5 C3@1+0.5 D3@1.5+0.5 G2@2+1 / Bar 27 tune: E5@0+1 G5@1+2 / Bar 27 countermelody: C5@0+1 D5@1+1 E5@2+1 / Bar 27 bass: C3@0+1 E3@1+1 G3@2+1 / Bar 28 tune: C5@0+1 G4@1+1 E4@2+1 / Bar 28 countermelody: E4@0+3 / Bar 28 bass: C3@0+3"
+      }
+    },
+    "reply": {
+      "status": "ok",
+      "answer": {
+        "adds": [
+          {
+            "art": "",
+            "bar": "21",
+            "dyn": "ff",
+            "events": "E5@0+1 C6@1+1.5 G5@2.5+0.5",
+            "part": "Violin I",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "22",
+            "dyn": "ff",
+            "events": "F5@0+2.5 G5@2.5+0.5",
+            "part": "Violin I",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "23",
+            "dyn": "ff",
+            "events": "E5@0+1 C6@1+1.5 G5@2.5+0.5",
+            "part": "Violin I",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "24",
+            "dyn": "ff",
+            "events": "A5@0+3",
+            "part": "Violin I",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "25",
+            "dyn": "ff",
+            "events": "D6@0+1 C6@1+1 B5@2+1",
+            "part": "Violin I",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "26",
+            "dyn": "ff",
+            "events": "C6@0+1 G5@1+1 A5@2+1",
+            "part": "Violin I",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "27",
+            "dyn": "ff",
+            "events": "E5@0+1 G5@1+2",
+            "part": "Violin I",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "28",
+            "dyn": "ff",
+            "events": "C5@0+1 G4@1+1 E4@2+1",
+            "part": "Violin I",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "21",
+            "dyn": "ff",
+            "events": "C3@0+0.5 C3@0.5+0.5 G2@1+0.5 G2@1.5+0.5 C3@2+0.5 G2@2.5+0.5",
+            "part": "Trombone 1",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "22",
+            "dyn": "ff",
+            "events": "F2@0+1 C3@1+1 F2@2+1",
+            "part": "Trombone 1",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "23",
+            "dyn": "ff",
+            "events": "C3@0+3",
+            "part": "Trombone 1",
+            "role": "pedal"
+          },
+          {
+            "art": "",
+            "bar": "24",
+            "dyn": "ff",
+            "events": "F2@0+3",
+            "part": "Trombone 1",
+            "role": "pedal"
+          },
+          {
+            "art": "",
+            "bar": "25",
+            "dyn": "ff",
+            "events": "G2@0+1 D3@1+1 G2@2+1",
+            "part": "Trombone 1",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "26",
+            "dyn": "ff",
+            "events": "F2@0+0.5 A2@0.5+0.5 C3@1+0.5 D3@1.5+0.5 G2@2+1",
+            "part": "Trombone 1",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "27",
+            "dyn": "ff",
+            "events": "C3@0+1 E3@1+1 G3@2+1",
+            "part": "Trombone 1",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "28",
+            "dyn": "ff",
+            "events": "C3@0+3",
+            "part": "Trombone 1",
+            "role": "pedal"
+          },
+          {
+            "art": "",
+            "bar": "22",
+            "dyn": "ff",
+            "events": "A4@0+1 G4@1+1 A4@2+1",
+            "part": "Viola",
+            "role": "countermelody"
+          },
+          {
+            "art": "",
+            "bar": "24",
+            "dyn": "ff",
+            "events": "C5@0+1 Bb4@1+1 A4@2+1",
+            "part": "Viola",
+            "role": "countermelody"
+          },
+          {
+            "art": "",
+            "bar": "26",
+            "dyn": "ff",
+            "events": "A4@0+1 G4@1+1 F4@2+1",
+            "part": "Viola",
+            "role": "countermelody"
+          },
+          {
+            "art": "",
+            "bar": "27",
+            "dyn": "ff",
+            "events": "C5@0+1 D5@1+1 E5@2+1",
+            "part": "Viola",
+            "role": "countermelody"
+          },
+          {
+            "art": "",
+            "bar": "28",
+            "dyn": "ff",
+            "events": "E4@0+3",
+            "part": "Viola",
+            "role": "countermelody"
+          },
+          {
+            "art": "",
+            "bar": "21",
+            "dyn": "ff",
+            "events": "C4@0+0.5 C4@1+0.5 C4@2+0.5",
+            "part": "Snare Drum",
+            "role": "rhythm"
+          },
+          {
+            "art": "",
+            "bar": "22",
+            "dyn": "ff",
+            "events": "C4@0+0.5 C4@1+0.5 C4@2+0.5",
+            "part": "Snare Drum",
+            "role": "rhythm"
+          },
+          {
+            "art": "",
+            "bar": "23",
+            "dyn": "ff",
+            "events": "C4@0+0.5 C4@1+0.5 C4@2+0.5",
+            "part": "Snare Drum",
+            "role": "rhythm"
+          },
+          {
+            "art": "",
+            "bar": "24",
+            "dyn": "ff",
+            "events": "C4@0+0.5 C4@1+0.5 C4@2+0.5",
+            "part": "Snare Drum",
+            "role": "rhythm"
+          },
+          {
+            "art": "",
+            "bar": "25",
+            "dyn": "ff",
+            "events": "C4@0+0.5 C4@1+0.5 C4@2+0.5",
+            "part": "Snare Drum",
+            "role": "rhythm"
+          },
+          {
+            "art": "",
+            "bar": "26",
+            "dyn": "ff",
+            "events": "C4@0+0.5 C4@1+0.5 C4@2+0.5",
+            "part": "Snare Drum",
+            "role": "rhythm"
+          },
+          {
+            "art": "",
+            "bar": "27",
+            "dyn": "ff",
+            "events": "C4@0+0.5 C4@1+0.5 C4@2+0.5",
+            "part": "Snare Drum",
+            "role": "rhythm"
+          },
+          {
+            "art": "",
+            "bar": "28",
+            "dyn": "ff",
+            "events": "C4@0+0.5 C4@1+0.5 C4@2+0.5",
+            "part": "Snare Drum",
+            "role": "rhythm"
+          }
+        ],
+        "doubles": [
+          {
+            "from": "21",
+            "octave": -1,
+            "of": "Violin I",
+            "part": "Trumpet 1",
+            "to": "27"
+          },
+          {
+            "from": "28",
+            "octave": 0,
+            "of": "Violin I",
+            "part": "Trumpet 1",
+            "to": "28"
+          },
+          {
+            "from": "21",
+            "octave": -1,
+            "of": "Violin I",
+            "part": "Horn 1",
+            "to": "27"
+          },
+          {
+            "from": "28",
+            "octave": 0,
+            "of": "Violin I",
+            "part": "Horn 1",
+            "to": "28"
+          }
+        ]
+      },
+      "sources": [],
+      "cached": false
+    },
+    "ms": 98108,
+    "thinking": [
+      {
+        "at": 3909,
+        "text": "Mapping existing composed lines to instruments and arranging additional parts for bars 21-28 under orchestration constraints."
+      },
+      {
+        "at": 7007,
+        "text": "Assigning named melodic lines to instruments and applying octave transposition to fit range limits."
+      },
+      {
+        "at": 16410,
+        "text": "Validating pitch bounds for the trumpet line and resolving the out-of-range note."
+      },
+      {
+        "at": 23404,
+        "text": "Checking instrument range limits and reassigning countermelody to fit available parts."
+      },
+      {
+        "at": 30533,
+        "text": "Expanding instrumentation beyond the initial plan to cover high notes within range."
+      },
+      {
+        "at": 37989,
+        "text": "Checking instrument ranges against the score to allow octave doubling while keeping the tune in the named parts."
+      },
+      {
+        "at": 47589,
+        "text": "Validating MIDI ranges and weighing octave displacement against the note-for-note constraint for the assigned instruments."
+      },
+      {
+        "at": 57817,
+        "text": "Resolving the carrier instrument conflict by using a non-plan instrument for the high tune and plan instruments for doubles and bass."
+      },
+      {
+        "at": 66273,
+        "text": "Adjusting octave splits for brass doubles to keep notes within instrument range."
+      },
+      {
+        "at": 74352,
+        "text": "Extending the doubling plan with bar-level octave choices and layer assignments for remaining instruments."
+      }
+    ],
+    "version": "arrange-16",
+    "model": "muse-spark-1.3",
+    "usage": {
+      "inputTokens": 7403,
+      "cachedTokens": 3825,
+      "outputTokens": 10535
+    }
+  },
+  {
+    "shape": "arrange",
+    "input": {
+      "piece": {
+        "title": "Low Engine Chase",
+        "composer": null,
+        "instrument": "Piccolo"
+      },
+      "fifths": 0,
+      "time": "3/4",
+      "written": [
+        {
+          "bar": "1",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 0
+        },
+        {
+          "bar": "2",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 1
+        },
+        {
+          "bar": "3",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 2
+        },
+        {
+          "bar": "4",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 3
+        },
+        {
+          "bar": "5",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 4
+        },
+        {
+          "bar": "6",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 5
+        },
+        {
+          "bar": "7",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 6
+        },
+        {
+          "bar": "8",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 7
+        },
+        {
+          "bar": "9",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 8
+        },
+        {
+          "bar": "10",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 9
+        },
+        {
+          "bar": "11",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 10
+        },
+        {
+          "bar": "12",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 11
+        },
+        {
+          "bar": "13",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 12
+        },
+        {
+          "bar": "14",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 13
+        },
+        {
+          "bar": "15",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 14
+        },
+        {
+          "bar": "16",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 15
+        },
+        {
+          "bar": "17",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 16
+        },
+        {
+          "bar": "18",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 17
+        },
+        {
+          "bar": "19",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 18
+        },
+        {
+          "bar": "20",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 19
+        },
+        {
+          "bar": "21",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 20
+        },
+        {
+          "bar": "22",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 21
+        },
+        {
+          "bar": "23",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 22
+        },
+        {
+          "bar": "24",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 23
+        },
+        {
+          "bar": "25",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 24
+        },
+        {
+          "bar": "26",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 25
+        },
+        {
+          "bar": "27",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 26
+        },
+        {
+          "bar": "28",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 27
+        },
+        {
+          "bar": "29",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 28
+        },
+        {
+          "bar": "30",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 29
+        },
+        {
+          "bar": "31",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 30
+        },
+        {
+          "bar": "32",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 31
+        }
+      ],
+      "returns": [],
+      "lines": [
+        "Piccolo"
+      ],
+      "moreBars": 0,
+      "ask": "The mood I want: action.",
+      "reading": null,
+      "instruments": [
+        "Piccolo",
+        "Flute 1",
+        "Flute 2",
+        "Oboe 1",
+        "Oboe 2",
+        "Clarinet 1",
+        "Clarinet 2",
+        "Bassoon 1",
+        "Bassoon 2",
+        "Horn 1",
+        "Horn 2",
+        "Horn 3",
+        "Horn 4",
+        "Trumpet 1",
+        "Trumpet 2",
+        "Trumpet 3",
+        "Trombone 1",
+        "Trombone 2",
+        "Bass Trombone",
+        "Tuba",
+        "Timpani",
+        "Glockenspiel",
+        "Snare Drum",
+        "Bass Drum",
+        "Cymbals",
+        "Harp",
+        "Violin I",
+        "Violin II",
+        "Viola",
+        "Cello",
+        "Double Bass"
+      ],
+      "where": "inside",
+      "tracks": [],
+      "answers": [],
+      "cues": [],
+      "freedom": 2,
+      "chosen": {
+        "fifths": 0,
+        "idea": "Full C-major tune over driving minor-inflected engine; low ostinato powers three chases to high brass arrival.",
+        "motif": {
+          "from": "1",
+          "to": "2",
+          "what": "E-B-G flick to held F"
+        },
+        "name": "Low Engine Chase",
+        "qpm": 144,
+        "time": "3/4",
+        "why": [
+          {
+            "chords": "Am | Am | F | G",
+            "dynamics": "mp driving to mf",
+            "from": "1",
+            "principle": "Ostinato engine frees tune entry over waiting dominant",
+            "to": "4",
+            "variation": "engine states motif rhythm",
+            "what": "Cello Double Bass ostinato, Viola answer, Timpani roots"
+          },
+          {
+            "chords": "Am | Dm | Am | Dm | Em7 | Am | G | C",
+            "dynamics": "mf driving to f",
+            "from": "5",
+            "principle": "Relative minor darkens major tune for chase tension",
+            "to": "12",
+            "variation": "whole tune stated over minor",
+            "what": "Violin I tune, Horn 1 counterline, Cello engine"
+          },
+          {
+            "chords": "Am | Bb | Am | F | G | Dm | Em7 | C",
+            "dynamics": "f driving to ff",
+            "from": "13",
+            "principle": "Borrowed flat-seven surprises repeat without losing drive",
+            "to": "20",
+            "variation": "repeat varied with flat-seven colour",
+            "what": "Violin II tune, Trumpet 1 punctuates, Harp lifts"
+          },
+          {
+            "chords": "C | F | C | F | G | F G | C | C",
+            "dynamics": "ff held for climax",
+            "from": "21",
+            "principle": "Brass unison widens register for single late peak",
+            "to": "28",
+            "variation": "high octave over quickening harmony",
+            "what": "Trumpet 1 Horn 1 tune, Trombone 1 pedal, Snare Drum hits"
+          },
+          {
+            "chords": "F | G | C | C",
+            "dynamics": "ff falling to f",
+            "from": "29",
+            "principle": "Strong perfect cadence earns arrival after tension",
+            "to": "32",
+            "variation": "tail fragmented to firm close",
+            "what": "Violin I Trombone 1 cadence, Timpani Bass Drum confirm"
+          }
+        ]
+      },
+      "window": {
+        "from": "29",
+        "to": "32"
+      },
+      "earlier": "Violin I: C5@0+1 G4@1+1 E4@2+1 / Trombone 1: C3@0+3 / Viola: E4@0+3 / Snare Drum: C4@0+0.5 C4@1+0.5 C4@2+0.5 / Trumpet 1: C5@0+1 G4@1+1 E4@2+1 / Horn 1: C5@0+1 G4@1+1 E4@2+1",
+      "seed": {
+        "tune": "Bar 1: Piano upper 1:E4@0+1 4:B4@1+1.5 5:G4@2.5+0.5 | Piano lower 2:C3@0+0.5 3:B3@0.5+2 6:B3~@2.5+0.5 / Bar 2: Piano upper 1:F4@0+3 | Piano lower 2:C3@0+0.5 3:A3@0.5+0.5 4:F3@1+2 / Bar 3: Piano upper 1:E4@0+1 4:B4@1+1.5 5:G4@2.5+0.5 | Piano lower 2:C3@0+0.5 3:B3@0.5+2 6:B3~@2.5+0.5 / Bar 4: Piano upper 1:A4@0+1 4:F4@1+2 | Piano lower 2:C3@0+0.5 3:A3@0.5+2 5:A3~@2.5+0.5 / Bar 5: Piano upper 1:G4@0+1 4:D5@1+1.5 5:B4@2.5+0.5 | Piano lower 2:D3@0+0.5 3:B3@0.5+2 6:B3~@2.5+0.5 / Bar 6: Piano upper 1:C5@0+1 4:E4@1+2 | Piano lower 2:C3@0+0.5 3:B3@0.5+2 5:B3~@2.5+0.5 / Bar 7: Piano upper 1:F4@0+1 4:G4@1+2 | Piano lower 2:C3@0+0.5 3:A3@0.5+2 5:A3~@2.5+0.5 / Bar 8: Piano upper 1:G4~@0+3 | Piano lower 2:C3@0+0.5 3:C4@0+0.5 4:G3@0.5+2 5:G3~@2.5+0.5 / Bar 9: Piano upper 1:E4@0+1 4:B4@1+1.5 5:G4@2.5+0.5 | Piano lower 2:C3@0+0.5 3:B3@0.5+2 6:B3~@2.5+0.5 / Bar 10: Piano upper 1:F4@0+3 | Piano lower 2:C3@0+0.5 3:A3@0.5+2 4:A3~@2.5+0.5 / Bar 11: Piano upper 1:E4@0+1 4:B4@1+1 5:G4@2+1 | Piano lower 2:C3@0+0.5 3:G3@0.5+2 6:G3~@2.5+0.5 / Bar 12: Piano upper 1:F4@0+2 2:A4@0+2 6:C5@2+1 | Piano lower 3:C3@0+0.5 4:A3@0.5+0.5 5:F3@1+2 / Bar 13: Piano upper 1:D5@0+2 2:G4@0+2 6:B4@2+0.5 7:G4@2.5+0.5 | Piano lower 3:D3@0+0.5 4:B3@0.5+0.5 5:B3@1+2 / Bar 14: Piano upper 1:A4@0+1 4:F4@1+2 | Piano lower 2:C3@0+0.5 3:A3@0.5+2 5:A3~@2.5+0.5 / Bar 15: Piano upper 1:G4@0+1 4:D5@1+1.5 5:B4@2.5+0.5 | Piano lower 2:D3@0+0.5 3:B3@0.5+2 6:B3~@2.5+0.5 / Bar 16: Piano upper 1:C5@0+1 4:E5@1+2 | Piano lower 2:C3@0+0.5 3:G3@0.5+2 5:G3~@2.5+0.5 / Bar 17: Piano upper 1:E5@0+1 4:C6@1+1.5 5:G5@2.5+0.5 | Piano lower 2:C4@0+0.5 3:G4@0.5+2 6:G4~@2.5+0.5 / Bar 18: Piano upper 1:F5@0+3 | Piano lower 2:C4@0+0.5 3:A4@0.5+0.5 4:C5@1+2 / Bar 19: Piano upper 1:E5@0+1 4:C6@1+1.5 5:G5@2.5+0.5 | Piano lower 2:C4@0+0.5 3:G4@0.5+2 6:G4~@2.5+0.5 / Bar 20: Piano upper 1:A5@0+3 | Piano lower 2:C4@0+0.5 3:A4@0.5+0.5 4:C5@1+2 / Bar 21: Piano upper 1:G5@0+1 2:D6@0+1 5:D6@1+1.5 6:G5@1+1.5 7:B5@2.5+0.5 | Piano lower 3:D4@0+0.5 4:G4@0.5+2 8:G4~@2.5+0.5 / Bar 22: Piano upper 1:C6@0+1 4:G5@1+1 5:A5@2+1 | Piano lower 2:C4@0+0.5 3:G4@0.5+2 6:G4~@2.5+0.5 / Bar 23: Piano upper 1:E5@0+1 4:G5@1+2 | Piano lower 2:C4@0+0.5 3:G4@0.5+1.5 5:G4~@2+0.25 6:D5@2.25+0.75 / Bar 24: Piano upper 1:C5@0+2 6:C5~@2+0.5 7:E4@2.5+0.5 | Piano lower 2:C3@0+0.5 3:G3@0.5+0.5 4:C4@1+0.5 5:D4@1.5+1.5",
+        "motif": "E-B-G flick to held F From bars 1 to 2.",
+        "theme": "Bar 29 tune: F4@0+1 G4@1+1 A4@2+1 / Bar 29 countermelody: A3@0+1 G3@1+1 F3@2+1 / Bar 29 bass: F2@0+1 C3@1+1 F2@2+1 / Bar 30 tune: G4@0+1 A4@1+1 B4@2+1 / Bar 30 countermelody: G3@0+1 F3@1+1 D3@2+1 / Bar 30 bass: G2@0+1 D3@1+1 G2@2+1 / Bar 31 tune: C5@0+2 G4@2+1 / Bar 31 countermelody: E4@0+1 D4@1+1 C4@2+1 / Bar 31 bass: C3@0+1 G2@1+1 C3@2+1 / Bar 32 tune: C5@0+3 / Bar 32 bass: C3@0+1 G2@1+1 C2@2+1"
+      }
+    },
+    "reply": {
+      "status": "ok",
+      "answer": {
+        "adds": [
+          {
+            "art": "",
+            "bar": "29",
+            "dyn": "ff",
+            "events": "F4@0+1 G4@1+1 A4@2+1",
+            "part": "Violin I",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "30",
+            "dyn": "ff",
+            "events": "G4@0+1 A4@1+1 B4@2+1",
+            "part": "Violin I",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "31",
+            "dyn": "f",
+            "events": "C5@0+2 G4@2+1",
+            "part": "Violin I",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "32",
+            "dyn": "f",
+            "events": "C5@0+3",
+            "part": "Violin I",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "29",
+            "dyn": "ff",
+            "events": "A3@0+1 G3@1+1 F3@2+1",
+            "part": "Trombone 1",
+            "role": "countermelody"
+          },
+          {
+            "art": "",
+            "bar": "30",
+            "dyn": "ff",
+            "events": "G3@0+1 F3@1+1 D3@2+1",
+            "part": "Trombone 1",
+            "role": "countermelody"
+          },
+          {
+            "art": "",
+            "bar": "31",
+            "dyn": "f",
+            "events": "E4@0+1 D4@1+1 C4@2+1",
+            "part": "Trombone 1",
+            "role": "countermelody"
+          },
+          {
+            "art": "",
+            "bar": "32",
+            "dyn": "f",
+            "events": "G4@0+3",
+            "part": "Trombone 1",
+            "role": "harmony"
+          },
+          {
+            "art": "",
+            "bar": "29",
+            "dyn": "ff",
+            "events": "F2@0+1 C3@1+1 F2@2+1",
+            "part": "Double Bass",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "30",
+            "dyn": "ff",
+            "events": "G2@0+1 D3@1+1 G2@2+1",
+            "part": "Double Bass",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "31",
+            "dyn": "f",
+            "events": "C3@0+1 G2@1+1 C3@2+1",
+            "part": "Double Bass",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "32",
+            "dyn": "f",
+            "events": "C3@0+1 G2@1+1 C2@2+1",
+            "part": "Double Bass",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "29",
+            "dyn": "ff",
+            "events": "F2@0+3",
+            "part": "Timpani",
+            "role": "pedal"
+          },
+          {
+            "art": "",
+            "bar": "30",
+            "dyn": "ff",
+            "events": "G2@0+3",
+            "part": "Timpani",
+            "role": "pedal"
+          },
+          {
+            "art": "",
+            "bar": "31",
+            "dyn": "f",
+            "events": "C3@0+3",
+            "part": "Timpani",
+            "role": "pedal"
+          },
+          {
+            "art": "",
+            "bar": "32",
+            "dyn": "f",
+            "events": "C3@0+3",
+            "part": "Timpani",
+            "role": "pedal"
+          },
+          {
+            "art": "",
+            "bar": "29",
+            "dyn": "ff",
+            "events": "C4@0+0.5",
+            "part": "Bass Drum",
+            "role": "rhythm"
+          },
+          {
+            "art": "",
+            "bar": "30",
+            "dyn": "ff",
+            "events": "C4@0+0.5",
+            "part": "Bass Drum",
+            "role": "rhythm"
+          },
+          {
+            "art": "",
+            "bar": "31",
+            "dyn": "f",
+            "events": "C4@0+0.5",
+            "part": "Bass Drum",
+            "role": "rhythm"
+          },
+          {
+            "art": "",
+            "bar": "32",
+            "dyn": "f",
+            "events": "C4@0+0.5 C4@2+0.5",
+            "part": "Bass Drum",
+            "role": "rhythm"
+          },
+          {
+            "art": "",
+            "bar": "29",
+            "dyn": "ff",
+            "events": "C4@0+3",
+            "part": "Viola",
+            "role": "harmony"
+          },
+          {
+            "art": "",
+            "bar": "30",
+            "dyn": "ff",
+            "events": "D4@0+3",
+            "part": "Viola",
+            "role": "harmony"
+          },
+          {
+            "art": "",
+            "bar": "31",
+            "dyn": "f",
+            "events": "G3@0+3",
+            "part": "Viola",
+            "role": "harmony"
+          },
+          {
+            "art": "",
+            "bar": "32",
+            "dyn": "f",
+            "events": "E4@0+3",
+            "part": "Viola",
+            "role": "harmony"
+          },
+          {
+            "art": "",
+            "bar": "29",
+            "dyn": "ff",
+            "events": "F3@0+3",
+            "part": "Cello",
+            "role": "harmony"
+          },
+          {
+            "art": "",
+            "bar": "30",
+            "dyn": "ff",
+            "events": "G3@0+3",
+            "part": "Cello",
+            "role": "harmony"
+          },
+          {
+            "art": "",
+            "bar": "31",
+            "dyn": "f",
+            "events": "E3@0+2 G3@2+1",
+            "part": "Cello",
+            "role": "harmony"
+          },
+          {
+            "art": "",
+            "bar": "32",
+            "dyn": "f",
+            "events": "C3@0+1 G3@1+1 C3@2+1",
+            "part": "Cello",
+            "role": "harmony"
+          }
+        ],
+        "doubles": []
+      },
+      "sources": [],
+      "cached": false
+    },
+    "ms": 120778,
+    "thinking": [
+      {
+        "at": 3863,
+        "text": "Mapping bar 29-32 musical material to JSON adds and doubles while handling cadence and dynamics."
+      },
+      {
+        "at": 8119,
+        "text": "Resolving instrument range conflict by reassigning tune and bass lines to named instruments."
+      },
+      {
+        "at": 13684,
+        "text": "Resolving pitch-range conflict for the bass line while mapping the three lines to the named instruments."
+      },
+      {
+        "at": 22612,
+        "text": "Adjusting the bass line to fit instrument bounds while keeping the three-line mapping to the named instruments."
+      },
+      {
+        "at": 31455,
+        "text": "Resolving the instrument range conflict by adding a low bass instrument beyond the plan list."
+      },
+      {
+        "at": 40192,
+        "text": "Extending orchestration to include double bass for the C2 bass note while keeping the planned instruments."
+      },
+      {
+        "at": 48602,
+        "text": "Assigning countermelody and harmony layers to remaining instruments while respecting range and plan constraints."
+      },
+      {
+        "at": 57854,
+        "text": "Extending instrumentation with bass and harmony parts to cover low range and inner voices."
+      },
+      {
+        "at": 68991,
+        "text": "Adding timpani, bass drum, viola, and cello parts with octave and harmony spacing."
+      },
+      {
+        "at": 80032,
+        "text": "Validating voice leading and register spacing for viola and cello against the chord tones."
+      }
+    ],
+    "version": "arrange-16",
+    "model": "muse-spark-1.3",
+    "usage": {
+      "inputTokens": 7109,
+      "cachedTokens": 3825,
+      "outputTokens": 12526
+    }
+  }
+]
