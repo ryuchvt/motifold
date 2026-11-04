@@ -1,0 +1,102 @@
+{
+  "id": "recompose-neutral-string-quartet-a",
+  "recipe": {
+    "id": "recompose-neutral-string-quartet",
+    "intent": "recompose",
+    "ensemble": "String quartet",
+    "instruments": [
+      "Violin I",
+      "Violin II",
+      "Viola",
+      "Cello"
+    ],
+    "mood": "Neutral",
+    "bars": 32,
+    "moreBars": 32,
+    "where": "after",
+    "tuneOnly": false,
+    "freedom": 2
+  },
+  "option": 0,
+  "plan": "Answering Waltz",
+  "status": "complete",
+  "verified": {
+    "sha256": "9a4f922dfc5172405a0ed636aa04d5974b42d8ab3a7ebdb5a46767c9efddd9f0",
+    "files": 8,
+    "parts": [
+      {
+        "name": "Violin I",
+        "bars": 32
+      },
+      {
+        "name": "Violin II",
+        "bars": 32
+      },
+      {
+        "name": "Viola",
+        "bars": 32
+      },
+      {
+        "name": "Cello",
+        "bars": 32
+      }
+    ],
+    "tracks": 4,
+    "notes": 291,
+    "ppq": 480,
+    "scoreAndMidiAgree": true
+  },
+  "placement": null,
+  "advisoryClashes": [
+    {
+      "bar": "6",
+      "part": "Violin I",
+      "name": "E4"
+    },
+    {
+      "bar": "6",
+      "part": "Violin II",
+      "name": "F4"
+    },
+    {
+      "bar": "6",
+      "part": "Viola",
+      "name": "E3"
+    },
+    {
+      "bar": "12",
+      "part": "Violin I",
+      "name": "F4"
+    },
+    {
+      "bar": "16",
+      "part": "Violin I",
+      "name": "F4"
+    },
+    {
+      "bar": "12",
+      "part": "Violin II",
+      "name": "E4"
+    },
+    {
+      "bar": "16",
+      "part": "Violin II",
+      "name": "E4"
+    },
+    {
+      "bar": "26",
+      "part": "Violin II",
+      "name": "C5"
+    },
+    {
+      "bar": "26",
+      "part": "Viola",
+      "name": "B3"
+    }
+  ],
+  "audio": {
+    "status": "not-rendered",
+    "expectedFile": "audio/render.wav"
+  },
+  "provenance": "Actual successful Meta calls. The recorded stages may include cold retries. No uninterrupted live session is claimed."
+}

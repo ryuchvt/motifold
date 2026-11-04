@@ -1,0 +1,14 @@
+Pedal Pastoral: Pedal Pastoral
+
+Pastoral waltz over open pedals passes tune round quartet, keeps light plagal colours and closes hushed.
+
+Bars 1 to 8. Cello holds C-G fifths, viola rocking ostinato, Violin II sings tune, Violin I halos. Pedal suspends time, inner tune leaves air above. Chords: C | F/C | Am7 | F | C/E | F | Em7 | C Level: pp staying soft
+Bars 9 to 16. Viola takes tune, Violin I Violin II answer in thirds, Cello walking bass down fourth. Shared tones between thirds soften repeat contrast. Chords: Bb | Em | F | C | C | F | G | F Level: mp gently rising
+Bars 17 to 24. Violin I high tune, Violin II sixth below, viola cello long F-Bb-C pedals. Open fifths and slow changes give space. Chords: C | Fmaj7 | C | Bb | C | Dm | C/E | G Level: mf growing to f
+Bars 25 to 32. Violin I Violin II echo tail, viola arpeggios, cello roots-fifths to firm C cadence. Thinned texture before hit lands final arrival. Chords: Am | F | C | G7 | C | F | Dm G7 | C Level: f dying to pp
+
+254 new notes. The code checked each one against what's sounding and the range of its instrument.
+10 long notes sit a semitone from something else sounding. That can be a good suspension or a slip, so check by ear: Violin I F5 in bar 6, Violin II E4 in bar 6, Violin I F5 in bar 9, Viola E4 in bar 9 and 6 more.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your own notes are as you wrote them.

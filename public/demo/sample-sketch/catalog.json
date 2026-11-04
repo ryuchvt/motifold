@@ -1675,12 +1675,39 @@
       "ensemble": "String quartet",
       "mood": "Neutral",
       "option": 0,
-      "name": "String quartet A",
+      "name": "Answering Waltz",
       "bars": 32,
       "sourceBars": 24,
       "freedom": 2,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/recompose-neutral-string-quartet-a/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/recompose-neutral-string-quartet-a/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/recompose-neutral-string-quartet-a/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/recompose-neutral-string-quartet-a/run.json",
+      "xmlSha256": "2a29bea318c055d713ca72d18e971cbb90bd29b89345ddfb4cc0043206735c39",
+      "midiSha256": "f10d5d0e84f97401c308f2d2d236bb8cf6c15a6000ffae3d5bf8d75f6339f379",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "8",
+          "chords": "Am | Dm7 G7 | C | Dm7 | Em | Dm/F | G | Am7"
+        },
+        {
+          "from": "9",
+          "to": "16",
+          "chords": "Bb F/A | C | C | F | Em A7 | Dm7 | G G7 | Dm"
+        },
+        {
+          "from": "17",
+          "to": "24",
+          "chords": "Em7 | C | Am7 | Db/F | C | F | G | F G"
+        },
+        {
+          "from": "25",
+          "to": "32",
+          "chords": "Am7 | Dm7 G7 | C | F | Dm | G7 | C Fm6 | C"
+        }
+      ]
     },
     {
       "id": "recompose-neutral-string-quartet-b",
@@ -1689,12 +1716,39 @@
       "ensemble": "String quartet",
       "mood": "Neutral",
       "option": 1,
-      "name": "String quartet B",
+      "name": "Pedal Pastoral",
       "bars": 32,
       "sourceBars": 24,
       "freedom": 2,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/recompose-neutral-string-quartet-b/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/recompose-neutral-string-quartet-b/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/recompose-neutral-string-quartet-b/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/recompose-neutral-string-quartet-b/run.json",
+      "xmlSha256": "c881c9c0e5b5b9fe45202eb4e21b5286a6715dbc7e8f3fe40ea17ab4b4d5cad8",
+      "midiSha256": "ad47f5c1af3052bbfd4acf0db2697196cc608f018845686c401b899e595e4c17",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "8",
+          "chords": "C | F/C | Am7 | F | C/E | F | Em7 | C"
+        },
+        {
+          "from": "9",
+          "to": "16",
+          "chords": "Bb | Em | F | C | C | F | G | F"
+        },
+        {
+          "from": "17",
+          "to": "24",
+          "chords": "C | Fmaj7 | C | Bb | C | Dm | C/E | G"
+        },
+        {
+          "from": "25",
+          "to": "32",
+          "chords": "Am | F | C | G7 | C | F | Dm G7 | C"
+        }
+      ]
     },
     {
       "id": "recompose-sad-string-quartet-a",
@@ -3825,12 +3879,39 @@
       "ensemble": "Woodwind quintet",
       "mood": "Neutral",
       "option": 0,
-      "name": "Woodwind quintet A",
+      "name": "Pastoral Morning",
       "bars": 32,
       "sourceBars": 24,
       "freedom": 2,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/recompose-neutral-woodwind-quintet-a/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/recompose-neutral-woodwind-quintet-a/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/recompose-neutral-woodwind-quintet-a/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/recompose-neutral-woodwind-quintet-a/run.json",
+      "xmlSha256": "27bfde13d80496bba4da288674df6573b3595963b3bc0d547f17fadda06f809f",
+      "midiSha256": "811593ab13f7edc716601c6e12663b2da16167e4ec064db0469bd6c1197123fc",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "8",
+          "chords": "C | Fmaj9 | C | F | Em7 | C | Dm7 G | C"
+        },
+        {
+          "from": "9",
+          "to": "16",
+          "chords": "Am | Dm7 | C | F | G | F | G | C"
+        },
+        {
+          "from": "17",
+          "to": "24",
+          "chords": "C | Fmaj7 | C | F | G | Am | F G | C"
+        },
+        {
+          "from": "25",
+          "to": "32",
+          "chords": "C | F | C | Am | Dm7 | G | F | C"
+        }
+      ]
     },
     {
       "id": "recompose-neutral-woodwind-quintet-b",
@@ -3839,12 +3920,39 @@
       "ensemble": "Woodwind quintet",
       "mood": "Neutral",
       "option": 1,
-      "name": "Woodwind quintet B",
+      "name": "Amber Lament",
       "bars": 32,
       "sourceBars": 24,
       "freedom": 2,
-      "status": "unavailable",
-      "reason": "Not recorded."
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/recompose-neutral-woodwind-quintet-b/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/recompose-neutral-woodwind-quintet-b/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/recompose-neutral-woodwind-quintet-b/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/recompose-neutral-woodwind-quintet-b/run.json",
+      "xmlSha256": "9730dd78216fef3e139c82cf4b54c917189257411aa21002f70cce84a89e80a4",
+      "midiSha256": "530c46edcaa1159a3497cfa0a69cb11b0431f920a0a13a788cf9da156d93911b",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "8",
+          "chords": "Am7 | Dm | Am | Dm | Em7 | Am | Dm Em | Am"
+        },
+        {
+          "from": "9",
+          "to": "16",
+          "chords": "Fmaj7 | Dm | Am | F | Em | Dm | Em | Am"
+        },
+        {
+          "from": "17",
+          "to": "24",
+          "chords": "Am | Bb | Am | Dm | Em | F E | Am | E Am"
+        },
+        {
+          "from": "25",
+          "to": "32",
+          "chords": "Am | Dm | Am | F | Dm | Em | Dm E | Am"
+        }
+      ]
     },
     {
       "id": "recompose-sad-woodwind-quintet-a",
@@ -4250,7 +4358,7 @@
       "sourceBars": 24,
       "freedom": 2,
       "status": "unavailable",
-      "reason": "Not recorded."
+      "reason": "Unfinished writing windows"
     },
     {
       "id": "recompose-neutral-brass-quintet-b",
@@ -4264,7 +4372,7 @@
       "sourceBars": 24,
       "freedom": 2,
       "status": "unavailable",
-      "reason": "Not recorded."
+      "reason": "Unfinished writing windows"
     },
     {
       "id": "recompose-sad-brass-quintet-a",

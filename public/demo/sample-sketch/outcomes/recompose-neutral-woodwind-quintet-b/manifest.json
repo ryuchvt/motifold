@@ -1,0 +1,102 @@
+{
+  "id": "recompose-neutral-woodwind-quintet-b",
+  "recipe": {
+    "id": "recompose-neutral-woodwind-quintet",
+    "intent": "recompose",
+    "ensemble": "Woodwind quintet",
+    "instruments": [
+      "Flute",
+      "Oboe",
+      "Clarinet",
+      "Horn",
+      "Bassoon"
+    ],
+    "mood": "Neutral",
+    "bars": 32,
+    "moreBars": 32,
+    "where": "after",
+    "tuneOnly": false,
+    "freedom": 2
+  },
+  "option": 1,
+  "plan": "Amber Lament",
+  "status": "complete",
+  "verified": {
+    "sha256": "bfe27cd01bd932e185c2172e292b2fda94701a2421334dd5ce95a7e8d02c2489",
+    "files": 9,
+    "parts": [
+      {
+        "name": "Flute",
+        "bars": 32
+      },
+      {
+        "name": "Oboe",
+        "bars": 32
+      },
+      {
+        "name": "Clarinet",
+        "bars": 32
+      },
+      {
+        "name": "Horn",
+        "bars": 32
+      },
+      {
+        "name": "Bassoon",
+        "bars": 32
+      }
+    ],
+    "tracks": 5,
+    "notes": 249,
+    "ppq": 480,
+    "scoreAndMidiAgree": true
+  },
+  "placement": null,
+  "advisoryClashes": [
+    {
+      "bar": "16",
+      "part": "Oboe",
+      "name": "B3"
+    },
+    {
+      "bar": "16",
+      "part": "Horn",
+      "name": "C4"
+    },
+    {
+      "bar": "22",
+      "part": "Flute",
+      "name": "A5"
+    },
+    {
+      "bar": "24",
+      "part": "Flute",
+      "name": "C5"
+    },
+    {
+      "bar": "19",
+      "part": "Oboe",
+      "name": "C5"
+    },
+    {
+      "bar": "22",
+      "part": "Oboe",
+      "name": "G#4"
+    },
+    {
+      "bar": "24",
+      "part": "Oboe",
+      "name": "B4"
+    },
+    {
+      "bar": "19",
+      "part": "Clarinet",
+      "name": "B3"
+    }
+  ],
+  "audio": {
+    "status": "not-rendered",
+    "expectedFile": "audio/render.wav"
+  },
+  "provenance": "Actual successful Meta calls. The recorded stages may include cold retries. No uninterrupted live session is claimed."
+}

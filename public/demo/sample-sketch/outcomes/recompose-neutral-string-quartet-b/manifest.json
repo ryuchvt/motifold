@@ -1,0 +1,107 @@
+{
+  "id": "recompose-neutral-string-quartet-b",
+  "recipe": {
+    "id": "recompose-neutral-string-quartet",
+    "intent": "recompose",
+    "ensemble": "String quartet",
+    "instruments": [
+      "Violin I",
+      "Violin II",
+      "Viola",
+      "Cello"
+    ],
+    "mood": "Neutral",
+    "bars": 32,
+    "moreBars": 32,
+    "where": "after",
+    "tuneOnly": false,
+    "freedom": 2
+  },
+  "option": 1,
+  "plan": "Pedal Pastoral",
+  "status": "complete",
+  "verified": {
+    "sha256": "6cd317781f92ead6d587f1beb0190a3e619d572b2b787277e463fad135f34cb1",
+    "files": 8,
+    "parts": [
+      {
+        "name": "Violin I",
+        "bars": 32
+      },
+      {
+        "name": "Violin II",
+        "bars": 32
+      },
+      {
+        "name": "Viola",
+        "bars": 32
+      },
+      {
+        "name": "Cello",
+        "bars": 32
+      }
+    ],
+    "tracks": 4,
+    "notes": 254,
+    "ppq": 480,
+    "scoreAndMidiAgree": true
+  },
+  "placement": null,
+  "advisoryClashes": [
+    {
+      "bar": "6",
+      "part": "Violin I",
+      "name": "F5"
+    },
+    {
+      "bar": "6",
+      "part": "Violin II",
+      "name": "E4"
+    },
+    {
+      "bar": "9",
+      "part": "Violin I",
+      "name": "F5"
+    },
+    {
+      "bar": "9",
+      "part": "Viola",
+      "name": "E4"
+    },
+    {
+      "bar": "11",
+      "part": "Violin I",
+      "name": "C5"
+    },
+    {
+      "bar": "11",
+      "part": "Viola",
+      "name": "B4"
+    },
+    {
+      "bar": "18",
+      "part": "Violin I",
+      "name": "F5"
+    },
+    {
+      "bar": "18",
+      "part": "Violin II",
+      "name": "E5"
+    },
+    {
+      "bar": "24",
+      "part": "Violin I",
+      "name": "C5"
+    },
+    {
+      "bar": "24",
+      "part": "Violin II",
+      "name": "B4"
+    }
+  ],
+  "audio": {
+    "status": "not-rendered",
+    "expectedFile": "audio/render.wav"
+  },
+  "provenance": "Actual successful Meta calls. The recorded stages may include cold retries. No uninterrupted live session is claimed."
+}

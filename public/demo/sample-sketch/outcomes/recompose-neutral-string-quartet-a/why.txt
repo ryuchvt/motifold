@@ -1,0 +1,14 @@
+Answering Waltz: Answering Waltz
+
+Gentle waltz keeps whole tune in order, varies repeats with singing bass, darkens middle, crowns high phrase then sings home.
+
+Bars 1 to 8. Cello and viola rocking Am-Dm-G, Violin II gives tune bars 3-8, Violin I counterline fills gaps. Low pedal grounds, tune enters alone for clarity. Chords: Am | Dm7 G7 | C | Dm7 | Em | Dm/F | G | Am7 Level: pp growing to mp
+Bars 9 to 16. Violin I takes tune, viola broken chords, cello sings contrary bass, Violin II answers. Contrary bass reharmonises repeat, avoids literal copy. Chords: Bb F/A | C | C | F | Em A7 | Dm7 | G G7 | Dm Level: mp swelling to mf
+Bars 17 to 24. Violin I Violin II sing high tune in octaves, viola sustains, cello drives to Neapolitan Db. Widest register plus chromatic colour builds one peak. Chords: Em7 | C | Am7 | Db/F | C | F | G | F G Level: mf rising to ff
+Bars 25 to 32. Violin II recalls head, Violin I viola chorale, cello steps to close. Slowed rhythm and plagal shadow earn perfect close. Chords: Am7 | Dm7 G7 | C | F | Dm | G7 | C Fm6 | C Level: ff falling to pp
+
+291 new notes. The code checked each one against what's sounding and the range of its instrument.
+9 long notes sit a semitone from something else sounding. That can be a good suspension or a slip, so check by ear: Violin I E4 in bar 6, Violin II F4 in bar 6, Viola E3 in bar 6, Violin I F4 in bar 12 and 5 more.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your own notes are as you wrote them.

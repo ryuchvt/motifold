@@ -1,0 +1,14 @@
+Pastoral Morning: Pastoral Morning
+
+Whole C-major tune kept in order with warm plagal colours and travelling wind answers.
+
+Bars 1 to 8. Flute sings tune, clarinet rocking figure, horn bassoon sustain. Three layers separate by register rhythm colour. Chords: C | Fmaj9 | C | F | Em7 | C | Dm7 G | C Level: p growing to mp
+Bars 9 to 16. Oboe takes tune, flute counterline, bassoon walking bass. Pass phrase between colours for travelling ear. Chords: Am | Dm7 | C | F | G | F | G | C Level: mp sustained with swell
+Bars 17 to 24. Flute oboe double peak, horn pedal, clarinet runs. Grow by adding, peak late before rest. Chords: C | Fmaj7 | C | F | G | Am | F G | C Level: mf rising to f
+Bars 25 to 32. Clarinet sings coda, flute ornaments, bassoon horn settle. Return recognised not same, plagal then perfect. Chords: C | F | C | Am | Dm7 | G | F | C Level: f falling to pp
+
+290 new notes. The code checked each one against what's sounding and the range of its instrument.
+8 long notes sit a semitone from something else sounding. That can be a good suspension or a slip, so check by ear: Oboe F4 in bar 14, Clarinet F3 in bar 14, Bassoon E3 in bar 14, Flute F5 in bar 18 and 4 more.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your own notes are as you wrote them.

@@ -1,0 +1,14 @@
+Amber Lament: Amber Lament
+
+Same tune heard as A-minor lament over falling bass and Neapolitan colour, low winds dominate.
+
+Bars 1 to 8. Oboe sings tune, bassoon steps bass, horn sustains. Low pedal with moving chords creates tension. Chords: Am7 | Dm | Am | Dm | Em7 | Am | Dm Em | Am Level: pp sustained barely growing
+Bars 9 to 16. Clarinet takes tune, oboe counters, bassoon horn pulse. Counter moves when tune holds, meets in sixths. Chords: Fmaj7 | Dm | Am | F | Em | Dm | Em | Am Level: p swelling to mp
+Bars 17 to 24. Flute sings high, clarinet ostinato, bassoon Neapolitan bass. Bold flat-second kept for phrase peak. Chords: Am | Bb | Am | Dm | Em | F E | Am | E Am Level: mp rising to f
+Bars 25 to 32. Horn oboe share cadence, flute bassoon soften. Slow harmony, deceptive then perfect arrival. Chords: Am | Dm | Am | F | Dm | Em | Dm E | Am Level: f dying to pp
+
+249 new notes. The code checked each one against what's sounding and the range of its instrument.
+8 long notes sit a semitone from something else sounding. That can be a good suspension or a slip, so check by ear: Oboe B3 in bar 16, Horn C4 in bar 16, Flute A5 in bar 22, Flute C5 in bar 24 and 4 more.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your own notes are as you wrote them.

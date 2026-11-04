@@ -1,0 +1,102 @@
+{
+  "id": "recompose-neutral-woodwind-quintet-a",
+  "recipe": {
+    "id": "recompose-neutral-woodwind-quintet",
+    "intent": "recompose",
+    "ensemble": "Woodwind quintet",
+    "instruments": [
+      "Flute",
+      "Oboe",
+      "Clarinet",
+      "Horn",
+      "Bassoon"
+    ],
+    "mood": "Neutral",
+    "bars": 32,
+    "moreBars": 32,
+    "where": "after",
+    "tuneOnly": false,
+    "freedom": 2
+  },
+  "option": 0,
+  "plan": "Pastoral Morning",
+  "status": "complete",
+  "verified": {
+    "sha256": "7399163ac9f595e830bdfd50a068da3d0444db5cab112bc0b4a2836c9d7772ac",
+    "files": 9,
+    "parts": [
+      {
+        "name": "Flute",
+        "bars": 32
+      },
+      {
+        "name": "Oboe",
+        "bars": 32
+      },
+      {
+        "name": "Clarinet",
+        "bars": 32
+      },
+      {
+        "name": "Horn",
+        "bars": 32
+      },
+      {
+        "name": "Bassoon",
+        "bars": 32
+      }
+    ],
+    "tracks": 5,
+    "notes": 290,
+    "ppq": 480,
+    "scoreAndMidiAgree": true
+  },
+  "placement": null,
+  "advisoryClashes": [
+    {
+      "bar": "14",
+      "part": "Oboe",
+      "name": "F4"
+    },
+    {
+      "bar": "14",
+      "part": "Clarinet",
+      "name": "F3"
+    },
+    {
+      "bar": "14",
+      "part": "Bassoon",
+      "name": "E3"
+    },
+    {
+      "bar": "18",
+      "part": "Flute",
+      "name": "F5"
+    },
+    {
+      "bar": "18",
+      "part": "Horn",
+      "name": "E4"
+    },
+    {
+      "bar": "23",
+      "part": "Clarinet",
+      "name": "C5"
+    },
+    {
+      "bar": "23",
+      "part": "Horn",
+      "name": "B3"
+    },
+    {
+      "bar": "18",
+      "part": "Oboe",
+      "name": "F5"
+    }
+  ],
+  "audio": {
+    "status": "not-rendered",
+    "expectedFile": "audio/render.wav"
+  },
+  "provenance": "Actual successful Meta calls. The recorded stages may include cold retries. No uninterrupted live session is claimed."
+}
