@@ -381,6 +381,9 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
   const exportScore = arranged.shown?.score ?? standing;
   const hasExportNotes = !!exportScore?.parts.some(part => part.notes.some(note => !note.rest && !note.hidden && !note.cue && !note.grace && (note.soundingMidi !== null || note.unpitched)));
   const shownAt = arranged.recomposed ? 0 : ((comparisonHosted ? chosenPlan : null) ?? pick ?? (trying?.kind === "option" ? trying.index : written.length ? Number(written[0]![0]) : null));
+  const selectedNotes = shownAt !== null && options.status === "ready" ? options.notes[shownAt] : undefined;
+  const incompleteWriting = !!selectedNotes && (selectedNotes.status !== "ready" || !!selectedNotes.preview || !!selectedNotes.writing || !!selectedNotes.missing?.length);
+  const exportCurrent = hasExportNotes ? () => go(5) : undefined;
 
   const onShow = trying?.kind === "structure" ? undefined : selectRange;
   const place = (from: string, to: string, text: string, why?: string) => (
@@ -434,7 +437,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
     return <div className="reading arrange">{steps}
       <h2 className="arrange-title">{theme.status === "asking" ? "Writing the new melody" : "The new melody did not finish"}</h2>
       <p className="arrange-said">{theme.plan.name}. {theme.status === "asking" ? "The accompaniment waits for a usable melody." : "No accompaniment was requested. Your previous score is still available to play and export."}</p>
-      <FailureReason reason={arranged.themeReason} onExplore={onExplore}/>
+      <FailureReason reason={arranged.themeReason} step="Writing the melody" onExplore={onExplore} onExport={exportCurrent}/>
       {theme.status === "unavailable" && <p className="spark-note">Try again sends a separate request and may use credit. It does not resume the previous call.</p>}
       {action(<div className="arrange-actions">
         {theme.status === "unavailable" && <button className="button primary arrange-go" disabled={busy} onClick={() => void arranged.writeRecomposed(theme.index)}>Try melody again</button>}
@@ -456,10 +459,11 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
 
   if (current === 5 && standing) return <div className="reading arrange">{steps}
     <h2 className="arrange-title">Take it to your DAW</h2>
-    <p className="arrange-said">Download the complete score, including every bar and the changes you kept.</p>
+    <p className="arrange-said">{incompleteWriting ? "Download the current score with the notes written so far. The new writing is not complete. Your original bars remain in an arrangement or expansion." : "Download the complete score, including every bar and the changes you kept."}</p>
+    {incompleteWriting&&selectedNotes&&'missing' in selectedNotes&&!!selectedNotes.missing?.length&&<p className="arrange-hit">Unfinished writing in {selectedNotes.missing.map(range=>barsWords(range.from,range.to).toLowerCase()).join(', ')}.</p>}
     {!hasExportNotes && <p className="arrange-said" role="status">There are no sounding notes to export yet. Write a section or return to your sketch.</p>}
     <p className="spark-note">The ZIP contains MIDI, a MusicXML score, separate instrument tracks and your scene markers. Export works with your original sketch too.</p>
-    {action(<button className="button primary arrange-go" disabled={!hasExportNotes} data-tutorial="download" onClick={() => { download(forPlayers); const chosen=trying?.kind==='option'?trying.index:null; const notes=options.status==='ready'&&chosen!==null?options.notes[chosen]:null; if(guide&&chosen!==null&&guide.completeOptions.includes(chosen as 0|1)&&notes?.status==='ready'&&!notes.preview&&!notes.writing&&!notes.missing?.length)guide.mark('downloaded',true,true); }}>Download MIDI</button>)}
+    {action(<button className="button primary arrange-go" disabled={!hasExportNotes} data-tutorial="download" onClick={() => { download(forPlayers); const chosen=trying?.kind==='option'?trying.index:null; const notes=options.status==='ready'&&chosen!==null?options.notes[chosen]:null; if(guide&&chosen!==null&&guide.completeOptions.includes(chosen as 0|1)&&notes?.status==='ready'&&!notes.preview&&!notes.writing&&!notes.missing?.length)guide.mark('downloaded',true,true); }}>{incompleteWriting&&hasExportNotes?'Download partial score':'Download MIDI'}</button>)}
     <label className="arrange-check"><input type="checkbox" checked={forPlayers} onChange={(event) => setForPlayers(event.target.checked)}/>Also include a score transposed for the players</label>
     {trying?.kind === 'option' && <button className="arrange-quiet" onClick={() => { keep(); setPick(null); go(2); }}>Build on this arrangement</button>}
     {kept && <button className="arrange-quiet" onClick={startAgain}>Back to my score</button>}
@@ -512,7 +516,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
       <div className="reading arrange">
         {steps}
         <p className="arrange-said">Muse Spark can't answer here.</p>
-        <FailureReason reason={piece.reason??"failed"} onExplore={onExplore}/>
+        <FailureReason reason={piece.reason??"failed"} step="Reading the sketch" onExplore={onExplore} onExport={exportCurrent}/>
         <button className="button small" disabled={busy} onClick={() => void askPiece()}>
           Try again
         </button>
@@ -525,7 +529,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
   const nextQuestion = questions.findIndex((_, k) => !answered[k]?.trim() && !skipped.includes(k));
   const timed = cues.some((c) => c.beats !== undefined || parseTime(c.time) !== null);
   const o = shownAt !== null && options.status === "ready" ? options.plans[shownAt] : undefined;
-  const notes = shownAt !== null && options.status === "ready" ? options.notes[shownAt] : undefined;
+  const notes = selectedNotes;
   const onPage = trying?.kind === "option" && trying.index === shownAt;
   const left = notes?.status === "ready" && onPage ? remaining(notes.check) : notes?.status === "ready" ? notes.check : null;
   const done = notes?.status === "ready" && !notes.writing;
@@ -701,7 +705,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
   return (
     <div className="reading arrange">
       {steps}
-      {notes?.status === "ready" && notes.reason && <FailureReason reason={notes.reason} onExplore={onExplore}/>}
+      {notes?.status === "ready" && !notes.writing && notes.reason && <FailureReason reason={notes.reason} step="Writing" missing={notes.missing} onExplore={onExplore} onExport={exportCurrent}/>}
       {current === 3 && mode !== "recompose" && placed.status === "ready" && placementHasProblems(placed.check) && <div className="arrange-hit" role="alert">
         <strong>{canSuggestRangeRepair(placed.check) ? "Check the instrument ranges" : "Check the instrument placement"}</strong>
         <p>Planning is paused. Review these placement checks before writing plans.</p>
@@ -743,7 +747,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
             ) : study.status === "asking" ? (
               <p className="spark-note">Studying the form and the harmony. This takes a minute or two, and it goes on the score when it's done.</p>
             ) : study.status === "unavailable" ? (
-              <><FailureReason reason={study.reason??"failed"} onExplore={onExplore}/><button className="button small" disabled={busy} onClick={() => void arranged.askStudy()}>Retry harmony analysis</button></>
+              <><FailureReason reason={study.reason??"failed"} step="Studying the harmony" onExplore={onExplore} onExport={exportCurrent}/><button className="button small" disabled={busy} onClick={() => void arranged.askStudy()}>Retry harmony analysis</button></>
             ) : null}
             {reading.missing.length > 0 && <p className="spark-note">Ideas you can develop</p>}
             <ul className="arrange-lines">
@@ -884,7 +888,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
           {mode === "recompose" && arranged.recompose.status === "asking" && <p className="arrange-said">Composing two new pieces from your motif. This takes a minute or two.</p>}
           {placed.status === "unavailable" && (
             <>
-              <FailureReason reason={placed.reason??"failed"} onExplore={onExplore}/>
+              <FailureReason reason={placed.reason??"failed"} step="Instrument placement" onExplore={onExplore} onExport={exportCurrent}/>
               <span className="arrange-actions">
                 <button className="button small" disabled={busy} onClick={create}>
                   Try again
@@ -931,7 +935,7 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
           )}
           {(options.status === "unavailable" || arranged.recompose.status === "unavailable") && (
             <>
-              <FailureReason reason={(mode==="recompose"&&arranged.recompose.status==="unavailable"?arranged.recompose.reason:options.status==="unavailable"?options.reason:undefined)??(demo?"not-prepared":"failed")} onExplore={onExplore}/>
+              <FailureReason reason={(mode==="recompose"&&arranged.recompose.status==="unavailable"?arranged.recompose.reason:options.status==="unavailable"?options.reason:undefined)??(demo?"not-prepared":"failed")} step="Choosing a plan" onExplore={onExplore} onExport={exportCurrent}/>
               <button className="button small" disabled={busy} onClick={generate}>
                 Try again
               </button>
@@ -1035,8 +1039,8 @@ export function ArrangePanel({ arranged, busy, demo = false, prepared = [], onSt
             </p>
           )}
           {(!notes || notes.status === "asking") && <p className="arrange-said">Writing the notes. This takes a minute or two.</p>}
-          {notes?.status === "unfinished" && <><p className="arrange-said">It didn't finish this one.</p><FailureReason reason={notes.reason??"failed"} onExplore={onExplore}/></>}
-          {notes?.status === "unavailable" && <FailureReason reason={notes.reason??"failed"} onExplore={onExplore}/>}
+          {notes?.status === "unfinished" && <FailureReason reason={notes.reason??"failed"} step="Writing" missing={notes.missing} onExplore={onExplore} onExport={exportCurrent}/>}
+          {notes?.status === "unavailable" && <FailureReason reason={notes.reason??"failed"} step="Writing" missing={notes.missing} onExplore={onExplore} onExport={exportCurrent}/>}
           {(notes?.status === "unfinished" || notes?.status === "unavailable") && (
             <button className="button small primary" disabled={busy} onClick={() => write(shownAt!, "arrange")}>
               Try again

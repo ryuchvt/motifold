@@ -14,7 +14,10 @@ export function failureMessage(reason: string): string {
   return "That step couldn't finish. What is already written is still here.";
 }
 
-export function FailureReason({ reason, onExplore }: { reason?: string | null; onExplore?: () => void }) {
+export function FailureReason({ reason, onExplore, step, missing, onExport }: { reason?: string | null; onExplore?: () => void; step?: string; missing?: {from:string;to:string}[]; onExport?:()=>void }) {
   if (!reason) return null;
-  return <div className="failure-reason" role="status"><p>{failureMessage(reason)}</p>{onExplore && <button type="button" className="door-link" onClick={onExplore}>Explore free recordings</button>}</div>;
+  return <div className="failure-reason" role="status">{step&&<strong>{step} stopped</strong>}<p>{failureMessage(reason)}</p>
+    {!!missing?.length&&<><p>Your original and the completed sections are still here. These sections are unfinished.</p><ul>{missing.map(range=><li key={`${range.from}-${range.to}`}>{range.from===range.to?`Bar ${range.from}`:`Bars ${range.from} to ${range.to}`}</li>)}</ul></>}
+    {onExport&&<button type="button" className="button small" onClick={onExport}>Export current score</button>}
+    {onExplore && <button type="button" className="door-link" onClick={onExplore}>Explore free recordings</button>}</div>;
 }

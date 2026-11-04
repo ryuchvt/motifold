@@ -16,14 +16,16 @@ afterEach(()=>{act(()=>root?.unmount());root=null;setTransport(null);document.bo
 it('defers final gap warnings during a pending continuation, then retains real gaps and the failed-window reason',async()=>{
  vi.stubGlobal('fetch',vi.fn(async()=>{throw Error('No HTTP is allowed')}));
  let finishSecond!:(reply:SparkReply)=>void;
+ let blocked=true;const windows:string[]=[];
  const answer=(bar:string):SparkReply=>({status:'ok',cached:false,answer:{adds:[{part:'Flute',bar,events:'C5@0+1',dyn:'mf'}],doubles:[]}});
  setTransport(async(shape,input)=>{
   if(shape==='read_piece')return{status:'ok',cached:false,answer:{summary:'An original synthetic cello line.',sections:[{from:'1',to:'18',name:'Source'}],roles:[{from:'1',to:'18',line:'Cello',role:'melody',of:'',why:'The only line'}],tracks:[{line:'Cello',instrument:'Cello',sure:true,why:'One line'}],questions:[],thin:[],missing:[],structures:[]}};
   if(shape==='plan_options')return{status:'ok',cached:false,answer:{options:[plan]}};
   if(shape==='arrange'){
    const from=(input as {window?:{from:string}}).window?.from??'1';
+   windows.push(from);
    if(from==='9')return await new Promise<SparkReply>(resolve=>{finishSecond=resolve});
-   if(from==='17')return{status:'fallback',reason:'quota'};
+   if(from==='17'&&blocked)return{status:'fallback',reason:'quota'};
    return answer(from);
   }
   return{status:'fallback',reason:'not-prepared'};
@@ -42,6 +44,22 @@ it('defers final gap warnings during a pending continuation, then retains real g
  expect(host.textContent).not.toContain('Writing bars 9 to 16');
  expect(host.textContent).toContain("Bars 17 to 18 didn't finish");
  expect(host.textContent).toContain("This connection has reached today's allowance");
+ expect(host.textContent).toContain('Writing stopped');
+ expect(host.querySelector('.failure-reason ul')?.textContent).toContain('Bars 17 to 18');
  expect(host.textContent).toContain('No new notes came back');
+ expect(windows).toEqual(['1','9','17']); // No automatic retry after refusal.
+ await press('Export current score');
+ expect(host.textContent).toContain('The new writing is not complete');
+ expect(host.textContent).toContain('Unfinished writing in bars 17 to 18');
+ expect([...host.querySelectorAll('button')].some(b=>b.textContent==='Download partial score')).toBe(true);
+ expect(windows).toEqual(['1','9','17']); // Opening Export does not spend.
+ blocked=false;await press('Write');await press("Write what's missing");
+ expect(windows).toEqual(['1','9','17','17']);
+ const result=now.options.status==='ready'?now.options.notes[0]:null;
+ expect(result).toMatchObject({status:'ready',adds:[{bar:'1'},{bar:'9'},{bar:'17'}]});
+ expect(result&&'missing'in result?result.missing:undefined).toBeUndefined();
+ await press('Export');
+ expect([...host.querySelectorAll('button')].some(b=>b.textContent==='Download MIDI')).toBe(true);
+ expect(host.textContent).not.toContain('The new writing is not complete');
  expect(fetch).not.toHaveBeenCalled();
 });

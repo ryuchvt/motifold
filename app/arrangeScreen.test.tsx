@@ -700,7 +700,7 @@ describe("the panel", () => {
     expect(host.textContent).toContain("At 114.3 and not 120, it would fall on the first beat of bar 2.");
   });
 
-  it("says when it ran out of room, which isn't the same as having no way to ask, and offers again", async () => {
+  it("identifies unfinished writing, lists its bars and offers an explicit retry", async () => {
     vi.stubGlobal("fetch", async (url: string, init?: RequestInit) => (url.endsWith("arrange") ? reply("fallback", { reason: "failed" }) : spark(url, init)));
     const { host } = setUp();
     await press(host, "Read my score");
@@ -711,9 +711,10 @@ describe("the panel", () => {
     await act(async () => keep.click());
     await press(host, "Create");
     await settled();
-    // Both first sections ran out of room, so each plan offers to be written again.
+    // Both opening previews failed, so the next write is another explicit attempt.
     await press(host, "Write this one");
-    expect(host.textContent).toContain("It didn't finish this one.");
+    expect(host.textContent).toContain("Writing stopped");
+    expect(host.querySelector('.failure-reason ul')?.textContent).toContain('Bars 1 to 2');
     expect([...host.querySelectorAll("button")].filter((b) => b.textContent === "Try again")).toHaveLength(1);
   });
 

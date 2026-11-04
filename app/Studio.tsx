@@ -181,6 +181,8 @@ export function Studio({ initialScore = null, sample = false, initialSetup, samp
       }
       setUnbarred(null);
       const { xmlText, score } = openedScore(bytes, file.name, { skipEmptyMidiBars: skipEmptyMidiBars === true });
+      const scoreBars = Math.max(0, ...score.parts.map(part => part.measures.length));
+      if (scoreBars > MAX_SCORE_BARS) throw new Error(`This score has ${scoreBars} bars. Analyse up to ${MAX_SCORE_BARS} bars at a time. Export a shorter section from your music software.`);
       if (skipEmptyMidiBars) setSourceNote(`${midiLeadIn(bytes).emptyBars} empty DAW bars left out. This notation reading keeps the file's tempo map. The original MIDI is unchanged.`);
       setLoaded({ fileName: file.name, xmlText, score });
     } catch (e) {
@@ -418,7 +420,7 @@ export function Studio({ initialScore = null, sample = false, initialSetup, samp
                   Or sing, hum or play it in now
                 </button>
               )}
-              {error && <p className="error">{error}</p>}
+              {error && <div className="error" role="alert"><strong>The sketch could not be opened.</strong><p>{error}</p><p>Your original file is unchanged. Choose another file above, or export MIDI or MusicXML from your music software.</p></div>}
               <input
                 ref={input}
                 type="file"

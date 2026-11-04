@@ -92,6 +92,21 @@ it("hears a recording and goes on to find its bars, as it does for free playing"
   expect(host.textContent).toContain("24 notes");
 });
 
+it("explains an oversized MusicXML before any model call and keeps the file picker available", async () => {
+  const host = await openStudio(), sent = vi.fn();
+  vi.stubGlobal('fetch', sent);
+  const measure=xml.match(/<measure[\s\S]*?<\/measure>/)![0];
+  const text=xml.replace(measure,Array.from({length:301},(_,i)=>measure.replace('number="1"',`number="${i+1}"`)).join(''));
+  const file=new File([text],'long-original.musicxml');
+  Object.defineProperty(file,'arrayBuffer',{value:async()=>new TextEncoder().encode(text).buffer});
+  await choose(host,file);
+  expect(host.querySelector('[role="alert"]')?.textContent).toContain('This score has 301 bars');
+  expect(host.textContent).toContain('Export a shorter section');
+  expect(host.textContent).toContain('Your original file is unchanged');
+  expect(host.querySelector('input[type="file"]')).not.toBeNull();
+  expect(sent).not.toHaveBeenCalled();
+});
+
 it("says what it can hear when a recording gives too few notes", async () => {
   pending.listen.mockResolvedValue({ midi: line(3), notes: 3, seconds: 4 });
   const host = await openStudio();

@@ -31,3 +31,6 @@
 }
 .failure-reason p { margin: 0.35rem 0; }
 .failure-reason .door-link { margin-top: 0.15rem; }
+.failure-reason>strong { display:block; color:#e5c0ad; font-weight:600; }
+.failure-reason ul { margin:6px 0 12px; padding-left:20px; }
+.failure-reason>.button { margin:6px 12px 6px 0; }
