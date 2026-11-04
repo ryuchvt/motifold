@@ -158,9 +158,7 @@ function nameOf(track: MidiRead["tracks"][number], used: Map<string, number>): s
   return k > 1 ? `${base} ${k}` : base;
 }
 
-/** The file as a score: a part for each track, in the bars its time signature gives, with the notes on the nearest grid. */
-export function midiScoreXml(bytes: Uint8Array, title: string): string {
-  const midi = readMidi(bytes);
+function midiBars(midi: MidiRead) {
   if (!midi.tracks.length) throw fail("it has no notes, apart from any drums");
   const beatsOf = (tick: number) => tick / midi.ppq;
   const lastBeat = Math.max(...midi.tracks.flatMap((t) => t.notes.map((n) => snap(beatsOf(n.tick + n.length)))));
@@ -170,9 +168,30 @@ export function midiScoreXml(bytes: Uint8Array, title: string): string {
     while (t + 1 < times.length && beatsOf(times[t + 1]!.tick) <= start + 1e-6) t++;
     const time = { beats: times[t]!.beats, beatType: times[t]!.beatType };
     const length = (time.beats * 4) / time.beatType;
+    if (!Number.isFinite(length) || length <= 0) throw fail("its time signature has no usable bar length");
     bars.push({ start, length, time });
     start += length;
   }
+  return bars;
+}
+
+function firstSoundingBar(midi: MidiRead, bars: ReturnType<typeof midiBars>): number {
+  const first = Math.min(...midi.tracks.flatMap(track => track.notes.map(note => note.tick / midi.ppq)));
+  return Math.max(0, bars.findIndex(bar => first < bar.start + bar.length - 1e-6));
+}
+
+/** Whole empty bars before the music, measured on the file's changing metre grid. No source event is moved. */
+export function midiLeadIn(bytes: Uint8Array): { emptyBars: number; totalBars: number } {
+  const midi = readMidi(bytes), bars = midiBars(midi);
+  return { emptyBars: firstSoundingBar(midi, bars), totalBars: bars.length };
+}
+
+/** The file as a score. Leaving out leading empty bars is an explicit import choice, never an edit to the MIDI. */
+export function midiScoreXml(bytes: Uint8Array, title: string, options: { skipEmptyBars?: boolean } = {}): string {
+  const midi = readMidi(bytes), allBars = midiBars(midi);
+  const skipped = options.skipEmptyBars ? firstSoundingBar(midi, allBars) : 0;
+  const bars = allBars.slice(skipped);
+  const beatsOf = (tick: number) => tick / midi.ppq;
   const used = new Map<string, number>();
   const parts: PlacedPart[] = midi.tracks.map((track) => {
     const part: PlacedPart = { name: nameOf(track, used), bars: bars.map(() => []) };
@@ -194,7 +213,8 @@ export function midiScoreXml(bytes: Uint8Array, title: string): string {
     const rounded = (qpm: number) => Math.round(qpm * 100) / 100;
     const atBarline = [...inBar].reverse().find((t) => beatsOf(t.tick) <= bar.start + 1e-6);
     // A file plays at 120 until its first tempo, by the MIDI standard.
-    const qpm = atBarline ? rounded(atBarline.qpm) : k === 0 && inBar.length ? 120 : null;
+    const carried = k === 0 && skipped > 0 ? [...midi.tempos].reverse().find(t => beatsOf(t.tick) <= bar.start + 1e-6) : null;
+    const qpm = atBarline ? rounded(atBarline.qpm) : k === 0 && skipped > 0 ? rounded(carried?.qpm ?? 120) : k === 0 && inBar.length ? 120 : null;
     const moreTempos = inBar.filter((t) => beatsOf(t.tick) > bar.start + 1e-6).map((t) => ({ beat: beatsOf(t.tick) - bar.start, qpm: rounded(t.qpm) }));
     return { number: String(k + 1), implicit: false, length: bar.length, time: bar.time, fifths: midi.fifths, repeatForward: false, repeatBackward: null, endings: [], words: [], qpm, ...(moreTempos.length ? { moreTempos } : {}) };
   });

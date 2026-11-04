@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { parseScore, ScoreFileError } from "../score";
-import { midiFile, scoreTracks, snap } from "./arrange";
-import { isMidi, markersOf, midiScoreXml, readMidi } from "./midi";
+import { midiFile, packageFiles, scoreTracks, snap } from "./arrange";
+import { isMidi, markersOf, midiLeadIn, midiScoreXml, readMidi } from "./midi";
+import { unzipSync } from "fflate";
+import { beatClock } from "./audio/preview";
 import { openedScore } from "./opened";
 
 const time = { beats: 4, beatType: 4 };
@@ -85,5 +87,65 @@ describe("opening a file", () => {
     expect(() => openedScore(new Uint8Array(4), "cue.sib")).toThrow(/Export MusicXML from Sibelius/);
     expect(() => openedScore(new Uint8Array(4), "cue.mscz")).toThrow(/Export MusicXML from MuseScore/);
     expect(() => openedScore(new Uint8Array(4), "take.m4a")).toThrow(/can't read audio/);
+  });
+});
+
+describe("an explicit import without empty DAW bars", () => {
+  const cut = 1497;
+  const source = midiFile([
+    { name: "Piano", program: 0, notes: [{ start: cut + 1 / 3, length: 4, height: 64, velocity: 91 }, { start: cut + 1 / 3, length: 1, height: 60, velocity: 57 }] },
+    { name: "Cello", program: 42, notes: [{ start: cut + 3.25, length: 2, height: 48, velocity: 73 }] },
+  ], [{ beat: 0, qpm: 98 }, { beat: cut - 2, qpm: 130 }, { beat: cut + .5, qpm: 150 }], { beats: 3, beatType: 4 }, [{ beat: cut + 1, text: "Theme" }]);
+
+  it("requires a choice and leaves the ordinary converter and source bytes unchanged", () => {
+    const before = source.slice();
+    expect(midiLeadIn(source)).toEqual({ emptyBars: 499, totalBars: 501 });
+    expect(parseScore(midiScoreXml(source, "Full timeline")).parts[0]!.measures).toHaveLength(501);
+    expect(openedScore(source, "sketch.mid", { skipEmptyMidiBars: true }).score.parts[0]!.measures).toHaveLength(2);
+    expect(source).toEqual(before);
+    expect(markersOf(source)).toEqual([{ beats: cut + 1, what: "Theme" }]);
+  });
+
+  it("retains every interpreted note and its pickup position, velocity and cross-bar duration", () => {
+    const original = scoreTracks(parseScore(midiScoreXml(source, "Full timeline")));
+    const trimmed = scoreTracks(parseScore(midiScoreXml(source, "Music", { skipEmptyBars: true })));
+    expect(trimmed.map(t => t.name)).toEqual(original.map(t => t.name));
+    for (let t = 0; t < original.length; t++) {
+      expect(trimmed[t]!.notes).toHaveLength(original[t]!.notes.length);
+      for (let n = 0; n < original[t]!.notes.length; n++) {
+        const a = original[t]!.notes[n]!, b = trimmed[t]!.notes[n]!;
+        expect(b.height).toBe(a.height);expect(b.velocity).toBe(a.velocity);
+        expect(b.start).toBeCloseTo(a.start - cut, 9);expect(b.length).toBeCloseTo(a.length, 9);
+      }
+    }
+    expect(trimmed[0]!.notes[0]!.start).toBeCloseTo(1 / 3, 9);
+  });
+
+  it("carries the active tempo into the first retained bar and keeps intra-bar changes in the actual export", () => {
+    const xml = midiScoreXml(source, "Music", { skipEmptyBars: true });
+    const midi = readMidi(unzipSync(packageFiles(xml, null, "Music"))["all-parts.mid"]!);
+    expect(midi.tempos.map(t => ({ beat: t.tick / midi.ppq, qpm: Math.round(t.qpm) }))).toEqual([{ beat: 0, qpm: 130 }, { beat: .5, qpm: 150 }]);
+    const old = readMidi(source), oldClock = beatClock(old.tempos.map(t => ({ beat: t.tick / old.ppq, qpm: t.qpm })));
+    const newClock = beatClock(midi.tempos.map(t => ({ beat: t.tick / midi.ppq, qpm: t.qpm })));
+    for (const note of midi.tracks.flatMap(t => t.notes)) {
+      const beat = note.tick / midi.ppq;
+      expect(Math.abs(newClock.seconds(beat) - (oldClock.seconds(cut + beat) - oldClock.seconds(cut)))).toBeLessThan(.002);
+    }
+  });
+
+  it("counts empty bars across metre changes and retains later changes", () => {
+    const start = 8 + 20 * 3;
+    const changing = midiFile([{ name: "Piano", program: 0, notes: [{ start: start + .5, length: 1, height: 60 }, { start: start + 3.25, length: 3, height: 67 }] }], 120,
+      [{ beat: 0, beats: 4, beatType: 4 }, { beat: 8, beats: 3, beatType: 4 }, { beat: start + 3, beats: 5, beatType: 8 }]);
+    expect(midiLeadIn(changing)).toEqual({ emptyBars: 22, totalBars: 25 });
+    const score = parseScore(midiScoreXml(changing, "Changing metre", { skipEmptyBars: true }));
+    expect(score.parts[0]!.measures.map(m => m.time)).toEqual([{ beats: 3, beatType: 4 }, { beats: 5, beatType: 8 }, { beats: 5, beatType: 8 }]);
+    expect(scoreTracks(score)[0]!.notes[0]!.start).toBe(.5);
+  });
+
+  it("rejects an invalid zero-length MIDI metre instead of looping over its grid", () => {
+    const invalid = midiFile([{ name: "Piano", program: 0, notes: [{ start: 0, length: 1, height: 60 }] }], 120, { beats: 0, beatType: 4 });
+    expect(() => midiLeadIn(invalid)).toThrow(/no usable bar length/);
+    expect(() => midiScoreXml(invalid, "Invalid")).toThrow(/no usable bar length/);
   });
 });

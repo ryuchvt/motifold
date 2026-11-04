@@ -9,10 +9,10 @@ const NOT_YET: [RegExp, string][] = [
 ];
 
 /** A score from whatever was opened: MusicXML, or a DAW's MIDI file turned into one. */
-export function openedScore(bytes: Uint8Array, fileName: string): { xmlText: string; score: Score } {
+export function openedScore(bytes: Uint8Array, fileName: string, options: { skipEmptyMidiBars?: boolean } = {}): { xmlText: string; score: Score } {
   const refused = NOT_YET.find(([ending]) => ending.test(fileName));
   if (refused) throw new ScoreFileError(refused[1]);
   if (!isMidi(bytes)) return parseScoreFile(bytes);
-  const xmlText = midiScoreXml(bytes, fileName.replace(/\.[^.]+$/, ""));
+  const xmlText = midiScoreXml(bytes, fileName.replace(/\.[^.]+$/, ""), { skipEmptyBars: options.skipEmptyMidiBars });
   return { xmlText, score: parseScore(xmlText) };
 }

@@ -5,6 +5,7 @@ import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeAll, expect, it, vi } from "vitest";
 import { notesAsMidi } from "./listen";
 import { Studio } from "./Studio";
+import { midiFile } from "./arrange";
 
 const pending = vi.hoisted(() => ({ listen: vi.fn() }));
 vi.mock("./listen", async (original) => ({ ...(await original<typeof import("./listen")>()), listenTo: pending.listen }));
@@ -47,6 +48,38 @@ it("takes a recording as well as a score", async () => {
   const host = await openStudio();
   expect(host.querySelector<HTMLInputElement>('input[type="file"]')!.accept).toContain(".wav");
   expect(host.textContent).toContain("a recording of one line");
+});
+
+it("asks about a large DAW lead-in before any model call, then reads only the selected musical bars", async () => {
+  const host = await openStudio(), sent: unknown[] = [];
+  vi.stubGlobal("fetch", async (url: string, init?: RequestInit) => {
+    if (url.startsWith("/api/spark/")) sent.push(JSON.parse(String(init?.body)));
+    return Response.json({ status: "fallback", reason: "not-prepared" });
+  });
+  const bytes = midiFile([{ name: "Piano", program: 0, notes: [{ start: 1497, length: 3, height: 60 }] }], [{ beat: 0, qpm: 98 }, { beat: 1497, qpm: 173 }], { beats: 3, beatType: 4 });
+  const file = new File([bytes as BlobPart], "new-daw-cue.mid");
+  Object.defineProperty(file, "arrayBuffer", { value: async () => bytes.buffer });
+  await choose(host, file);
+  expect(host.textContent).toContain("Your music starts at DAW bar 500");
+  expect(sent).toHaveLength(0);
+  expect(button(host, "Keep the full timeline").disabled).toBe(true);
+  await act(async () => button(host, "Open from the music").click());
+  expect(sent).toHaveLength(1);
+  expect((sent[0] as { input: { written: unknown[] } }).input.written).toHaveLength(1);
+  expect(host.textContent).toContain("499 empty DAW bars left out");
+});
+
+it("blocks analysis when the music itself remains over the bar limit after removing a DAW lead-in", async () => {
+  const host = await openStudio(), sent = vi.fn();
+  vi.stubGlobal("fetch", sent);
+  const bytes = midiFile([{ name: "Piano", program: 0, notes: [{ start: 1497, length: 903, height: 60 }] }], [{ beat: 0, qpm: 98 }, { beat: 1497, qpm: 173 }], { beats: 3, beatType: 4 });
+  const file = new File([bytes as BlobPart], "long-daw-cue.mid");
+  Object.defineProperty(file, "arrayBuffer", { value: async () => bytes.buffer });
+  await choose(host, file);
+  expect(host.textContent).toContain("The musical region also exceeds the 300-bar analysis limit");
+  expect(button(host, "Open from the music").disabled).toBe(true);
+  expect(button(host, "Keep the full timeline").disabled).toBe(true);
+  expect(sent).not.toHaveBeenCalled();
 });
 
 it("hears a recording and goes on to find its bars, as it does for free playing", async () => {

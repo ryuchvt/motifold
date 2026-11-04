@@ -104,6 +104,8 @@ export function placedNotes(w: StudyScoreInput["written"][number], lines?: strin
   return [...new Set(staves)].sort((a, b) => Number(a) - Number(b)).map((staff) => `${lines?.[Number(staff) - 1] ?? words[staff] ?? `staff ${staff}`} ${names.flatMap((_, k) => (staves[k] === staff ? [placed(k)] : [])).join(" ")}`).join(" | ");
 }
 
+export const MAX_SCORE_BARS = 300;
+
 /** The notation every arranger call is given, checked before anything is sent. */
 export function parseScoreInput(raw: unknown): StudyScoreInput | null {
   const r = raw as Partial<StudyScoreInput> | null;
@@ -112,7 +114,7 @@ export function parseScoreInput(raw: unknown): StudyScoreInput | null {
   if (!isText(title ?? null, 120) || !isText(composer ?? null, 80) || !isText(instrument ?? null, 80)) return null;
   if (!Number.isInteger(r.fifths) || Math.abs(r.fifths!) > 7) return null;
   if (r.time !== null && r.time !== undefined && !/^\d{1,2}\/\d{1,2}$/.test(String(r.time))) return null;
-  if (!Array.isArray(r.written) || r.written.length < 1 || r.written.length > 300) return null;
+  if (!Array.isArray(r.written) || r.written.length < 1 || r.written.length > MAX_SCORE_BARS) return null;
   if (new Set(r.written.map((w) => w?.bar)).size !== r.written.length) return null;
   const lines = r.lines;
   if (lines !== undefined && (!Array.isArray(lines) || lines.length < 1 || lines.length > 32 || !lines.every((l) => typeof l === "string" && !!l.trim() && isText(l, 40)))) return null;

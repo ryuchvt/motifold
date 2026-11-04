@@ -4,7 +4,8 @@ import type { InitialSetup } from "./ArrangePanel";
 import { Workspace } from "./Workspace";
 import { FreeBars } from "./FreeBars";
 import { loadDemoIndex, startDemo, stopDemo, type DemoIndex, type DemoPiece } from "./demo";
-import { isMidi } from "./midi";
+import { isMidi, midiLeadIn } from "./midi";
+import { MAX_SCORE_BARS } from "../server/shapes";
 import { openedScore } from "./opened";
 import { AUDIO_FILE, isAudioFile, listenTo } from "./listen";
 import { OWN_KEY } from "../server/pools";
@@ -84,6 +85,7 @@ export function Studio({ initialScore = null, sample = false, initialSetup, samp
   const [typedKey, setTypedKey] = useState("");
   const [loaded, setLoaded] = useState<LoadedSketch | null>(initialScore);
   const [unbarred, setUnbarred] = useState<{ fileName: string; bytes: Uint8Array } | null>(null);
+  const [leadingMidi, setLeadingMidi] = useState<{ fileName: string; bytes: Uint8Array; emptyBars: number; totalBars: number } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [thinking, setThinking] = useState(false);
   const [sourceNote, setSourceNote] = useState<string | null>(null);
@@ -140,10 +142,11 @@ export function Studio({ initialScore = null, sample = false, initialSetup, samp
     setListening(null);
   };
 
-  const open = async (file: File, keepBars = false) => {
+  const open = async (file: File, keepBars = false, skipEmptyMidiBars: boolean | null = null) => {
     const mine = ++opening.current;
     if (!keepBars) resetRun();
     stopListening();
+    setLeadingMidi(null);
     setError(null);
     try {
       if (isAudioFile(file)) {
@@ -167,8 +170,17 @@ export function Studio({ initialScore = null, sample = false, initialSetup, samp
         setUnbarred({ fileName: file.name, bytes });
         return;
       }
+      if (isMidi(bytes) && skipEmptyMidiBars === null) {
+        const lead = midiLeadIn(bytes);
+        if (lead.emptyBars > 0) {
+          setLoaded(null);setUnbarred(null);
+          setLeadingMidi({ fileName: file.name, bytes, ...lead });
+          return;
+        }
+      }
       setUnbarred(null);
-      const { xmlText, score } = openedScore(bytes, file.name);
+      const { xmlText, score } = openedScore(bytes, file.name, { skipEmptyMidiBars: skipEmptyMidiBars === true });
+      if (skipEmptyMidiBars) setSourceNote(`${midiLeadIn(bytes).emptyBars} empty DAW bars left out. This notation reading keeps the file's tempo map. The original MIDI is unchanged.`);
       setLoaded({ fileName: file.name, xmlText, score });
     } catch (e) {
       if (opening.current !== mine) return;
@@ -245,6 +257,7 @@ export function Studio({ initialScore = null, sample = false, initialSetup, samp
     setAccess(null);
     setLoaded(null);
     setUnbarred(null);
+    setLeadingMidi(null);
     setDemoPiece(null);
     setSourceNote(null);
   };
@@ -255,6 +268,7 @@ export function Studio({ initialScore = null, sample = false, initialSetup, samp
     stopListening();
     setLoaded(null);
     setUnbarred(null);
+    setLeadingMidi(null);
     setSourceNote(null);
   };
 
@@ -298,7 +312,7 @@ export function Studio({ initialScore = null, sample = false, initialSetup, samp
         <span className="hud-clock">
           <Clock />
         </span>
-        {(inWork || unbarred) && (
+        {(inWork || unbarred || leadingMidi) && (
           <button className="hud-action" onClick={another}>
             Another piece
           </button>
@@ -344,7 +358,7 @@ export function Studio({ initialScore = null, sample = false, initialSetup, samp
         </main>
       )}
 
-      {access && !inWork && !unbarred && !guide && !exploring && (
+      {access && !inWork && !unbarred && !leadingMidi && !guide && !exploring && (
         <main className="import">
           {listening ? (
             <div className="hearing">
@@ -419,6 +433,18 @@ export function Studio({ initialScore = null, sample = false, initialSetup, samp
           )}
         </main>
       )}
+
+      {leadingMidi && !inWork && !guide && !exploring && <main className="import">
+        <h2>Your music starts at DAW bar {leadingMidi.emptyBars + 1}</h2>
+        <p>{leadingMidi.emptyBars} empty bars come before the first note. Open the {leadingMidi.totalBars - leadingMidi.emptyBars} musical bars from there, or keep the full timeline.</p>
+        <p className="spark-note">This opens a notation reading with the file's tempo map. Your original MIDI stays unchanged.</p>
+        <div className="tutorial-sketch-actions">
+          <button className="button primary" disabled={leadingMidi.totalBars - leadingMidi.emptyBars > MAX_SCORE_BARS} onClick={()=>void open(new File([leadingMidi.bytes as BlobPart],leadingMidi.fileName),true,true)}>Open from the music</button>
+          <button className="button" disabled={leadingMidi.totalBars > MAX_SCORE_BARS} onClick={()=>void open(new File([leadingMidi.bytes as BlobPart],leadingMidi.fileName),true,false)}>Keep the full timeline</button>
+        </div>
+        {leadingMidi.totalBars - leadingMidi.emptyBars > MAX_SCORE_BARS ? <p className="spark-note">The musical region also exceeds the {MAX_SCORE_BARS}-bar analysis limit. Export a shorter selection from your DAW.</p> : leadingMidi.totalBars > MAX_SCORE_BARS && <p className="spark-note">The full {leadingMidi.totalBars}-bar timeline exceeds the {MAX_SCORE_BARS}-bar analysis limit. Open from the music or export a shorter selection from your DAW.</p>}
+        {error && <p className="error" role="alert">{error}</p>}
+      </main>}
 
       {!inWork && unbarred && !guide && !exploring && (
         <FreeBars
