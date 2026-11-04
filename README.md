@@ -1,5 +1,7 @@
 # Motifold
 
+[Open app](https://motifold.chawanvit-vut.workers.dev) · [Recorded video walkthrough](https://www.youtube.com/watch?v=Z1bjtmefSEs) · [Run locally](#run-it)
+
 Motifold turns a musical sketch into an orchestral score you can read, change and take into your DAW. You bring a melody or a piano part, as MIDI or MusicXML, or one line you sing, hum or play into a recording. It works out what you played, reads it, asks what it can't tell, and writes the rest as notes.
 
 You choose the job. **Arrange** is neutral. It keeps the accepted score's notes, harmony, key, metre, timing, character and section order, and adds no bars. It can voice your music for different instruments and add a supporting counterline within your theme. **Expand** keeps that character and develops the same piece with a connected section, a return or a finished ending. Your written notes and harmony stay. **Recompose** writes a new piece within the freedom you choose, with a new mood and harmony if you want them. Its default keeps your whole tune recognisable, with small changes to the melody and new harmony.
@@ -50,12 +52,16 @@ Calls on my shared credit go through a ledger that reserves the worst case first
 
 ## Run it
 
-Use Node.js 24 or 26 with npm. Node 22.13 or later within the 22.x release is also supported. Run these commands from the root of your clone.
+Use Git and Node.js 24 or 26 with npm. Node 22.13 or later within the 22.x release is also supported. Clone and start the app with these commands.
 
 ```sh
+git clone https://github.com/ryuchvt/motifold.git
+cd motifold
 npm ci
 npm run server
 ```
+
+If you already cloned or downloaded the repository, run the last two commands from its root directory.
 
 Open http://127.0.0.1:8788. This starts the app and Worker locally. Local replay needs no Cloudflare account, API key, deployment or environment file. The first install downloads the npm dependencies.
 

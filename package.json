@@ -2,6 +2,13 @@
   "name": "motifold",
   "private": true,
   "version": "0.0.0",
+  "description": "Develop musical sketches into editable orchestral scores with Muse Spark. Export MIDI and MusicXML.",
+  "homepage": "https://motifold.chawanvit-vut.workers.dev",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ryuchvt/motifold.git"
+  },
+  "author": "Chawanvit Vuthikornudomkit (Ryu)",
   "type": "module",
   "license": "UNLICENSED",
   "scripts": {
