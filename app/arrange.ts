@@ -535,12 +535,14 @@ const CLEFS: [RegExp, string, number][] = [
 /** One staff of one bar. Notes struck and released together are a chord, and overlapping ones go in voices of their own. */
 function staffXml(events: NewEvent[], staff: number | null, voiceBase: number, barTicks: number, color?: string, octaveShift = 0, transposition: Part["transposition"] = null, marks?: { before: string; after: string }): string {
   type Token = { start: number; ticks: number; names: string[]; tieStart: boolean; tieStop: boolean; velocities: Map<string, number> };
-  const chords = new Map<string, Token>();
+  const chords = new Map<string, Token[]>();
   for (const e of [...events].sort((a, b) => a.start - b.start)) {
     const names = [...new Set(e.names)];
     const token: Token = { start: Math.round(e.start * DIV), ticks: Math.max(1, Math.round(e.length * DIV)), names, tieStart: !!e.tieStart, tieStop: !!e.tieStop, velocities: new Map(e.velocity !== undefined ? names.map((name) => [name, e.velocity!]) : []) };
     const key = `${token.start}|${token.ticks}|${token.tieStart}|${token.tieStop}`;
-    const same = chords.get(key);
+    const group = chords.get(key) ?? [];
+    // A shared pitch is another voice, not another note of the same chord.
+    const same = group.find((chord) => token.names.every((name) => !chord.names.includes(name)));
     if (same) {
       // Each note of a chord keeps how hard it was struck.
       for (const name of token.names) {
@@ -548,10 +550,13 @@ function staffXml(events: NewEvent[], staff: number | null, voiceBase: number, b
         same.names.push(name);
         if (token.velocities.has(name)) same.velocities.set(name, token.velocities.get(name)!);
       }
-    } else chords.set(key, token);
+    } else {
+      group.push(token);
+      chords.set(key, group);
+    }
   }
   const voices: Token[][] = [];
-  for (const token of chords.values()) {
+  for (const token of [...chords.values()].flat()) {
     const free = voices.find((v) => v[v.length - 1]!.start + v[v.length - 1]!.ticks <= token.start);
     if (free) free.push(token);
     else voices.push([token]);
@@ -919,6 +924,69 @@ interface LineNote {
   tieStop: boolean;
   placed: boolean;
   velocity?: number;
+  voice: string;
+}
+
+type OpenTie<T> = { value: T; end: number; voice: string };
+const sameTieTime = (a: number, b: number) => Math.abs(a - b) <= Number.EPSILON * 8 * Math.max(1, Math.abs(a), Math.abs(b));
+
+/** A stop must continue an explicit, contiguous start. A voice change is safe only when the choice is unique. */
+function takeTies<T, K>(open: Map<number, OpenTie<T>[]>, start: number, stops: { key: K; height: number; voice: string }[]): Map<K, OpenTie<T>> {
+  const claimed = new Map<K, OpenTie<T>>();
+  for (const height of new Set(stops.map((stop) => stop.height))) {
+    const live = (open.get(height) ?? []).filter((tie) => tie.end > start || sameTieTime(tie.end, start));
+    const predecessors = live.filter((tie) => sameTieTime(tie.end, start));
+    const successors = stops.filter((stop) => stop.height === height);
+    const pair = (tie: OpenTie<T>, stop: (typeof successors)[number]) => {
+      claimed.set(stop.key, tie);
+      predecessors.splice(predecessors.indexOf(tie), 1);
+      successors.splice(successors.indexOf(stop), 1);
+      live.splice(live.indexOf(tie), 1);
+    };
+    // Reserve voice-matched successors for the whole onset before considering a voice change.
+    for (const voice of new Set(successors.map((stop) => stop.voice))) {
+      const before = predecessors.filter((tie) => tie.voice === voice);
+      const after = successors.filter((stop) => stop.voice === voice);
+      if (before.length === 1 && after.length === 1) pair(before[0]!, after[0]!);
+    }
+    if (predecessors.length === 1 && successors.length === 1) pair(predecessors[0]!, successors[0]!);
+    if (live.length) open.set(height, live);
+    else open.delete(height);
+  }
+  return claimed;
+}
+
+function holdTie<T>(open: Map<number, OpenTie<T>[]>, height: number, tie: OpenTie<T>): void {
+  open.set(height, [...(open.get(height) ?? []), tie]);
+}
+
+/** Printed fragments inside one bar are one event before placement or voice selection. */
+function joinInBar(notes: LineNote[], ticksPerQuarter: number): LineNote[] {
+  const open = new Map<number, OpenTie<LineNote>[]>();
+  const order = new Map<LineNote, number>();
+  const out: LineNote[] = [];
+  const sorted = notes.map((note, index) => ({ note, index })).sort((a, b) => a.note.start - b.note.start || Number(b.note.tieStop) - Number(a.note.tieStop) || a.index - b.index);
+  for (let from = 0; from < sorted.length;) {
+    let to = from + 1;
+    while (to < sorted.length && sameTieTime(sorted[from]!.note.start, sorted[to]!.note.start)) to++;
+    const group = sorted.slice(from, to);
+    const held = takeTies(open, group[0]!.note.start, group.filter(({ note }) => note.tieStop).map(({ note }) => ({ key: note, height: note.height, voice: note.voice })));
+    for (const { note, index } of group) {
+      const previous = held.get(note);
+      const combined = previous?.value ?? { ...note };
+      if (previous) {
+        // Keep the source's integer tick grid, regardless of how the tie was printed.
+        combined.length = (Math.round(note.start * ticksPerQuarter) + Math.round(note.length * ticksPerQuarter) - Math.round(combined.start * ticksPerQuarter)) / ticksPerQuarter;
+        combined.tieStart = note.tieStart;
+      } else {
+        out.push(combined);
+        order.set(combined, index);
+      }
+      if (note.tieStart) holdTie(open, note.height, { value: combined, end: note.start + note.length, voice: note.voice });
+    }
+    from = to;
+  }
+  return out.sort((a, b) => order.get(a)! - order.get(b)!);
 }
 
 /** Every line of a score, bar by bar, as the notes that sound, with how many there are and how many grace notes aren't counted among them. */
@@ -946,10 +1014,10 @@ function readLines(score: Score, input: StudyScoreInput): { lines: Map<string, L
           if (!n.tieStop) notes++;
           const height = Math.round(n.soundingMidi);
           const written = nameInScore(n, part);
-          return [{ start: n.onset / score.ticksPerQuarter, length: n.duration / score.ticksPerQuarter, height, ...(n.velocity !== undefined ? { velocity: n.velocity } : {}), name: noteHeight(written) === height ? written : noteName(height), tieStart: n.tieStart, tieStop: n.tieStop, placed: false }];
+          return [{ start: n.onset / score.ticksPerQuarter, length: n.duration / score.ticksPerQuarter, height, ...(n.velocity !== undefined ? { velocity: n.velocity } : {}), name: noteHeight(written) === height ? written : noteName(height), tieStart: n.tieStart, tieStop: n.tieStop, placed: false, voice: n.voice }];
         }),
       );
-      return [line.label, inBars] as const;
+      return [line.label, inBars.map((notes) => joinInBar(notes, score.ticksPerQuarter))] as const;
     }),
   );
   return { lines, levels, dynamicMarks, notes, grace };
@@ -1092,7 +1160,7 @@ export function placeNotes(score: Score, input: StudyScoreInput, answer: Distrib
   const put = (target: PlacedPart, k: number, n: LineNote, octaves: number) => {
     const name = octaves ? moveOctave(n.name, octaves) : n.name;
     const inBar = target.bars[k]!;
-    if (inBar.some((e) => e.start === n.start && e.length === n.length && e.names[0] === name)) {
+    if (inBar.some((e) => e.start === n.start && e.length === n.length && e.names[0] === name && e.velocity === n.velocity && !!e.tieStart === n.tieStart && !!e.tieStop === n.tieStop)) {
       if (!n.tieStop) check.merged++;
     } else inBar.push({ start: n.start, length: n.length, names: [name], tieStart: n.tieStart, tieStop: n.tieStop, ...(n.velocity !== undefined ? { velocity: n.velocity } : {}) });
   };
@@ -1405,9 +1473,10 @@ export function scoreTracks(score: Score): MidiTrack[] {
   return score.parts.flatMap((part) => {
     const staves = Array.from({ length: part.staves }, (_, s) => s + 1);
     return staves.flatMap((staff) => {
-      const open = new Map<number, MidiTrack["notes"][number]>();
+      const open = new Map<number, OpenTie<MidiTrack["notes"][number]>[]>();
       const notes: MidiTrack["notes"] = [];
       const plucked: MidiTrack["notes"] = [];
+      const attackOrder = new Map<MidiTrack["notes"][number], number>();
       let pizz = false;
       const levels = levelPoints(part, score.ticksPerQuarter);
       for (const m of part.measures) {
@@ -1415,25 +1484,40 @@ export function scoreTracks(score: Score): MidiTrack[] {
           if (/^pizz/i.test(word.trim())) pizz = true;
           if (/^arco/i.test(word.trim())) pizz = false;
         }
-        for (const i of m.noteIndexes) {
+        // Voices are serialized one at a time. A continuation can therefore be
+        // printed before its start; process time first, then retain attack order below.
+        const ordered = m.noteIndexes.filter((i) => {
           const n = part.notes[i]!;
-          if (n.staff !== staff || n.rest || n.grace || n.hidden || n.cue || !n.pitch || n.soundingMidi === null) continue;
-          const height = Math.round(n.soundingMidi);
-          const length = n.duration / score.ticksPerQuarter;
-          const held = n.tieStop ? open.get(height) : undefined;
-          if (held) held.length += length;
-          else {
-            const start = (m.start + n.onset) / score.ticksPerQuarter;
-            const velocity = n.velocity ?? levelAt(levels, start);
-            const note = { start, length, height, ...(velocity !== undefined ? { velocity } : {}) };
-            (pizz ? plucked : notes).push(note);
-            if (n.tieStart) open.set(height, note);
+          return n.staff === staff && !n.rest && !n.grace && !n.hidden && !n.cue && n.pitch && n.soundingMidi !== null;
+        }).sort((i, j) => part.notes[i]!.onset - part.notes[j]!.onset || Number(part.notes[j]!.tieStop) - Number(part.notes[i]!.tieStop) || i - j);
+        for (let from = 0; from < ordered.length;) {
+          let to = from + 1;
+          while (to < ordered.length && sameTieTime(part.notes[ordered[from]!]!.onset, part.notes[ordered[to]!]!.onset)) to++;
+          const group = ordered.slice(from, to);
+          const held = takeTies(open, m.start + part.notes[group[0]!]!.onset, group.filter((i) => part.notes[i]!.tieStop).map((i) => ({ key: i, height: Math.round(part.notes[i]!.soundingMidi!), voice: part.notes[i]!.voice })));
+          for (const i of group) {
+            const n = part.notes[i]!, height = Math.round(n.soundingMidi!), length = n.duration / score.ticksPerQuarter, startTicks = m.start + n.onset;
+            const previous = held.get(i);
+            let note: MidiTrack["notes"][number];
+            if (previous) {
+              note = previous.value;
+              note.length += length;
+            } else {
+              const start = startTicks / score.ticksPerQuarter;
+              const velocity = n.velocity ?? levelAt(levels, start);
+              note = { start, length, height, ...(velocity !== undefined ? { velocity } : {}) };
+              (pizz ? plucked : notes).push(note);
+              attackOrder.set(note, i);
+            }
+            if (n.tieStart) holdTie(open, height, { value: note, end: startTicks + n.duration, voice: n.voice });
           }
-          if (!n.tieStart) open.delete(height);
+          from = to;
         }
       }
       const name = part.staves > 1 ? `${part.name} ${["upper", "lower"][staff - 1] ?? staff}` : part.name;
       const controls = levelCurve(levels);
+      // Keep simultaneous MIDI events in the source's established attack order.
+      for (const line of [notes, plucked]) line.sort((a, b) => attackOrder.get(a)! - attackOrder.get(b)!);
       // Plucked notes get a track of their own, because a sample library plays them from a different patch.
       return [
         ...(notes.length ? [{ name, program: PROGRAMS.find(([word]) => word.test(name))?.[1] ?? 0, notes, ...(controls.length ? { controls } : {}) }] : []),

@@ -79,7 +79,7 @@ it("stops before paid planning/previews, then opens and focuses a reviewed repai
   await press(screen.host, "Create"); await paused(screen);
   const warning = screen.host.querySelector('[role="alert"]')!;
   expect(warning.closest("details")).toBeNull();
-  expect(warning.textContent).toContain("23 sit outside the comfortable range");
+  expect(warning.textContent).toContain("17 sit outside the comfortable range");
   const count = screen.requests.length;
   await press(screen.host, "Adjust instrument placement");
   await vi.waitFor(() => {
@@ -151,8 +151,16 @@ it("does not bypass an unsafe ready layout by asking to keep the current tracks"
 });
 
 it("continues the ordinary clean layout flow and derives exactly the genuine recorded Brass repair guidance", async () => {
-  const check = placeNotes(score, bad.input, bad.reply.answer, bad.input.instruments, false).check;
-  expect(check.outOfRange).toHaveLength(23);
+  const placed = placeNotes(score, bad.input, bad.reply.answer, bad.input.instruments, false), check = placed.check;
+  // Each Tuba B3 is one held event, rather than two separately counted printed fragments.
+  expect(check.outOfRange).toHaveLength(17);
+  const tuba = placed.parts.find(part => part.name === "Tuba")!;
+  for (const [bar, velocity] of [[1, 31], [3, 29], [5, 26], [6, 31], [9, 40], [15, 35]]) {
+    expect(check.outOfRange.filter(note => note.part === "Tuba" && note.bar === String(bar) && note.name === "B3")).toHaveLength(1);
+    expect(tuba.bars[bar! - 1]!.filter(note => note.names.includes("B3"))).toEqual([
+      { start: 0.5, length: 2.5, names: ["B3"], tieStart: false, tieStop: false, velocity },
+    ]);
+  }
   expect(placementRangeWords(check.outOfRange)).toBe(repaired.input.ask);
   const screen = setup(true); await opened(screen); await press(screen.host, "Create");
   await vi.waitFor(() => expect(screen.requests.filter(request => request.shape === "arrange")).toHaveLength(2));
