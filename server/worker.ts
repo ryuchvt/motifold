@@ -8,8 +8,10 @@ import { OWN_KEY, POOLS, SLOTS } from "./pools";
 import { CONTEXT_WINDOW, PRICES, reservationMicros, SEARCH_QUALIFIED } from "./prices";
 import { SHAPES } from "./shapes";
 import { MODEL } from "./spark";
+import { serveAudioAsset } from './audioAssets';
 
 interface Env {
+  ASSETS: Fetcher;
   LEDGER: DurableObjectNamespace<LedgerObject>;
   META_API_KEY: string;
   /** "dev" only when the local server script sets it. */
@@ -69,6 +71,8 @@ export class LedgerObject extends DurableObject<Env> {
 export default {
   async fetch(request, env, ctx): Promise<Response> {
     const url = new URL(request.url);
+    // Audio is public static data. It never opens the ledger or a model transport.
+    if (url.pathname.startsWith('/demo/') && url.pathname.endsWith('.mp3')) return serveAudioAsset(request, env.ASSETS);
     const dev = env.MODE === "dev" && (url.hostname === "localhost" || url.hostname === "127.0.0.1");
 
     if (url.pathname === "/api/access") {

@@ -3,11 +3,12 @@
   "name": "motifold",
   "main": "server/worker.ts",
   "compatibility_date": "2026-09-30",
-  // The built app is served as static files. Only /api/* runs the Worker.
+  // The Worker also supplies byte ranges for streamed demo audio.
   "assets": {
     "directory": "./dist",
+    "binding": "ASSETS",
     "not_found_handling": "single-page-application",
-    "run_worker_first": ["/api/*"]
+    "run_worker_first": ["/api/*", "/demo/*.mp3"]
   },
   "durable_objects": {
     "bindings": [{ "name": "LEDGER", "class_name": "LedgerObject" }]
