@@ -1,0 +1,24 @@
+.featured-examples { flex:1; min-height:0; overflow:auto; padding:clamp(22px,4vw,54px); }
+.featured-intro { display:flex; justify-content:space-between; align-items:flex-start; gap:24px; }
+.featured-intro h1 { font:500 clamp(25px,3vw,36px)/1.2 var(--sans); letter-spacing:-.8px; margin:0 0 12px; }
+.featured-intro p { max-width:65ch; color:var(--muted); line-height:1.6; margin:0 0 10px; }
+.featured-intro>.button { flex:none; }
+.featured-list { margin:32px 0 24px; display:grid; gap:14px; }
+.featured-example { display:flex; align-items:center; justify-content:space-between; gap:28px; padding:26px; border:1px solid var(--line2); border-radius:10px; background:#1c2735; }
+.featured-example h2 { margin:0 0 9px; font:600 22px/1.25 var(--sans); }
+.featured-example p { margin:0 0 10px; max-width:65ch; color:#afbed0; line-height:1.6; }
+.featured-example .button { flex:none; }
+.featured-example.example-cute-sad { border-left:3px solid #8996c6; }
+.example-settings { font-size:12px; color:#acbcd0; }
+.featured-recording { color:var(--muted); line-height:1.6; max-width:78ch; font-size:12px; }
+.featured-viewer { flex:1; min-height:0; display:flex; flex-direction:column; overflow:auto; }
+.featured-viewer>.featured-intro { flex:none; padding:20px clamp(14px,3vw,46px) 8px; }
+.example-original { flex:none; display:flex; align-items:center; flex-wrap:wrap; gap:12px; padding:12px clamp(14px,3vw,46px); border-bottom:1px solid var(--line); background:#141c26; }
+.example-original>div { margin-right:auto; }.example-original strong { font-weight:500; }.example-original p { font-size:12px; color:var(--muted); margin:5px 0; }.example-original a { font-size:12px; color:#b9cbe1; }
+.example-original>.error { flex-basis:100%; }
+.featured-viewer>.outcome-explorer { flex:none; overflow:visible; }
+.featured-viewer .explorer-heading>button { display:none; }
+.explorer-heading h2 { font:500 clamp(21px,2.5vw,28px)/1.2 var(--sans); margin:0 0 10px; letter-spacing:-.5px; }
+@media(max-width:760px) {
+ .featured-examples { padding:22px 14px; }.featured-intro { flex-direction:column; gap:12px; }.featured-example { padding:20px; align-items:flex-start; flex-direction:column; gap:10px; }.featured-example>.button { width:100%; }.featured-viewer>.featured-intro { padding-top:16px; }.example-original>div { flex-basis:100%; }.example-original .button { flex:1; }.example-original a { flex-basis:100%; }
+}

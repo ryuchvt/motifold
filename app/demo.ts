@@ -90,7 +90,7 @@ export function recordedDemoCatalog(value: unknown, pieceId: string): DemoCatalo
   }
   return value as unknown as DemoCatalog;
 }
-export async function loadDemoCatalog(piece: DemoPiece): Promise<DemoCatalog | null> {
+export async function loadDemoCatalog(piece: Pick<DemoPiece, "id" | "catalog">): Promise<DemoCatalog | null> {
   if (!piece.catalog || !localAsset(piece.catalog)) return null;
   try { const response = await fetch(piece.catalog); return response.ok ? recordedDemoCatalog(await response.json(), piece.id) : null; } catch { return null; }
 }

@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "pieceId": "cute-test",
+  "recorded": "2026-11-04",
+  "outcomes": [
+    {
+      "id": "recompose-sad-full-a",
+      "runKey": "cute-sad-full",
+      "intent": "recompose",
+      "ensemble": "Full orchestra",
+      "mood": "Sad",
+      "freedom": 2,
+      "option": 0,
+      "name": "Ashen Lullaby",
+      "bars": 26,
+      "sourceBars": 26,
+      "status": "complete",
+      "xml": "/demo/cute-test/outcomes/recompose-sad-full-a/score.musicxml",
+      "xmlSha256": "635ea44c9490cdd856430b6200f9018dfd889807dc762dc04a0fc3624b55c985",
+      "midi": "/demo/cute-test/outcomes/recompose-sad-full-a/all-parts.mid",
+      "midiSha256": "f3141b9d4bdac6a5c7793790191e25456ecf25e27d44458d1ed161162da529dc",
+      "zip": "/demo/cute-test/outcomes/recompose-sad-full-a/arrangement.zip",
+      "run": "/demo/cute-test/outcomes/recompose-sad-full-a/run.json",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "8",
+          "chords": "Am | F | Dm | E7 | F | Dm | Am | E7"
+        },
+        {
+          "from": "9",
+          "to": "16",
+          "chords": "Am | F | G | E7 | Am | Dm | F E7 | Am"
+        },
+        {
+          "from": "17",
+          "to": "24",
+          "chords": "F | E7 | Am | Dm | Bb E7 | Am | Bm7b5 E7 | Am"
+        },
+        {
+          "from": "25",
+          "to": "26",
+          "chords": "Dm E7 | Am"
+        }
+      ]
+    }
+  ]
+}

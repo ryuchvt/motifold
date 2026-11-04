@@ -1,0 +1,5003 @@
+[
+  {
+    "shape": "read_piece",
+    "input": {
+      "piece": {
+        "title": "cute_test",
+        "composer": null,
+        "instrument": "Sum 12 and Sum 12 2 and Sum 12 3 and Sum 12 4 and Inst 2 and Sum 12 5 and Sum 12"
+      },
+      "fifths": 0,
+      "time": "3/4",
+      "written": [
+        {
+          "bar": "1",
+          "notes": "C3 G4 E4 C4 G4 E4 C4",
+          "rhythm": "1 0.25x3 1x3",
+          "at": "0 1 1 1 2 2 2",
+          "staves": "1 1 1 1 1 1 1",
+          "measure": 0
+        },
+        {
+          "bar": "2",
+          "notes": "A2 A2 A4 E4 C4 A4 E4 C4",
+          "rhythm": "1 0.25x4 1x3",
+          "at": "0 1 1 1 1 2 2 2",
+          "staves": "1 1 1 1 1 1 1 1",
+          "held": "2",
+          "measure": 1
+        },
+        {
+          "bar": "3",
+          "notes": "D3 A4 F4 D4 A4 F4 D4",
+          "rhythm": "1.333 0.25x3 0.333x3",
+          "at": "0 1 1 1 2 2 2",
+          "staves": "1 1 1 1 1 1 1",
+          "measure": 2
+        },
+        {
+          "bar": "4",
+          "notes": "G3 G3",
+          "rhythm": "2 0.667",
+          "at": "0 2",
+          "staves": "1 1",
+          "held": "2",
+          "measure": 3
+        },
+        {
+          "bar": "5",
+          "notes": "C3 C3 G4 E4 C4 G4 E4 C4",
+          "rhythm": "1 0.25x4 1x3",
+          "at": "0 1 1 1 1 2 2 2",
+          "staves": "1 1 1 1 1 1 1 1",
+          "held": "2",
+          "measure": 4
+        },
+        {
+          "bar": "6",
+          "notes": "A2 A4 E4 C4 A2 A4 E4 C4",
+          "rhythm": "1.5 0.25x4 1x3",
+          "at": "0 1 1 1 1.5 2 2 2",
+          "staves": "1 1 1 1 1 1 1 1",
+          "held": "5",
+          "measure": 5
+        },
+        {
+          "bar": "7",
+          "notes": "D3 A4 F4 D4 A4 F4 D4",
+          "rhythm": "2 0.25x3 0.333x3",
+          "at": "0 1 1 1 2 2 2",
+          "staves": "1 1 1 1 1 1 1",
+          "measure": 6
+        },
+        {
+          "bar": "8",
+          "notes": "G2 E4 C4 A3 A2 F4 D4 B3 B2",
+          "rhythm": "1 0.25x3 1 0.75x3 1",
+          "at": "0 1 1 1 1 2 2 2 2",
+          "staves": "1 1 1 1 1 1 1 1 1",
+          "measure": 7
+        },
+        {
+          "bar": "9",
+          "notes": "C3 C6 C3 C3 C6 G5 E5 C4 C5 G4 E4 C4 G4 E4 C4 C6 C5 G4 E4 C4 A5 G4 E4 C4 C6 A4",
+          "rhythm": "1 1.5 1 3 2 3x3 1.5 0.25x8 1x7 0.75 1",
+          "at": "0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1.5 1.5 2 2 2 2 2 2 2 2 2",
+          "staves": "2 5 6 9 10 10 10 10 14 2 2 2 6 6 6 5 14 2 2 2 5 6 6 6 10 14",
+          "held": "16 17 25",
+          "measure": 8
+        },
+        {
+          "bar": "10",
+          "notes": "A2 C6 A2 A2 C6 E5 A5 A3 C5 A2 A4 E4 C4 A2 A4 E4 C4 A4 E4 C4 A4 E4 C4 C6 E5",
+          "rhythm": "1 3 1 3 2x2 3x3 0.25x8 1x6 0.75x2",
+          "at": "0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2",
+          "staves": "2 5 6 9 10 10 10 10 14 2 2 2 2 6 6 6 6 2 2 2 6 6 6 10 10",
+          "held": "10 14 24 25",
+          "measure": 9
+        },
+        {
+          "bar": "11",
+          "notes": "D3 C6 D3 D3 A5 A3 F5 D5 D4 C5 A4 F4 D4 A4 F4 D4 A4 F4 D4 A4 F4 D4 A5 F5",
+          "rhythm": "1.333 3 1.333 3 2 0.25 2 3x3 0.25x6 0.333x6 0.5 0.75",
+          "at": "0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 2 2 2 2 2 2 2 2",
+          "staves": "2 5 6 9 10 10 10 10 10 14 2 2 2 6 6 6 2 2 2 6 6 6 10 10",
+          "held": "2 5 6 10 23 24",
+          "measure": 10
+        },
+        {
+          "bar": "12",
+          "notes": "G2 D6 G2 G2 D5 B5 G5 G3 D5 B4 G4 D4 B4 G4 D4 G2 A2 G2 B4 G4 D4 A5 G2 B4 G4 D4 B2 D5 B5 G5 G3 A4",
+          "rhythm": "2x3 1 2x5 0.25x7 1 0.667 0.333x3 1 0.667 0.333x3 1 0.75x4 1",
+          "at": "0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2",
+          "staves": "2 5 6 9 10 10 10 10 14 2 2 2 6 6 6 9 9 2 2 2 2 5 6 6 6 6 9 10 10 10 10 14",
+          "held": "5 16 18 23 28 29 30 31",
+          "measure": 11
+        },
+        {
+          "bar": "13",
+          "notes": "C3 C6 C3 C3 C6 G5 E5 C4 C5 G4 E4 C4 G4 E4 C4 C6 C5 G4 E4 C4 A5 G4 E4 C4 C6 A4",
+          "rhythm": "1 1.5 1 3 2 3x3 1.5 0.25x8 1x7 0.75 1",
+          "at": "0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1.5 1.5 2 2 2 2 2 2 2 2 2",
+          "staves": "3 5 7 9 11 11 11 11 14 3 3 3 7 7 7 5 14 3 3 3 5 7 7 7 11 14",
+          "held": "16 17 25",
+          "measure": 12
+        },
+        {
+          "bar": "14",
+          "notes": "A2 C6 A2 A2 C6 E5 A5 A3 C5 A2 A4 E4 C4 A2 A4 E4 C4 A4 E4 C4 A4 E4 C4 C6 E5",
+          "rhythm": "1 3 1 3 2x2 3x3 0.25x8 1x6 0.75x2",
+          "at": "0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2",
+          "staves": "3 5 7 9 11 11 11 11 14 3 3 3 3 7 7 7 7 3 3 3 7 7 7 11 11",
+          "held": "10 14 24 25",
+          "measure": 13
+        },
+        {
+          "bar": "15",
+          "notes": "D3 C6 D3 A2 D3 A5 A3 F5 D5 D4 C5 A4 F4 D4 A4 F4 D4 A4 F4 D4 D6 A4 F4 D4 A5 F5 D5",
+          "rhythm": "1.333 2 1.333 0.25 3 2 0.25 2 3x2 2 0.25x6 0.333x3 1 0.333x3 0.5 0.75 1",
+          "at": "0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2",
+          "staves": "3 5 7 9 9 11 11 11 11 11 14 3 3 3 7 7 7 3 3 3 5 7 7 7 11 11 14",
+          "held": "2 4 6 7 11 25 26",
+          "measure": 14
+        },
+        {
+          "bar": "16",
+          "notes": "G2 A5 G2 G3 D5 B5 G5 G3 A4 B4 G4 D4 B4 G4 D4 A5 A4 G2 B4 G4 D4 B5 G2 B4 G4 D4 D5 B5 G5 G3 B4",
+          "rhythm": "2 1.5 2 3 2x4 1.5 0.25x8 0.667 0.333x3 1 0.667 0.333x3 0.75x4 1",
+          "at": "0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1.5 1.5 2 2 2 2 2 2 2 2 2 2 2 2 2 2",
+          "staves": "3 5 7 9 11 11 11 11 14 3 3 3 7 7 7 5 14 3 3 3 3 5 7 7 7 7 11 11 11 11 14",
+          "held": "5 16 17 18 23 27 28 29 30",
+          "measure": 15
+        },
+        {
+          "bar": "17",
+          "notes": "C3 C6 C3 C3 C6 G5 E5 C4 C5 G4 E4 C4 G4 E4 C4 G4 E4 C4 A5 G4 E4 C4 C6 A4",
+          "rhythm": "1 2 1 3 2 3x3 2 0.25x6 1x7 0.75 1",
+          "at": "0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2",
+          "staves": "4 5 8 9 12 12 12 12 14 4 4 4 8 8 8 4 4 4 5 8 8 8 12 14",
+          "held": "23",
+          "measure": 16
+        },
+        {
+          "bar": "18",
+          "notes": "A2 C6 A2 A2 C6 E5 A5 A3 C5 A2 A4 E4 C4 A2 A4 E4 C4 A4 E4 C4 C6 A4 E4 C4 C6 E5 C5 E6 E5",
+          "rhythm": "1 2 1 3 2x2 3x2 2 0.25x8 1x3 0.25 1x3 0.75x2 0.25 0.5x2",
+          "at": "0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2.5 2.5",
+          "staves": "4 5 8 9 12 12 12 12 14 4 4 4 4 8 8 8 8 4 4 4 5 8 8 8 12 12 14 5 14",
+          "held": "10 14 21 25 26 27",
+          "measure": 17
+        },
+        {
+          "bar": "19",
+          "notes": "D3 E6 D6 D3 A2 D2 A5 A3 F5 D5 D4 E5 D5 A4 F4 D4 A4 F4 D4 A4 F4 D4 D6 A4 F4 D4 A5 F5 D5",
+          "rhythm": "1.333 0.25 2 1.333 0.25 3 2 0.25 2 3x2 0.25 2 0.25x6 0.333x3 0.75 0.333x3 0.5 0.75x2",
+          "at": "0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2",
+          "staves": "4 5 5 8 9 9 12 12 12 12 12 14 14 4 4 4 8 8 8 4 4 4 5 8 8 8 12 12 14",
+          "held": "2 5 7 8 12 23 27 28 29",
+          "measure": 18
+        },
+        {
+          "bar": "20",
+          "notes": "G3 G5 G3 G2 D5 B5 G5 G3 G4 A5 G2 E2 A4 G3 B5 G3 D2 D5 B5 G5 G3 B4",
+          "rhythm": "2 1 2 1 2x4 1x2 0.25 1x2 0.667 1 0.667 1 0.75x4 1",
+          "at": "0 0 0 0 0 0 0 0 0 1 1 1 1 2 2 2 2 2 2 2 2 2",
+          "staves": "4 5 8 9 12 12 12 12 14 5 9 9 14 4 5 8 9 12 12 12 12 14",
+          "held": "5 11 14 16 18 19 20 21",
+          "measure": 19
+        },
+        {
+          "bar": "21",
+          "notes": "C3 C6 C3 D2 C3 C6 G5 E5 C4 C5 C3 G4 E4 C4 C3 G4 E4 C4 G4 E4 C4 C6 G4 E4 C4 C6 C5",
+          "rhythm": "1 2 1 0.25 3 2 3x3 2 0.25x8 1x3 0.5 1x3 0.75 0.5",
+          "at": "0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2",
+          "staves": "4 5 8 9 9 13 13 13 13 14 4 4 4 4 8 8 8 8 4 4 4 5 8 8 8 13 14",
+          "held": "4 11 15 22 26 27",
+          "measure": 20
+        },
+        {
+          "bar": "22",
+          "notes": "A2 A2 A2 C6 E5 A5 A3 A4 E4 C4 A4 E4 C4 A2 A2 A4 E4 C4 A5 A4 E4 C4 G2 C6 E5 A4",
+          "rhythm": "1.5x2 2x3 3x2 0.25x8 1x8 0.75x2 1",
+          "at": "0 0 0 0 0 0 0 1 1 1 1 1 1 1.5 1.5 2 2 2 2 2 2 2 2 2 2 2",
+          "staves": "4 8 9 13 13 13 13 4 4 4 8 8 8 4 8 4 4 4 5 8 8 8 9 13 13 14",
+          "held": "14 15 24 25",
+          "measure": 21
+        },
+        {
+          "bar": "23",
+          "notes": "D3 D6 D3 G2 A2 A5 A3 F5 D5 D4 D5 A4 F4 D4 A4 F4 D4 A4 F4 D4 A4 F4 D4 A5 F5",
+          "rhythm": "2 3 2 0.25 3 2 0.25 2 3x3 0.25x6 0.333x6 0.5 0.75",
+          "at": "0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 2 2 2 2 2 2 2 2",
+          "staves": "4 5 8 9 9 13 13 13 13 13 14 4 4 4 8 8 8 4 4 4 8 8 8 13 13",
+          "held": "4 6 7 24 25",
+          "measure": 22
+        },
+        {
+          "bar": "24",
+          "notes": "G2 G6 G2 A2 G2 D5 B5 G5 G3 G5 E4 C4 A3 A2 E6 E4 C4 A3 A2 E5 F4 D4 B3 B2 D6 F4 D4 B3 B2 D5 B5 G5 G3 D5",
+          "rhythm": "1 1.333 1 0.25 3 2x4 1.333 0.25x3 1x2 0.25x3 1x11 0.75x4 1",
+          "at": "0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2",
+          "staves": "4 5 8 9 9 13 13 13 13 14 4 4 4 4 5 8 8 8 8 14 4 4 4 4 5 8 8 8 8 13 13 13 13 14",
+          "held": "4 6 30 31 32 33",
+          "measure": 23
+        },
+        {
+          "bar": "25",
+          "notes": "F4 B3 D4 B2 D6 F4 B3 D4 B2 D5 F4 B3 F4 B3",
+          "rhythm": "1x2 1.333 1.5 3 1x2 1.333 1.5 3 0.25x4",
+          "at": "0 0 0 0 0 0 0 0 0 0 1 1 1 1",
+          "staves": "4 4 4 4 5 8 8 8 8 14 4 4 8 8",
+          "held": "1 2 3 4 5 6 7 8 9 10 11 12 13 14",
+          "measure": 24
+        },
+        {
+          "bar": "26",
+          "notes": "D6 D5 D6 D5",
+          "rhythm": "2x2 0.75x2",
+          "at": "0 0 2 2",
+          "staves": "5 14 5 14",
+          "held": "1 2 3 4",
+          "measure": 25
+        }
+      ],
+      "returns": [],
+      "lines": [
+        "Sum 12",
+        "Sum 12 2",
+        "Sum 12 3",
+        "Sum 12 4",
+        "Inst 2",
+        "Sum 12 5",
+        "Sum 12 6",
+        "Sum 12 7",
+        "Inst 5",
+        "Inst 5 2",
+        "Inst 5 3",
+        "Inst 5 4",
+        "Inst 5 5",
+        "Inst 2 2"
+      ]
+    },
+    "reply": {
+      "status": "ok",
+      "answer": {
+        "missing": [
+          {
+            "from": "9",
+            "to": "16",
+            "what": "literal repeat with no new material",
+            "why": "adds length without contrast"
+          },
+          {
+            "from": "9",
+            "to": "24",
+            "what": "melody only holds long notes",
+            "why": "never shapes clear cadence"
+          },
+          {
+            "from": "25",
+            "to": "26",
+            "what": "no final arrival on tonic",
+            "why": "music hangs on D"
+          }
+        ],
+        "questions": [
+          {
+            "ask": "Is the high held line the main tune?",
+            "choices": [
+              {
+                "label": "Yes main tune",
+                "role": "melody"
+              },
+              {
+                "label": "Background wash",
+                "role": "harmony"
+              }
+            ],
+            "from": "9",
+            "line": "Inst 2",
+            "to": "26"
+          },
+          {
+            "ask": "Is the broken pattern accompaniment or second tune?",
+            "choices": [
+              {
+                "label": "Accompaniment",
+                "role": "harmony"
+              },
+              {
+                "label": "Second tune",
+                "role": "countermelody"
+              }
+            ],
+            "from": "9",
+            "line": "Sum 12 2",
+            "to": "12"
+          },
+          {
+            "ask": "What plays the sustained chord pads?",
+            "choices": [
+              {
+                "label": "Strings",
+                "role": ""
+              },
+              {
+                "label": "Organ",
+                "role": ""
+              }
+            ],
+            "from": "9",
+            "line": "Inst 5 2",
+            "to": "12"
+          }
+        ],
+        "roles": [
+          {
+            "from": "1",
+            "line": "Sum 12",
+            "of": "",
+            "role": "harmony",
+            "to": "8",
+            "why": "broken chords outline each chord"
+          },
+          {
+            "from": "9",
+            "line": "Sum 12 2",
+            "of": "",
+            "role": "harmony",
+            "to": "12",
+            "why": "broken chords outline each chord"
+          },
+          {
+            "from": "9",
+            "line": "Sum 12 5",
+            "of": "Sum 12 2",
+            "role": "doubling",
+            "to": "12",
+            "why": "same pitches at same time"
+          },
+          {
+            "from": "13",
+            "line": "Sum 12 3",
+            "of": "",
+            "role": "harmony",
+            "to": "16",
+            "why": "broken chords outline each chord"
+          },
+          {
+            "from": "13",
+            "line": "Sum 12 6",
+            "of": "Sum 12 3",
+            "role": "doubling",
+            "to": "16",
+            "why": "same pitches at same time"
+          },
+          {
+            "from": "17",
+            "line": "Sum 12 4",
+            "of": "",
+            "role": "harmony",
+            "to": "25",
+            "why": "broken chords outline each chord"
+          },
+          {
+            "from": "17",
+            "line": "Sum 12 7",
+            "of": "Sum 12 4",
+            "role": "doubling",
+            "to": "25",
+            "why": "same pitches at same time"
+          },
+          {
+            "from": "9",
+            "line": "Inst 2",
+            "of": "",
+            "role": "melody",
+            "to": "26",
+            "why": "long high line sings over"
+          },
+          {
+            "from": "9",
+            "line": "Inst 2 2",
+            "of": "Inst 2",
+            "role": "doubling",
+            "to": "26",
+            "why": "same rhythm octave below"
+          },
+          {
+            "from": "9",
+            "line": "Inst 5",
+            "of": "",
+            "role": "bass",
+            "to": "24",
+            "why": "long low roots ground harmony"
+          },
+          {
+            "from": "9",
+            "line": "Inst 5 2",
+            "of": "",
+            "role": "harmony",
+            "to": "12",
+            "why": "held chords fill middle"
+          },
+          {
+            "from": "13",
+            "line": "Inst 5 3",
+            "of": "",
+            "role": "harmony",
+            "to": "16",
+            "why": "held chords fill middle"
+          },
+          {
+            "from": "17",
+            "line": "Inst 5 4",
+            "of": "",
+            "role": "harmony",
+            "to": "20",
+            "why": "held chords fill middle"
+          },
+          {
+            "from": "21",
+            "line": "Inst 5 5",
+            "of": "",
+            "role": "harmony",
+            "to": "24",
+            "why": "held chords fill middle"
+          }
+        ],
+        "sections": [
+          {
+            "from": "1",
+            "name": "Chords alone",
+            "to": "8"
+          },
+          {
+            "from": "9",
+            "name": "Tune arrives",
+            "to": "16"
+          },
+          {
+            "from": "17",
+            "name": "Tune moves",
+            "to": "24"
+          },
+          {
+            "from": "25",
+            "name": "Unresolved hold",
+            "to": "26"
+          }
+        ],
+        "structures": [
+          {
+            "name": "Cut the repeat",
+            "order": [
+              {
+                "from": "1",
+                "to": "8"
+              },
+              {
+                "from": "9",
+                "to": "12"
+              },
+              {
+                "from": "17",
+                "to": "26"
+              }
+            ],
+            "why": "removes literal repeat keeps motion"
+          },
+          {
+            "name": "Tune first",
+            "order": [
+              {
+                "from": "9",
+                "to": "12"
+              },
+              {
+                "from": "1",
+                "to": "8"
+              },
+              {
+                "from": "17",
+                "to": "21"
+              }
+            ],
+            "why": "starts with tune ends on tonic"
+          }
+        ],
+        "summary": "High violin carries melody bars 9-24, moving only at bar 20. No countermelody, only octave doubling below and arpeggiated accompaniment.",
+        "thin": [
+          {
+            "from": "9",
+            "line": "Sum 12 5",
+            "to": "12",
+            "why": "exact duplicate of arpeggio"
+          },
+          {
+            "from": "13",
+            "line": "Sum 12 6",
+            "to": "16",
+            "why": "exact duplicate of arpeggio"
+          },
+          {
+            "from": "17",
+            "line": "Sum 12 7",
+            "to": "24",
+            "why": "exact duplicate of arpeggio"
+          },
+          {
+            "from": "9",
+            "line": "Inst 2 2",
+            "to": "24",
+            "why": "octave copy adds little"
+          }
+        ],
+        "tracks": [
+          {
+            "instrument": "acoustic guitar",
+            "line": "Sum 12",
+            "sure": true,
+            "why": "fingerpicked broken chords mid range"
+          },
+          {
+            "instrument": "acoustic guitar",
+            "line": "Sum 12 2",
+            "sure": true,
+            "why": "same picking pattern continues"
+          },
+          {
+            "instrument": "acoustic guitar",
+            "line": "Sum 12 3",
+            "sure": true,
+            "why": "same picking pattern continues"
+          },
+          {
+            "instrument": "acoustic guitar",
+            "line": "Sum 12 4",
+            "sure": true,
+            "why": "same picking pattern continues"
+          },
+          {
+            "instrument": "violin",
+            "line": "Inst 2",
+            "sure": true,
+            "why": "sustained high notes sing over"
+          },
+          {
+            "instrument": "acoustic guitar",
+            "line": "Sum 12 5",
+            "sure": true,
+            "why": "same picking pattern continues"
+          },
+          {
+            "instrument": "acoustic guitar",
+            "line": "Sum 12 6",
+            "sure": true,
+            "why": "same picking pattern continues"
+          },
+          {
+            "instrument": "acoustic guitar",
+            "line": "Sum 12 7",
+            "sure": true,
+            "why": "same picking pattern continues"
+          },
+          {
+            "instrument": "cello",
+            "line": "Inst 5",
+            "sure": true,
+            "why": "long low roots ground harmony"
+          },
+          {
+            "instrument": "string ensemble",
+            "line": "Inst 5 2",
+            "sure": true,
+            "why": "held chords fill middle register"
+          },
+          {
+            "instrument": "string ensemble",
+            "line": "Inst 5 3",
+            "sure": true,
+            "why": "held chords fill middle register"
+          },
+          {
+            "instrument": "string ensemble",
+            "line": "Inst 5 4",
+            "sure": true,
+            "why": "held chords fill middle register"
+          },
+          {
+            "instrument": "string ensemble",
+            "line": "Inst 5 5",
+            "sure": true,
+            "why": "held chords fill middle register"
+          },
+          {
+            "instrument": "violin",
+            "line": "Inst 2 2",
+            "sure": true,
+            "why": "same tune octave below"
+          }
+        ]
+      },
+      "sources": [],
+      "cached": true
+    },
+    "ms": 125,
+    "thinking": [],
+    "version": "read-piece-5",
+    "model": "muse-spark-1.3"
+  },
+  {
+    "shape": "study_score",
+    "input": {
+      "piece": {
+        "title": "cute_test",
+        "composer": null,
+        "instrument": "Sum 12 and Sum 12 2 and Sum 12 3 and Sum 12 4 and Inst 2 and Sum 12 5 and Sum 12"
+      },
+      "fifths": 0,
+      "time": "3/4",
+      "written": [
+        {
+          "bar": "1",
+          "notes": "C3 G4 E4 C4 G4 E4 C4",
+          "rhythm": "1 0.25x3 1x3",
+          "at": "0 1 1 1 2 2 2",
+          "staves": "1 1 1 1 1 1 1",
+          "measure": 0
+        },
+        {
+          "bar": "2",
+          "notes": "A2 A2 A4 E4 C4 A4 E4 C4",
+          "rhythm": "1 0.25x4 1x3",
+          "at": "0 1 1 1 1 2 2 2",
+          "staves": "1 1 1 1 1 1 1 1",
+          "held": "2",
+          "measure": 1
+        },
+        {
+          "bar": "3",
+          "notes": "D3 A4 F4 D4 A4 F4 D4",
+          "rhythm": "1.333 0.25x3 0.333x3",
+          "at": "0 1 1 1 2 2 2",
+          "staves": "1 1 1 1 1 1 1",
+          "measure": 2
+        },
+        {
+          "bar": "4",
+          "notes": "G3 G3",
+          "rhythm": "2 0.667",
+          "at": "0 2",
+          "staves": "1 1",
+          "held": "2",
+          "measure": 3
+        },
+        {
+          "bar": "5",
+          "notes": "C3 C3 G4 E4 C4 G4 E4 C4",
+          "rhythm": "1 0.25x4 1x3",
+          "at": "0 1 1 1 1 2 2 2",
+          "staves": "1 1 1 1 1 1 1 1",
+          "held": "2",
+          "measure": 4
+        },
+        {
+          "bar": "6",
+          "notes": "A2 A4 E4 C4 A2 A4 E4 C4",
+          "rhythm": "1.5 0.25x4 1x3",
+          "at": "0 1 1 1 1.5 2 2 2",
+          "staves": "1 1 1 1 1 1 1 1",
+          "held": "5",
+          "measure": 5
+        },
+        {
+          "bar": "7",
+          "notes": "D3 A4 F4 D4 A4 F4 D4",
+          "rhythm": "2 0.25x3 0.333x3",
+          "at": "0 1 1 1 2 2 2",
+          "staves": "1 1 1 1 1 1 1",
+          "measure": 6
+        },
+        {
+          "bar": "8",
+          "notes": "G2 E4 C4 A3 A2 F4 D4 B3 B2",
+          "rhythm": "1 0.25x3 1 0.75x3 1",
+          "at": "0 1 1 1 1 2 2 2 2",
+          "staves": "1 1 1 1 1 1 1 1 1",
+          "measure": 7
+        },
+        {
+          "bar": "9",
+          "notes": "C3 C6 C3 C3 C6 G5 E5 C4 C5 G4 E4 C4 G4 E4 C4 C6 C5 G4 E4 C4 A5 G4 E4 C4 C6 A4",
+          "rhythm": "1 1.5 1 3 2 3x3 1.5 0.25x8 1x7 0.75 1",
+          "at": "0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1.5 1.5 2 2 2 2 2 2 2 2 2",
+          "staves": "2 5 6 9 10 10 10 10 14 2 2 2 6 6 6 5 14 2 2 2 5 6 6 6 10 14",
+          "held": "16 17 25",
+          "measure": 8
+        },
+        {
+          "bar": "10",
+          "notes": "A2 C6 A2 A2 C6 E5 A5 A3 C5 A2 A4 E4 C4 A2 A4 E4 C4 A4 E4 C4 A4 E4 C4 C6 E5",
+          "rhythm": "1 3 1 3 2x2 3x3 0.25x8 1x6 0.75x2",
+          "at": "0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2",
+          "staves": "2 5 6 9 10 10 10 10 14 2 2 2 2 6 6 6 6 2 2 2 6 6 6 10 10",
+          "held": "10 14 24 25",
+          "measure": 9
+        },
+        {
+          "bar": "11",
+          "notes": "D3 C6 D3 D3 A5 A3 F5 D5 D4 C5 A4 F4 D4 A4 F4 D4 A4 F4 D4 A4 F4 D4 A5 F5",
+          "rhythm": "1.333 3 1.333 3 2 0.25 2 3x3 0.25x6 0.333x6 0.5 0.75",
+          "at": "0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 2 2 2 2 2 2 2 2",
+          "staves": "2 5 6 9 10 10 10 10 10 14 2 2 2 6 6 6 2 2 2 6 6 6 10 10",
+          "held": "2 5 6 10 23 24",
+          "measure": 10
+        },
+        {
+          "bar": "12",
+          "notes": "G2 D6 G2 G2 D5 B5 G5 G3 D5 B4 G4 D4 B4 G4 D4 G2 A2 G2 B4 G4 D4 A5 G2 B4 G4 D4 B2 D5 B5 G5 G3 A4",
+          "rhythm": "2x3 1 2x5 0.25x7 1 0.667 0.333x3 1 0.667 0.333x3 1 0.75x4 1",
+          "at": "0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2",
+          "staves": "2 5 6 9 10 10 10 10 14 2 2 2 6 6 6 9 9 2 2 2 2 5 6 6 6 6 9 10 10 10 10 14",
+          "held": "5 16 18 23 28 29 30 31",
+          "measure": 11
+        },
+        {
+          "bar": "13",
+          "notes": "C3 C6 C3 C3 C6 G5 E5 C4 C5 G4 E4 C4 G4 E4 C4 C6 C5 G4 E4 C4 A5 G4 E4 C4 C6 A4",
+          "rhythm": "1 1.5 1 3 2 3x3 1.5 0.25x8 1x7 0.75 1",
+          "at": "0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1.5 1.5 2 2 2 2 2 2 2 2 2",
+          "staves": "3 5 7 9 11 11 11 11 14 3 3 3 7 7 7 5 14 3 3 3 5 7 7 7 11 14",
+          "held": "16 17 25",
+          "measure": 12
+        },
+        {
+          "bar": "14",
+          "notes": "A2 C6 A2 A2 C6 E5 A5 A3 C5 A2 A4 E4 C4 A2 A4 E4 C4 A4 E4 C4 A4 E4 C4 C6 E5",
+          "rhythm": "1 3 1 3 2x2 3x3 0.25x8 1x6 0.75x2",
+          "at": "0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2",
+          "staves": "3 5 7 9 11 11 11 11 14 3 3 3 3 7 7 7 7 3 3 3 7 7 7 11 11",
+          "held": "10 14 24 25",
+          "measure": 13
+        },
+        {
+          "bar": "15",
+          "notes": "D3 C6 D3 A2 D3 A5 A3 F5 D5 D4 C5 A4 F4 D4 A4 F4 D4 A4 F4 D4 D6 A4 F4 D4 A5 F5 D5",
+          "rhythm": "1.333 2 1.333 0.25 3 2 0.25 2 3x2 2 0.25x6 0.333x3 1 0.333x3 0.5 0.75 1",
+          "at": "0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2",
+          "staves": "3 5 7 9 9 11 11 11 11 11 14 3 3 3 7 7 7 3 3 3 5 7 7 7 11 11 14",
+          "held": "2 4 6 7 11 25 26",
+          "measure": 14
+        },
+        {
+          "bar": "16",
+          "notes": "G2 A5 G2 G3 D5 B5 G5 G3 A4 B4 G4 D4 B4 G4 D4 A5 A4 G2 B4 G4 D4 B5 G2 B4 G4 D4 D5 B5 G5 G3 B4",
+          "rhythm": "2 1.5 2 3 2x4 1.5 0.25x8 0.667 0.333x3 1 0.667 0.333x3 0.75x4 1",
+          "at": "0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1.5 1.5 2 2 2 2 2 2 2 2 2 2 2 2 2 2",
+          "staves": "3 5 7 9 11 11 11 11 14 3 3 3 7 7 7 5 14 3 3 3 3 5 7 7 7 7 11 11 11 11 14",
+          "held": "5 16 17 18 23 27 28 29 30",
+          "measure": 15
+        },
+        {
+          "bar": "17",
+          "notes": "C3 C6 C3 C3 C6 G5 E5 C4 C5 G4 E4 C4 G4 E4 C4 G4 E4 C4 A5 G4 E4 C4 C6 A4",
+          "rhythm": "1 2 1 3 2 3x3 2 0.25x6 1x7 0.75 1",
+          "at": "0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2",
+          "staves": "4 5 8 9 12 12 12 12 14 4 4 4 8 8 8 4 4 4 5 8 8 8 12 14",
+          "held": "23",
+          "measure": 16
+        },
+        {
+          "bar": "18",
+          "notes": "A2 C6 A2 A2 C6 E5 A5 A3 C5 A2 A4 E4 C4 A2 A4 E4 C4 A4 E4 C4 C6 A4 E4 C4 C6 E5 C5 E6 E5",
+          "rhythm": "1 2 1 3 2x2 3x2 2 0.25x8 1x3 0.25 1x3 0.75x2 0.25 0.5x2",
+          "at": "0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2.5 2.5",
+          "staves": "4 5 8 9 12 12 12 12 14 4 4 4 4 8 8 8 8 4 4 4 5 8 8 8 12 12 14 5 14",
+          "held": "10 14 21 25 26 27",
+          "measure": 17
+        },
+        {
+          "bar": "19",
+          "notes": "D3 E6 D6 D3 A2 D2 A5 A3 F5 D5 D4 E5 D5 A4 F4 D4 A4 F4 D4 A4 F4 D4 D6 A4 F4 D4 A5 F5 D5",
+          "rhythm": "1.333 0.25 2 1.333 0.25 3 2 0.25 2 3x2 0.25 2 0.25x6 0.333x3 0.75 0.333x3 0.5 0.75x2",
+          "at": "0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2",
+          "staves": "4 5 5 8 9 9 12 12 12 12 12 14 14 4 4 4 8 8 8 4 4 4 5 8 8 8 12 12 14",
+          "held": "2 5 7 8 12 23 27 28 29",
+          "measure": 18
+        },
+        {
+          "bar": "20",
+          "notes": "G3 G5 G3 G2 D5 B5 G5 G3 G4 A5 G2 E2 A4 G3 B5 G3 D2 D5 B5 G5 G3 B4",
+          "rhythm": "2 1 2 1 2x4 1x2 0.25 1x2 0.667 1 0.667 1 0.75x4 1",
+          "at": "0 0 0 0 0 0 0 0 0 1 1 1 1 2 2 2 2 2 2 2 2 2",
+          "staves": "4 5 8 9 12 12 12 12 14 5 9 9 14 4 5 8 9 12 12 12 12 14",
+          "held": "5 11 14 16 18 19 20 21",
+          "measure": 19
+        },
+        {
+          "bar": "21",
+          "notes": "C3 C6 C3 D2 C3 C6 G5 E5 C4 C5 C3 G4 E4 C4 C3 G4 E4 C4 G4 E4 C4 C6 G4 E4 C4 C6 C5",
+          "rhythm": "1 2 1 0.25 3 2 3x3 2 0.25x8 1x3 0.5 1x3 0.75 0.5",
+          "at": "0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2",
+          "staves": "4 5 8 9 9 13 13 13 13 14 4 4 4 4 8 8 8 8 4 4 4 5 8 8 8 13 14",
+          "held": "4 11 15 22 26 27",
+          "measure": 20
+        },
+        {
+          "bar": "22",
+          "notes": "A2 A2 A2 C6 E5 A5 A3 A4 E4 C4 A4 E4 C4 A2 A2 A4 E4 C4 A5 A4 E4 C4 G2 C6 E5 A4",
+          "rhythm": "1.5x2 2x3 3x2 0.25x8 1x8 0.75x2 1",
+          "at": "0 0 0 0 0 0 0 1 1 1 1 1 1 1.5 1.5 2 2 2 2 2 2 2 2 2 2 2",
+          "staves": "4 8 9 13 13 13 13 4 4 4 8 8 8 4 8 4 4 4 5 8 8 8 9 13 13 14",
+          "held": "14 15 24 25",
+          "measure": 21
+        },
+        {
+          "bar": "23",
+          "notes": "D3 D6 D3 G2 A2 A5 A3 F5 D5 D4 D5 A4 F4 D4 A4 F4 D4 A4 F4 D4 A4 F4 D4 A5 F5",
+          "rhythm": "2 3 2 0.25 3 2 0.25 2 3x3 0.25x6 0.333x6 0.5 0.75",
+          "at": "0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 2 2 2 2 2 2 2 2",
+          "staves": "4 5 8 9 9 13 13 13 13 13 14 4 4 4 8 8 8 4 4 4 8 8 8 13 13",
+          "held": "4 6 7 24 25",
+          "measure": 22
+        },
+        {
+          "bar": "24",
+          "notes": "G2 G6 G2 A2 G2 D5 B5 G5 G3 G5 E4 C4 A3 A2 E6 E4 C4 A3 A2 E5 F4 D4 B3 B2 D6 F4 D4 B3 B2 D5 B5 G5 G3 D5",
+          "rhythm": "1 1.333 1 0.25 3 2x4 1.333 0.25x3 1x2 0.25x3 1x11 0.75x4 1",
+          "at": "0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2",
+          "staves": "4 5 8 9 9 13 13 13 13 14 4 4 4 4 5 8 8 8 8 14 4 4 4 4 5 8 8 8 8 13 13 13 13 14",
+          "held": "4 6 30 31 32 33",
+          "measure": 23
+        },
+        {
+          "bar": "25",
+          "notes": "F4 B3 D4 B2 D6 F4 B3 D4 B2 D5 F4 B3 F4 B3",
+          "rhythm": "1x2 1.333 1.5 3 1x2 1.333 1.5 3 0.25x4",
+          "at": "0 0 0 0 0 0 0 0 0 0 1 1 1 1",
+          "staves": "4 4 4 4 5 8 8 8 8 14 4 4 8 8",
+          "held": "1 2 3 4 5 6 7 8 9 10 11 12 13 14",
+          "measure": 24
+        },
+        {
+          "bar": "26",
+          "notes": "D6 D5 D6 D5",
+          "rhythm": "2x2 0.75x2",
+          "at": "0 0 2 2",
+          "staves": "5 14 5 14",
+          "held": "1 2 3 4",
+          "measure": 25
+        }
+      ],
+      "returns": [],
+      "lines": [
+        "Sum 12",
+        "Sum 12 2",
+        "Sum 12 3",
+        "Sum 12 4",
+        "Inst 2",
+        "Sum 12 5",
+        "Sum 12 6",
+        "Sum 12 7",
+        "Inst 5",
+        "Inst 5 2",
+        "Inst 5 3",
+        "Inst 5 4",
+        "Inst 5 5",
+        "Inst 2 2"
+      ]
+    },
+    "reply": {
+      "status": "ok",
+      "answer": {
+        "harmony": [
+          {
+            "chord": "C",
+            "from": "1",
+            "note": 1,
+            "numeral": "I",
+            "to": "1"
+          },
+          {
+            "chord": "Am",
+            "from": "2",
+            "note": 1,
+            "numeral": "vi",
+            "to": "2"
+          },
+          {
+            "chord": "Dm",
+            "from": "3",
+            "note": 1,
+            "numeral": "ii",
+            "to": "3"
+          },
+          {
+            "chord": "G",
+            "from": "4",
+            "note": 1,
+            "numeral": "V",
+            "to": "4"
+          },
+          {
+            "chord": "C",
+            "from": "5",
+            "note": 1,
+            "numeral": "I",
+            "to": "5"
+          },
+          {
+            "chord": "Am",
+            "from": "6",
+            "note": 1,
+            "numeral": "vi",
+            "to": "6"
+          },
+          {
+            "chord": "Dm",
+            "from": "7",
+            "note": 1,
+            "numeral": "ii",
+            "to": "7"
+          },
+          {
+            "chord": "pass",
+            "from": "8",
+            "note": 1,
+            "numeral": "pass",
+            "to": "8"
+          },
+          {
+            "chord": "C",
+            "from": "9",
+            "note": 1,
+            "numeral": "I",
+            "to": "9"
+          },
+          {
+            "chord": "Am",
+            "from": "10",
+            "note": 1,
+            "numeral": "vi",
+            "to": "10"
+          },
+          {
+            "chord": "Dm7",
+            "from": "11",
+            "note": 1,
+            "numeral": "ii7",
+            "to": "11"
+          },
+          {
+            "chord": "G",
+            "from": "12",
+            "note": 1,
+            "numeral": "V",
+            "to": "12"
+          },
+          {
+            "chord": "C",
+            "from": "13",
+            "note": 1,
+            "numeral": "I",
+            "to": "13"
+          },
+          {
+            "chord": "Am",
+            "from": "14",
+            "note": 1,
+            "numeral": "vi",
+            "to": "14"
+          },
+          {
+            "chord": "Dm7",
+            "from": "15",
+            "note": 1,
+            "numeral": "ii7",
+            "to": "15"
+          },
+          {
+            "chord": "G",
+            "from": "16",
+            "note": 1,
+            "numeral": "V",
+            "to": "16"
+          },
+          {
+            "chord": "C",
+            "from": "17",
+            "note": 1,
+            "numeral": "I",
+            "to": "17"
+          },
+          {
+            "chord": "Am",
+            "from": "18",
+            "note": 1,
+            "numeral": "vi",
+            "to": "18"
+          },
+          {
+            "chord": "Dm",
+            "from": "19",
+            "note": 1,
+            "numeral": "ii",
+            "to": "19"
+          },
+          {
+            "chord": "G",
+            "from": "20",
+            "note": 1,
+            "numeral": "V",
+            "to": "20"
+          },
+          {
+            "chord": "C",
+            "from": "21",
+            "note": 1,
+            "numeral": "I",
+            "to": "21"
+          },
+          {
+            "chord": "Am",
+            "from": "22",
+            "note": 1,
+            "numeral": "vi",
+            "to": "22"
+          },
+          {
+            "chord": "Dm/A",
+            "from": "23",
+            "note": 1,
+            "numeral": "ii",
+            "to": "23"
+          },
+          {
+            "chord": "G7",
+            "from": "24",
+            "note": 1,
+            "numeral": "V7",
+            "to": "24"
+          },
+          {
+            "chord": "Bdim",
+            "from": "25",
+            "note": 1,
+            "numeral": "vii\u00b0",
+            "to": "25"
+          },
+          {
+            "chord": "?",
+            "from": "26",
+            "note": 1,
+            "numeral": "?",
+            "to": "26"
+          }
+        ],
+        "moments": [
+          {
+            "bar": "1",
+            "kind": "sequence",
+            "note": 1,
+            "toBar": "3",
+            "toNote": 1,
+            "what": "Arpeggios fall by thirds"
+          },
+          {
+            "bar": "4",
+            "kind": "dominant",
+            "note": 1,
+            "toBar": "5",
+            "toNote": 1,
+            "what": "Held dominant wants tonic"
+          },
+          {
+            "bar": "8",
+            "kind": "leading-tone",
+            "note": 9,
+            "toBar": "9",
+            "toNote": 1,
+            "what": "B pulls up to C"
+          },
+          {
+            "bar": "9",
+            "kind": "together",
+            "note": 1,
+            "toBar": "9",
+            "toNote": 2,
+            "what": "All parts arrive on tonic"
+          },
+          {
+            "bar": "10",
+            "kind": "pedal",
+            "note": 2,
+            "toBar": "11",
+            "toNote": 2,
+            "what": "High C holds over changes"
+          },
+          {
+            "bar": "12",
+            "kind": "cadence",
+            "note": 27,
+            "toBar": "13",
+            "toNote": 1,
+            "what": "Dominant resolves to tonic"
+          },
+          {
+            "bar": "16",
+            "kind": "cadence",
+            "note": 22,
+            "toBar": "17",
+            "toNote": 1,
+            "what": "Dominant closes to tonic"
+          },
+          {
+            "bar": "24",
+            "kind": "climax",
+            "note": 2,
+            "toBar": "24",
+            "toNote": 2,
+            "what": "Highest G crowns line"
+          },
+          {
+            "bar": "20",
+            "kind": "dominant",
+            "note": 15,
+            "toBar": "21",
+            "toNote": 1,
+            "what": "Dominant leans to tonic"
+          },
+          {
+            "bar": "24",
+            "kind": "resolution",
+            "note": 1,
+            "toBar": "25",
+            "toNote": 1,
+            "what": "Dominant sheds root and thins"
+          },
+          {
+            "bar": "25",
+            "kind": "resolution",
+            "note": 4,
+            "toBar": "26",
+            "toNote": 1,
+            "what": "Held tones fade to D"
+          },
+          {
+            "bar": "17",
+            "kind": "dialogue",
+            "note": 19,
+            "toBar": "17",
+            "toNote": 24,
+            "what": "High voice hands down octave"
+          }
+        ],
+        "overview": "Ground in C major repeats with added voices and high pedal, each time walking to tonic, then thinning to one high note.",
+        "sections": [
+          {
+            "form": "A",
+            "from": "1",
+            "mood": "steady",
+            "name": "Ground",
+            "to": "4",
+            "what": "Single line states tonic to dominant"
+          },
+          {
+            "form": "A'",
+            "from": "5",
+            "mood": "moving",
+            "name": "Ground varied",
+            "to": "8",
+            "what": "Repeats line with walking bass toward tonic"
+          },
+          {
+            "form": "A''",
+            "from": "9",
+            "mood": "full",
+            "name": "Layered",
+            "to": "12",
+            "what": "Doubled arpeggios with high pedal above"
+          },
+          {
+            "form": "A'''",
+            "from": "13",
+            "mood": "light",
+            "name": "Layered varied",
+            "to": "16",
+            "what": "Same layering with top line shifting"
+          },
+          {
+            "form": "A''''",
+            "from": "17",
+            "mood": "high",
+            "name": "High song",
+            "to": "20",
+            "what": "Top line sings while bass steps down"
+          },
+          {
+            "form": "A'''''",
+            "from": "21",
+            "mood": "wide",
+            "name": "Return",
+            "to": "24",
+            "what": "Ground returns with walking bass below"
+          },
+          {
+            "form": "B",
+            "from": "25",
+            "mood": "still",
+            "name": "Close",
+            "to": "26",
+            "what": "Held chord thins to single high note"
+          }
+        ]
+      },
+      "sources": [],
+      "cached": true
+    },
+    "ms": 93,
+    "thinking": [],
+    "version": "study-score-m1",
+    "model": "muse-spark-1.3"
+  },
+  {
+    "shape": "plan_recompose",
+    "input": {
+      "piece": {
+        "title": "cute_test",
+        "composer": null,
+        "instrument": "Sum 12 and Sum 12 2 and Sum 12 3 and Sum 12 4 and Inst 2 and Sum 12 5 and Sum 12"
+      },
+      "fifths": 0,
+      "time": "3/4",
+      "written": [
+        {
+          "bar": "1",
+          "notes": "C3 G4 E4 C4 G4 E4 C4",
+          "rhythm": "1 0.25x3 1x3",
+          "at": "0 1 1 1 2 2 2",
+          "staves": "1 1 1 1 1 1 1",
+          "measure": 0
+        },
+        {
+          "bar": "2",
+          "notes": "A2 A2 A4 E4 C4 A4 E4 C4",
+          "rhythm": "1 0.25x4 1x3",
+          "at": "0 1 1 1 1 2 2 2",
+          "staves": "1 1 1 1 1 1 1 1",
+          "held": "2",
+          "measure": 1
+        },
+        {
+          "bar": "3",
+          "notes": "D3 A4 F4 D4 A4 F4 D4",
+          "rhythm": "1.333 0.25x3 0.333x3",
+          "at": "0 1 1 1 2 2 2",
+          "staves": "1 1 1 1 1 1 1",
+          "measure": 2
+        },
+        {
+          "bar": "4",
+          "notes": "G3 G3",
+          "rhythm": "2 0.667",
+          "at": "0 2",
+          "staves": "1 1",
+          "held": "2",
+          "measure": 3
+        },
+        {
+          "bar": "5",
+          "notes": "C3 C3 G4 E4 C4 G4 E4 C4",
+          "rhythm": "1 0.25x4 1x3",
+          "at": "0 1 1 1 1 2 2 2",
+          "staves": "1 1 1 1 1 1 1 1",
+          "held": "2",
+          "measure": 4
+        },
+        {
+          "bar": "6",
+          "notes": "A2 A4 E4 C4 A2 A4 E4 C4",
+          "rhythm": "1.5 0.25x4 1x3",
+          "at": "0 1 1 1 1.5 2 2 2",
+          "staves": "1 1 1 1 1 1 1 1",
+          "held": "5",
+          "measure": 5
+        },
+        {
+          "bar": "7",
+          "notes": "D3 A4 F4 D4 A4 F4 D4",
+          "rhythm": "2 0.25x3 0.333x3",
+          "at": "0 1 1 1 2 2 2",
+          "staves": "1 1 1 1 1 1 1",
+          "measure": 6
+        },
+        {
+          "bar": "8",
+          "notes": "G2 E4 C4 A3 A2 F4 D4 B3 B2",
+          "rhythm": "1 0.25x3 1 0.75x3 1",
+          "at": "0 1 1 1 1 2 2 2 2",
+          "staves": "1 1 1 1 1 1 1 1 1",
+          "measure": 7
+        },
+        {
+          "bar": "9",
+          "notes": "C3 C6 C3 C3 C6 G5 E5 C4 C5 G4 E4 C4 G4 E4 C4 C6 C5 G4 E4 C4 A5 G4 E4 C4 C6 A4",
+          "rhythm": "1 1.5 1 3 2 3x3 1.5 0.25x8 1x7 0.75 1",
+          "at": "0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1.5 1.5 2 2 2 2 2 2 2 2 2",
+          "staves": "2 5 6 9 10 10 10 10 14 2 2 2 6 6 6 5 14 2 2 2 5 6 6 6 10 14",
+          "held": "16 17 25",
+          "measure": 8
+        },
+        {
+          "bar": "10",
+          "notes": "A2 C6 A2 A2 C6 E5 A5 A3 C5 A2 A4 E4 C4 A2 A4 E4 C4 A4 E4 C4 A4 E4 C4 C6 E5",
+          "rhythm": "1 3 1 3 2x2 3x3 0.25x8 1x6 0.75x2",
+          "at": "0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2",
+          "staves": "2 5 6 9 10 10 10 10 14 2 2 2 2 6 6 6 6 2 2 2 6 6 6 10 10",
+          "held": "10 14 24 25",
+          "measure": 9
+        },
+        {
+          "bar": "11",
+          "notes": "D3 C6 D3 D3 A5 A3 F5 D5 D4 C5 A4 F4 D4 A4 F4 D4 A4 F4 D4 A4 F4 D4 A5 F5",
+          "rhythm": "1.333 3 1.333 3 2 0.25 2 3x3 0.25x6 0.333x6 0.5 0.75",
+          "at": "0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 2 2 2 2 2 2 2 2",
+          "staves": "2 5 6 9 10 10 10 10 10 14 2 2 2 6 6 6 2 2 2 6 6 6 10 10",
+          "held": "2 5 6 10 23 24",
+          "measure": 10
+        },
+        {
+          "bar": "12",
+          "notes": "G2 D6 G2 G2 D5 B5 G5 G3 D5 B4 G4 D4 B4 G4 D4 G2 A2 G2 B4 G4 D4 A5 G2 B4 G4 D4 B2 D5 B5 G5 G3 A4",
+          "rhythm": "2x3 1 2x5 0.25x7 1 0.667 0.333x3 1 0.667 0.333x3 1 0.75x4 1",
+          "at": "0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2",
+          "staves": "2 5 6 9 10 10 10 10 14 2 2 2 6 6 6 9 9 2 2 2 2 5 6 6 6 6 9 10 10 10 10 14",
+          "held": "5 16 18 23 28 29 30 31",
+          "measure": 11
+        },
+        {
+          "bar": "13",
+          "notes": "C3 C6 C3 C3 C6 G5 E5 C4 C5 G4 E4 C4 G4 E4 C4 C6 C5 G4 E4 C4 A5 G4 E4 C4 C6 A4",
+          "rhythm": "1 1.5 1 3 2 3x3 1.5 0.25x8 1x7 0.75 1",
+          "at": "0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1.5 1.5 2 2 2 2 2 2 2 2 2",
+          "staves": "3 5 7 9 11 11 11 11 14 3 3 3 7 7 7 5 14 3 3 3 5 7 7 7 11 14",
+          "held": "16 17 25",
+          "measure": 12
+        },
+        {
+          "bar": "14",
+          "notes": "A2 C6 A2 A2 C6 E5 A5 A3 C5 A2 A4 E4 C4 A2 A4 E4 C4 A4 E4 C4 A4 E4 C4 C6 E5",
+          "rhythm": "1 3 1 3 2x2 3x3 0.25x8 1x6 0.75x2",
+          "at": "0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2",
+          "staves": "3 5 7 9 11 11 11 11 14 3 3 3 3 7 7 7 7 3 3 3 7 7 7 11 11",
+          "held": "10 14 24 25",
+          "measure": 13
+        },
+        {
+          "bar": "15",
+          "notes": "D3 C6 D3 A2 D3 A5 A3 F5 D5 D4 C5 A4 F4 D4 A4 F4 D4 A4 F4 D4 D6 A4 F4 D4 A5 F5 D5",
+          "rhythm": "1.333 2 1.333 0.25 3 2 0.25 2 3x2 2 0.25x6 0.333x3 1 0.333x3 0.5 0.75 1",
+          "at": "0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2",
+          "staves": "3 5 7 9 9 11 11 11 11 11 14 3 3 3 7 7 7 3 3 3 5 7 7 7 11 11 14",
+          "held": "2 4 6 7 11 25 26",
+          "measure": 14
+        },
+        {
+          "bar": "16",
+          "notes": "G2 A5 G2 G3 D5 B5 G5 G3 A4 B4 G4 D4 B4 G4 D4 A5 A4 G2 B4 G4 D4 B5 G2 B4 G4 D4 D5 B5 G5 G3 B4",
+          "rhythm": "2 1.5 2 3 2x4 1.5 0.25x8 0.667 0.333x3 1 0.667 0.333x3 0.75x4 1",
+          "at": "0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1.5 1.5 2 2 2 2 2 2 2 2 2 2 2 2 2 2",
+          "staves": "3 5 7 9 11 11 11 11 14 3 3 3 7 7 7 5 14 3 3 3 3 5 7 7 7 7 11 11 11 11 14",
+          "held": "5 16 17 18 23 27 28 29 30",
+          "measure": 15
+        },
+        {
+          "bar": "17",
+          "notes": "C3 C6 C3 C3 C6 G5 E5 C4 C5 G4 E4 C4 G4 E4 C4 G4 E4 C4 A5 G4 E4 C4 C6 A4",
+          "rhythm": "1 2 1 3 2 3x3 2 0.25x6 1x7 0.75 1",
+          "at": "0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2",
+          "staves": "4 5 8 9 12 12 12 12 14 4 4 4 8 8 8 4 4 4 5 8 8 8 12 14",
+          "held": "23",
+          "measure": 16
+        },
+        {
+          "bar": "18",
+          "notes": "A2 C6 A2 A2 C6 E5 A5 A3 C5 A2 A4 E4 C4 A2 A4 E4 C4 A4 E4 C4 C6 A4 E4 C4 C6 E5 C5 E6 E5",
+          "rhythm": "1 2 1 3 2x2 3x2 2 0.25x8 1x3 0.25 1x3 0.75x2 0.25 0.5x2",
+          "at": "0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2.5 2.5",
+          "staves": "4 5 8 9 12 12 12 12 14 4 4 4 4 8 8 8 8 4 4 4 5 8 8 8 12 12 14 5 14",
+          "held": "10 14 21 25 26 27",
+          "measure": 17
+        },
+        {
+          "bar": "19",
+          "notes": "D3 E6 D6 D3 A2 D2 A5 A3 F5 D5 D4 E5 D5 A4 F4 D4 A4 F4 D4 A4 F4 D4 D6 A4 F4 D4 A5 F5 D5",
+          "rhythm": "1.333 0.25 2 1.333 0.25 3 2 0.25 2 3x2 0.25 2 0.25x6 0.333x3 0.75 0.333x3 0.5 0.75x2",
+          "at": "0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2",
+          "staves": "4 5 5 8 9 9 12 12 12 12 12 14 14 4 4 4 8 8 8 4 4 4 5 8 8 8 12 12 14",
+          "held": "2 5 7 8 12 23 27 28 29",
+          "measure": 18
+        },
+        {
+          "bar": "20",
+          "notes": "G3 G5 G3 G2 D5 B5 G5 G3 G4 A5 G2 E2 A4 G3 B5 G3 D2 D5 B5 G5 G3 B4",
+          "rhythm": "2 1 2 1 2x4 1x2 0.25 1x2 0.667 1 0.667 1 0.75x4 1",
+          "at": "0 0 0 0 0 0 0 0 0 1 1 1 1 2 2 2 2 2 2 2 2 2",
+          "staves": "4 5 8 9 12 12 12 12 14 5 9 9 14 4 5 8 9 12 12 12 12 14",
+          "held": "5 11 14 16 18 19 20 21",
+          "measure": 19
+        },
+        {
+          "bar": "21",
+          "notes": "C3 C6 C3 D2 C3 C6 G5 E5 C4 C5 C3 G4 E4 C4 C3 G4 E4 C4 G4 E4 C4 C6 G4 E4 C4 C6 C5",
+          "rhythm": "1 2 1 0.25 3 2 3x3 2 0.25x8 1x3 0.5 1x3 0.75 0.5",
+          "at": "0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2",
+          "staves": "4 5 8 9 9 13 13 13 13 14 4 4 4 4 8 8 8 8 4 4 4 5 8 8 8 13 14",
+          "held": "4 11 15 22 26 27",
+          "measure": 20
+        },
+        {
+          "bar": "22",
+          "notes": "A2 A2 A2 C6 E5 A5 A3 A4 E4 C4 A4 E4 C4 A2 A2 A4 E4 C4 A5 A4 E4 C4 G2 C6 E5 A4",
+          "rhythm": "1.5x2 2x3 3x2 0.25x8 1x8 0.75x2 1",
+          "at": "0 0 0 0 0 0 0 1 1 1 1 1 1 1.5 1.5 2 2 2 2 2 2 2 2 2 2 2",
+          "staves": "4 8 9 13 13 13 13 4 4 4 8 8 8 4 8 4 4 4 5 8 8 8 9 13 13 14",
+          "held": "14 15 24 25",
+          "measure": 21
+        },
+        {
+          "bar": "23",
+          "notes": "D3 D6 D3 G2 A2 A5 A3 F5 D5 D4 D5 A4 F4 D4 A4 F4 D4 A4 F4 D4 A4 F4 D4 A5 F5",
+          "rhythm": "2 3 2 0.25 3 2 0.25 2 3x3 0.25x6 0.333x6 0.5 0.75",
+          "at": "0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 2 2 2 2 2 2 2 2",
+          "staves": "4 5 8 9 9 13 13 13 13 13 14 4 4 4 8 8 8 4 4 4 8 8 8 13 13",
+          "held": "4 6 7 24 25",
+          "measure": 22
+        },
+        {
+          "bar": "24",
+          "notes": "G2 G6 G2 A2 G2 D5 B5 G5 G3 G5 E4 C4 A3 A2 E6 E4 C4 A3 A2 E5 F4 D4 B3 B2 D6 F4 D4 B3 B2 D5 B5 G5 G3 D5",
+          "rhythm": "1 1.333 1 0.25 3 2x4 1.333 0.25x3 1x2 0.25x3 1x11 0.75x4 1",
+          "at": "0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2",
+          "staves": "4 5 8 9 9 13 13 13 13 14 4 4 4 4 5 8 8 8 8 14 4 4 4 4 5 8 8 8 8 13 13 13 13 14",
+          "held": "4 6 30 31 32 33",
+          "measure": 23
+        },
+        {
+          "bar": "25",
+          "notes": "F4 B3 D4 B2 D6 F4 B3 D4 B2 D5 F4 B3 F4 B3",
+          "rhythm": "1x2 1.333 1.5 3 1x2 1.333 1.5 3 0.25x4",
+          "at": "0 0 0 0 0 0 0 0 0 0 1 1 1 1",
+          "staves": "4 4 4 4 5 8 8 8 8 14 4 4 8 8",
+          "held": "1 2 3 4 5 6 7 8 9 10 11 12 13 14",
+          "measure": 24
+        },
+        {
+          "bar": "26",
+          "notes": "D6 D5 D6 D5",
+          "rhythm": "2x2 0.75x2",
+          "at": "0 0 2 2",
+          "staves": "5 14 5 14",
+          "held": "1 2 3 4",
+          "measure": 25
+        }
+      ],
+      "returns": [],
+      "lines": [
+        "Sum 12",
+        "Sum 12 2",
+        "Sum 12 3",
+        "Sum 12 4",
+        "Inst 2",
+        "Sum 12 5",
+        "Sum 12 6",
+        "Sum 12 7",
+        "Inst 5",
+        "Inst 5 2",
+        "Inst 5 3",
+        "Inst 5 4",
+        "Inst 5 5",
+        "Inst 2 2"
+      ],
+      "moreBars": 26,
+      "ask": "The mood I want: sad.",
+      "reading": {
+        "roles": [
+          {
+            "from": "1",
+            "line": "Sum 12",
+            "of": "",
+            "role": "harmony",
+            "to": "8",
+            "why": "broken chords outline each chord"
+          },
+          {
+            "from": "9",
+            "line": "Sum 12 2",
+            "of": "",
+            "role": "harmony",
+            "to": "12",
+            "why": "broken chords outline each chord"
+          },
+          {
+            "from": "9",
+            "line": "Sum 12 5",
+            "of": "Sum 12 2",
+            "role": "doubling",
+            "to": "12",
+            "why": "same pitches at same time"
+          },
+          {
+            "from": "13",
+            "line": "Sum 12 3",
+            "of": "",
+            "role": "harmony",
+            "to": "16",
+            "why": "broken chords outline each chord"
+          },
+          {
+            "from": "13",
+            "line": "Sum 12 6",
+            "of": "Sum 12 3",
+            "role": "doubling",
+            "to": "16",
+            "why": "same pitches at same time"
+          },
+          {
+            "from": "17",
+            "line": "Sum 12 4",
+            "of": "",
+            "role": "harmony",
+            "to": "25",
+            "why": "broken chords outline each chord"
+          },
+          {
+            "from": "17",
+            "line": "Sum 12 7",
+            "of": "Sum 12 4",
+            "role": "doubling",
+            "to": "25",
+            "why": "same pitches at same time"
+          },
+          {
+            "from": "9",
+            "line": "Inst 2",
+            "of": "",
+            "role": "melody",
+            "to": "26",
+            "why": "long high line sings over"
+          },
+          {
+            "from": "9",
+            "line": "Inst 2 2",
+            "of": "Inst 2",
+            "role": "doubling",
+            "to": "26",
+            "why": "same rhythm octave below"
+          },
+          {
+            "from": "9",
+            "line": "Inst 5",
+            "of": "",
+            "role": "bass",
+            "to": "24",
+            "why": "long low roots ground harmony"
+          },
+          {
+            "from": "9",
+            "line": "Inst 5 2",
+            "of": "",
+            "role": "harmony",
+            "to": "12",
+            "why": "held chords fill middle"
+          },
+          {
+            "from": "13",
+            "line": "Inst 5 3",
+            "of": "",
+            "role": "harmony",
+            "to": "16",
+            "why": "held chords fill middle"
+          },
+          {
+            "from": "17",
+            "line": "Inst 5 4",
+            "of": "",
+            "role": "harmony",
+            "to": "20",
+            "why": "held chords fill middle"
+          },
+          {
+            "from": "21",
+            "line": "Inst 5 5",
+            "of": "",
+            "role": "harmony",
+            "to": "24",
+            "why": "held chords fill middle"
+          }
+        ],
+        "missing": [
+          {
+            "from": "9",
+            "to": "16",
+            "what": "literal repeat with no new material",
+            "why": "adds length without contrast"
+          },
+          {
+            "from": "9",
+            "to": "24",
+            "what": "melody only holds long notes",
+            "why": "never shapes clear cadence"
+          },
+          {
+            "from": "25",
+            "to": "26",
+            "what": "no final arrival on tonic",
+            "why": "music hangs on D"
+          }
+        ]
+      },
+      "instruments": [
+        "Piccolo",
+        "Flute 1",
+        "Flute 2",
+        "Oboe 1",
+        "Oboe 2",
+        "Clarinet 1",
+        "Clarinet 2",
+        "Bassoon 1",
+        "Bassoon 2",
+        "Horn 1",
+        "Horn 2",
+        "Horn 3",
+        "Horn 4",
+        "Trumpet 1",
+        "Trumpet 2",
+        "Trumpet 3",
+        "Trombone 1",
+        "Trombone 2",
+        "Bass Trombone",
+        "Tuba",
+        "Timpani",
+        "Glockenspiel",
+        "Snare Drum",
+        "Bass Drum",
+        "Cymbals",
+        "Harp",
+        "Violin I",
+        "Violin II",
+        "Viola",
+        "Cello",
+        "Double Bass"
+      ],
+      "where": "after",
+      "tracks": [],
+      "answers": [],
+      "cues": [],
+      "freedom": 2
+    },
+    "reply": {
+      "status": "ok",
+      "answer": {
+        "options": [
+          {
+            "fifths": 0,
+            "idea": "Oboe carries whole lullaby in A minor over descending bass, answered by strings",
+            "motif": {
+              "from": "9",
+              "to": "12",
+              "what": "Long C6 held then falling to A5"
+            },
+            "name": "Ashen Lullaby",
+            "qpm": 72,
+            "time": "3/4",
+            "why": [
+              {
+                "chords": "Am | F | Dm | E7 | F | Dm | Am | E7",
+                "dynamics": "pp growing to mp",
+                "from": "1",
+                "principle": "Separate layers by register rhythm and level",
+                "to": "8",
+                "variation": "Keep tune plain in order",
+                "what": "Oboe 1 tune, Viola rocking figure, Cello bass"
+              },
+              {
+                "chords": "Am | F | G | E7 | Am | Dm | F E7 | Am",
+                "dynamics": "mp growing to mf",
+                "from": "9",
+                "principle": "Pass phrase between colours to travel",
+                "to": "16",
+                "variation": "Sequence down with suspensions",
+                "what": "Flute 1 tune, Bassoon answers, Harp arpeggios"
+              },
+              {
+                "chords": "F | E7 | Am | Dm | Bb E7 | Am | Bm7b5 E7 | Am",
+                "dynamics": "mf growing to ff",
+                "from": "17",
+                "principle": "Add weight slowly for one climax",
+                "to": "24",
+                "variation": "Stretch rhythm toward high peak",
+                "what": "Violin I peaks, Horn pad, Timpani roots"
+              },
+              {
+                "chords": "Dm E7 | Am",
+                "dynamics": "ff dying to pp",
+                "from": "25",
+                "principle": "Hold tonic pedal to rest after arrival",
+                "to": "26",
+                "variation": "Strip to skeleton to close",
+                "what": "Cello and Oboe 1 settle, Viola holds"
+              }
+            ]
+          },
+          {
+            "fifths": 0,
+            "idea": "Cello sings lament low over harp ostinato, clarinet answers softly",
+            "motif": {
+              "from": "17",
+              "to": "20",
+              "what": "Rising G5 A5 B5 to C6"
+            },
+            "name": "Low Lament",
+            "qpm": 60,
+            "time": "3/4",
+            "why": [
+              {
+                "chords": "Am | G | F | E7 | Am | E7",
+                "dynamics": "pp staying to pp",
+                "from": "1",
+                "principle": "Low pedal with moving chords creates dread",
+                "to": "6",
+                "variation": "Keep tune plain over lament bass",
+                "what": "Cello tune, Harp ostinato, Double Bass pedal"
+              },
+              {
+                "chords": "Am | Dm | Bm7b5 E7 | Am | F | Dm | Bm7b5 E7 | Am",
+                "dynamics": "p growing to mp",
+                "from": "7",
+                "principle": "Counter moves when tune holds and rests",
+                "to": "14",
+                "variation": "Invert fragments as counterline",
+                "what": "Clarinet 1 counters, Viola sustains, Bassoon bass"
+              },
+              {
+                "chords": "F | Bb | E7 | Am | Dm | Bm7b5 | E7 | Am",
+                "dynamics": "mp growing to f",
+                "from": "15",
+                "principle": "Thin solo needs transparent accompaniment",
+                "to": "22",
+                "variation": "Hide head in inner viola",
+                "what": "Violin II tune high, Viola hides head, Horns colour"
+              },
+              {
+                "chords": "F | Dm Bm7b5 | E7 | Am",
+                "dynamics": "f dying to pp",
+                "from": "23",
+                "principle": "Save strongest cadence for last arrival",
+                "to": "26",
+                "variation": "Augment tail for final arrival",
+                "what": "Cello and Horn 1 close, Harp bells, Timpani hit"
+              }
+            ]
+          }
+        ]
+      },
+      "sources": [],
+      "cached": false
+    },
+    "ms": 86729,
+    "thinking": [
+      {
+        "at": 6527,
+        "text": "Interpreting reshaped freedom rules to allow rhythm, mode, chord, and metre changes while keeping the whole tune recognizable and in order."
+      },
+      {
+        "at": 13432,
+        "text": "Analyzing the bar-level harmony to confirm key and metre change allowances."
+      },
+      {
+        "at": 20445,
+        "text": "Mapping instrument assignments and extracting the long-note melody to define the singable motif."
+      },
+      {
+        "at": 27905,
+        "text": "Resolving ambiguous track labels to identify unused instruments for the new 26-bar composition."
+      },
+      {
+        "at": 34451,
+        "text": "Mapping abstract track labels to the orchestral instrument list to identify empty slots."
+      },
+      {
+        "at": 42141,
+        "text": "Resolving track-name ambiguity and choosing a minor-mode key and tempo for the reshaped orchestral arrangement."
+      },
+      {
+        "at": 53071,
+        "text": "Selecting a distinctive motif from the source bars and mapping the tune contour to a 26-bar structure."
+      },
+      {
+        "at": 60799,
+        "text": "Designing two 26-bar A-minor orchestrations with distinct harmonies, layers, and phrasing for a singable sad melody."
+      },
+      {
+        "at": 68611,
+        "text": "Mapping four 8-bar stretches with chords, dynamics, and instrument layers under length limits."
+      },
+      {
+        "at": 86729,
+        "text": "Drafting two option variations with chords, dynamics, and instrument layers within bar constraints."
+      }
+    ],
+    "version": "plan-recompose-5",
+    "model": "muse-spark-1.3"
+  },
+  {
+    "shape": "write_theme",
+    "input": {
+      "piece": {
+        "title": "cute_test",
+        "composer": null,
+        "instrument": "Sum 12 and Sum 12 2 and Sum 12 3 and Sum 12 4 and Inst 2 and Sum 12 5 and Sum 12"
+      },
+      "fifths": 0,
+      "time": "3/4",
+      "written": [
+        {
+          "bar": "1",
+          "notes": "C3 G4 E4 C4 G4 E4 C4",
+          "rhythm": "1 0.25x3 1x3",
+          "at": "0 1 1 1 2 2 2",
+          "staves": "1 1 1 1 1 1 1",
+          "measure": 0
+        },
+        {
+          "bar": "2",
+          "notes": "A2 A2 A4 E4 C4 A4 E4 C4",
+          "rhythm": "1 0.25x4 1x3",
+          "at": "0 1 1 1 1 2 2 2",
+          "staves": "1 1 1 1 1 1 1 1",
+          "held": "2",
+          "measure": 1
+        },
+        {
+          "bar": "3",
+          "notes": "D3 A4 F4 D4 A4 F4 D4",
+          "rhythm": "1.333 0.25x3 0.333x3",
+          "at": "0 1 1 1 2 2 2",
+          "staves": "1 1 1 1 1 1 1",
+          "measure": 2
+        },
+        {
+          "bar": "4",
+          "notes": "G3 G3",
+          "rhythm": "2 0.667",
+          "at": "0 2",
+          "staves": "1 1",
+          "held": "2",
+          "measure": 3
+        },
+        {
+          "bar": "5",
+          "notes": "C3 C3 G4 E4 C4 G4 E4 C4",
+          "rhythm": "1 0.25x4 1x3",
+          "at": "0 1 1 1 1 2 2 2",
+          "staves": "1 1 1 1 1 1 1 1",
+          "held": "2",
+          "measure": 4
+        },
+        {
+          "bar": "6",
+          "notes": "A2 A4 E4 C4 A2 A4 E4 C4",
+          "rhythm": "1.5 0.25x4 1x3",
+          "at": "0 1 1 1 1.5 2 2 2",
+          "staves": "1 1 1 1 1 1 1 1",
+          "held": "5",
+          "measure": 5
+        },
+        {
+          "bar": "7",
+          "notes": "D3 A4 F4 D4 A4 F4 D4",
+          "rhythm": "2 0.25x3 0.333x3",
+          "at": "0 1 1 1 2 2 2",
+          "staves": "1 1 1 1 1 1 1",
+          "measure": 6
+        },
+        {
+          "bar": "8",
+          "notes": "G2 E4 C4 A3 A2 F4 D4 B3 B2",
+          "rhythm": "1 0.25x3 1 0.75x3 1",
+          "at": "0 1 1 1 1 2 2 2 2",
+          "staves": "1 1 1 1 1 1 1 1 1",
+          "measure": 7
+        },
+        {
+          "bar": "9",
+          "notes": "C3 C6 C3 C3 C6 G5 E5 C4 C5 G4 E4 C4 G4 E4 C4 C6 C5 G4 E4 C4 A5 G4 E4 C4 C6 A4",
+          "rhythm": "1 1.5 1 3 2 3x3 1.5 0.25x8 1x7 0.75 1",
+          "at": "0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1.5 1.5 2 2 2 2 2 2 2 2 2",
+          "staves": "2 5 6 9 10 10 10 10 14 2 2 2 6 6 6 5 14 2 2 2 5 6 6 6 10 14",
+          "held": "16 17 25",
+          "measure": 8
+        },
+        {
+          "bar": "10",
+          "notes": "A2 C6 A2 A2 C6 E5 A5 A3 C5 A2 A4 E4 C4 A2 A4 E4 C4 A4 E4 C4 A4 E4 C4 C6 E5",
+          "rhythm": "1 3 1 3 2x2 3x3 0.25x8 1x6 0.75x2",
+          "at": "0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2",
+          "staves": "2 5 6 9 10 10 10 10 14 2 2 2 2 6 6 6 6 2 2 2 6 6 6 10 10",
+          "held": "10 14 24 25",
+          "measure": 9
+        },
+        {
+          "bar": "11",
+          "notes": "D3 C6 D3 D3 A5 A3 F5 D5 D4 C5 A4 F4 D4 A4 F4 D4 A4 F4 D4 A4 F4 D4 A5 F5",
+          "rhythm": "1.333 3 1.333 3 2 0.25 2 3x3 0.25x6 0.333x6 0.5 0.75",
+          "at": "0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 2 2 2 2 2 2 2 2",
+          "staves": "2 5 6 9 10 10 10 10 10 14 2 2 2 6 6 6 2 2 2 6 6 6 10 10",
+          "held": "2 5 6 10 23 24",
+          "measure": 10
+        },
+        {
+          "bar": "12",
+          "notes": "G2 D6 G2 G2 D5 B5 G5 G3 D5 B4 G4 D4 B4 G4 D4 G2 A2 G2 B4 G4 D4 A5 G2 B4 G4 D4 B2 D5 B5 G5 G3 A4",
+          "rhythm": "2x3 1 2x5 0.25x7 1 0.667 0.333x3 1 0.667 0.333x3 1 0.75x4 1",
+          "at": "0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2",
+          "staves": "2 5 6 9 10 10 10 10 14 2 2 2 6 6 6 9 9 2 2 2 2 5 6 6 6 6 9 10 10 10 10 14",
+          "held": "5 16 18 23 28 29 30 31",
+          "measure": 11
+        },
+        {
+          "bar": "13",
+          "notes": "C3 C6 C3 C3 C6 G5 E5 C4 C5 G4 E4 C4 G4 E4 C4 C6 C5 G4 E4 C4 A5 G4 E4 C4 C6 A4",
+          "rhythm": "1 1.5 1 3 2 3x3 1.5 0.25x8 1x7 0.75 1",
+          "at": "0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1.5 1.5 2 2 2 2 2 2 2 2 2",
+          "staves": "3 5 7 9 11 11 11 11 14 3 3 3 7 7 7 5 14 3 3 3 5 7 7 7 11 14",
+          "held": "16 17 25",
+          "measure": 12
+        },
+        {
+          "bar": "14",
+          "notes": "A2 C6 A2 A2 C6 E5 A5 A3 C5 A2 A4 E4 C4 A2 A4 E4 C4 A4 E4 C4 A4 E4 C4 C6 E5",
+          "rhythm": "1 3 1 3 2x2 3x3 0.25x8 1x6 0.75x2",
+          "at": "0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2",
+          "staves": "3 5 7 9 11 11 11 11 14 3 3 3 3 7 7 7 7 3 3 3 7 7 7 11 11",
+          "held": "10 14 24 25",
+          "measure": 13
+        },
+        {
+          "bar": "15",
+          "notes": "D3 C6 D3 A2 D3 A5 A3 F5 D5 D4 C5 A4 F4 D4 A4 F4 D4 A4 F4 D4 D6 A4 F4 D4 A5 F5 D5",
+          "rhythm": "1.333 2 1.333 0.25 3 2 0.25 2 3x2 2 0.25x6 0.333x3 1 0.333x3 0.5 0.75 1",
+          "at": "0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2",
+          "staves": "3 5 7 9 9 11 11 11 11 11 14 3 3 3 7 7 7 3 3 3 5 7 7 7 11 11 14",
+          "held": "2 4 6 7 11 25 26",
+          "measure": 14
+        },
+        {
+          "bar": "16",
+          "notes": "G2 A5 G2 G3 D5 B5 G5 G3 A4 B4 G4 D4 B4 G4 D4 A5 A4 G2 B4 G4 D4 B5 G2 B4 G4 D4 D5 B5 G5 G3 B4",
+          "rhythm": "2 1.5 2 3 2x4 1.5 0.25x8 0.667 0.333x3 1 0.667 0.333x3 0.75x4 1",
+          "at": "0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1.5 1.5 2 2 2 2 2 2 2 2 2 2 2 2 2 2",
+          "staves": "3 5 7 9 11 11 11 11 14 3 3 3 7 7 7 5 14 3 3 3 3 5 7 7 7 7 11 11 11 11 14",
+          "held": "5 16 17 18 23 27 28 29 30",
+          "measure": 15
+        },
+        {
+          "bar": "17",
+          "notes": "C3 C6 C3 C3 C6 G5 E5 C4 C5 G4 E4 C4 G4 E4 C4 G4 E4 C4 A5 G4 E4 C4 C6 A4",
+          "rhythm": "1 2 1 3 2 3x3 2 0.25x6 1x7 0.75 1",
+          "at": "0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2",
+          "staves": "4 5 8 9 12 12 12 12 14 4 4 4 8 8 8 4 4 4 5 8 8 8 12 14",
+          "held": "23",
+          "measure": 16
+        },
+        {
+          "bar": "18",
+          "notes": "A2 C6 A2 A2 C6 E5 A5 A3 C5 A2 A4 E4 C4 A2 A4 E4 C4 A4 E4 C4 C6 A4 E4 C4 C6 E5 C5 E6 E5",
+          "rhythm": "1 2 1 3 2x2 3x2 2 0.25x8 1x3 0.25 1x3 0.75x2 0.25 0.5x2",
+          "at": "0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2.5 2.5",
+          "staves": "4 5 8 9 12 12 12 12 14 4 4 4 4 8 8 8 8 4 4 4 5 8 8 8 12 12 14 5 14",
+          "held": "10 14 21 25 26 27",
+          "measure": 17
+        },
+        {
+          "bar": "19",
+          "notes": "D3 E6 D6 D3 A2 D2 A5 A3 F5 D5 D4 E5 D5 A4 F4 D4 A4 F4 D4 A4 F4 D4 D6 A4 F4 D4 A5 F5 D5",
+          "rhythm": "1.333 0.25 2 1.333 0.25 3 2 0.25 2 3x2 0.25 2 0.25x6 0.333x3 0.75 0.333x3 0.5 0.75x2",
+          "at": "0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2",
+          "staves": "4 5 5 8 9 9 12 12 12 12 12 14 14 4 4 4 8 8 8 4 4 4 5 8 8 8 12 12 14",
+          "held": "2 5 7 8 12 23 27 28 29",
+          "measure": 18
+        },
+        {
+          "bar": "20",
+          "notes": "G3 G5 G3 G2 D5 B5 G5 G3 G4 A5 G2 E2 A4 G3 B5 G3 D2 D5 B5 G5 G3 B4",
+          "rhythm": "2 1 2 1 2x4 1x2 0.25 1x2 0.667 1 0.667 1 0.75x4 1",
+          "at": "0 0 0 0 0 0 0 0 0 1 1 1 1 2 2 2 2 2 2 2 2 2",
+          "staves": "4 5 8 9 12 12 12 12 14 5 9 9 14 4 5 8 9 12 12 12 12 14",
+          "held": "5 11 14 16 18 19 20 21",
+          "measure": 19
+        },
+        {
+          "bar": "21",
+          "notes": "C3 C6 C3 D2 C3 C6 G5 E5 C4 C5 C3 G4 E4 C4 C3 G4 E4 C4 G4 E4 C4 C6 G4 E4 C4 C6 C5",
+          "rhythm": "1 2 1 0.25 3 2 3x3 2 0.25x8 1x3 0.5 1x3 0.75 0.5",
+          "at": "0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2",
+          "staves": "4 5 8 9 9 13 13 13 13 14 4 4 4 4 8 8 8 8 4 4 4 5 8 8 8 13 14",
+          "held": "4 11 15 22 26 27",
+          "measure": 20
+        },
+        {
+          "bar": "22",
+          "notes": "A2 A2 A2 C6 E5 A5 A3 A4 E4 C4 A4 E4 C4 A2 A2 A4 E4 C4 A5 A4 E4 C4 G2 C6 E5 A4",
+          "rhythm": "1.5x2 2x3 3x2 0.25x8 1x8 0.75x2 1",
+          "at": "0 0 0 0 0 0 0 1 1 1 1 1 1 1.5 1.5 2 2 2 2 2 2 2 2 2 2 2",
+          "staves": "4 8 9 13 13 13 13 4 4 4 8 8 8 4 8 4 4 4 5 8 8 8 9 13 13 14",
+          "held": "14 15 24 25",
+          "measure": 21
+        },
+        {
+          "bar": "23",
+          "notes": "D3 D6 D3 G2 A2 A5 A3 F5 D5 D4 D5 A4 F4 D4 A4 F4 D4 A4 F4 D4 A4 F4 D4 A5 F5",
+          "rhythm": "2 3 2 0.25 3 2 0.25 2 3x3 0.25x6 0.333x6 0.5 0.75",
+          "at": "0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 2 2 2 2 2 2 2 2",
+          "staves": "4 5 8 9 9 13 13 13 13 13 14 4 4 4 8 8 8 4 4 4 8 8 8 13 13",
+          "held": "4 6 7 24 25",
+          "measure": 22
+        },
+        {
+          "bar": "24",
+          "notes": "G2 G6 G2 A2 G2 D5 B5 G5 G3 G5 E4 C4 A3 A2 E6 E4 C4 A3 A2 E5 F4 D4 B3 B2 D6 F4 D4 B3 B2 D5 B5 G5 G3 D5",
+          "rhythm": "1 1.333 1 0.25 3 2x4 1.333 0.25x3 1x2 0.25x3 1x11 0.75x4 1",
+          "at": "0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2",
+          "staves": "4 5 8 9 9 13 13 13 13 14 4 4 4 4 5 8 8 8 8 14 4 4 4 4 5 8 8 8 8 13 13 13 13 14",
+          "held": "4 6 30 31 32 33",
+          "measure": 23
+        },
+        {
+          "bar": "25",
+          "notes": "F4 B3 D4 B2 D6 F4 B3 D4 B2 D5 F4 B3 F4 B3",
+          "rhythm": "1x2 1.333 1.5 3 1x2 1.333 1.5 3 0.25x4",
+          "at": "0 0 0 0 0 0 0 0 0 0 1 1 1 1",
+          "staves": "4 4 4 4 5 8 8 8 8 14 4 4 8 8",
+          "held": "1 2 3 4 5 6 7 8 9 10 11 12 13 14",
+          "measure": 24
+        },
+        {
+          "bar": "26",
+          "notes": "D6 D5 D6 D5",
+          "rhythm": "2x2 0.75x2",
+          "at": "0 0 2 2",
+          "staves": "5 14 5 14",
+          "held": "1 2 3 4",
+          "measure": 25
+        }
+      ],
+      "returns": [],
+      "lines": [
+        "Sum 12",
+        "Sum 12 2",
+        "Sum 12 3",
+        "Sum 12 4",
+        "Inst 2",
+        "Sum 12 5",
+        "Sum 12 6",
+        "Sum 12 7",
+        "Inst 5",
+        "Inst 5 2",
+        "Inst 5 3",
+        "Inst 5 4",
+        "Inst 5 5",
+        "Inst 2 2"
+      ],
+      "moreBars": 26,
+      "ask": "The mood I want: sad.",
+      "reading": {
+        "roles": [
+          {
+            "from": "1",
+            "line": "Sum 12",
+            "of": "",
+            "role": "harmony",
+            "to": "8",
+            "why": "broken chords outline each chord"
+          },
+          {
+            "from": "9",
+            "line": "Sum 12 2",
+            "of": "",
+            "role": "harmony",
+            "to": "12",
+            "why": "broken chords outline each chord"
+          },
+          {
+            "from": "9",
+            "line": "Sum 12 5",
+            "of": "Sum 12 2",
+            "role": "doubling",
+            "to": "12",
+            "why": "same pitches at same time"
+          },
+          {
+            "from": "13",
+            "line": "Sum 12 3",
+            "of": "",
+            "role": "harmony",
+            "to": "16",
+            "why": "broken chords outline each chord"
+          },
+          {
+            "from": "13",
+            "line": "Sum 12 6",
+            "of": "Sum 12 3",
+            "role": "doubling",
+            "to": "16",
+            "why": "same pitches at same time"
+          },
+          {
+            "from": "17",
+            "line": "Sum 12 4",
+            "of": "",
+            "role": "harmony",
+            "to": "25",
+            "why": "broken chords outline each chord"
+          },
+          {
+            "from": "17",
+            "line": "Sum 12 7",
+            "of": "Sum 12 4",
+            "role": "doubling",
+            "to": "25",
+            "why": "same pitches at same time"
+          },
+          {
+            "from": "9",
+            "line": "Inst 2",
+            "of": "",
+            "role": "melody",
+            "to": "26",
+            "why": "long high line sings over"
+          },
+          {
+            "from": "9",
+            "line": "Inst 2 2",
+            "of": "Inst 2",
+            "role": "doubling",
+            "to": "26",
+            "why": "same rhythm octave below"
+          },
+          {
+            "from": "9",
+            "line": "Inst 5",
+            "of": "",
+            "role": "bass",
+            "to": "24",
+            "why": "long low roots ground harmony"
+          },
+          {
+            "from": "9",
+            "line": "Inst 5 2",
+            "of": "",
+            "role": "harmony",
+            "to": "12",
+            "why": "held chords fill middle"
+          },
+          {
+            "from": "13",
+            "line": "Inst 5 3",
+            "of": "",
+            "role": "harmony",
+            "to": "16",
+            "why": "held chords fill middle"
+          },
+          {
+            "from": "17",
+            "line": "Inst 5 4",
+            "of": "",
+            "role": "harmony",
+            "to": "20",
+            "why": "held chords fill middle"
+          },
+          {
+            "from": "21",
+            "line": "Inst 5 5",
+            "of": "",
+            "role": "harmony",
+            "to": "24",
+            "why": "held chords fill middle"
+          }
+        ],
+        "missing": [
+          {
+            "from": "9",
+            "to": "16",
+            "what": "literal repeat with no new material",
+            "why": "adds length without contrast"
+          },
+          {
+            "from": "9",
+            "to": "24",
+            "what": "melody only holds long notes",
+            "why": "never shapes clear cadence"
+          },
+          {
+            "from": "25",
+            "to": "26",
+            "what": "no final arrival on tonic",
+            "why": "music hangs on D"
+          }
+        ]
+      },
+      "instruments": [
+        "Piccolo",
+        "Flute 1",
+        "Flute 2",
+        "Oboe 1",
+        "Oboe 2",
+        "Clarinet 1",
+        "Clarinet 2",
+        "Bassoon 1",
+        "Bassoon 2",
+        "Horn 1",
+        "Horn 2",
+        "Horn 3",
+        "Horn 4",
+        "Trumpet 1",
+        "Trumpet 2",
+        "Trumpet 3",
+        "Trombone 1",
+        "Trombone 2",
+        "Bass Trombone",
+        "Tuba",
+        "Timpani",
+        "Glockenspiel",
+        "Snare Drum",
+        "Bass Drum",
+        "Cymbals",
+        "Harp",
+        "Violin I",
+        "Violin II",
+        "Viola",
+        "Cello",
+        "Double Bass"
+      ],
+      "where": "after",
+      "tracks": [],
+      "answers": [],
+      "cues": [],
+      "freedom": 2,
+      "chosen": {
+        "fifths": 0,
+        "idea": "Oboe carries whole lullaby in A minor over descending bass, answered by strings",
+        "motif": {
+          "from": "9",
+          "to": "12",
+          "what": "Long C6 held then falling to A5"
+        },
+        "name": "Ashen Lullaby",
+        "qpm": 72,
+        "time": "3/4",
+        "why": [
+          {
+            "chords": "Am | F | Dm | E7 | F | Dm | Am | E7",
+            "dynamics": "pp growing to mp",
+            "from": "1",
+            "principle": "Separate layers by register rhythm and level",
+            "to": "8",
+            "variation": "Keep tune plain in order",
+            "what": "Oboe 1 tune, Viola rocking figure, Cello bass"
+          },
+          {
+            "chords": "Am | F | G | E7 | Am | Dm | F E7 | Am",
+            "dynamics": "mp growing to mf",
+            "from": "9",
+            "principle": "Pass phrase between colours to travel",
+            "to": "16",
+            "variation": "Sequence down with suspensions",
+            "what": "Flute 1 tune, Bassoon answers, Harp arpeggios"
+          },
+          {
+            "chords": "F | E7 | Am | Dm | Bb E7 | Am | Bm7b5 E7 | Am",
+            "dynamics": "mf growing to ff",
+            "from": "17",
+            "principle": "Add weight slowly for one climax",
+            "to": "24",
+            "variation": "Stretch rhythm toward high peak",
+            "what": "Violin I peaks, Horn pad, Timpani roots"
+          },
+          {
+            "chords": "Dm E7 | Am",
+            "dynamics": "ff dying to pp",
+            "from": "25",
+            "principle": "Hold tonic pedal to rest after arrival",
+            "to": "26",
+            "variation": "Strip to skeleton to close",
+            "what": "Cello and Oboe 1 settle, Viola holds"
+          }
+        ]
+      }
+    },
+    "reply": {
+      "status": "ok",
+      "answer": {
+        "lines": [
+          {
+            "bar": "1",
+            "events": "C5@0+2 A4@2+1",
+            "role": "tune"
+          },
+          {
+            "bar": "1",
+            "events": "A2@0+3",
+            "role": "bass"
+          },
+          {
+            "bar": "2",
+            "events": "C5@0+2",
+            "role": "tune"
+          },
+          {
+            "bar": "2",
+            "events": "A3@0+1.5 C4@1.5+1.5",
+            "role": "countermelody"
+          },
+          {
+            "bar": "2",
+            "events": "F2@0+3",
+            "role": "bass"
+          },
+          {
+            "bar": "3",
+            "events": "D5@0+1.5 A4@1.5+1.5",
+            "role": "tune"
+          },
+          {
+            "bar": "3",
+            "events": "F4@0+2.5",
+            "role": "countermelody"
+          },
+          {
+            "bar": "3",
+            "events": "D2@0+3",
+            "role": "bass"
+          },
+          {
+            "bar": "4",
+            "events": "C5@0+1.5 A4@1.5+1.5",
+            "role": "tune"
+          },
+          {
+            "bar": "4",
+            "events": "B3@0+1.5 A3@1.5+1.5",
+            "role": "countermelody"
+          },
+          {
+            "bar": "4",
+            "events": "E2@0+3",
+            "role": "bass"
+          },
+          {
+            "bar": "5",
+            "events": "C5@0+2",
+            "role": "tune"
+          },
+          {
+            "bar": "5",
+            "events": "A3@0+1 G3@1+1 A3@2+1",
+            "role": "countermelody"
+          },
+          {
+            "bar": "5",
+            "events": "F2@0+3",
+            "role": "bass"
+          },
+          {
+            "bar": "6",
+            "events": "D5@0+2 C5@2+1",
+            "role": "tune"
+          },
+          {
+            "bar": "6",
+            "events": "F3@0+3",
+            "role": "countermelody"
+          },
+          {
+            "bar": "6",
+            "events": "D2@0+3",
+            "role": "bass"
+          },
+          {
+            "bar": "7",
+            "events": "A4@0+2 B4@2+1",
+            "role": "tune"
+          },
+          {
+            "bar": "7",
+            "events": "C4@0+1.5 D4@1.5+1.5",
+            "role": "countermelody"
+          },
+          {
+            "bar": "7",
+            "events": "A2@0+3",
+            "role": "bass"
+          },
+          {
+            "bar": "8",
+            "events": "B4@0+2.5",
+            "role": "tune"
+          },
+          {
+            "bar": "8",
+            "events": "G#3@0+1.5 A3@1.5+1.5",
+            "role": "countermelody"
+          },
+          {
+            "bar": "8",
+            "events": "E2@0+3",
+            "role": "bass"
+          },
+          {
+            "bar": "9",
+            "events": "C5@0+1.5 A4@1.5+1.5",
+            "role": "tune"
+          },
+          {
+            "bar": "9",
+            "events": "A2@0+3",
+            "role": "bass"
+          },
+          {
+            "bar": "10",
+            "events": "C5@0+2 E5@2+1",
+            "role": "tune"
+          },
+          {
+            "bar": "10",
+            "events": "A3@0+1.5 G3@1.5+1.5",
+            "role": "countermelody"
+          },
+          {
+            "bar": "10",
+            "events": "F2@0+3",
+            "role": "bass"
+          },
+          {
+            "bar": "11",
+            "events": "D5@0+2.5",
+            "role": "tune"
+          },
+          {
+            "bar": "11",
+            "events": "B3@0+1 A3@1+1 G3@2+1",
+            "role": "countermelody"
+          },
+          {
+            "bar": "11",
+            "events": "G2@0+3",
+            "role": "bass"
+          },
+          {
+            "bar": "12",
+            "events": "G4@0+1 A4@1+1 B4@2+1",
+            "role": "tune"
+          },
+          {
+            "bar": "12",
+            "events": "E4@0+3",
+            "role": "countermelody"
+          },
+          {
+            "bar": "12",
+            "events": "E2@0+3",
+            "role": "bass"
+          },
+          {
+            "bar": "13",
+            "events": "C5@0+2.5",
+            "role": "tune"
+          },
+          {
+            "bar": "13",
+            "events": "E4@0+1.5 D4@1.5+1.5",
+            "role": "countermelody"
+          },
+          {
+            "bar": "13",
+            "events": "A2@0+3",
+            "role": "bass"
+          },
+          {
+            "bar": "14",
+            "events": "A4@0+2.5",
+            "role": "tune"
+          },
+          {
+            "bar": "14",
+            "events": "C4@0+1.5 B3@1.5+1.5",
+            "role": "countermelody"
+          },
+          {
+            "bar": "14",
+            "events": "D2@0+3",
+            "role": "bass"
+          },
+          {
+            "bar": "15",
+            "events": "D5@0+3",
+            "role": "tune"
+          },
+          {
+            "bar": "15",
+            "events": "A3@0+1.5 G#3@1.5+1.5",
+            "role": "countermelody"
+          },
+          {
+            "bar": "15",
+            "events": "F2@0+1.5 E2@1.5+1.5",
+            "role": "bass"
+          },
+          {
+            "bar": "16",
+            "events": "D5@0+1 C5@1+1 A4@2+1",
+            "role": "tune"
+          },
+          {
+            "bar": "16",
+            "events": "E4@0+3",
+            "role": "countermelody"
+          },
+          {
+            "bar": "16",
+            "events": "A2@0+3",
+            "role": "bass"
+          },
+          {
+            "bar": "17",
+            "events": "A4@0+2.5",
+            "role": "tune"
+          },
+          {
+            "bar": "17",
+            "events": "C4@0+1 A3@1+1 C4@2+1",
+            "role": "countermelody"
+          },
+          {
+            "bar": "17",
+            "events": "F2@0+3",
+            "role": "bass"
+          },
+          {
+            "bar": "18",
+            "events": "B4@0+2.5",
+            "role": "tune"
+          },
+          {
+            "bar": "18",
+            "events": "C4@0+1 B3@1+1 G#3@2+1",
+            "role": "countermelody"
+          },
+          {
+            "bar": "18",
+            "events": "E2@0+3",
+            "role": "bass"
+          },
+          {
+            "bar": "19",
+            "events": "C5@0+2.5",
+            "role": "tune"
+          },
+          {
+            "bar": "19",
+            "events": "A3@0+1.5 G3@1.5+1.5",
+            "role": "countermelody"
+          },
+          {
+            "bar": "19",
+            "events": "A2@0+3",
+            "role": "bass"
+          },
+          {
+            "bar": "20",
+            "events": "D5@0+2.5",
+            "role": "tune"
+          },
+          {
+            "bar": "20",
+            "events": "F4@0+1.5 E4@1.5+1.5",
+            "role": "countermelody"
+          },
+          {
+            "bar": "20",
+            "events": "D2@0+3",
+            "role": "bass"
+          },
+          {
+            "bar": "21",
+            "events": "G5@0+1.5 E5@1.5+1.5",
+            "role": "tune"
+          },
+          {
+            "bar": "21",
+            "events": "D4@0+3",
+            "role": "countermelody"
+          },
+          {
+            "bar": "21",
+            "events": "Bb2@0+1.5 E2@1.5+1.5",
+            "role": "bass"
+          },
+          {
+            "bar": "22",
+            "events": "A4@0+2.5",
+            "role": "tune"
+          },
+          {
+            "bar": "22",
+            "events": "C4@0+1.5 B3@1.5+1.5",
+            "role": "countermelody"
+          },
+          {
+            "bar": "22",
+            "events": "A2@0+3",
+            "role": "bass"
+          },
+          {
+            "bar": "23",
+            "events": "B4@0+1.5 C5@1.5+1.5",
+            "role": "tune"
+          },
+          {
+            "bar": "23",
+            "events": "A3@0+3",
+            "role": "countermelody"
+          },
+          {
+            "bar": "23",
+            "events": "B2@0+1.5 E2@1.5+1.5",
+            "role": "bass"
+          },
+          {
+            "bar": "24",
+            "events": "A4@0+2.5",
+            "role": "tune"
+          },
+          {
+            "bar": "24",
+            "events": "E4@0+2",
+            "role": "countermelody"
+          },
+          {
+            "bar": "24",
+            "events": "A2@0+3",
+            "role": "bass"
+          },
+          {
+            "bar": "25",
+            "events": "D5@0+1.5 B4@1.5+1.5",
+            "role": "tune"
+          },
+          {
+            "bar": "25",
+            "events": "C4@0+1.5 D4@1.5+1.5",
+            "role": "countermelody"
+          },
+          {
+            "bar": "25",
+            "events": "D2@0+1.5 E2@1.5+1.5",
+            "role": "bass"
+          },
+          {
+            "bar": "26",
+            "events": "A4@0+3",
+            "role": "tune"
+          },
+          {
+            "bar": "26",
+            "events": "E4@0+3",
+            "role": "countermelody"
+          },
+          {
+            "bar": "26",
+            "events": "A2@0+3",
+            "role": "bass"
+          }
+        ]
+      },
+      "sources": [],
+      "cached": false
+    },
+    "ms": 131630,
+    "thinking": [
+      {
+        "at": 9539,
+        "text": "Extracting the melody from the source bars and mapping it to 3/4 bars for the JSON output."
+      },
+      {
+        "at": 18240,
+        "text": "Structuring the melody into 3/4 phrases with orchestration and dynamics for the JSON output."
+      },
+      {
+        "at": 27235,
+        "text": "Mapping the melody sequence to 26 bars with octave transposition and three-part voicing."
+      },
+      {
+        "at": 39288,
+        "text": "Compressing the melody into 24 bars with octave shift and a tonic-ending variation for closure."
+      },
+      {
+        "at": 52671,
+        "text": "Mapping source notes to 16 bars while preserving order and ending the first phrase on the dominant."
+      },
+      {
+        "at": 62032,
+        "text": "Extending the mapping with a held suspension and adding a climax section with peak and development."
+      },
+      {
+        "at": 71597,
+        "text": "Adjusting the melodic contour to place the peak later and resolve the chordal dissonance."
+      },
+      {
+        "at": 83412,
+        "text": "Mapping bass roots and countermelody motion against the chord progression while preserving note order and avoiding parallel fifths."
+      },
+      {
+        "at": 92248,
+        "text": "Designing countermelody events to complement the tune while respecting chord tones and voice leading."
+      },
+      {
+        "at": 131630,
+        "text": "Extending countermelody choices with voice-leading checks and parallel-interval constraints."
+      }
+    ],
+    "version": "write-theme-5",
+    "model": "muse-spark-1.3"
+  },
+  {
+    "shape": "arrange",
+    "input": {
+      "piece": {
+        "title": "Ashen Lullaby",
+        "composer": null,
+        "instrument": "Piccolo"
+      },
+      "fifths": 0,
+      "time": "3/4",
+      "written": [
+        {
+          "bar": "1",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 0
+        },
+        {
+          "bar": "2",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 1
+        },
+        {
+          "bar": "3",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 2
+        },
+        {
+          "bar": "4",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 3
+        },
+        {
+          "bar": "5",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 4
+        },
+        {
+          "bar": "6",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 5
+        },
+        {
+          "bar": "7",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 6
+        },
+        {
+          "bar": "8",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 7
+        },
+        {
+          "bar": "9",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 8
+        },
+        {
+          "bar": "10",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 9
+        },
+        {
+          "bar": "11",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 10
+        },
+        {
+          "bar": "12",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 11
+        },
+        {
+          "bar": "13",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 12
+        },
+        {
+          "bar": "14",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 13
+        },
+        {
+          "bar": "15",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 14
+        },
+        {
+          "bar": "16",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 15
+        },
+        {
+          "bar": "17",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 16
+        },
+        {
+          "bar": "18",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 17
+        },
+        {
+          "bar": "19",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 18
+        },
+        {
+          "bar": "20",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 19
+        },
+        {
+          "bar": "21",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 20
+        },
+        {
+          "bar": "22",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 21
+        },
+        {
+          "bar": "23",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 22
+        },
+        {
+          "bar": "24",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 23
+        },
+        {
+          "bar": "25",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 24
+        },
+        {
+          "bar": "26",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 25
+        }
+      ],
+      "returns": [],
+      "lines": [
+        "Piccolo"
+      ],
+      "moreBars": 0,
+      "ask": "The mood I want: sad.",
+      "reading": null,
+      "instruments": [
+        "Piccolo",
+        "Flute 1",
+        "Flute 2",
+        "Oboe 1",
+        "Oboe 2",
+        "Clarinet 1",
+        "Clarinet 2",
+        "Bassoon 1",
+        "Bassoon 2",
+        "Horn 1",
+        "Horn 2",
+        "Horn 3",
+        "Horn 4",
+        "Trumpet 1",
+        "Trumpet 2",
+        "Trumpet 3",
+        "Trombone 1",
+        "Trombone 2",
+        "Bass Trombone",
+        "Tuba",
+        "Timpani",
+        "Glockenspiel",
+        "Snare Drum",
+        "Bass Drum",
+        "Cymbals",
+        "Harp",
+        "Violin I",
+        "Violin II",
+        "Viola",
+        "Cello",
+        "Double Bass"
+      ],
+      "where": "inside",
+      "tracks": [],
+      "answers": [],
+      "cues": [],
+      "freedom": 2,
+      "chosen": {
+        "fifths": 0,
+        "idea": "Oboe carries whole lullaby in A minor over descending bass, answered by strings",
+        "motif": {
+          "from": "9",
+          "to": "12",
+          "what": "Long C6 held then falling to A5"
+        },
+        "name": "Ashen Lullaby",
+        "qpm": 72,
+        "time": "3/4",
+        "why": [
+          {
+            "chords": "Am | F | Dm | E7 | F | Dm | Am | E7",
+            "dynamics": "pp growing to mp",
+            "from": "1",
+            "principle": "Separate layers by register rhythm and level",
+            "to": "8",
+            "variation": "Keep tune plain in order",
+            "what": "Oboe 1 tune, Viola rocking figure, Cello bass"
+          },
+          {
+            "chords": "Am | F | G | E7 | Am | Dm | F E7 | Am",
+            "dynamics": "mp growing to mf",
+            "from": "9",
+            "principle": "Pass phrase between colours to travel",
+            "to": "16",
+            "variation": "Sequence down with suspensions",
+            "what": "Flute 1 tune, Bassoon answers, Harp arpeggios"
+          },
+          {
+            "chords": "F | E7 | Am | Dm | Bb E7 | Am | Bm7b5 E7 | Am",
+            "dynamics": "mf growing to ff",
+            "from": "17",
+            "principle": "Add weight slowly for one climax",
+            "to": "24",
+            "variation": "Stretch rhythm toward high peak",
+            "what": "Violin I peaks, Horn pad, Timpani roots"
+          },
+          {
+            "chords": "Dm E7 | Am",
+            "dynamics": "ff dying to pp",
+            "from": "25",
+            "principle": "Hold tonic pedal to rest after arrival",
+            "to": "26",
+            "variation": "Strip to skeleton to close",
+            "what": "Cello and Oboe 1 settle, Viola holds"
+          }
+        ]
+      },
+      "window": {
+        "from": "1",
+        "to": "8"
+      },
+      "seed": {
+        "tune": "Bar 1: Sum 12 1:C3@0+1 2:G4@1+0.25 3:E4@1+0.25 4:C4@1+0.25 5:G4@2+1 6:E4@2+1 7:C4@2+1 / Bar 2: Sum 12 1:A2@0+1 2:A2~@1+0.25 3:A4@1+0.25 4:E4@1+0.25 5:C4@1+0.25 6:A4@2+1 7:E4@2+1 8:C4@2+1 / Bar 3: Sum 12 1:D3@0+1.333 2:A4@1+0.25 3:F4@1+0.25 4:D4@1+0.25 5:A4@2+0.333 6:F4@2+0.333 7:D4@2+0.333 / Bar 4: Sum 12 1:G3@0+2 2:G3~@2+0.667 / Bar 5: Sum 12 1:C3@0+1 2:C3~@1+0.25 3:G4@1+0.25 4:E4@1+0.25 5:C4@1+0.25 6:G4@2+1 7:E4@2+1 8:C4@2+1 / Bar 6: Sum 12 1:A2@0+1.5 2:A4@1+0.25 3:E4@1+0.25 4:C4@1+0.25 5:A2~@1.5+0.25 6:A4@2+1 7:E4@2+1 8:C4@2+1 / Bar 7: Sum 12 1:D3@0+2 2:A4@1+0.25 3:F4@1+0.25 4:D4@1+0.25 5:A4@2+0.333 6:F4@2+0.333 7:D4@2+0.333 / Bar 8: Sum 12 1:G2@0+1 2:E4@1+0.25 3:C4@1+0.25 4:A3@1+0.25 5:A2@1+1 6:F4@2+0.75 7:D4@2+0.75 8:B3@2+0.75 9:B2@2+1 / Bar 9: Sum 12 2 1:C3@0+1 10:G4@1+0.25 11:E4@1+0.25 12:C4@1+0.25 18:G4@2+1 19:E4@2+1 20:C4@2+1 | Inst 2 2:C6@0+1.5 16:C6~@1.5+0.25 21:A5@2+1 | Sum 12 5 3:C3@0+1 13:G4@1+0.25 14:E4@1+0.25 15:C4@1+0.25 22:G4@2+1 23:E4@2+1 24:C4@2+1 | Inst 5 4:C3@0+3 | Inst 5 2 5:C6@0+2 6:G5@0+3 7:E5@0+3 8:C4@0+3 25:C6~@2+0.75 | Inst 2 2 9:C5@0+1.5 17:C5~@1.5+0.25 26:A4@2+1 / Bar 10: Sum 12 2 1:A2@0+1 10:A2~@1+0.25 11:A4@1+0.25 12:E4@1+0.25 13:C4@1+0.25 18:A4@2+1 19:E4@2+1 20:C4@2+1 | Inst 2 2:C6@0+3 | Sum 12 5 3:A2@0+1 14:A2~@1+0.25 15:A4@1+0.25 16:E4@1+0.25 17:C4@1+0.25 21:A4@2+1 22:E4@2+1 23:C4@2+1 | Inst 5 4:A2@0+3 | Inst 5 2 5:C6@0+2 6:E5@0+2 7:A5@0+3 8:A3@0+3 24:C6~@2+0.75 25:E5~@2+0.75 | Inst 2 2 9:C5@0+3 / Bar 11: Sum 12 2 1:D3@0+1.333 11:A4@1+0.25 12:F4@1+0.25 13:D4@1+0.25 17:A4@2+0.333 18:F4@2+0.333 19:D4@2+0.333 | Inst 2 2:C6~@0+3 | Sum 12 5 3:D3@0+1.333 14:A4@1+0.25 15:F4@1+0.25 16:D4@1+0.25 20:A4@2+0.333 21:F4@2+0.333 22:D4@2+0.333 | Inst 5 4:D3@0+3 | Inst 5 2 5:A5~@0+2 6:A3~@0+0.25 7:F5@0+2 8:D5@0+3 9:D4@0+3 23:A5~@2+0.5 24:F5~@2+0.75 | Inst 2 2 10:C5~@0+3 / Bar 12: Sum 12 2 1:G2@0+2 10:B4@1+0.25 11:G4@1+0.25 12:D4@1+0.25 18:G2~@2+0.667 19:B4@2+0.333 20:G4@2+0.333 21:D4@2+0.333 | Inst 2 2:D6@0+2 22:A5@2+1 | Sum 12 5 3:G2@0+2 13:B4@1+0.25 14:G4@1+0.25 15:D4@1+0.25 23:G2~@2+0.667 24:B4@2+0.333 25:G4@2+0.333 26:D4@2+0.333 | Inst 5 4:G2@0+1 16:G2~@1+0.25 17:A2@1+1 27:B2@2+1 | Inst 5 2 5:D5~@0+2 6:B5@0+2 7:G5@0+2 8:G3@0+2 28:D5~@2+0.75 29:B5~@2+0.75 30:G5~@2+0.75 31:G3~@2+0.75 | Inst 2 2 9:D5@0+2 32:A4@2+1 / Bar 13: Sum 12 3 1:C3@0+1 10:G4@1+0.25 11:E4@1+0.25 12:C4@1+0.25 18:G4@2+1 19:E4@2+1 20:C4@2+1 | Inst 2 2:C6@0+1.5 16:C6~@1.5+0.25 21:A5@2+1 | Sum 12 6 3:C3@0+1 13:G4@1+0.25 14:E4@1+0.25 15:C4@1+0.25 22:G4@2+1 23:E4@2+1 24:C4@2+1 | Inst 5 4:C3@0+3 | Inst 5 3 5:C6@0+2 6:G5@0+3 7:E5@0+3 8:C4@0+3 25:C6~@2+0.75 | Inst 2 2 9:C5@0+1.5 17:C5~@1.5+0.25 26:A4@2+1 / Bar 14: Sum 12 3 1:A2@0+1 10:A2~@1+0.25 11:A4@1+0.25 12:E4@1+0.25 13:C4@1+0.25 18:A4@2+1 19:E4@2+1 20:C4@2+1 | Inst 2 2:C6@0+3 | Sum 12 6 3:A2@0+1 14:A2~@1+0.25 15:A4@1+0.25 16:E4@1+0.25 17:C4@1+0.25 21:A4@2+1 22:E4@2+1 23:C4@2+1 | Inst 5 4:A2@0+3 | Inst 5 3 5:C6@0+2 6:E5@0+2 7:A5@0+3 8:A3@0+3 24:C6~@2+0.75 25:E5~@2+0.75 | Inst 2 2 9:C5@0+3 / Bar 15: Sum 12 3 1:D3@0+1.333 12:A4@1+0.25 13:F4@1+0.25 14:D4@1+0.25 18:A4@2+0.333 19:F4@2+0.333 20:D4@2+0.333 | Inst 2 2:C6~@0+2 21:D6@2+1 | Sum 12 6 3:D3@0+1.333 15:A4@1+0.25 16:F4@1+0.25 17:D4@1+0.25 22:A4@2+0.333 23:F4@2+0.333 24:D4@2+0.333 | Inst 5 4:A2~@0+0.25 5:D3@0+3 | Inst 5 3 6:A5~@0+2 7:A3~@0+0.25 8:F5@0+2 9:D5@0+3 10:D4@0+3 25:A5~@2+0.5 26:F5~@2+0.75 | Inst 2 2 11:C5~@0+2 27:D5@2+1 / Bar 16: Sum 12 3 1:G2@0+2 10:B4@1+0.25 11:G4@1+0.25 12:D4@1+0.25 18:G2~@2+0.667 19:B4@2+0.333 20:G4@2+0.333 21:D4@2+0.333 | Inst 2 2:A5@0+1.5 16:A5~@1.5+0.25 22:B5@2+1 | Sum 12 6 3:G2@0+2 13:B4@1+0.25 14:G4@1+0.25 15:D4@1+0.25 23:G2~@2+0.667 24:B4@2+0.333 25:G4@2+0.333 26:D4@2+0.333 | Inst 5 4:G3@0+3 | Inst 5 3 5:D5~@0+2 6:B5@0+2 7:G5@0+2 8:G3@0+2 27:D5~@2+0.75 28:B5~@2+0.75 29:G5~@2+0.75 30:G3~@2+0.75 | Inst 2 2 9:A4@0+1.5 17:A4~@1.5+0.25 31:B4@2+1 / Bar 17: Sum 12 4 1:C3@0+1 10:G4@1+0.25 11:E4@1+0.25 12:C4@1+0.25 16:G4@2+1 17:E4@2+1 18:C4@2+1 | Inst 2 2:C6@0+2 19:A5@2+1 | Sum 12 7 3:C3@0+1 13:G4@1+0.25 14:E4@1+0.25 15:C4@1+0.25 20:G4@2+1 21:E4@2+1 22:C4@2+1 | Inst 5 4:C3@0+3 | Inst 5 4 5:C6@0+2 6:G5@0+3 7:E5@0+3 8:C4@0+3 23:C6~@2+0.75 | Inst 2 2 9:C5@0+2 24:A4@2+1 / Bar 18: Sum 12 4 1:A2@0+1 10:A2~@1+0.25 11:A4@1+0.25 12:E4@1+0.25 13:C4@1+0.25 18:A4@2+1 19:E4@2+1 20:C4@2+1 | Inst 2 2:C6@0+2 21:C6~@2+0.25 28:E6@2.5+0.5 | Sum 12 7 3:A2@0+1 14:A2~@1+0.25 15:A4@1+0.25 16:E4@1+0.25 17:C4@1+0.25 22:A4@2+1 23:E4@2+1 24:C4@2+1 | Inst 5 4:A2@0+3 | Inst 5 4 5:C6@0+2 6:E5@0+2 7:A5@0+3 8:A3@0+3 25:C6~@2+0.75 26:E5~@2+0.75 | Inst 2 2 9:C5@0+2 27:C5~@2+0.25 29:E5@2.5+0.5 / Bar 19: Sum 12 4 1:D3@0+1.333 14:A4@1+0.25 15:F4@1+0.25 16:D4@1+0.25 20:A4@2+0.333 21:F4@2+0.333 22:D4@2+0.333 | Inst 2 2:E6~@0+0.25 3:D6@0+2 23:D6~@2+0.75 | Sum 12 7 4:D3@0+1.333 17:A4@1+0.25 18:F4@1+0.25 19:D4@1+0.25 24:A4@2+0.333 25:F4@2+0.333 26:D4@2+0.333 | Inst 5 5:A2~@0+0.25 6:D2@0+3 | Inst 5 4 7:A5~@0+2 8:A3~@0+0.25 9:F5@0+2 10:D5@0+3 11:D4@0+3 27:A5~@2+0.5 28:F5~@2+0.75 | Inst 2 2 12:E5~@0+0.25 13:D5@0+2 29:D5~@2+0.75 / Bar 20: Sum 12 4 1:G3@0+2 14:G3~@2+0.667 | Inst 2 2:G5@0+1 10:A5@1+1 15:B5@2+1 | Sum 12 7 3:G3@0+2 16:G3~@2+0.667 | Inst 5 4:G2@0+1 11:G2~@1+0.25 12:E2@1+1 17:D2@2+1 | Inst 5 4 5:D5~@0+2 6:B5@0+2 7:G5@0+2 8:G3@0+2 18:D5~@2+0.75 19:B5~@2+0.75 20:G5~@2+0.75 21:G3~@2+0.75 | Inst 2 2 9:G4@0+1 13:A4@1+1 22:B4@2+1 / Bar 21: Sum 12 4 1:C3@0+1 11:C3~@1+0.25 12:G4@1+0.25 13:E4@1+0.25 14:C4@1+0.25 19:G4@2+1 20:E4@2+1 21:C4@2+1 | Inst 2 2:C6@0+2 22:C6~@2+0.5 | Sum 12 7 3:C3@0+1 15:C3~@1+0.25 16:G4@1+0.25 17:E4@1+0.25 18:C4@1+0.25 23:G4@2+1 24:E4@2+1 25:C4@2+1 | Inst 5 4:D2~@0+0.25 5:C3@0+3 | Inst 5 5 6:C6@0+2 7:G5@0+3 8:E5@0+3 9:C4@0+3 26:C6~@2+0.75 | Inst 2 2 10:C5@0+2 27:C5~@2+0.5 / Bar 22: Sum 12 4 1:A2@0+1.5 8:A4@1+0.25 9:E4@1+0.25 10:C4@1+0.25 14:A2~@1.5+0.25 16:A4@2+1 17:E4@2+1 18:C4@2+1 | Inst 2 19:A5@2+1 | Sum 12 7 2:A2@0+1.5 11:A4@1+0.25 12:E4@1+0.25 13:C4@1+0.25 15:A2~@1.5+0.25 20:A4@2+1 21:E4@2+1 22:C4@2+1 | Inst 5 3:A2@0+2 23:G2@2+1 | Inst 5 5 4:C6@0+2 5:E5@0+2 6:A5@0+3 7:A3@0+3 24:C6~@2+0.75 25:E5~@2+0.75 | Inst 2 2 26:A4@2+1 / Bar 23: Sum 12 4 1:D3@0+2 12:A4@1+0.25 13:F4@1+0.25 14:D4@1+0.25 18:A4@2+0.333 19:F4@2+0.333 20:D4@2+0.333 | Inst 2 2:D6@0+3 | Sum 12 7 3:D3@0+2 15:A4@1+0.25 16:F4@1+0.25 17:D4@1+0.25 21:A4@2+0.333 22:F4@2+0.333 23:D4@2+0.333 | Inst 5 4:G2~@0+0.25 5:A2@0+3 | Inst 5 5 6:A5~@0+2 7:A3~@0+0.25 8:F5@0+2 9:D5@0+3 10:D4@0+3 24:A5~@2+0.5 25:F5~@2+0.75 | Inst 2 2 11:D5@0+3 / Bar 24: Sum 12 4 1:G2@0+1 11:E4@1+0.25 12:C4@1+0.25 13:A3@1+0.25 14:A2@1+1 21:F4@2+1 22:D4@2+1 23:B3@2+1 24:B2@2+1 | Inst 2 2:G6@0+1.333 15:E6@1+1 25:D6@2+1 | Sum 12 7 3:G2@0+1 16:E4@1+0.25 17:C4@1+0.25 18:A3@1+0.25 19:A2@1+1 26:F4@2+1 27:D4@2+1 28:B3@2+1 29:B2@2+1 | Inst 5 4:A2~@0+0.25 5:G2@0+3 | Inst 5 5 6:D5~@0+2 7:B5@0+2 8:G5@0+2 9:G3@0+2 30:D5~@2+0.75 31:B5~@2+0.75 32:G5~@2+0.75 33:G3~@2+0.75 | Inst 2 2 10:G5@0+1.333 20:E5@1+1 34:D5@2+1 / Bar 25: Sum 12 4 1:F4~@0+1 2:B3~@0+1 3:D4~@0+1.333 4:B2~@0+1.5 11:F4~@1+0.25 12:B3~@1+0.25 | Inst 2 5:D6~@0+3 | Sum 12 7 6:F4~@0+1 7:B3~@0+1 8:D4~@0+1.333 9:B2~@0+1.5 13:F4~@1+0.25 14:B3~@1+0.25 | Inst 2 2 10:D5~@0+3 / Bar 26: Inst 2 1:D6~@0+2 3:D6~@2+0.75 | Inst 2 2 2:D5~@0+2 4:D5~@2+0.75",
+        "motif": "Long C6 held then falling to A5 From bars 9 to 12.",
+        "theme": "Bar 1 tune: C5@0+2 A4@2+1 / Bar 1 bass: A2@0+3 / Bar 2 tune: C5@0+2 / Bar 2 countermelody: A3@0+1.5 C4@1.5+1.5 / Bar 2 bass: F2@0+3 / Bar 3 tune: D5@0+1.5 A4@1.5+1.5 / Bar 3 countermelody: F4@0+2.5 / Bar 3 bass: D2@0+3 / Bar 4 tune: C5@0+1.5 A4@1.5+1.5 / Bar 4 countermelody: B3@0+1.5 A3@1.5+1.5 / Bar 4 bass: E2@0+3 / Bar 5 tune: C5@0+2 / Bar 5 countermelody: A3@0+1 G3@1+1 A3@2+1 / Bar 5 bass: F2@0+3 / Bar 6 tune: D5@0+2 C5@2+1 / Bar 6 countermelody: F3@0+3 / Bar 6 bass: D2@0+3 / Bar 7 tune: A4@0+2 B4@2+1 / Bar 7 countermelody: C4@0+1.5 D4@1.5+1.5 / Bar 7 bass: A2@0+3 / Bar 8 tune: B4@0+2.5 / Bar 8 countermelody: G#3@0+1.5 A3@1.5+1.5 / Bar 8 bass: E2@0+3"
+      }
+    },
+    "reply": {
+      "status": "ok",
+      "answer": {
+        "adds": [
+          {
+            "art": "",
+            "bar": "1",
+            "dyn": "pp",
+            "events": "C5@0+2 A4@2+1",
+            "part": "Oboe 1",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "1",
+            "dyn": "pp",
+            "events": "A3@0+1 E4@1+1 C4@2+1",
+            "part": "Viola",
+            "role": "figure"
+          },
+          {
+            "art": "",
+            "bar": "1",
+            "dyn": "pp",
+            "events": "A2@0+3",
+            "part": "Cello",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "2",
+            "dyn": "pp",
+            "events": "C5@0+2",
+            "part": "Oboe 1",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "2",
+            "dyn": "pp",
+            "events": "A3@0+1.5 C4@1.5+1.5",
+            "part": "Viola",
+            "role": "countermelody"
+          },
+          {
+            "art": "",
+            "bar": "2",
+            "dyn": "pp",
+            "events": "F2@0+3",
+            "part": "Cello",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "3",
+            "dyn": "p",
+            "events": "D5@0+1.5 A4@1.5+1.5",
+            "part": "Oboe 1",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "3",
+            "dyn": "pp",
+            "events": "F4@0+2.5",
+            "part": "Viola",
+            "role": "countermelody"
+          },
+          {
+            "art": "",
+            "bar": "3",
+            "dyn": "pp",
+            "events": "D2@0+3",
+            "part": "Cello",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "4",
+            "dyn": "p",
+            "events": "C5@0+1.5 A4@1.5+1.5",
+            "part": "Oboe 1",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "4",
+            "dyn": "pp",
+            "events": "B3@0+1.5 A3@1.5+1.5",
+            "part": "Viola",
+            "role": "countermelody"
+          },
+          {
+            "art": "",
+            "bar": "4",
+            "dyn": "pp",
+            "events": "E2@0+3",
+            "part": "Cello",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "5",
+            "dyn": "p",
+            "events": "C5@0+2",
+            "part": "Oboe 1",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "5",
+            "dyn": "pp",
+            "events": "A3@0+1 G3@1+1 A3@2+1",
+            "part": "Viola",
+            "role": "countermelody"
+          },
+          {
+            "art": "",
+            "bar": "5",
+            "dyn": "pp",
+            "events": "F2@0+3",
+            "part": "Cello",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "6",
+            "dyn": "p",
+            "events": "D5@0+2 C5@2+1",
+            "part": "Oboe 1",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "6",
+            "dyn": "pp",
+            "events": "F3@0+3",
+            "part": "Viola",
+            "role": "countermelody"
+          },
+          {
+            "art": "",
+            "bar": "6",
+            "dyn": "pp",
+            "events": "D2@0+3",
+            "part": "Cello",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "7",
+            "dyn": "mp",
+            "events": "A4@0+2 B4@2+1",
+            "part": "Oboe 1",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "7",
+            "dyn": "p",
+            "events": "C4@0+1.5 D4@1.5+1.5",
+            "part": "Viola",
+            "role": "countermelody"
+          },
+          {
+            "art": "",
+            "bar": "7",
+            "dyn": "p",
+            "events": "A2@0+3",
+            "part": "Cello",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "8",
+            "dyn": "mp",
+            "events": "B4@0+2.5",
+            "part": "Oboe 1",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "8",
+            "dyn": "p",
+            "events": "G#3@0+1.5 A3@1.5+1.5",
+            "part": "Viola",
+            "role": "countermelody"
+          },
+          {
+            "art": "",
+            "bar": "8",
+            "dyn": "p",
+            "events": "E2@0+3",
+            "part": "Cello",
+            "role": "bass"
+          }
+        ],
+        "doubles": []
+      },
+      "sources": [],
+      "cached": false
+    },
+    "ms": 55210,
+    "thinking": [
+      {
+        "at": 9544,
+        "text": "Composing bars 1-8 for specified instruments only, assigning separate melodic and harmonic layers with dynamic progression."
+      },
+      {
+        "at": 15449,
+        "text": "Assigning tune, bass, and countermelody lines to the named instruments while resolving the viola role conflict."
+      },
+      {
+        "at": 22057,
+        "text": "Resolving the viola assignment conflict by restricting additions to empty bars only."
+      },
+      {
+        "at": 32125,
+        "text": "Interpreting the assignment rules to limit adds to the three planned instruments without doubling existing parts."
+      },
+      {
+        "at": 38960,
+        "text": "Assigning roles to tune, countermelody, and bass while formatting events and filling the viola figure."
+      },
+      {
+        "at": 48833,
+        "text": "Assigning per-bar dynamics and roles while enforcing the single-instrument-per-bar constraint."
+      },
+      {
+        "at": 55210,
+        "text": "Finalizing per-bar note events and validating lengths, naming, and role assignments against the schema."
+      }
+    ],
+    "version": "arrange-16",
+    "model": "muse-spark-1.3"
+  },
+  {
+    "shape": "arrange",
+    "input": {
+      "piece": {
+        "title": "Ashen Lullaby",
+        "composer": null,
+        "instrument": "Piccolo"
+      },
+      "fifths": 0,
+      "time": "3/4",
+      "written": [
+        {
+          "bar": "1",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 0
+        },
+        {
+          "bar": "2",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 1
+        },
+        {
+          "bar": "3",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 2
+        },
+        {
+          "bar": "4",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 3
+        },
+        {
+          "bar": "5",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 4
+        },
+        {
+          "bar": "6",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 5
+        },
+        {
+          "bar": "7",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 6
+        },
+        {
+          "bar": "8",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 7
+        },
+        {
+          "bar": "9",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 8
+        },
+        {
+          "bar": "10",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 9
+        },
+        {
+          "bar": "11",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 10
+        },
+        {
+          "bar": "12",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 11
+        },
+        {
+          "bar": "13",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 12
+        },
+        {
+          "bar": "14",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 13
+        },
+        {
+          "bar": "15",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 14
+        },
+        {
+          "bar": "16",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 15
+        },
+        {
+          "bar": "17",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 16
+        },
+        {
+          "bar": "18",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 17
+        },
+        {
+          "bar": "19",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 18
+        },
+        {
+          "bar": "20",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 19
+        },
+        {
+          "bar": "21",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 20
+        },
+        {
+          "bar": "22",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 21
+        },
+        {
+          "bar": "23",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 22
+        },
+        {
+          "bar": "24",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 23
+        },
+        {
+          "bar": "25",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 24
+        },
+        {
+          "bar": "26",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 25
+        }
+      ],
+      "returns": [],
+      "lines": [
+        "Piccolo"
+      ],
+      "moreBars": 0,
+      "ask": "The mood I want: sad.",
+      "reading": null,
+      "instruments": [
+        "Piccolo",
+        "Flute 1",
+        "Flute 2",
+        "Oboe 1",
+        "Oboe 2",
+        "Clarinet 1",
+        "Clarinet 2",
+        "Bassoon 1",
+        "Bassoon 2",
+        "Horn 1",
+        "Horn 2",
+        "Horn 3",
+        "Horn 4",
+        "Trumpet 1",
+        "Trumpet 2",
+        "Trumpet 3",
+        "Trombone 1",
+        "Trombone 2",
+        "Bass Trombone",
+        "Tuba",
+        "Timpani",
+        "Glockenspiel",
+        "Snare Drum",
+        "Bass Drum",
+        "Cymbals",
+        "Harp",
+        "Violin I",
+        "Violin II",
+        "Viola",
+        "Cello",
+        "Double Bass"
+      ],
+      "where": "inside",
+      "tracks": [],
+      "answers": [],
+      "cues": [],
+      "freedom": 2,
+      "chosen": {
+        "fifths": 0,
+        "idea": "Oboe carries whole lullaby in A minor over descending bass, answered by strings",
+        "motif": {
+          "from": "9",
+          "to": "12",
+          "what": "Long C6 held then falling to A5"
+        },
+        "name": "Ashen Lullaby",
+        "qpm": 72,
+        "time": "3/4",
+        "why": [
+          {
+            "chords": "Am | F | Dm | E7 | F | Dm | Am | E7",
+            "dynamics": "pp growing to mp",
+            "from": "1",
+            "principle": "Separate layers by register rhythm and level",
+            "to": "8",
+            "variation": "Keep tune plain in order",
+            "what": "Oboe 1 tune, Viola rocking figure, Cello bass"
+          },
+          {
+            "chords": "Am | F | G | E7 | Am | Dm | F E7 | Am",
+            "dynamics": "mp growing to mf",
+            "from": "9",
+            "principle": "Pass phrase between colours to travel",
+            "to": "16",
+            "variation": "Sequence down with suspensions",
+            "what": "Flute 1 tune, Bassoon answers, Harp arpeggios"
+          },
+          {
+            "chords": "F | E7 | Am | Dm | Bb E7 | Am | Bm7b5 E7 | Am",
+            "dynamics": "mf growing to ff",
+            "from": "17",
+            "principle": "Add weight slowly for one climax",
+            "to": "24",
+            "variation": "Stretch rhythm toward high peak",
+            "what": "Violin I peaks, Horn pad, Timpani roots"
+          },
+          {
+            "chords": "Dm E7 | Am",
+            "dynamics": "ff dying to pp",
+            "from": "25",
+            "principle": "Hold tonic pedal to rest after arrival",
+            "to": "26",
+            "variation": "Strip to skeleton to close",
+            "what": "Cello and Oboe 1 settle, Viola holds"
+          }
+        ]
+      },
+      "window": {
+        "from": "9",
+        "to": "16"
+      },
+      "earlier": "Oboe 1: B4@0+2.5 / Viola: G#3@0+1.5 A3@1.5+1.5 / Cello: E2@0+3",
+      "seed": {
+        "tune": "Bar 1: Sum 12 1:C3@0+1 2:G4@1+0.25 3:E4@1+0.25 4:C4@1+0.25 5:G4@2+1 6:E4@2+1 7:C4@2+1 / Bar 2: Sum 12 1:A2@0+1 2:A2~@1+0.25 3:A4@1+0.25 4:E4@1+0.25 5:C4@1+0.25 6:A4@2+1 7:E4@2+1 8:C4@2+1 / Bar 3: Sum 12 1:D3@0+1.333 2:A4@1+0.25 3:F4@1+0.25 4:D4@1+0.25 5:A4@2+0.333 6:F4@2+0.333 7:D4@2+0.333 / Bar 4: Sum 12 1:G3@0+2 2:G3~@2+0.667 / Bar 5: Sum 12 1:C3@0+1 2:C3~@1+0.25 3:G4@1+0.25 4:E4@1+0.25 5:C4@1+0.25 6:G4@2+1 7:E4@2+1 8:C4@2+1 / Bar 6: Sum 12 1:A2@0+1.5 2:A4@1+0.25 3:E4@1+0.25 4:C4@1+0.25 5:A2~@1.5+0.25 6:A4@2+1 7:E4@2+1 8:C4@2+1 / Bar 7: Sum 12 1:D3@0+2 2:A4@1+0.25 3:F4@1+0.25 4:D4@1+0.25 5:A4@2+0.333 6:F4@2+0.333 7:D4@2+0.333 / Bar 8: Sum 12 1:G2@0+1 2:E4@1+0.25 3:C4@1+0.25 4:A3@1+0.25 5:A2@1+1 6:F4@2+0.75 7:D4@2+0.75 8:B3@2+0.75 9:B2@2+1 / Bar 9: Sum 12 2 1:C3@0+1 10:G4@1+0.25 11:E4@1+0.25 12:C4@1+0.25 18:G4@2+1 19:E4@2+1 20:C4@2+1 | Inst 2 2:C6@0+1.5 16:C6~@1.5+0.25 21:A5@2+1 | Sum 12 5 3:C3@0+1 13:G4@1+0.25 14:E4@1+0.25 15:C4@1+0.25 22:G4@2+1 23:E4@2+1 24:C4@2+1 | Inst 5 4:C3@0+3 | Inst 5 2 5:C6@0+2 6:G5@0+3 7:E5@0+3 8:C4@0+3 25:C6~@2+0.75 | Inst 2 2 9:C5@0+1.5 17:C5~@1.5+0.25 26:A4@2+1 / Bar 10: Sum 12 2 1:A2@0+1 10:A2~@1+0.25 11:A4@1+0.25 12:E4@1+0.25 13:C4@1+0.25 18:A4@2+1 19:E4@2+1 20:C4@2+1 | Inst 2 2:C6@0+3 | Sum 12 5 3:A2@0+1 14:A2~@1+0.25 15:A4@1+0.25 16:E4@1+0.25 17:C4@1+0.25 21:A4@2+1 22:E4@2+1 23:C4@2+1 | Inst 5 4:A2@0+3 | Inst 5 2 5:C6@0+2 6:E5@0+2 7:A5@0+3 8:A3@0+3 24:C6~@2+0.75 25:E5~@2+0.75 | Inst 2 2 9:C5@0+3 / Bar 11: Sum 12 2 1:D3@0+1.333 11:A4@1+0.25 12:F4@1+0.25 13:D4@1+0.25 17:A4@2+0.333 18:F4@2+0.333 19:D4@2+0.333 | Inst 2 2:C6~@0+3 | Sum 12 5 3:D3@0+1.333 14:A4@1+0.25 15:F4@1+0.25 16:D4@1+0.25 20:A4@2+0.333 21:F4@2+0.333 22:D4@2+0.333 | Inst 5 4:D3@0+3 | Inst 5 2 5:A5~@0+2 6:A3~@0+0.25 7:F5@0+2 8:D5@0+3 9:D4@0+3 23:A5~@2+0.5 24:F5~@2+0.75 | Inst 2 2 10:C5~@0+3 / Bar 12: Sum 12 2 1:G2@0+2 10:B4@1+0.25 11:G4@1+0.25 12:D4@1+0.25 18:G2~@2+0.667 19:B4@2+0.333 20:G4@2+0.333 21:D4@2+0.333 | Inst 2 2:D6@0+2 22:A5@2+1 | Sum 12 5 3:G2@0+2 13:B4@1+0.25 14:G4@1+0.25 15:D4@1+0.25 23:G2~@2+0.667 24:B4@2+0.333 25:G4@2+0.333 26:D4@2+0.333 | Inst 5 4:G2@0+1 16:G2~@1+0.25 17:A2@1+1 27:B2@2+1 | Inst 5 2 5:D5~@0+2 6:B5@0+2 7:G5@0+2 8:G3@0+2 28:D5~@2+0.75 29:B5~@2+0.75 30:G5~@2+0.75 31:G3~@2+0.75 | Inst 2 2 9:D5@0+2 32:A4@2+1 / Bar 13: Sum 12 3 1:C3@0+1 10:G4@1+0.25 11:E4@1+0.25 12:C4@1+0.25 18:G4@2+1 19:E4@2+1 20:C4@2+1 | Inst 2 2:C6@0+1.5 16:C6~@1.5+0.25 21:A5@2+1 | Sum 12 6 3:C3@0+1 13:G4@1+0.25 14:E4@1+0.25 15:C4@1+0.25 22:G4@2+1 23:E4@2+1 24:C4@2+1 | Inst 5 4:C3@0+3 | Inst 5 3 5:C6@0+2 6:G5@0+3 7:E5@0+3 8:C4@0+3 25:C6~@2+0.75 | Inst 2 2 9:C5@0+1.5 17:C5~@1.5+0.25 26:A4@2+1 / Bar 14: Sum 12 3 1:A2@0+1 10:A2~@1+0.25 11:A4@1+0.25 12:E4@1+0.25 13:C4@1+0.25 18:A4@2+1 19:E4@2+1 20:C4@2+1 | Inst 2 2:C6@0+3 | Sum 12 6 3:A2@0+1 14:A2~@1+0.25 15:A4@1+0.25 16:E4@1+0.25 17:C4@1+0.25 21:A4@2+1 22:E4@2+1 23:C4@2+1 | Inst 5 4:A2@0+3 | Inst 5 3 5:C6@0+2 6:E5@0+2 7:A5@0+3 8:A3@0+3 24:C6~@2+0.75 25:E5~@2+0.75 | Inst 2 2 9:C5@0+3 / Bar 15: Sum 12 3 1:D3@0+1.333 12:A4@1+0.25 13:F4@1+0.25 14:D4@1+0.25 18:A4@2+0.333 19:F4@2+0.333 20:D4@2+0.333 | Inst 2 2:C6~@0+2 21:D6@2+1 | Sum 12 6 3:D3@0+1.333 15:A4@1+0.25 16:F4@1+0.25 17:D4@1+0.25 22:A4@2+0.333 23:F4@2+0.333 24:D4@2+0.333 | Inst 5 4:A2~@0+0.25 5:D3@0+3 | Inst 5 3 6:A5~@0+2 7:A3~@0+0.25 8:F5@0+2 9:D5@0+3 10:D4@0+3 25:A5~@2+0.5 26:F5~@2+0.75 | Inst 2 2 11:C5~@0+2 27:D5@2+1 / Bar 16: Sum 12 3 1:G2@0+2 10:B4@1+0.25 11:G4@1+0.25 12:D4@1+0.25 18:G2~@2+0.667 19:B4@2+0.333 20:G4@2+0.333 21:D4@2+0.333 | Inst 2 2:A5@0+1.5 16:A5~@1.5+0.25 22:B5@2+1 | Sum 12 6 3:G2@0+2 13:B4@1+0.25 14:G4@1+0.25 15:D4@1+0.25 23:G2~@2+0.667 24:B4@2+0.333 25:G4@2+0.333 26:D4@2+0.333 | Inst 5 4:G3@0+3 | Inst 5 3 5:D5~@0+2 6:B5@0+2 7:G5@0+2 8:G3@0+2 27:D5~@2+0.75 28:B5~@2+0.75 29:G5~@2+0.75 30:G3~@2+0.75 | Inst 2 2 9:A4@0+1.5 17:A4~@1.5+0.25 31:B4@2+1 / Bar 17: Sum 12 4 1:C3@0+1 10:G4@1+0.25 11:E4@1+0.25 12:C4@1+0.25 16:G4@2+1 17:E4@2+1 18:C4@2+1 | Inst 2 2:C6@0+2 19:A5@2+1 | Sum 12 7 3:C3@0+1 13:G4@1+0.25 14:E4@1+0.25 15:C4@1+0.25 20:G4@2+1 21:E4@2+1 22:C4@2+1 | Inst 5 4:C3@0+3 | Inst 5 4 5:C6@0+2 6:G5@0+3 7:E5@0+3 8:C4@0+3 23:C6~@2+0.75 | Inst 2 2 9:C5@0+2 24:A4@2+1 / Bar 18: Sum 12 4 1:A2@0+1 10:A2~@1+0.25 11:A4@1+0.25 12:E4@1+0.25 13:C4@1+0.25 18:A4@2+1 19:E4@2+1 20:C4@2+1 | Inst 2 2:C6@0+2 21:C6~@2+0.25 28:E6@2.5+0.5 | Sum 12 7 3:A2@0+1 14:A2~@1+0.25 15:A4@1+0.25 16:E4@1+0.25 17:C4@1+0.25 22:A4@2+1 23:E4@2+1 24:C4@2+1 | Inst 5 4:A2@0+3 | Inst 5 4 5:C6@0+2 6:E5@0+2 7:A5@0+3 8:A3@0+3 25:C6~@2+0.75 26:E5~@2+0.75 | Inst 2 2 9:C5@0+2 27:C5~@2+0.25 29:E5@2.5+0.5 / Bar 19: Sum 12 4 1:D3@0+1.333 14:A4@1+0.25 15:F4@1+0.25 16:D4@1+0.25 20:A4@2+0.333 21:F4@2+0.333 22:D4@2+0.333 | Inst 2 2:E6~@0+0.25 3:D6@0+2 23:D6~@2+0.75 | Sum 12 7 4:D3@0+1.333 17:A4@1+0.25 18:F4@1+0.25 19:D4@1+0.25 24:A4@2+0.333 25:F4@2+0.333 26:D4@2+0.333 | Inst 5 5:A2~@0+0.25 6:D2@0+3 | Inst 5 4 7:A5~@0+2 8:A3~@0+0.25 9:F5@0+2 10:D5@0+3 11:D4@0+3 27:A5~@2+0.5 28:F5~@2+0.75 | Inst 2 2 12:E5~@0+0.25 13:D5@0+2 29:D5~@2+0.75 / Bar 20: Sum 12 4 1:G3@0+2 14:G3~@2+0.667 | Inst 2 2:G5@0+1 10:A5@1+1 15:B5@2+1 | Sum 12 7 3:G3@0+2 16:G3~@2+0.667 | Inst 5 4:G2@0+1 11:G2~@1+0.25 12:E2@1+1 17:D2@2+1 | Inst 5 4 5:D5~@0+2 6:B5@0+2 7:G5@0+2 8:G3@0+2 18:D5~@2+0.75 19:B5~@2+0.75 20:G5~@2+0.75 21:G3~@2+0.75 | Inst 2 2 9:G4@0+1 13:A4@1+1 22:B4@2+1 / Bar 21: Sum 12 4 1:C3@0+1 11:C3~@1+0.25 12:G4@1+0.25 13:E4@1+0.25 14:C4@1+0.25 19:G4@2+1 20:E4@2+1 21:C4@2+1 | Inst 2 2:C6@0+2 22:C6~@2+0.5 | Sum 12 7 3:C3@0+1 15:C3~@1+0.25 16:G4@1+0.25 17:E4@1+0.25 18:C4@1+0.25 23:G4@2+1 24:E4@2+1 25:C4@2+1 | Inst 5 4:D2~@0+0.25 5:C3@0+3 | Inst 5 5 6:C6@0+2 7:G5@0+3 8:E5@0+3 9:C4@0+3 26:C6~@2+0.75 | Inst 2 2 10:C5@0+2 27:C5~@2+0.5 / Bar 22: Sum 12 4 1:A2@0+1.5 8:A4@1+0.25 9:E4@1+0.25 10:C4@1+0.25 14:A2~@1.5+0.25 16:A4@2+1 17:E4@2+1 18:C4@2+1 | Inst 2 19:A5@2+1 | Sum 12 7 2:A2@0+1.5 11:A4@1+0.25 12:E4@1+0.25 13:C4@1+0.25 15:A2~@1.5+0.25 20:A4@2+1 21:E4@2+1 22:C4@2+1 | Inst 5 3:A2@0+2 23:G2@2+1 | Inst 5 5 4:C6@0+2 5:E5@0+2 6:A5@0+3 7:A3@0+3 24:C6~@2+0.75 25:E5~@2+0.75 | Inst 2 2 26:A4@2+1 / Bar 23: Sum 12 4 1:D3@0+2 12:A4@1+0.25 13:F4@1+0.25 14:D4@1+0.25 18:A4@2+0.333 19:F4@2+0.333 20:D4@2+0.333 | Inst 2 2:D6@0+3 | Sum 12 7 3:D3@0+2 15:A4@1+0.25 16:F4@1+0.25 17:D4@1+0.25 21:A4@2+0.333 22:F4@2+0.333 23:D4@2+0.333 | Inst 5 4:G2~@0+0.25 5:A2@0+3 | Inst 5 5 6:A5~@0+2 7:A3~@0+0.25 8:F5@0+2 9:D5@0+3 10:D4@0+3 24:A5~@2+0.5 25:F5~@2+0.75 | Inst 2 2 11:D5@0+3 / Bar 24: Sum 12 4 1:G2@0+1 11:E4@1+0.25 12:C4@1+0.25 13:A3@1+0.25 14:A2@1+1 21:F4@2+1 22:D4@2+1 23:B3@2+1 24:B2@2+1 | Inst 2 2:G6@0+1.333 15:E6@1+1 25:D6@2+1 | Sum 12 7 3:G2@0+1 16:E4@1+0.25 17:C4@1+0.25 18:A3@1+0.25 19:A2@1+1 26:F4@2+1 27:D4@2+1 28:B3@2+1 29:B2@2+1 | Inst 5 4:A2~@0+0.25 5:G2@0+3 | Inst 5 5 6:D5~@0+2 7:B5@0+2 8:G5@0+2 9:G3@0+2 30:D5~@2+0.75 31:B5~@2+0.75 32:G5~@2+0.75 33:G3~@2+0.75 | Inst 2 2 10:G5@0+1.333 20:E5@1+1 34:D5@2+1 / Bar 25: Sum 12 4 1:F4~@0+1 2:B3~@0+1 3:D4~@0+1.333 4:B2~@0+1.5 11:F4~@1+0.25 12:B3~@1+0.25 | Inst 2 5:D6~@0+3 | Sum 12 7 6:F4~@0+1 7:B3~@0+1 8:D4~@0+1.333 9:B2~@0+1.5 13:F4~@1+0.25 14:B3~@1+0.25 | Inst 2 2 10:D5~@0+3 / Bar 26: Inst 2 1:D6~@0+2 3:D6~@2+0.75 | Inst 2 2 2:D5~@0+2 4:D5~@2+0.75",
+        "motif": "Long C6 held then falling to A5 From bars 9 to 12.",
+        "theme": "Bar 9 tune: C5@0+1.5 A4@1.5+1.5 / Bar 9 bass: A2@0+3 / Bar 10 tune: C5@0+2 E5@2+1 / Bar 10 countermelody: A3@0+1.5 G3@1.5+1.5 / Bar 10 bass: F2@0+3 / Bar 11 tune: D5@0+2.5 / Bar 11 countermelody: B3@0+1 A3@1+1 G3@2+1 / Bar 11 bass: G2@0+3 / Bar 12 tune: G4@0+1 A4@1+1 B4@2+1 / Bar 12 countermelody: E4@0+3 / Bar 12 bass: E2@0+3 / Bar 13 tune: C5@0+2.5 / Bar 13 countermelody: E4@0+1.5 D4@1.5+1.5 / Bar 13 bass: A2@0+3 / Bar 14 tune: A4@0+2.5 / Bar 14 countermelody: C4@0+1.5 B3@1.5+1.5 / Bar 14 bass: D2@0+3 / Bar 15 tune: D5@0+3 / Bar 15 countermelody: A3@0+1.5 G#3@1.5+1.5 / Bar 15 bass: F2@0+1.5 E2@1.5+1.5 / Bar 16 tune: D5@0+1 C5@1+1 A4@2+1 / Bar 16 countermelody: E4@0+3 / Bar 16 bass: A2@0+3"
+      }
+    },
+    "reply": {
+      "status": "ok",
+      "answer": {
+        "adds": [
+          {
+            "art": "",
+            "bar": "9",
+            "dyn": "mp",
+            "events": "C5@0+1.5 A4@1.5+1.5",
+            "part": "Flute 1",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "9",
+            "dyn": "p",
+            "events": "A2@0+3",
+            "part": "Bassoon 2",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "9",
+            "dyn": "p",
+            "events": "E3@0+1 A3@1+0.5 C4@1.5+0.5 E4@2+1",
+            "part": "Harp",
+            "role": "figure"
+          },
+          {
+            "art": "",
+            "bar": "10",
+            "dyn": "mp",
+            "events": "C5@0+2 E5@2+1",
+            "part": "Flute 1",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "10",
+            "dyn": "p",
+            "events": "A3@0+1.5 G3@1.5+1.5",
+            "part": "Bassoon 1",
+            "role": "countermelody"
+          },
+          {
+            "art": "",
+            "bar": "10",
+            "dyn": "p",
+            "events": "F2@0+3",
+            "part": "Bassoon 2",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "10",
+            "dyn": "p",
+            "events": "F3@0+1 C4@1+1 A4@2+1",
+            "part": "Harp",
+            "role": "figure"
+          },
+          {
+            "art": "",
+            "bar": "11",
+            "dyn": "mp",
+            "events": "D5@0+2.5",
+            "part": "Flute 1",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "11",
+            "dyn": "p",
+            "events": "B3@0+1 A3@1+1 G3@2+1",
+            "part": "Bassoon 1",
+            "role": "countermelody"
+          },
+          {
+            "art": "",
+            "bar": "11",
+            "dyn": "p",
+            "events": "G2@0+3",
+            "part": "Bassoon 2",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "11",
+            "dyn": "p<mp",
+            "events": "G3@0+1 D4@1+1 B4@2+1",
+            "part": "Harp",
+            "role": "figure"
+          },
+          {
+            "art": "",
+            "bar": "12",
+            "dyn": "mp<mf",
+            "events": "G4@0+1 A4@1+1 B4@2+1",
+            "part": "Flute 1",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "12",
+            "dyn": "p",
+            "events": "E4@0+3",
+            "part": "Bassoon 1",
+            "role": "countermelody"
+          },
+          {
+            "art": "",
+            "bar": "12",
+            "dyn": "p",
+            "events": "E2@0+3",
+            "part": "Bassoon 2",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "12",
+            "dyn": "mp",
+            "events": "E3@0+1 G#3@1+1 B3@2+1",
+            "part": "Harp",
+            "role": "figure"
+          },
+          {
+            "art": "",
+            "bar": "13",
+            "dyn": "mf",
+            "events": "C5@0+2.5",
+            "part": "Flute 1",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "13",
+            "dyn": "mp",
+            "events": "E4@0+1.5 D4@1.5+1.5",
+            "part": "Bassoon 1",
+            "role": "countermelody"
+          },
+          {
+            "art": "",
+            "bar": "13",
+            "dyn": "mp",
+            "events": "A2@0+3",
+            "part": "Bassoon 2",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "13",
+            "dyn": "mp",
+            "events": "A3@0+1 C4@1+1 E4@2+1",
+            "part": "Harp",
+            "role": "figure"
+          },
+          {
+            "art": "",
+            "bar": "14",
+            "dyn": "mf",
+            "events": "A4@0+2.5",
+            "part": "Flute 1",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "14",
+            "dyn": "mp",
+            "events": "C4@0+1.5 B3@1.5+1.5",
+            "part": "Bassoon 1",
+            "role": "countermelody"
+          },
+          {
+            "art": "",
+            "bar": "14",
+            "dyn": "mp",
+            "events": "D2@0+3",
+            "part": "Bassoon 2",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "14",
+            "dyn": "mp",
+            "events": "D3@0+1 F3@1+1 A3@2+1",
+            "part": "Harp",
+            "role": "figure"
+          },
+          {
+            "art": "",
+            "bar": "15",
+            "dyn": "mf",
+            "events": "D5@0+3",
+            "part": "Flute 1",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "15",
+            "dyn": "mp",
+            "events": "A3@0+1.5 G#3@1.5+1.5",
+            "part": "Bassoon 1",
+            "role": "countermelody"
+          },
+          {
+            "art": "",
+            "bar": "15",
+            "dyn": "mp",
+            "events": "F2@0+1.5 E2@1.5+1.5",
+            "part": "Bassoon 2",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "15",
+            "dyn": "mp",
+            "events": "F3@0+0.75 C4@0.75+0.75 E3@1.5+0.75 B3@2.25+0.75",
+            "part": "Harp",
+            "role": "figure"
+          },
+          {
+            "art": "",
+            "bar": "16",
+            "dyn": "mf",
+            "events": "D5@0+1 C5@1+1 A4@2+1",
+            "part": "Flute 1",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "16",
+            "dyn": "mp",
+            "events": "E4@0+3",
+            "part": "Bassoon 1",
+            "role": "countermelody"
+          },
+          {
+            "art": "",
+            "bar": "16",
+            "dyn": "mp",
+            "events": "A2@0+3",
+            "part": "Bassoon 2",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "16",
+            "dyn": "mp",
+            "events": "E3@0+1 A3@1+1 C4@2+1",
+            "part": "Harp",
+            "role": "figure"
+          }
+        ],
+        "doubles": []
+      },
+      "sources": [],
+      "cached": false
+    },
+    "ms": 69006,
+    "thinking": [
+      {
+        "at": 7749,
+        "text": "Assigning orchestration for bars 9-16 to selected instruments while avoiding overlap with existing parts and interpreting prior composed material."
+      },
+      {
+        "at": 15244,
+        "text": "Mapping the three composed lines to the named instruments while resolving the missing bass assignment."
+      },
+      {
+        "at": 24839,
+        "text": "Resolving the bass instrument assignment and applying the no-duplicate-per-bar constraint for instrument selection."
+      },
+      {
+        "at": 33074,
+        "text": "Validating instrument ranges and assigning bass to harp while keeping three layers and no duplicate per bar."
+      },
+      {
+        "at": 44399,
+        "text": "Resolving harp pedal conflicts for G versus G# across bars and finalizing arpeggio timing."
+      },
+      {
+        "at": 54548,
+        "text": "Assigning Bassoon2 to the bass role to free the harp for arpeggios while avoiding pitch doubling."
+      },
+      {
+        "at": 69006,
+        "text": "Validating pitch choices and dynamics across bars while preventing octave doubling and timing gaps."
+      }
+    ],
+    "version": "arrange-16",
+    "model": "muse-spark-1.3"
+  },
+  {
+    "shape": "arrange",
+    "input": {
+      "piece": {
+        "title": "Ashen Lullaby",
+        "composer": null,
+        "instrument": "Piccolo"
+      },
+      "fifths": 0,
+      "time": "3/4",
+      "written": [
+        {
+          "bar": "1",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 0
+        },
+        {
+          "bar": "2",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 1
+        },
+        {
+          "bar": "3",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 2
+        },
+        {
+          "bar": "4",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 3
+        },
+        {
+          "bar": "5",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 4
+        },
+        {
+          "bar": "6",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 5
+        },
+        {
+          "bar": "7",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 6
+        },
+        {
+          "bar": "8",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 7
+        },
+        {
+          "bar": "9",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 8
+        },
+        {
+          "bar": "10",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 9
+        },
+        {
+          "bar": "11",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 10
+        },
+        {
+          "bar": "12",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 11
+        },
+        {
+          "bar": "13",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 12
+        },
+        {
+          "bar": "14",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 13
+        },
+        {
+          "bar": "15",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 14
+        },
+        {
+          "bar": "16",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 15
+        },
+        {
+          "bar": "17",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 16
+        },
+        {
+          "bar": "18",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 17
+        },
+        {
+          "bar": "19",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 18
+        },
+        {
+          "bar": "20",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 19
+        },
+        {
+          "bar": "21",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 20
+        },
+        {
+          "bar": "22",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 21
+        },
+        {
+          "bar": "23",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 22
+        },
+        {
+          "bar": "24",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 23
+        },
+        {
+          "bar": "25",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 24
+        },
+        {
+          "bar": "26",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 25
+        }
+      ],
+      "returns": [],
+      "lines": [
+        "Piccolo"
+      ],
+      "moreBars": 0,
+      "ask": "The mood I want: sad.",
+      "reading": null,
+      "instruments": [
+        "Piccolo",
+        "Flute 1",
+        "Flute 2",
+        "Oboe 1",
+        "Oboe 2",
+        "Clarinet 1",
+        "Clarinet 2",
+        "Bassoon 1",
+        "Bassoon 2",
+        "Horn 1",
+        "Horn 2",
+        "Horn 3",
+        "Horn 4",
+        "Trumpet 1",
+        "Trumpet 2",
+        "Trumpet 3",
+        "Trombone 1",
+        "Trombone 2",
+        "Bass Trombone",
+        "Tuba",
+        "Timpani",
+        "Glockenspiel",
+        "Snare Drum",
+        "Bass Drum",
+        "Cymbals",
+        "Harp",
+        "Violin I",
+        "Violin II",
+        "Viola",
+        "Cello",
+        "Double Bass"
+      ],
+      "where": "inside",
+      "tracks": [],
+      "answers": [],
+      "cues": [],
+      "freedom": 2,
+      "chosen": {
+        "fifths": 0,
+        "idea": "Oboe carries whole lullaby in A minor over descending bass, answered by strings",
+        "motif": {
+          "from": "9",
+          "to": "12",
+          "what": "Long C6 held then falling to A5"
+        },
+        "name": "Ashen Lullaby",
+        "qpm": 72,
+        "time": "3/4",
+        "why": [
+          {
+            "chords": "Am | F | Dm | E7 | F | Dm | Am | E7",
+            "dynamics": "pp growing to mp",
+            "from": "1",
+            "principle": "Separate layers by register rhythm and level",
+            "to": "8",
+            "variation": "Keep tune plain in order",
+            "what": "Oboe 1 tune, Viola rocking figure, Cello bass"
+          },
+          {
+            "chords": "Am | F | G | E7 | Am | Dm | F E7 | Am",
+            "dynamics": "mp growing to mf",
+            "from": "9",
+            "principle": "Pass phrase between colours to travel",
+            "to": "16",
+            "variation": "Sequence down with suspensions",
+            "what": "Flute 1 tune, Bassoon answers, Harp arpeggios"
+          },
+          {
+            "chords": "F | E7 | Am | Dm | Bb E7 | Am | Bm7b5 E7 | Am",
+            "dynamics": "mf growing to ff",
+            "from": "17",
+            "principle": "Add weight slowly for one climax",
+            "to": "24",
+            "variation": "Stretch rhythm toward high peak",
+            "what": "Violin I peaks, Horn pad, Timpani roots"
+          },
+          {
+            "chords": "Dm E7 | Am",
+            "dynamics": "ff dying to pp",
+            "from": "25",
+            "principle": "Hold tonic pedal to rest after arrival",
+            "to": "26",
+            "variation": "Strip to skeleton to close",
+            "what": "Cello and Oboe 1 settle, Viola holds"
+          }
+        ]
+      },
+      "window": {
+        "from": "17",
+        "to": "24"
+      },
+      "earlier": "Flute 1: D5@0+1 C5@1+1 A4@2+1 / Bassoon 1: E4@0+3 / Bassoon 2: A2@0+3 / Harp: E3@0+1 A3@1+1 C4@2+1",
+      "seed": {
+        "tune": "Bar 1: Sum 12 1:C3@0+1 2:G4@1+0.25 3:E4@1+0.25 4:C4@1+0.25 5:G4@2+1 6:E4@2+1 7:C4@2+1 / Bar 2: Sum 12 1:A2@0+1 2:A2~@1+0.25 3:A4@1+0.25 4:E4@1+0.25 5:C4@1+0.25 6:A4@2+1 7:E4@2+1 8:C4@2+1 / Bar 3: Sum 12 1:D3@0+1.333 2:A4@1+0.25 3:F4@1+0.25 4:D4@1+0.25 5:A4@2+0.333 6:F4@2+0.333 7:D4@2+0.333 / Bar 4: Sum 12 1:G3@0+2 2:G3~@2+0.667 / Bar 5: Sum 12 1:C3@0+1 2:C3~@1+0.25 3:G4@1+0.25 4:E4@1+0.25 5:C4@1+0.25 6:G4@2+1 7:E4@2+1 8:C4@2+1 / Bar 6: Sum 12 1:A2@0+1.5 2:A4@1+0.25 3:E4@1+0.25 4:C4@1+0.25 5:A2~@1.5+0.25 6:A4@2+1 7:E4@2+1 8:C4@2+1 / Bar 7: Sum 12 1:D3@0+2 2:A4@1+0.25 3:F4@1+0.25 4:D4@1+0.25 5:A4@2+0.333 6:F4@2+0.333 7:D4@2+0.333 / Bar 8: Sum 12 1:G2@0+1 2:E4@1+0.25 3:C4@1+0.25 4:A3@1+0.25 5:A2@1+1 6:F4@2+0.75 7:D4@2+0.75 8:B3@2+0.75 9:B2@2+1 / Bar 9: Sum 12 2 1:C3@0+1 10:G4@1+0.25 11:E4@1+0.25 12:C4@1+0.25 18:G4@2+1 19:E4@2+1 20:C4@2+1 | Inst 2 2:C6@0+1.5 16:C6~@1.5+0.25 21:A5@2+1 | Sum 12 5 3:C3@0+1 13:G4@1+0.25 14:E4@1+0.25 15:C4@1+0.25 22:G4@2+1 23:E4@2+1 24:C4@2+1 | Inst 5 4:C3@0+3 | Inst 5 2 5:C6@0+2 6:G5@0+3 7:E5@0+3 8:C4@0+3 25:C6~@2+0.75 | Inst 2 2 9:C5@0+1.5 17:C5~@1.5+0.25 26:A4@2+1 / Bar 10: Sum 12 2 1:A2@0+1 10:A2~@1+0.25 11:A4@1+0.25 12:E4@1+0.25 13:C4@1+0.25 18:A4@2+1 19:E4@2+1 20:C4@2+1 | Inst 2 2:C6@0+3 | Sum 12 5 3:A2@0+1 14:A2~@1+0.25 15:A4@1+0.25 16:E4@1+0.25 17:C4@1+0.25 21:A4@2+1 22:E4@2+1 23:C4@2+1 | Inst 5 4:A2@0+3 | Inst 5 2 5:C6@0+2 6:E5@0+2 7:A5@0+3 8:A3@0+3 24:C6~@2+0.75 25:E5~@2+0.75 | Inst 2 2 9:C5@0+3 / Bar 11: Sum 12 2 1:D3@0+1.333 11:A4@1+0.25 12:F4@1+0.25 13:D4@1+0.25 17:A4@2+0.333 18:F4@2+0.333 19:D4@2+0.333 | Inst 2 2:C6~@0+3 | Sum 12 5 3:D3@0+1.333 14:A4@1+0.25 15:F4@1+0.25 16:D4@1+0.25 20:A4@2+0.333 21:F4@2+0.333 22:D4@2+0.333 | Inst 5 4:D3@0+3 | Inst 5 2 5:A5~@0+2 6:A3~@0+0.25 7:F5@0+2 8:D5@0+3 9:D4@0+3 23:A5~@2+0.5 24:F5~@2+0.75 | Inst 2 2 10:C5~@0+3 / Bar 12: Sum 12 2 1:G2@0+2 10:B4@1+0.25 11:G4@1+0.25 12:D4@1+0.25 18:G2~@2+0.667 19:B4@2+0.333 20:G4@2+0.333 21:D4@2+0.333 | Inst 2 2:D6@0+2 22:A5@2+1 | Sum 12 5 3:G2@0+2 13:B4@1+0.25 14:G4@1+0.25 15:D4@1+0.25 23:G2~@2+0.667 24:B4@2+0.333 25:G4@2+0.333 26:D4@2+0.333 | Inst 5 4:G2@0+1 16:G2~@1+0.25 17:A2@1+1 27:B2@2+1 | Inst 5 2 5:D5~@0+2 6:B5@0+2 7:G5@0+2 8:G3@0+2 28:D5~@2+0.75 29:B5~@2+0.75 30:G5~@2+0.75 31:G3~@2+0.75 | Inst 2 2 9:D5@0+2 32:A4@2+1 / Bar 13: Sum 12 3 1:C3@0+1 10:G4@1+0.25 11:E4@1+0.25 12:C4@1+0.25 18:G4@2+1 19:E4@2+1 20:C4@2+1 | Inst 2 2:C6@0+1.5 16:C6~@1.5+0.25 21:A5@2+1 | Sum 12 6 3:C3@0+1 13:G4@1+0.25 14:E4@1+0.25 15:C4@1+0.25 22:G4@2+1 23:E4@2+1 24:C4@2+1 | Inst 5 4:C3@0+3 | Inst 5 3 5:C6@0+2 6:G5@0+3 7:E5@0+3 8:C4@0+3 25:C6~@2+0.75 | Inst 2 2 9:C5@0+1.5 17:C5~@1.5+0.25 26:A4@2+1 / Bar 14: Sum 12 3 1:A2@0+1 10:A2~@1+0.25 11:A4@1+0.25 12:E4@1+0.25 13:C4@1+0.25 18:A4@2+1 19:E4@2+1 20:C4@2+1 | Inst 2 2:C6@0+3 | Sum 12 6 3:A2@0+1 14:A2~@1+0.25 15:A4@1+0.25 16:E4@1+0.25 17:C4@1+0.25 21:A4@2+1 22:E4@2+1 23:C4@2+1 | Inst 5 4:A2@0+3 | Inst 5 3 5:C6@0+2 6:E5@0+2 7:A5@0+3 8:A3@0+3 24:C6~@2+0.75 25:E5~@2+0.75 | Inst 2 2 9:C5@0+3 / Bar 15: Sum 12 3 1:D3@0+1.333 12:A4@1+0.25 13:F4@1+0.25 14:D4@1+0.25 18:A4@2+0.333 19:F4@2+0.333 20:D4@2+0.333 | Inst 2 2:C6~@0+2 21:D6@2+1 | Sum 12 6 3:D3@0+1.333 15:A4@1+0.25 16:F4@1+0.25 17:D4@1+0.25 22:A4@2+0.333 23:F4@2+0.333 24:D4@2+0.333 | Inst 5 4:A2~@0+0.25 5:D3@0+3 | Inst 5 3 6:A5~@0+2 7:A3~@0+0.25 8:F5@0+2 9:D5@0+3 10:D4@0+3 25:A5~@2+0.5 26:F5~@2+0.75 | Inst 2 2 11:C5~@0+2 27:D5@2+1 / Bar 16: Sum 12 3 1:G2@0+2 10:B4@1+0.25 11:G4@1+0.25 12:D4@1+0.25 18:G2~@2+0.667 19:B4@2+0.333 20:G4@2+0.333 21:D4@2+0.333 | Inst 2 2:A5@0+1.5 16:A5~@1.5+0.25 22:B5@2+1 | Sum 12 6 3:G2@0+2 13:B4@1+0.25 14:G4@1+0.25 15:D4@1+0.25 23:G2~@2+0.667 24:B4@2+0.333 25:G4@2+0.333 26:D4@2+0.333 | Inst 5 4:G3@0+3 | Inst 5 3 5:D5~@0+2 6:B5@0+2 7:G5@0+2 8:G3@0+2 27:D5~@2+0.75 28:B5~@2+0.75 29:G5~@2+0.75 30:G3~@2+0.75 | Inst 2 2 9:A4@0+1.5 17:A4~@1.5+0.25 31:B4@2+1 / Bar 17: Sum 12 4 1:C3@0+1 10:G4@1+0.25 11:E4@1+0.25 12:C4@1+0.25 16:G4@2+1 17:E4@2+1 18:C4@2+1 | Inst 2 2:C6@0+2 19:A5@2+1 | Sum 12 7 3:C3@0+1 13:G4@1+0.25 14:E4@1+0.25 15:C4@1+0.25 20:G4@2+1 21:E4@2+1 22:C4@2+1 | Inst 5 4:C3@0+3 | Inst 5 4 5:C6@0+2 6:G5@0+3 7:E5@0+3 8:C4@0+3 23:C6~@2+0.75 | Inst 2 2 9:C5@0+2 24:A4@2+1 / Bar 18: Sum 12 4 1:A2@0+1 10:A2~@1+0.25 11:A4@1+0.25 12:E4@1+0.25 13:C4@1+0.25 18:A4@2+1 19:E4@2+1 20:C4@2+1 | Inst 2 2:C6@0+2 21:C6~@2+0.25 28:E6@2.5+0.5 | Sum 12 7 3:A2@0+1 14:A2~@1+0.25 15:A4@1+0.25 16:E4@1+0.25 17:C4@1+0.25 22:A4@2+1 23:E4@2+1 24:C4@2+1 | Inst 5 4:A2@0+3 | Inst 5 4 5:C6@0+2 6:E5@0+2 7:A5@0+3 8:A3@0+3 25:C6~@2+0.75 26:E5~@2+0.75 | Inst 2 2 9:C5@0+2 27:C5~@2+0.25 29:E5@2.5+0.5 / Bar 19: Sum 12 4 1:D3@0+1.333 14:A4@1+0.25 15:F4@1+0.25 16:D4@1+0.25 20:A4@2+0.333 21:F4@2+0.333 22:D4@2+0.333 | Inst 2 2:E6~@0+0.25 3:D6@0+2 23:D6~@2+0.75 | Sum 12 7 4:D3@0+1.333 17:A4@1+0.25 18:F4@1+0.25 19:D4@1+0.25 24:A4@2+0.333 25:F4@2+0.333 26:D4@2+0.333 | Inst 5 5:A2~@0+0.25 6:D2@0+3 | Inst 5 4 7:A5~@0+2 8:A3~@0+0.25 9:F5@0+2 10:D5@0+3 11:D4@0+3 27:A5~@2+0.5 28:F5~@2+0.75 | Inst 2 2 12:E5~@0+0.25 13:D5@0+2 29:D5~@2+0.75 / Bar 20: Sum 12 4 1:G3@0+2 14:G3~@2+0.667 | Inst 2 2:G5@0+1 10:A5@1+1 15:B5@2+1 | Sum 12 7 3:G3@0+2 16:G3~@2+0.667 | Inst 5 4:G2@0+1 11:G2~@1+0.25 12:E2@1+1 17:D2@2+1 | Inst 5 4 5:D5~@0+2 6:B5@0+2 7:G5@0+2 8:G3@0+2 18:D5~@2+0.75 19:B5~@2+0.75 20:G5~@2+0.75 21:G3~@2+0.75 | Inst 2 2 9:G4@0+1 13:A4@1+1 22:B4@2+1 / Bar 21: Sum 12 4 1:C3@0+1 11:C3~@1+0.25 12:G4@1+0.25 13:E4@1+0.25 14:C4@1+0.25 19:G4@2+1 20:E4@2+1 21:C4@2+1 | Inst 2 2:C6@0+2 22:C6~@2+0.5 | Sum 12 7 3:C3@0+1 15:C3~@1+0.25 16:G4@1+0.25 17:E4@1+0.25 18:C4@1+0.25 23:G4@2+1 24:E4@2+1 25:C4@2+1 | Inst 5 4:D2~@0+0.25 5:C3@0+3 | Inst 5 5 6:C6@0+2 7:G5@0+3 8:E5@0+3 9:C4@0+3 26:C6~@2+0.75 | Inst 2 2 10:C5@0+2 27:C5~@2+0.5 / Bar 22: Sum 12 4 1:A2@0+1.5 8:A4@1+0.25 9:E4@1+0.25 10:C4@1+0.25 14:A2~@1.5+0.25 16:A4@2+1 17:E4@2+1 18:C4@2+1 | Inst 2 19:A5@2+1 | Sum 12 7 2:A2@0+1.5 11:A4@1+0.25 12:E4@1+0.25 13:C4@1+0.25 15:A2~@1.5+0.25 20:A4@2+1 21:E4@2+1 22:C4@2+1 | Inst 5 3:A2@0+2 23:G2@2+1 | Inst 5 5 4:C6@0+2 5:E5@0+2 6:A5@0+3 7:A3@0+3 24:C6~@2+0.75 25:E5~@2+0.75 | Inst 2 2 26:A4@2+1 / Bar 23: Sum 12 4 1:D3@0+2 12:A4@1+0.25 13:F4@1+0.25 14:D4@1+0.25 18:A4@2+0.333 19:F4@2+0.333 20:D4@2+0.333 | Inst 2 2:D6@0+3 | Sum 12 7 3:D3@0+2 15:A4@1+0.25 16:F4@1+0.25 17:D4@1+0.25 21:A4@2+0.333 22:F4@2+0.333 23:D4@2+0.333 | Inst 5 4:G2~@0+0.25 5:A2@0+3 | Inst 5 5 6:A5~@0+2 7:A3~@0+0.25 8:F5@0+2 9:D5@0+3 10:D4@0+3 24:A5~@2+0.5 25:F5~@2+0.75 | Inst 2 2 11:D5@0+3 / Bar 24: Sum 12 4 1:G2@0+1 11:E4@1+0.25 12:C4@1+0.25 13:A3@1+0.25 14:A2@1+1 21:F4@2+1 22:D4@2+1 23:B3@2+1 24:B2@2+1 | Inst 2 2:G6@0+1.333 15:E6@1+1 25:D6@2+1 | Sum 12 7 3:G2@0+1 16:E4@1+0.25 17:C4@1+0.25 18:A3@1+0.25 19:A2@1+1 26:F4@2+1 27:D4@2+1 28:B3@2+1 29:B2@2+1 | Inst 5 4:A2~@0+0.25 5:G2@0+3 | Inst 5 5 6:D5~@0+2 7:B5@0+2 8:G5@0+2 9:G3@0+2 30:D5~@2+0.75 31:B5~@2+0.75 32:G5~@2+0.75 33:G3~@2+0.75 | Inst 2 2 10:G5@0+1.333 20:E5@1+1 34:D5@2+1 / Bar 25: Sum 12 4 1:F4~@0+1 2:B3~@0+1 3:D4~@0+1.333 4:B2~@0+1.5 11:F4~@1+0.25 12:B3~@1+0.25 | Inst 2 5:D6~@0+3 | Sum 12 7 6:F4~@0+1 7:B3~@0+1 8:D4~@0+1.333 9:B2~@0+1.5 13:F4~@1+0.25 14:B3~@1+0.25 | Inst 2 2 10:D5~@0+3 / Bar 26: Inst 2 1:D6~@0+2 3:D6~@2+0.75 | Inst 2 2 2:D5~@0+2 4:D5~@2+0.75",
+        "motif": "Long C6 held then falling to A5 From bars 9 to 12.",
+        "theme": "Bar 17 tune: A4@0+2.5 / Bar 17 countermelody: C4@0+1 A3@1+1 C4@2+1 / Bar 17 bass: F2@0+3 / Bar 18 tune: B4@0+2.5 / Bar 18 countermelody: C4@0+1 B3@1+1 G#3@2+1 / Bar 18 bass: E2@0+3 / Bar 19 tune: C5@0+2.5 / Bar 19 countermelody: A3@0+1.5 G3@1.5+1.5 / Bar 19 bass: A2@0+3 / Bar 20 tune: D5@0+2.5 / Bar 20 countermelody: F4@0+1.5 E4@1.5+1.5 / Bar 20 bass: D2@0+3 / Bar 21 tune: G5@0+1.5 E5@1.5+1.5 / Bar 21 countermelody: D4@0+3 / Bar 21 bass: Bb2@0+1.5 E2@1.5+1.5 / Bar 22 tune: A4@0+2.5 / Bar 22 countermelody: C4@0+1.5 B3@1.5+1.5 / Bar 22 bass: A2@0+3 / Bar 23 tune: B4@0+1.5 C5@1.5+1.5 / Bar 23 countermelody: A3@0+3 / Bar 23 bass: B2@0+1.5 E2@1.5+1.5 / Bar 24 tune: A4@0+2.5 / Bar 24 countermelody: E4@0+2 / Bar 24 bass: A2@0+3"
+      }
+    },
+    "reply": {
+      "status": "ok",
+      "answer": {
+        "adds": [
+          {
+            "art": "",
+            "bar": "17",
+            "dyn": "mf",
+            "events": "A4@0+2.5",
+            "part": "Violin I",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "18",
+            "dyn": "mf",
+            "events": "B4@0+2.5",
+            "part": "Violin I",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "19",
+            "dyn": "f",
+            "events": "C5@0+2.5",
+            "part": "Violin I",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "20",
+            "dyn": "f",
+            "events": "D5@0+2.5",
+            "part": "Violin I",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "21",
+            "dyn": "f",
+            "events": "G5@0+1.5 E5@1.5+1.5",
+            "part": "Violin I",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "22",
+            "dyn": "f",
+            "events": "A4@0+2.5",
+            "part": "Violin I",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "23",
+            "dyn": "ff",
+            "events": "B4@0+1.5 C5@1.5+1.5",
+            "part": "Violin I",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "24",
+            "dyn": "ff",
+            "events": "A4@0+2.5",
+            "part": "Violin I",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "17",
+            "dyn": "mp",
+            "events": "C4@0+1 A3@1+1 C4@2+1",
+            "part": "Horn 1",
+            "role": "countermelody"
+          },
+          {
+            "art": "",
+            "bar": "18",
+            "dyn": "mp",
+            "events": "C4@0+1 B3@1+1 G#3@2+1",
+            "part": "Horn 1",
+            "role": "countermelody"
+          },
+          {
+            "art": "",
+            "bar": "19",
+            "dyn": "mf",
+            "events": "A3@0+1.5 G3@1.5+1.5",
+            "part": "Horn 1",
+            "role": "countermelody"
+          },
+          {
+            "art": "",
+            "bar": "20",
+            "dyn": "mf",
+            "events": "F4@0+1.5 E4@1.5+1.5",
+            "part": "Horn 1",
+            "role": "countermelody"
+          },
+          {
+            "art": "",
+            "bar": "21",
+            "dyn": "mf",
+            "events": "D4@0+3",
+            "part": "Horn 1",
+            "role": "countermelody"
+          },
+          {
+            "art": "",
+            "bar": "22",
+            "dyn": "mf",
+            "events": "C4@0+1.5 B3@1.5+1.5",
+            "part": "Horn 1",
+            "role": "countermelody"
+          },
+          {
+            "art": "",
+            "bar": "23",
+            "dyn": "f",
+            "events": "A3@0+3",
+            "part": "Horn 1",
+            "role": "countermelody"
+          },
+          {
+            "art": "",
+            "bar": "24",
+            "dyn": "f",
+            "events": "E4@0+2",
+            "part": "Horn 1",
+            "role": "countermelody"
+          },
+          {
+            "art": "",
+            "bar": "17",
+            "dyn": "mp",
+            "events": "A3@0+1 C4@1+1 A3@2+1",
+            "part": "Horn 2",
+            "role": "harmony"
+          },
+          {
+            "art": "",
+            "bar": "18",
+            "dyn": "mp",
+            "events": "G#3@0+1 D4@1+1 B3@2+1",
+            "part": "Horn 2",
+            "role": "harmony"
+          },
+          {
+            "art": "",
+            "bar": "19",
+            "dyn": "mf",
+            "events": "C4@0+3",
+            "part": "Horn 2",
+            "role": "harmony"
+          },
+          {
+            "art": "",
+            "bar": "20",
+            "dyn": "mf",
+            "events": "A3@0+3",
+            "part": "Horn 2",
+            "role": "harmony"
+          },
+          {
+            "art": "",
+            "bar": "21",
+            "dyn": "mf",
+            "events": "Bb3@0+1.5 B3@1.5+1.5",
+            "part": "Horn 2",
+            "role": "harmony"
+          },
+          {
+            "art": "",
+            "bar": "22",
+            "dyn": "mf",
+            "events": "E4@0+3",
+            "part": "Horn 2",
+            "role": "harmony"
+          },
+          {
+            "art": "",
+            "bar": "23",
+            "dyn": "f",
+            "events": "D4@0+3",
+            "part": "Horn 2",
+            "role": "harmony"
+          },
+          {
+            "art": "",
+            "bar": "24",
+            "dyn": "f",
+            "events": "C4@0+3",
+            "part": "Horn 2",
+            "role": "harmony"
+          },
+          {
+            "art": "",
+            "bar": "17",
+            "dyn": "mp",
+            "events": "F3@0+3",
+            "part": "Horn 3",
+            "role": "harmony"
+          },
+          {
+            "art": "",
+            "bar": "18",
+            "dyn": "mp",
+            "events": "E3@0+3",
+            "part": "Horn 3",
+            "role": "harmony"
+          },
+          {
+            "art": "",
+            "bar": "19",
+            "dyn": "mf",
+            "events": "E3@0+3",
+            "part": "Horn 3",
+            "role": "harmony"
+          },
+          {
+            "art": "",
+            "bar": "20",
+            "dyn": "mf",
+            "events": "D3@0+3",
+            "part": "Horn 3",
+            "role": "harmony"
+          },
+          {
+            "art": "",
+            "bar": "21",
+            "dyn": "mf",
+            "events": "F3@0+1.5 G#3@1.5+1.5",
+            "part": "Horn 3",
+            "role": "harmony"
+          },
+          {
+            "art": "",
+            "bar": "22",
+            "dyn": "mf",
+            "events": "E3@0+3",
+            "part": "Horn 3",
+            "role": "harmony"
+          },
+          {
+            "art": "",
+            "bar": "23",
+            "dyn": "f",
+            "events": "F3@0+1.5 E3@1.5+1.5",
+            "part": "Horn 3",
+            "role": "harmony"
+          },
+          {
+            "art": "",
+            "bar": "24",
+            "dyn": "f",
+            "events": "A3@0+3",
+            "part": "Horn 3",
+            "role": "harmony"
+          },
+          {
+            "art": "",
+            "bar": "17",
+            "dyn": "mp",
+            "events": "F2@0+3",
+            "part": "Horn 4",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "18",
+            "dyn": "mp",
+            "events": "E2@0+3",
+            "part": "Horn 4",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "19",
+            "dyn": "mf",
+            "events": "A2@0+3",
+            "part": "Horn 4",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "20",
+            "dyn": "mf",
+            "events": "D2@0+3",
+            "part": "Horn 4",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "21",
+            "dyn": "mf",
+            "events": "Bb2@0+1.5 E2@1.5+1.5",
+            "part": "Horn 4",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "22",
+            "dyn": "mf",
+            "events": "A2@0+3",
+            "part": "Horn 4",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "23",
+            "dyn": "f",
+            "events": "B2@0+1.5 E2@1.5+1.5",
+            "part": "Horn 4",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "24",
+            "dyn": "f",
+            "events": "A2@0+3",
+            "part": "Horn 4",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "17",
+            "dyn": "mp",
+            "events": "F2@0+1",
+            "part": "Timpani",
+            "role": "rhythm"
+          },
+          {
+            "art": "",
+            "bar": "18",
+            "dyn": "mp",
+            "events": "E2@0+1",
+            "part": "Timpani",
+            "role": "rhythm"
+          },
+          {
+            "art": "",
+            "bar": "19",
+            "dyn": "mf",
+            "events": "A2@0+1",
+            "part": "Timpani",
+            "role": "rhythm"
+          },
+          {
+            "art": "",
+            "bar": "20",
+            "dyn": "mf",
+            "events": "D3@0+1",
+            "part": "Timpani",
+            "role": "rhythm"
+          },
+          {
+            "art": "",
+            "bar": "21",
+            "dyn": "mf",
+            "events": "Bb2@0+1 E2@1.5+1",
+            "part": "Timpani",
+            "role": "rhythm"
+          },
+          {
+            "art": "",
+            "bar": "22",
+            "dyn": "mf",
+            "events": "A2@0+1",
+            "part": "Timpani",
+            "role": "rhythm"
+          },
+          {
+            "art": "",
+            "bar": "23",
+            "dyn": "f",
+            "events": "B2@0+1 E2@1.5+1",
+            "part": "Timpani",
+            "role": "rhythm"
+          },
+          {
+            "art": "",
+            "bar": "24",
+            "dyn": "f",
+            "events": "A2@0+2",
+            "part": "Timpani",
+            "role": "rhythm"
+          }
+        ],
+        "doubles": []
+      },
+      "sources": [],
+      "cached": false
+    },
+    "ms": 128248,
+    "thinking": [
+      {
+        "at": 9037,
+        "text": "Mapping orchestration plan to JSON structure for bars 17-24 with dynamics and instrument assignments."
+      },
+      {
+        "at": 15965,
+        "text": "Resolving instrument assignment conflicts for bass notes outside the timpani range."
+      },
+      {
+        "at": 23075,
+        "text": "Mapping the tune, countermelody, and bass lines to the planned violin, horn, and timpani parts."
+      },
+      {
+        "at": 31628,
+        "text": "Resolving a timpani range conflict on D2 while keeping the note-for-note pitch constraint."
+      },
+      {
+        "at": 39094,
+        "text": "Reassigning the out-of-range bass note to horn while keeping timpani within its pitch bounds."
+      },
+      {
+        "at": 46561,
+        "text": "Evaluating multiple doubles entries and octave shifts to keep bass within timpani bounds."
+      },
+      {
+        "at": 55199,
+        "text": "Assigning bass to horn and countermelody to another horn to satisfy pitch bounds and exact events."
+      },
+      {
+        "at": 66386,
+        "text": "Designing a horn pad with chordal voicing and dynamics while keeping timpani as rhythmic hits."
+      },
+      {
+        "at": 76798,
+        "text": "Refining horn voicings to avoid unison with the countermelody while fitting chord tones."
+      },
+      {
+        "at": 128247,
+        "text": "Extending voicing adjustments to prevent unison in the next bar while keeping chord tones."
+      }
+    ],
+    "version": "arrange-16",
+    "model": "muse-spark-1.3"
+  },
+  {
+    "shape": "arrange",
+    "input": {
+      "piece": {
+        "title": "Ashen Lullaby",
+        "composer": null,
+        "instrument": "Piccolo"
+      },
+      "fifths": 0,
+      "time": "3/4",
+      "written": [
+        {
+          "bar": "1",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 0
+        },
+        {
+          "bar": "2",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 1
+        },
+        {
+          "bar": "3",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 2
+        },
+        {
+          "bar": "4",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 3
+        },
+        {
+          "bar": "5",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 4
+        },
+        {
+          "bar": "6",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 5
+        },
+        {
+          "bar": "7",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 6
+        },
+        {
+          "bar": "8",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 7
+        },
+        {
+          "bar": "9",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 8
+        },
+        {
+          "bar": "10",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 9
+        },
+        {
+          "bar": "11",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 10
+        },
+        {
+          "bar": "12",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 11
+        },
+        {
+          "bar": "13",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 12
+        },
+        {
+          "bar": "14",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 13
+        },
+        {
+          "bar": "15",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 14
+        },
+        {
+          "bar": "16",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 15
+        },
+        {
+          "bar": "17",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 16
+        },
+        {
+          "bar": "18",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 17
+        },
+        {
+          "bar": "19",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 18
+        },
+        {
+          "bar": "20",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 19
+        },
+        {
+          "bar": "21",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 20
+        },
+        {
+          "bar": "22",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 21
+        },
+        {
+          "bar": "23",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 22
+        },
+        {
+          "bar": "24",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 23
+        },
+        {
+          "bar": "25",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 24
+        },
+        {
+          "bar": "26",
+          "notes": "",
+          "others": "- | - | -",
+          "beat": 1,
+          "measure": 25
+        }
+      ],
+      "returns": [],
+      "lines": [
+        "Piccolo"
+      ],
+      "moreBars": 0,
+      "ask": "The mood I want: sad.",
+      "reading": null,
+      "instruments": [
+        "Piccolo",
+        "Flute 1",
+        "Flute 2",
+        "Oboe 1",
+        "Oboe 2",
+        "Clarinet 1",
+        "Clarinet 2",
+        "Bassoon 1",
+        "Bassoon 2",
+        "Horn 1",
+        "Horn 2",
+        "Horn 3",
+        "Horn 4",
+        "Trumpet 1",
+        "Trumpet 2",
+        "Trumpet 3",
+        "Trombone 1",
+        "Trombone 2",
+        "Bass Trombone",
+        "Tuba",
+        "Timpani",
+        "Glockenspiel",
+        "Snare Drum",
+        "Bass Drum",
+        "Cymbals",
+        "Harp",
+        "Violin I",
+        "Violin II",
+        "Viola",
+        "Cello",
+        "Double Bass"
+      ],
+      "where": "inside",
+      "tracks": [],
+      "answers": [],
+      "cues": [],
+      "freedom": 2,
+      "chosen": {
+        "fifths": 0,
+        "idea": "Oboe carries whole lullaby in A minor over descending bass, answered by strings",
+        "motif": {
+          "from": "9",
+          "to": "12",
+          "what": "Long C6 held then falling to A5"
+        },
+        "name": "Ashen Lullaby",
+        "qpm": 72,
+        "time": "3/4",
+        "why": [
+          {
+            "chords": "Am | F | Dm | E7 | F | Dm | Am | E7",
+            "dynamics": "pp growing to mp",
+            "from": "1",
+            "principle": "Separate layers by register rhythm and level",
+            "to": "8",
+            "variation": "Keep tune plain in order",
+            "what": "Oboe 1 tune, Viola rocking figure, Cello bass"
+          },
+          {
+            "chords": "Am | F | G | E7 | Am | Dm | F E7 | Am",
+            "dynamics": "mp growing to mf",
+            "from": "9",
+            "principle": "Pass phrase between colours to travel",
+            "to": "16",
+            "variation": "Sequence down with suspensions",
+            "what": "Flute 1 tune, Bassoon answers, Harp arpeggios"
+          },
+          {
+            "chords": "F | E7 | Am | Dm | Bb E7 | Am | Bm7b5 E7 | Am",
+            "dynamics": "mf growing to ff",
+            "from": "17",
+            "principle": "Add weight slowly for one climax",
+            "to": "24",
+            "variation": "Stretch rhythm toward high peak",
+            "what": "Violin I peaks, Horn pad, Timpani roots"
+          },
+          {
+            "chords": "Dm E7 | Am",
+            "dynamics": "ff dying to pp",
+            "from": "25",
+            "principle": "Hold tonic pedal to rest after arrival",
+            "to": "26",
+            "variation": "Strip to skeleton to close",
+            "what": "Cello and Oboe 1 settle, Viola holds"
+          }
+        ]
+      },
+      "window": {
+        "from": "25",
+        "to": "26"
+      },
+      "earlier": "Violin I: A4@0+2.5 / Horn 1: E4@0+2 / Horn 2: C4@0+3 / Horn 3: A3@0+3 / Horn 4: A2@0+3 / Timpani: A2@0+2",
+      "seed": {
+        "tune": "Bar 1: Sum 12 1:C3@0+1 2:G4@1+0.25 3:E4@1+0.25 4:C4@1+0.25 5:G4@2+1 6:E4@2+1 7:C4@2+1 / Bar 2: Sum 12 1:A2@0+1 2:A2~@1+0.25 3:A4@1+0.25 4:E4@1+0.25 5:C4@1+0.25 6:A4@2+1 7:E4@2+1 8:C4@2+1 / Bar 3: Sum 12 1:D3@0+1.333 2:A4@1+0.25 3:F4@1+0.25 4:D4@1+0.25 5:A4@2+0.333 6:F4@2+0.333 7:D4@2+0.333 / Bar 4: Sum 12 1:G3@0+2 2:G3~@2+0.667 / Bar 5: Sum 12 1:C3@0+1 2:C3~@1+0.25 3:G4@1+0.25 4:E4@1+0.25 5:C4@1+0.25 6:G4@2+1 7:E4@2+1 8:C4@2+1 / Bar 6: Sum 12 1:A2@0+1.5 2:A4@1+0.25 3:E4@1+0.25 4:C4@1+0.25 5:A2~@1.5+0.25 6:A4@2+1 7:E4@2+1 8:C4@2+1 / Bar 7: Sum 12 1:D3@0+2 2:A4@1+0.25 3:F4@1+0.25 4:D4@1+0.25 5:A4@2+0.333 6:F4@2+0.333 7:D4@2+0.333 / Bar 8: Sum 12 1:G2@0+1 2:E4@1+0.25 3:C4@1+0.25 4:A3@1+0.25 5:A2@1+1 6:F4@2+0.75 7:D4@2+0.75 8:B3@2+0.75 9:B2@2+1 / Bar 9: Sum 12 2 1:C3@0+1 10:G4@1+0.25 11:E4@1+0.25 12:C4@1+0.25 18:G4@2+1 19:E4@2+1 20:C4@2+1 | Inst 2 2:C6@0+1.5 16:C6~@1.5+0.25 21:A5@2+1 | Sum 12 5 3:C3@0+1 13:G4@1+0.25 14:E4@1+0.25 15:C4@1+0.25 22:G4@2+1 23:E4@2+1 24:C4@2+1 | Inst 5 4:C3@0+3 | Inst 5 2 5:C6@0+2 6:G5@0+3 7:E5@0+3 8:C4@0+3 25:C6~@2+0.75 | Inst 2 2 9:C5@0+1.5 17:C5~@1.5+0.25 26:A4@2+1 / Bar 10: Sum 12 2 1:A2@0+1 10:A2~@1+0.25 11:A4@1+0.25 12:E4@1+0.25 13:C4@1+0.25 18:A4@2+1 19:E4@2+1 20:C4@2+1 | Inst 2 2:C6@0+3 | Sum 12 5 3:A2@0+1 14:A2~@1+0.25 15:A4@1+0.25 16:E4@1+0.25 17:C4@1+0.25 21:A4@2+1 22:E4@2+1 23:C4@2+1 | Inst 5 4:A2@0+3 | Inst 5 2 5:C6@0+2 6:E5@0+2 7:A5@0+3 8:A3@0+3 24:C6~@2+0.75 25:E5~@2+0.75 | Inst 2 2 9:C5@0+3 / Bar 11: Sum 12 2 1:D3@0+1.333 11:A4@1+0.25 12:F4@1+0.25 13:D4@1+0.25 17:A4@2+0.333 18:F4@2+0.333 19:D4@2+0.333 | Inst 2 2:C6~@0+3 | Sum 12 5 3:D3@0+1.333 14:A4@1+0.25 15:F4@1+0.25 16:D4@1+0.25 20:A4@2+0.333 21:F4@2+0.333 22:D4@2+0.333 | Inst 5 4:D3@0+3 | Inst 5 2 5:A5~@0+2 6:A3~@0+0.25 7:F5@0+2 8:D5@0+3 9:D4@0+3 23:A5~@2+0.5 24:F5~@2+0.75 | Inst 2 2 10:C5~@0+3 / Bar 12: Sum 12 2 1:G2@0+2 10:B4@1+0.25 11:G4@1+0.25 12:D4@1+0.25 18:G2~@2+0.667 19:B4@2+0.333 20:G4@2+0.333 21:D4@2+0.333 | Inst 2 2:D6@0+2 22:A5@2+1 | Sum 12 5 3:G2@0+2 13:B4@1+0.25 14:G4@1+0.25 15:D4@1+0.25 23:G2~@2+0.667 24:B4@2+0.333 25:G4@2+0.333 26:D4@2+0.333 | Inst 5 4:G2@0+1 16:G2~@1+0.25 17:A2@1+1 27:B2@2+1 | Inst 5 2 5:D5~@0+2 6:B5@0+2 7:G5@0+2 8:G3@0+2 28:D5~@2+0.75 29:B5~@2+0.75 30:G5~@2+0.75 31:G3~@2+0.75 | Inst 2 2 9:D5@0+2 32:A4@2+1 / Bar 13: Sum 12 3 1:C3@0+1 10:G4@1+0.25 11:E4@1+0.25 12:C4@1+0.25 18:G4@2+1 19:E4@2+1 20:C4@2+1 | Inst 2 2:C6@0+1.5 16:C6~@1.5+0.25 21:A5@2+1 | Sum 12 6 3:C3@0+1 13:G4@1+0.25 14:E4@1+0.25 15:C4@1+0.25 22:G4@2+1 23:E4@2+1 24:C4@2+1 | Inst 5 4:C3@0+3 | Inst 5 3 5:C6@0+2 6:G5@0+3 7:E5@0+3 8:C4@0+3 25:C6~@2+0.75 | Inst 2 2 9:C5@0+1.5 17:C5~@1.5+0.25 26:A4@2+1 / Bar 14: Sum 12 3 1:A2@0+1 10:A2~@1+0.25 11:A4@1+0.25 12:E4@1+0.25 13:C4@1+0.25 18:A4@2+1 19:E4@2+1 20:C4@2+1 | Inst 2 2:C6@0+3 | Sum 12 6 3:A2@0+1 14:A2~@1+0.25 15:A4@1+0.25 16:E4@1+0.25 17:C4@1+0.25 21:A4@2+1 22:E4@2+1 23:C4@2+1 | Inst 5 4:A2@0+3 | Inst 5 3 5:C6@0+2 6:E5@0+2 7:A5@0+3 8:A3@0+3 24:C6~@2+0.75 25:E5~@2+0.75 | Inst 2 2 9:C5@0+3 / Bar 15: Sum 12 3 1:D3@0+1.333 12:A4@1+0.25 13:F4@1+0.25 14:D4@1+0.25 18:A4@2+0.333 19:F4@2+0.333 20:D4@2+0.333 | Inst 2 2:C6~@0+2 21:D6@2+1 | Sum 12 6 3:D3@0+1.333 15:A4@1+0.25 16:F4@1+0.25 17:D4@1+0.25 22:A4@2+0.333 23:F4@2+0.333 24:D4@2+0.333 | Inst 5 4:A2~@0+0.25 5:D3@0+3 | Inst 5 3 6:A5~@0+2 7:A3~@0+0.25 8:F5@0+2 9:D5@0+3 10:D4@0+3 25:A5~@2+0.5 26:F5~@2+0.75 | Inst 2 2 11:C5~@0+2 27:D5@2+1 / Bar 16: Sum 12 3 1:G2@0+2 10:B4@1+0.25 11:G4@1+0.25 12:D4@1+0.25 18:G2~@2+0.667 19:B4@2+0.333 20:G4@2+0.333 21:D4@2+0.333 | Inst 2 2:A5@0+1.5 16:A5~@1.5+0.25 22:B5@2+1 | Sum 12 6 3:G2@0+2 13:B4@1+0.25 14:G4@1+0.25 15:D4@1+0.25 23:G2~@2+0.667 24:B4@2+0.333 25:G4@2+0.333 26:D4@2+0.333 | Inst 5 4:G3@0+3 | Inst 5 3 5:D5~@0+2 6:B5@0+2 7:G5@0+2 8:G3@0+2 27:D5~@2+0.75 28:B5~@2+0.75 29:G5~@2+0.75 30:G3~@2+0.75 | Inst 2 2 9:A4@0+1.5 17:A4~@1.5+0.25 31:B4@2+1 / Bar 17: Sum 12 4 1:C3@0+1 10:G4@1+0.25 11:E4@1+0.25 12:C4@1+0.25 16:G4@2+1 17:E4@2+1 18:C4@2+1 | Inst 2 2:C6@0+2 19:A5@2+1 | Sum 12 7 3:C3@0+1 13:G4@1+0.25 14:E4@1+0.25 15:C4@1+0.25 20:G4@2+1 21:E4@2+1 22:C4@2+1 | Inst 5 4:C3@0+3 | Inst 5 4 5:C6@0+2 6:G5@0+3 7:E5@0+3 8:C4@0+3 23:C6~@2+0.75 | Inst 2 2 9:C5@0+2 24:A4@2+1 / Bar 18: Sum 12 4 1:A2@0+1 10:A2~@1+0.25 11:A4@1+0.25 12:E4@1+0.25 13:C4@1+0.25 18:A4@2+1 19:E4@2+1 20:C4@2+1 | Inst 2 2:C6@0+2 21:C6~@2+0.25 28:E6@2.5+0.5 | Sum 12 7 3:A2@0+1 14:A2~@1+0.25 15:A4@1+0.25 16:E4@1+0.25 17:C4@1+0.25 22:A4@2+1 23:E4@2+1 24:C4@2+1 | Inst 5 4:A2@0+3 | Inst 5 4 5:C6@0+2 6:E5@0+2 7:A5@0+3 8:A3@0+3 25:C6~@2+0.75 26:E5~@2+0.75 | Inst 2 2 9:C5@0+2 27:C5~@2+0.25 29:E5@2.5+0.5 / Bar 19: Sum 12 4 1:D3@0+1.333 14:A4@1+0.25 15:F4@1+0.25 16:D4@1+0.25 20:A4@2+0.333 21:F4@2+0.333 22:D4@2+0.333 | Inst 2 2:E6~@0+0.25 3:D6@0+2 23:D6~@2+0.75 | Sum 12 7 4:D3@0+1.333 17:A4@1+0.25 18:F4@1+0.25 19:D4@1+0.25 24:A4@2+0.333 25:F4@2+0.333 26:D4@2+0.333 | Inst 5 5:A2~@0+0.25 6:D2@0+3 | Inst 5 4 7:A5~@0+2 8:A3~@0+0.25 9:F5@0+2 10:D5@0+3 11:D4@0+3 27:A5~@2+0.5 28:F5~@2+0.75 | Inst 2 2 12:E5~@0+0.25 13:D5@0+2 29:D5~@2+0.75 / Bar 20: Sum 12 4 1:G3@0+2 14:G3~@2+0.667 | Inst 2 2:G5@0+1 10:A5@1+1 15:B5@2+1 | Sum 12 7 3:G3@0+2 16:G3~@2+0.667 | Inst 5 4:G2@0+1 11:G2~@1+0.25 12:E2@1+1 17:D2@2+1 | Inst 5 4 5:D5~@0+2 6:B5@0+2 7:G5@0+2 8:G3@0+2 18:D5~@2+0.75 19:B5~@2+0.75 20:G5~@2+0.75 21:G3~@2+0.75 | Inst 2 2 9:G4@0+1 13:A4@1+1 22:B4@2+1 / Bar 21: Sum 12 4 1:C3@0+1 11:C3~@1+0.25 12:G4@1+0.25 13:E4@1+0.25 14:C4@1+0.25 19:G4@2+1 20:E4@2+1 21:C4@2+1 | Inst 2 2:C6@0+2 22:C6~@2+0.5 | Sum 12 7 3:C3@0+1 15:C3~@1+0.25 16:G4@1+0.25 17:E4@1+0.25 18:C4@1+0.25 23:G4@2+1 24:E4@2+1 25:C4@2+1 | Inst 5 4:D2~@0+0.25 5:C3@0+3 | Inst 5 5 6:C6@0+2 7:G5@0+3 8:E5@0+3 9:C4@0+3 26:C6~@2+0.75 | Inst 2 2 10:C5@0+2 27:C5~@2+0.5 / Bar 22: Sum 12 4 1:A2@0+1.5 8:A4@1+0.25 9:E4@1+0.25 10:C4@1+0.25 14:A2~@1.5+0.25 16:A4@2+1 17:E4@2+1 18:C4@2+1 | Inst 2 19:A5@2+1 | Sum 12 7 2:A2@0+1.5 11:A4@1+0.25 12:E4@1+0.25 13:C4@1+0.25 15:A2~@1.5+0.25 20:A4@2+1 21:E4@2+1 22:C4@2+1 | Inst 5 3:A2@0+2 23:G2@2+1 | Inst 5 5 4:C6@0+2 5:E5@0+2 6:A5@0+3 7:A3@0+3 24:C6~@2+0.75 25:E5~@2+0.75 | Inst 2 2 26:A4@2+1 / Bar 23: Sum 12 4 1:D3@0+2 12:A4@1+0.25 13:F4@1+0.25 14:D4@1+0.25 18:A4@2+0.333 19:F4@2+0.333 20:D4@2+0.333 | Inst 2 2:D6@0+3 | Sum 12 7 3:D3@0+2 15:A4@1+0.25 16:F4@1+0.25 17:D4@1+0.25 21:A4@2+0.333 22:F4@2+0.333 23:D4@2+0.333 | Inst 5 4:G2~@0+0.25 5:A2@0+3 | Inst 5 5 6:A5~@0+2 7:A3~@0+0.25 8:F5@0+2 9:D5@0+3 10:D4@0+3 24:A5~@2+0.5 25:F5~@2+0.75 | Inst 2 2 11:D5@0+3 / Bar 24: Sum 12 4 1:G2@0+1 11:E4@1+0.25 12:C4@1+0.25 13:A3@1+0.25 14:A2@1+1 21:F4@2+1 22:D4@2+1 23:B3@2+1 24:B2@2+1 | Inst 2 2:G6@0+1.333 15:E6@1+1 25:D6@2+1 | Sum 12 7 3:G2@0+1 16:E4@1+0.25 17:C4@1+0.25 18:A3@1+0.25 19:A2@1+1 26:F4@2+1 27:D4@2+1 28:B3@2+1 29:B2@2+1 | Inst 5 4:A2~@0+0.25 5:G2@0+3 | Inst 5 5 6:D5~@0+2 7:B5@0+2 8:G5@0+2 9:G3@0+2 30:D5~@2+0.75 31:B5~@2+0.75 32:G5~@2+0.75 33:G3~@2+0.75 | Inst 2 2 10:G5@0+1.333 20:E5@1+1 34:D5@2+1 / Bar 25: Sum 12 4 1:F4~@0+1 2:B3~@0+1 3:D4~@0+1.333 4:B2~@0+1.5 11:F4~@1+0.25 12:B3~@1+0.25 | Inst 2 5:D6~@0+3 | Sum 12 7 6:F4~@0+1 7:B3~@0+1 8:D4~@0+1.333 9:B2~@0+1.5 13:F4~@1+0.25 14:B3~@1+0.25 | Inst 2 2 10:D5~@0+3 / Bar 26: Inst 2 1:D6~@0+2 3:D6~@2+0.75 | Inst 2 2 2:D5~@0+2 4:D5~@2+0.75",
+        "motif": "Long C6 held then falling to A5 From bars 9 to 12.",
+        "theme": "Bar 25 tune: D5@0+1.5 B4@1.5+1.5 / Bar 25 countermelody: C4@0+1.5 D4@1.5+1.5 / Bar 25 bass: D2@0+1.5 E2@1.5+1.5 / Bar 26 tune: A4@0+3 / Bar 26 countermelody: E4@0+3 / Bar 26 bass: A2@0+3"
+      }
+    },
+    "reply": {
+      "status": "ok",
+      "answer": {
+        "adds": [
+          {
+            "art": "",
+            "bar": "25",
+            "dyn": "ff",
+            "events": "D5@0+1.5 B4@1.5+1.5",
+            "part": "Oboe 1",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "26",
+            "dyn": "pp",
+            "events": "A4@0+3",
+            "part": "Oboe 1",
+            "role": "melody"
+          },
+          {
+            "art": "",
+            "bar": "25",
+            "dyn": "f",
+            "events": "C4@0+1.5 D4@1.5+1.5",
+            "part": "Viola",
+            "role": "countermelody"
+          },
+          {
+            "art": "",
+            "bar": "26",
+            "dyn": "pp",
+            "events": "E4@0+3",
+            "part": "Viola",
+            "role": "countermelody"
+          },
+          {
+            "art": "",
+            "bar": "25",
+            "dyn": "f",
+            "events": "D2@0+1.5 E2@1.5+1.5",
+            "part": "Cello",
+            "role": "bass"
+          },
+          {
+            "art": "",
+            "bar": "26",
+            "dyn": "pp",
+            "events": "A2@0+3",
+            "part": "Cello",
+            "role": "bass"
+          }
+        ],
+        "doubles": []
+      },
+      "sources": [],
+      "cached": false
+    },
+    "ms": 25614,
+    "thinking": [
+      {
+        "at": 8431,
+        "text": "Composing bars 25-26 for cello, oboe, and viola with specified dynamics and tonic pedal while preserving existing melody."
+      },
+      {
+        "at": 14315,
+        "text": "Assigning tune to oboe, bass to cello, and countermelody to viola while checking ranges."
+      },
+      {
+        "at": 22589,
+        "text": "Mapping the ff-to-pp dynamic across bars 25-26 for the three named instruments."
+      },
+      {
+        "at": 25613,
+        "text": "Building six note-for-note adds for Oboe 1, Viola, and Cello across bars 25-26 with role and dynamic assignments."
+      }
+    ],
+    "version": "arrange-16",
+    "model": "muse-spark-1.3"
+  }
+]

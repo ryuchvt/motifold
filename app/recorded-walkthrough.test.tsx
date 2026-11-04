@@ -100,7 +100,9 @@ it('reproduces the complete real A export through the actual recorded Create wor
   vi.stubGlobal('URL', class extends URLNow { static createObjectURL(blob: Blob) { blobs.push(blob); return 'blob:recorded-export'; } static revokeObjectURL() {} });
   vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {});
   await press('Download MIDI');
-  expect(host.textContent).toContain('Explore the recorded outcomes');
+  expect(host.textContent).toContain('Your arrangement is ready');
+  expect(host.textContent).toContain('Make it longer');
+  expect(host.textContent).toContain('Hear Cute become Sad');
   expect(blobs).toHaveLength(1);
   vi.useRealTimers();
   const bytes = await new Promise<ArrayBuffer>((resolve, reject) => { const file = new FileReader(); file.onload = () => resolve(file.result as ArrayBuffer); file.onerror = reject; file.readAsArrayBuffer(blobs[0]!); });

@@ -29,7 +29,7 @@ export function recordedPieceData(score:Score) {
 }
 
 /** Prepared scores only. This component has no analysis or generation hook and never installs a live transport. */
-export function OutcomeExplorer({piece,onExit}:{piece:DemoPiece;onExit:()=>void}) {
+export function OutcomeExplorer({piece,onExit,outcomeId,playLabel}:{piece:Pick<DemoPiece,'id'|'catalog'>;onExit:()=>void;outcomeId?:string;playLabel?:string}) {
   const [catalog,setCatalog]=useState<DemoCatalog|null>(null),[catalogDone,setCatalogDone]=useState(false);
   const [filters,setFilters]=useState<Filters>({intent:'arrange',ensemble:'String orchestra',mood:'Neutral',option:0});
   const [record,setRecord]=useState<Loaded|null>(null),[error,setError]=useState<string|null>(null),[loading,setLoading]=useState(false);
@@ -39,7 +39,7 @@ export function OutcomeExplorer({piece,onExit}:{piece:DemoPiece;onExit:()=>void}
   const scoreView=useRef<ScoreViewHandle>(null);
   const transport=usePlayhead();
   useEffect(()=>{let active=true;setCatalogDone(false);void loadDemoCatalog(piece).then(value=>{if(!active)return;setCatalog(value);setCatalogDone(true);const first=value?.outcomes.find(item=>item.status==='complete');if(first)setFilters({intent:first.intent,ensemble:first.ensemble,mood:mood(first.mood),option:first.option})});return()=>{active=false}},[piece]);
-  const selected=catalog?.outcomes.find(item=>item.intent===filters.intent&&item.ensemble===filters.ensemble&&mood(item.mood)===filters.mood&&item.option===filters.option);
+  const selected=catalog?.outcomes.find(item=>outcomeId?item.id===outcomeId:item.intent===filters.intent&&item.ensemble===filters.ensemble&&mood(item.mood)===filters.mood&&item.option===filters.option);
   useEffect(()=>{
     const mine=++ticket.current,stop=new AbortController();
     const previous=current.current,comparing=!!previous&&!!selected&&sameOutcomeRecipe(previous.outcome,selected);
@@ -83,28 +83,29 @@ export function OutcomeExplorer({piece,onExit}:{piece:DemoPiece;onExit:()=>void}
     const prepared=pool.find(item=>item.option===0)??pool[0];
     return prepared?{intent,ensemble:prepared.ensemble,mood:mood(prepared.mood),option:prepared.option}:{...old,intent,mood:'Neutral',option:0};
   });
-  return <main className="outcome-explorer">
-    <div className="explorer-heading"><div><h1>Explore the recorded outcomes</h1><p>Choose a prepared score, compare A and B, and take the complete result into your DAW. No credit is used.</p></div><button className="button" onClick={onExit}>Back to the start</button></div>
-    <div className="explorer-filters">
+  const Container=outcomeId?'section':'main',Heading=outcomeId?'h2':'h1';
+  return <Container className="outcome-explorer">
+    <div className="explorer-heading"><div><Heading>{outcomeId?selected?.name??'Opening the recorded example':'Explore the recorded outcomes'}</Heading><p>{outcomeId?'Hear the recorded result, inspect its notes and take the score into your DAW. No credit is used.':'Choose a prepared score, compare A and B, and take the complete result into your DAW. No credit is used.'}</p></div><button className="button" onClick={onExit}>{outcomeId?'Back to examples':'Back to the start'}</button></div>
+    {!outcomeId&&<div className="explorer-filters">
       <label>Direction<select aria-label="Recorded direction" value={filters.intent} onChange={event=>changeDirection(event.target.value as Filters['intent'])}><option value="arrange">Arrange · original bars</option><option value="expand">Expand · longer, same character</option><option value="recompose">Recompose · recognisable tune, new harmony</option></select></label>
       <label>Players<select aria-label="Recorded ensemble" value={filters.ensemble} onChange={event=>setFilters(old=>({...old,ensemble:event.target.value,option:0}))}>{TEMPLATES.map(item=><option key={item.name}>{item.name}</option>)}</select></label>
       {filters.intent==='recompose'&&<label>Mood<select aria-label="Recorded mood" value={filters.mood} onChange={event=>setFilters(old=>({...old,mood:event.target.value,option:0}))}>{moods.map(value=><option key={value}>{value}</option>)}</select></label>}
       <span className="explorer-availability" role="status">{!catalogDone?'Loading the recorded catalog':catalog?`${available} of ${catalog.outcomes.length} outcomes prepared`:'The outcome catalog is not available yet.'}</span>
-    </div>
+    </div>}
     {selected&&<p className="explorer-preset">{selected.status==='unavailable'?'Planned preset':'Recorded preset'}: {selected.bars} bars. {selected.intent==='arrange'?'Neutral, original bars.':selected.intent==='expand'?`Neutral, same character, ${selected.bars-selected.sourceBars} added bars.`:selected.freedom===2?'Reshaped 2: recognisable melody with new harmony.':`Freedom ${selected.freedom??'not specified'}.`} {selected.status==='unavailable'?'There is no recording for this preset yet.':'These settings are fixed in this recorded run.'}</p>}
-    <div className="explorer-choices" role="group" aria-label="Recorded A and B">
+    {!outcomeId&&<div className="explorer-choices" role="group" aria-label="Recorded A and B">
       {([0,1]as const).map(option=>{const item=choices.find(row=>row.option===option);return <button key={option} className={`explorer-choice${filters.option===option?' on':''}`} aria-pressed={filters.option===option} onClick={()=>setFilters(old=>({...old,option}))}><span>{option===0?'A':'B'}</span><strong>{item?.status!=='unavailable'&&item?.name?item.name:`Option ${option===0?'A':'B'}`}</strong><small>{item?.status==='complete'?`${item.bars} bars, complete`:item?.status==='preview'?'Recorded preview only':'Not prepared'}</small></button>})}
-    </div>
+    </div>}
     {selected?.status==='unavailable'&&<p className="explorer-unavailable" role="status">{selected.reason??'This outcome has not been recorded.'} Choose another prepared outcome. No request will be sent to a model.</p>}
     {catalogDone&&catalog&&!selected&&<p role="status">This combination has no recorded outcome. Choose another prepared choice.</p>}
     {loading&&<p role="status">Opening the recorded score.</p>}{error&&<p className="error" role="alert">{error}</p>}
     {record&&data&&page&&<>
-      <div className="explorer-transport"><strong>{record.outcome.name}</strong><button className="button" onClick={()=>transport.playing?playhead.pause():playhead.play()}>{transport.playing?'Pause':exactRender?'Play DAW render':'Play browser instruments'}</button><button className="button" onClick={()=>playhead.stop()}>Stop</button><span>{transport.words}</span><span className="explorer-render-slot">{exactRender?'DAW render for this exact score':boundRender?'Solo playback uses browser instruments.':record.outcome.render?'DAW render does not match this export. Browser instruments.':'DAW render not added. Browser instruments.'}</span></div>
+      <div className="explorer-transport"><strong>{record.outcome.name}</strong><button className="button" onClick={()=>transport.playing?playhead.pause():playhead.play()}>{transport.playing?'Pause':playLabel??(exactRender?'Play DAW render':'Play browser instruments')}</button><button className="button" onClick={()=>playhead.stop()}>Stop</button><span>{transport.words}</span><span className="explorer-render-slot">{exactRender?'DAW render for this exact score':boundRender?'Solo playback uses browser instruments.':record.outcome.render?'DAW render does not match this export. Browser instruments.':'DAW render not added. Browser instruments.'}</span></div>
       <p className="explorer-audio-explanation">{boundRender?'The model answers and MIDI are recorded. This DAW audio is bound to the same exported score.':'The model answers and MIDI are recorded. Playback uses browser instruments. DAW audio has not been added. It can be rendered later from this exact outcome MIDI.'}{boundRender&&record.outcome.renderCredit&&` ${record.outcome.renderCredit}`}</p>
       <p className="explorer-score-label">Prepared final score · overview colors do not identify authorship.</p>
       <div className="explorer-overview"><PieceView key={record.outcome.id} data={data} sections={[]} moments={[]} selected={view} focus={null} solo={solo} instrumentOf={label=>instrumentFromName(label)??label} hasNew={false} render={exactRender} onSelect={bar=>{const index=data.bars.findIndex(item=>item.number===bar);setView({from:bar,to:data.bars[Math.min(index+7,data.bars.length-1)]!.number})}} onSelectRange={selectRange} onFocus={()=>{}} onSolo={label=>setSolo(old=>old.includes(label)?old.filter(item=>item!==label):[...old,label])} onBeat={beat=>scoreView.current?.showPlaying(cursor(beat))}/></div>
       <section className="score-desk explorer-score" aria-label="Recorded notation"><div className="score-toolbar"><label>Bars <select aria-label="First recorded bar" value={view.from} onChange={event=>{const i=data.bars.findIndex(bar=>bar.number===event.target.value);setView({from:event.target.value,to:data.bars[Math.min(i+7,data.bars.length-1)]!.number})}}>{data.bars.map(bar=><option key={bar.number}>{bar.number}</option>)}</select></label><span>to {view.to}</span><button className="button small" onClick={()=>setZoom(value=>Math.max(.35,value-.1))}>Smaller</button><button className="button small" onClick={()=>setZoom(value=>Math.min(1.5,value+.1))}>Bigger</button><span>{record.outcome.bars} bars in the complete export</span></div>{harmony&&<div className="explorer-harmony" role="region" aria-label="Planned harmony" tabIndex={0}><p><strong>Planned harmony</strong><span>From this option’s recorded plan. Compare with the notes.</span></p>{harmony.spans.length?<dl>{harmony.spans.map((span,index)=><div key={index}><dt>Bars {span.from} to {span.to}</dt><dd>{span.chords}</dd></div>)}</dl>:<p>{harmony.unaddressable?"The planned bar labels cannot be matched to this score.":"No planned harmony was saved for these bars."}</p>}</div>}<div className="notation-scroll"><ScoreView ref={scoreView} xmlText={page.xmlText} score={page.score} zoom={zoom} noTitle highlights={NONE} noteMarks={NONE} onTap={()=>{}} onDrawn={(_drawn,failure)=>setDrawError(failure)}/>{drawError&&<p className="error">{drawError}</p>}</div></section>
       <footer className="explorer-downloads">{record.outcome.status==='complete'?<><a className="button primary" href={record.outcome.zip} download>Download MIDI and score</a><a className="button" href={record.outcome.midi} download>Full MIDI</a><a className="button" href={record.outcome.xml} download>MusicXML</a><p>Downloads contain this complete recorded score. Soloing a part only changes browser playback.</p></>:<p>This is a preview. Its complete arrangement has not been recorded.</p>}</footer>
     </>}
-  </main>;
+  </Container>;
 }

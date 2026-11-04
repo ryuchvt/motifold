@@ -15,7 +15,7 @@ import { playhead, usePlayhead } from "./playhead";
 import { looksFreelyPlayed } from "./timing";
 import { useArrange } from "./useArrange";
 import "./replay-workspace.css";
-import { OutcomeExplorer } from "./OutcomeExplorer";
+import { FeaturedExamples } from "./FeaturedExamples";
 import { RawSketch, AcceptedSketch } from "./TutorialSketch";
 import { TutorialCoach, TutorialProvider, useTutorialController } from "./Tutorial";
 import { SharedAccess } from "./SharedAccess";
@@ -79,6 +79,7 @@ export function Studio({ initialScore = null, sample = false, initialSetup, samp
   const [demo, setDemo] = useState<DemoIndex | null>(null);
   const [demoPiece, setDemoPiece] = useState<DemoPiece | null>(null);
   const [exploring,setExploring]=useState(false);
+  const [finishedTutorial,setFinishedTutorial]=useState(false);
   const [guideOpening,setGuideOpening]=useState(false);
   const tutorial=useTutorialController();
   const guide=tutorial.guide;
@@ -132,7 +133,7 @@ export function Studio({ initialScore = null, sample = false, initialSetup, samp
       if(chosen!==null&&guide.completeOptions.includes(chosen as 0|1)&&notes?.status==='ready'&&!notes.preview&&!notes.writing&&!notes.missing?.length)guide.mark('write-ready');
     }
   },[guide?.run,guide?.events['study-started'],loaded,arranged.piece,arranged.study,arranged.tracksConfirmed,arranged.options,arranged.trying]);
-  useEffect(()=>{if(tutorial.complete&&guide)showExplorer(guide.piece,false)},[tutorial.complete]);
+  useEffect(()=>{if(tutorial.complete&&guide)showExplorer(guide.piece,false,true)},[tutorial.complete]);
 
   const stopListening = () => {
     hearing.current?.abort();
@@ -250,7 +251,7 @@ export function Studio({ initialScore = null, sample = false, initialSetup, samp
   const choosePiece = (piece: DemoPiece) => demo && startDemo(piece, demo.recorded);
   const leave = () => {
     opening.current++;
-    tutorial.exit();setExploring(false);setGuideOpening(false);
+    tutorial.exit();setExploring(false);setGuideOpening(false);setFinishedTutorial(false);
     resetRun();
     stopListening();
     if (!sample) stopDemo();
@@ -284,12 +285,12 @@ export function Studio({ initialScore = null, sample = false, initialSetup, samp
     catch(failure){if(opening.current===mine)setError(failure instanceof Error?failure.message:'The accepted score could not be opened.')}
     finally{if(opening.current===mine)setGuideOpening(false)}
   };
-  const showExplorer=(piece=demoPiece??demo?.pieces[0],reset=true)=>{
+  const showExplorer=(piece=demoPiece??demo?.pieces[0],reset=true,completed=false)=>{
     if(!piece)return;
     opening.current++;stopListening();playhead.stop();if(reset)resetRun();stopDemo();
     // No pending or unprepared action can become a live call while exploring static exports.
     setTransport(async()=>({status:'fallback',reason:'not-prepared'}));
-    setOwnKey(null);tutorial.exit();setAccess('demo');setDemoPiece(piece);setExploring(true);setError(null);
+    setOwnKey(null);tutorial.exit();setAccess('demo');setDemoPiece(piece);setExploring(true);setFinishedTutorial(completed);setStage('Explore');setError(null);
   };
   const rawGuide=!!guide&&guide.step===0;
   const acceptedGuide=!!guide&&!rawGuide&&!!loaded&&(guide.step===1||!guide.events['study-started']);
@@ -467,7 +468,7 @@ export function Studio({ initialScore = null, sample = false, initialSetup, samp
       {(guide||exploring)&&error&&<p className="error" role="alert">{error}</p>}
       {rawGuide&&guide&&<RawSketch piece={guide.piece} busy={guideOpening} onAccept={()=>void acceptTutorial()}/>}
       {acceptedGuide&&guide&&loaded&&<AcceptedSketch loaded={loaded} piece={guide.piece} onInspect={()=>guide.mark('tempo-inspected',true,true)} canStudy={!!guide.events['tempo-inspected']} onStudy={()=>guide.mark('study-started',true,true)}/>}
-      {exploring&&demoPiece&&<OutcomeExplorer piece={demoPiece} onExit={leave}/>}
+      {exploring&&demoPiece&&<FeaturedExamples piano={demoPiece} afterTutorial={finishedTutorial} onExit={leave}/>}
       {sample && <div className="ui-sample-banner">{sampleMessage ?? "Local UI sample. Fixed answers. No model calls."} <a href="http://127.0.0.1:8788/?record">Open live workspace</a></div>}
       <Thinking sample={sample} />
     </div></TutorialProvider>
