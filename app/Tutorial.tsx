@@ -1,8 +1,9 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import type { DemoPiece, DemoRecipe } from './demo';
+import { TutorialSpotlight } from './TutorialSpotlight';
 import './tutorial.css';
 
-export type TutorialEvent='accepted-bars'|'tempo-inspected'|'study-started'|'study-ready'|'tracks-confirmed'|'questions-done'|'created'|'previews-ready'|'audition-a'|'audition-b'|'plan-chosen'|'write-started'|'write-ready'|'downloaded';
+export type TutorialEvent='raw-played'|'accepted-bars'|'tempo-inspected'|'study-started'|'study-ready'|'tracks-confirmed'|'questions-done'|'created'|'previews-ready'|'audition-a'|'audition-b'|'plan-chosen'|'write-started'|'write-ready'|'downloaded';
 export const TUTORIAL_STEPS=[
   {id:'raw',title:'Start with the unedited performance',words:'Play my original MIDI and look at its uneven timing. Then open the saved accepted bars. The file keeps its original DAW offset.',requires:['accepted-bars'],target:'[data-tutorial="accept-bars"]',stage:null},
   {id:'tempo',title:'Inspect the accepted bars and tempo',words:'Move across the tempo map. It shows the saved interpretation of tempo inside 24 bars. Nearby attacks and notated releases were interpreted. This is saved accepted analysis, with no new model call.',requires:['tempo-inspected'],target:'[data-tutorial="tempo"]',stage:null},
@@ -45,28 +46,73 @@ export function useTutorialController(){
   return{guide,start,exit,back:()=>setState(now=>tutorialTransition(now,{kind:'back'})),next:()=>setState(now=>tutorialTransition(now,{kind:'continue'})),complete:!!state.piece&&state.step>=TUTORIAL_STEPS.length};
 }
 
-/** A coachmark in the layout. The highlighted real control stays clickable and nothing covers the score actions. */
+/** The next real action, including the separate actions inside a longer lesson. */
+export function tutorialCue(guide:TutorialGuide):{selectors:string[];instruction:string}{
+  const events=guide.events;
+  switch(TUTORIAL_STEPS[guide.step]?.id){
+    case 'raw':return events['raw-played']?{selectors:['[data-tutorial="accept-bars"]'],instruction:'When you are ready, open the saved accepted bars.'}:{selectors:['[data-tutorial="raw-play"]'],instruction:'Play the original piano sketch to hear its freely played timing.'};
+    case 'tempo':return{selectors:['[data-tutorial="tempo"] input[type="range"]','[data-tutorial="tempo"]'],instruction:'Move across the tempo map to inspect the accepted bars.'};
+    case 'study':
+      if(!events['study-started'])return{selectors:['[data-tutorial="study-start"]'],instruction:'Start the recorded Study of these bars.'};
+      if(!events['study-ready'])return{selectors:[],instruction:'The recorded Study is arriving. Wait for the track check.'};
+      if(!events['tracks-confirmed'])return{selectors:['[data-tutorial="tracks"]'],instruction:'Check both piano tracks, then confirm them.'};
+      return{selectors:['[data-tutorial="question-skip"]'],instruction:'Skip each question to follow this recorded take.'};
+    case 'setup':return{selectors:['[data-tutorial="create"]'],instruction:'Keep Arrange and String orchestra, then press Create.'};
+    case 'compare':
+      if(!events['previews-ready'])return{selectors:[],instruction:'Wait for both recorded opening previews.'};
+      if(!events['audition-a'])return{selectors:['button[aria-label="Audition plan A"]'],instruction:'Play the opening of A.'};
+      if(!events['audition-b'])return{selectors:['button[aria-label="Audition plan B"]'],instruction:'Now play the opening of B to compare.'};
+      return{selectors:['.idea-choose'],instruction:'Choose the complete plan you want to finish.'};
+    case 'write':return events['write-started']?{selectors:[],instruction:'The saved continuation is arriving. Your chosen plan stays selected.'}:{selectors:['[data-tutorial="write"]'],instruction:'Write the rest of the plan you chose.'};
+    case 'export':return{selectors:['[data-tutorial="download"]','[data-tutorial="export"]'],instruction:'Open Export, then download the complete result.'};
+    default:return{selectors:[],instruction:''};
+  }
+}
+
+/** Guide controls stay in the layout. The spotlight never intercepts input. */
 export function TutorialCoach({guide,onBack,onContinue,onSkip,onExit}:{guide:TutorialGuide;onBack:()=>void;onContinue:()=>void;onSkip:()=>void;onExit:()=>void}){
   const step=TUTORIAL_STEPS[guide.step];
   const done=step?.requires.every(event=>guide.events[event]);
-  const showControl=useCallback((target:HTMLElement|null,explicit=false)=>{
+  const cue=tutorialCue(guide),owner=`${guide.run}:${guide.step}:${cue.selectors.join('|')}`;
+  const [selected,setSelected]=useState<{owner:string;target:HTMLElement}|null>(null);
+  const target=selected?.owner===owner?selected.target:null;
+  const coach=useRef<HTMLElement>(null);
+  const showControl=useCallback((target:HTMLElement|null,explicit=false,focus=explicit)=>{
     if(!target)return;
+    const behavior=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches?'instant':'smooth';
     // An explicit request must reveal the control in the viewport too. A pane can
     // extend below the screen without having any internal scroll range of its own.
-    if(explicit){target.scrollIntoView({behavior:'smooth',block:'center',inline:'nearest'});return}
+    if(explicit){target.scrollIntoView({behavior,block:'center',inline:'nearest'});const control=target.matches('button,input,select,textarea,a[href],[tabindex]')?target:target.querySelector<HTMLElement>('button,input,select,textarea,a[href],[tabindex]');if(focus)control?.focus({preventScroll:true});return}
     let pane=target.parentElement;
     while(pane&&!/(auto|scroll)/.test(getComputedStyle(pane).overflowY))pane=pane.parentElement;
-    if(pane){const at=target.getBoundingClientRect(),box=pane.getBoundingClientRect();if(at.top<box.top||at.bottom>box.bottom)pane.scrollTo({top:Math.max(0,pane.scrollTop+at.top-box.top-24),behavior:'smooth'})}
+    if(pane){const at=target.getBoundingClientRect(),box=pane.getBoundingClientRect();if(at.top<box.top||at.bottom>box.bottom)pane.scrollTo({top:Math.max(0,pane.scrollTop+at.top-box.top-24),behavior})}
   },[]);
   useEffect(()=>{
     if(!step)return;
     let live=true,target:HTMLElement|null=null;
     const scope=document.querySelector('.studio')??document.body;
-    const discover=()=>{if(!live)return;const next=scope.querySelector<HTMLElement>(step.target);if(next===target)return;target?.classList.remove('tutorial-target');target=next;target?.classList.add('tutorial-target');if(step.id!=='raw')showControl(target)};
+    const discover=()=>{
+      if(!live)return;
+      const next=cue.selectors.flatMap(selector=>[...scope.querySelectorAll<HTMLElement>(selector)]).find(element=>{
+        if(element.closest('[hidden],[aria-hidden="true"]'))return false;
+        for(let at:HTMLElement|null=element;at;at=at.parentElement){const style=getComputedStyle(at);if(style.display==='none'||style.visibility==='hidden')return false}
+        return true;
+      })??null;
+      if(next===target)return;
+      target?.classList.remove('tutorial-target');target=next;target?.classList.add('tutorial-target');
+      setSelected(target?{owner,target}:null);
+      if(step.id!=='raw')showControl(target);
+      else if(target&&guide.events['raw-played']){
+        const box=target.getBoundingClientRect(),top=coach.current?.getBoundingClientRect().bottom??0;
+        const dock=document.querySelector<HTMLElement>('[aria-label="What Muse Spark is doing"]')?.getBoundingClientRect().top??innerHeight;
+        if(box.top<top+10||box.bottom>Math.min(innerHeight,dock)-10)showControl(target,true,false);
+      }
+    };
     discover();
-    const observer=new MutationObserver(discover);observer.observe(scope,{childList:true,subtree:true});
+    const observer=new MutationObserver(discover);observer.observe(scope,{childList:true,subtree:true,attributes:true,attributeFilter:['hidden','aria-hidden','class','style']});
     return()=>{live=false;observer.disconnect();target?.classList.remove('tutorial-target')};
-  },[guide.run,guide.step,guide.events,showControl]);
+  },[owner,showControl]);
   if(!step)return null;
-  return <aside className="tutorial-coach" aria-label="Hands-on tutorial"><div><span className="tutorial-count">{guide.step+1} of {TUTORIAL_STEPS.length}</span><strong>{step.title}</strong><p>{step.words}</p></div><div className="tutorial-coach-actions"><button onClick={onBack} disabled={guide.step===0}>Back</button>{done&&<button onClick={onContinue}>Continue</button>}<button onClick={()=>showControl(document.querySelector<HTMLElement>(step.target),true)}>Show control</button><button onClick={onSkip}>Skip guide</button><button onClick={onExit}>Exit tutorial</button></div></aside>;
+  const instruction=target?.dataset.tutorial==='download'?'Download this complete arrangement as MIDI and notation.':cue.instruction;
+  return <><aside ref={coach} className="tutorial-coach" aria-label="Hands-on tutorial"><div><span className="tutorial-count">{guide.step+1} of {TUTORIAL_STEPS.length}</span><strong>{step.title}</strong><p aria-live="polite">{instruction}</p><details><summary>About this step</summary><p>{step.words}</p></details></div><div className="tutorial-coach-actions"><button onClick={onBack} disabled={guide.step===0}>Back</button>{done&&<button onClick={onContinue}>Continue</button>}<button disabled={!target} onClick={()=>showControl(target,true)}>Show control</button><button onClick={onSkip}>Skip guide</button><button onClick={onExit}>Exit tutorial</button></div></aside><TutorialSpotlight key={owner} target={target} controls={coach} instruction={instruction}/></>;
 }

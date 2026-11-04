@@ -47,7 +47,7 @@ it('discovers a required control after async mounting, cleans old highlights, an
  const pane=host.appendChild(document.createElement('main'));pane.style.overflowY='auto';
  const coach=host.appendChild(document.createElement('div'));root=createRoot(coach);
  const scroll=vi.fn();pane.scrollTo=scroll;pane.getBoundingClientRect=()=>({top:0,bottom:200} as DOMRect);
- const guide={piece,recipe:piece.recipe,run:4,step:0,stepId:'raw',stage:null,events:{},completeOptions:[0],mark:()=>{}} satisfies TutorialGuide;
+ const guide={piece,recipe:piece.recipe,run:4,step:0,stepId:'raw',stage:null,events:{'raw-played':true},completeOptions:[0],mark:()=>{}} satisfies TutorialGuide;
  const props={onBack:()=>{},onContinue:()=>{},onSkip:()=>{},onExit:()=>{}};
  await act(async()=>root!.render(<TutorialCoach guide={guide} {...props}/>));
  const button=document.createElement('button');button.dataset.tutorial='accept-bars';button.getBoundingClientRect=()=>({top:400,bottom:430}as DOMRect);
@@ -69,7 +69,7 @@ it('explicitly reveals an offscreen raw control through all ancestors when the n
  pane.getBoundingClientRect=()=>({top:158,bottom:938}as DOMRect);
  Object.defineProperties(pane,{clientHeight:{value:780},scrollHeight:{value:780}});
  const localScroll=vi.fn();pane.scrollTo=localScroll;
- const button=pane.appendChild(document.createElement('button'));button.dataset.tutorial='accept-bars';
+ const button=pane.appendChild(document.createElement('button'));button.dataset.tutorial='raw-play';
  button.getBoundingClientRect=()=>({top:868,bottom:904}as DOMRect);
  const reveal=vi.fn();button.scrollIntoView=reveal;
  const coach=host.appendChild(document.createElement('div'));root=createRoot(coach);
