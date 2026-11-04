@@ -1,0 +1,15 @@
+Low Lament in A Minor: Low Lament in A Minor
+
+Dark lament keeps whole tune in order over falling A-minor bass, low strings leading to late high climax.
+
+Bars 1 to 4. Cellos basses bassoons horns hold A pedal, harp arpeggiates. Low pedal leaves space before tune enters. Chords: Am | Am | Bm7b5 E7 | Am Level: pp static, hollow
+Bars 5 to 12. Viola carries tune, cellos step bass, clarinets rock thirds. Thin middleground keeps tune forward over singing bass. Chords: Am | F | Em | Dm | G | C | Dm Bm7b5 | E7 Level: pp growing to mp
+Bars 13 to 20. Cello sings tune low, oboes answer, timpani roots pulse. Low colour plus flat-two chord deepens dark mood. Chords: Am | Dm | G | Bb | Bm7b5 | Dm | Em | Am Level: mp growing to mf
+Bars 21 to 28. Violins carry tune high, trombones drive bass, cymbals crash. Added layers and rising bass build single late peak. Chords: Am | F | Dm | Bm7b5 E7 | Am | F G | Dm E7 | Am Level: mf growing to ff
+Bars 29 to 32. Horns hold tune tail, harp falls, basses settle low. Perfect cadence confirms home after waiting dominant. Chords: F | Dm E7 | Am | Am Level: ff falling to pp
+
+519 new notes. The code checked each one against what's sounding and the range of its instrument.
+14 long notes sit a semitone from something else sounding. That can be a good suspension or a slip, so check by ear: Horn 1 B3 in bar 3, Harp C5 in bar 3, Cello B3 in bar 13, Oboe 1 C5 in bar 13 and 10 more.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your own notes are as you wrote them.

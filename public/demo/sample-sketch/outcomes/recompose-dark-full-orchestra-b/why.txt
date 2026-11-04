@@ -1,0 +1,15 @@
+Hollow Pedal in C Minor: Hollow Pedal in C Minor
+
+Whole tune turned to C minor over pedal and tritone shifts, winds and harp lead to bleak plagal close.
+
+Bars 1 to 2. Bassoons cellos basses hold C pedal, flutes breathe Eb. Pedal against Neapolitan creates dread before tune. Chords: Cm | Db G7 Level: pp hushed, still
+Bars 3 to 10. Oboe carries tune, viola rocking figure, harp arpeggiates. Soft wind over moving inner line keeps tune clear. Chords: Cm | Ab | Cm | Fm | Bb | Eb | Fm | G7 Level: pp growing to mp
+Bars 11 to 18. Clarinet takes tune, horns sustain, timpani marks roots. Neapolitan and mediant shifts widen dark harmonic space. Chords: Cm | Db | Cm | Fm | Gm | Fm | Eb | Ab G7 Level: mp growing to mf
+Bars 19 to 26. Flutes violins share tune high, trombones low fifths answer. Third-apart triads shift light while pedal holds dread. Chords: Cm | Db | Ab | Fm | Gb | Ab | Cm | Cm Level: mf growing to f
+Bars 27 to 32. Cellos recall tune tail, harp falls, bass drum thuds. Slow plagal close with lament bass confirms C minor. Chords: Fm | Db G7 | Cm | Ab Bb | Fm Cm | Cm Level: f falling to pp
+
+573 new notes. The code checked each one against what's sounding and the range of its instrument.
+27 long notes sit a semitone from something else sounding. That can be a good suspension or a slip, so check by ear: Oboe 1 G4 in bar 9, Clarinet 1 Eb5 in bar 18, Horn 2 D4 in bar 18, Flute 1 D6 in bar 23 and 23 more.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your own notes are as you wrote them.

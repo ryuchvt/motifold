@@ -3462,12 +3462,44 @@
       "ensemble": "Full orchestra",
       "mood": "Pulse",
       "option": 0,
-      "name": "Full orchestra A",
+      "name": "Low Pulse Keeping",
       "bars": 32,
       "sourceBars": 24,
       "freedom": 2,
-      "status": "unavailable",
-      "reason": "New-note range failure is not eligible for bounded repair"
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/recompose-pulse-full-orchestra-a/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/recompose-pulse-full-orchestra-a/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/recompose-pulse-full-orchestra-a/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/recompose-pulse-full-orchestra-a/run.json",
+      "xmlSha256": "8472b37b2b1002aad8b81a116f6edf68cb1bebf8458848ed8f2161da9e11e535",
+      "midiSha256": "3246d308fa783605f66bf69281636da675ffeca304d1b6f0e74e808b4a6b3372",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "4",
+          "chords": "Am | Dm7 | C G/B | Em"
+        },
+        {
+          "from": "5",
+          "to": "12",
+          "chords": "Am | Dm7 | C | Dm | Em7 | Am | C | Em"
+        },
+        {
+          "from": "13",
+          "to": "20",
+          "chords": "Am | Bb | Cmaj7 | F | G | Dm7 | Em7 | C"
+        },
+        {
+          "from": "21",
+          "to": "28",
+          "chords": "Am7 | Dm7 | Am7 | F | G | Am7 | G | C"
+        },
+        {
+          "from": "29",
+          "to": "32",
+          "chords": "Am | F | G | C"
+        }
+      ]
     },
     {
       "id": "recompose-pulse-full-orchestra-b",
@@ -3476,12 +3508,44 @@
       "ensemble": "Full orchestra",
       "mood": "Pulse",
       "option": 1,
-      "name": "Full orchestra B",
+      "name": "Upper Wind Pulse",
       "bars": 32,
       "sourceBars": 24,
       "freedom": 2,
-      "status": "unavailable",
-      "reason": "New-note range failure is not eligible for bounded repair"
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/recompose-pulse-full-orchestra-b/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/recompose-pulse-full-orchestra-b/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/recompose-pulse-full-orchestra-b/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/recompose-pulse-full-orchestra-b/run.json",
+      "xmlSha256": "931c4a00824cbed1ce0c73fc304c37186dbd2d814a4dbc65c4a8199c405d310b",
+      "midiSha256": "6292208e3ec9a2ca5ee9c19b2149367b32eca3daac11f1d8d2073f80e3f04ae7",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "2",
+          "chords": "Em | Cadd9"
+        },
+        {
+          "from": "3",
+          "to": "10",
+          "chords": "Em | Bb | Em | Bbmaj7 | G | C | Bb G | C"
+        },
+        {
+          "from": "11",
+          "to": "18",
+          "chords": "Cmaj7 | Dm | Em | Dm7 | Em7 | F | G | Am"
+        },
+        {
+          "from": "19",
+          "to": "26",
+          "chords": "C | Bb | Fmaj7 | Dm | Em | F | C | C"
+        },
+        {
+          "from": "27",
+          "to": "32",
+          "chords": "Am | Em | F | G | Am G | C"
+        }
+      ]
     },
     {
       "id": "recompose-action-full-orchestra-a",
@@ -3669,12 +3733,44 @@
       "ensemble": "Full orchestra",
       "mood": "Dark",
       "option": 0,
-      "name": "Full orchestra A",
+      "name": "Low Lament in A Minor",
       "bars": 32,
       "sourceBars": 24,
       "freedom": 2,
-      "status": "unavailable",
-      "reason": "Capture stopped"
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/recompose-dark-full-orchestra-a/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/recompose-dark-full-orchestra-a/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/recompose-dark-full-orchestra-a/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/recompose-dark-full-orchestra-a/run.json",
+      "xmlSha256": "414a4b261014dbc49980ec853f8453e05c574a2c37ea778c623f4d4b89b459f5",
+      "midiSha256": "1e64361f853c2b6cbf28688ac0296f0866426e667647120a9d6ec7e1bd0a9fda",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "4",
+          "chords": "Am | Am | Bm7b5 E7 | Am"
+        },
+        {
+          "from": "5",
+          "to": "12",
+          "chords": "Am | F | Em | Dm | G | C | Dm Bm7b5 | E7"
+        },
+        {
+          "from": "13",
+          "to": "20",
+          "chords": "Am | Dm | G | Bb | Bm7b5 | Dm | Em | Am"
+        },
+        {
+          "from": "21",
+          "to": "28",
+          "chords": "Am | F | Dm | Bm7b5 E7 | Am | F G | Dm E7 | Am"
+        },
+        {
+          "from": "29",
+          "to": "32",
+          "chords": "F | Dm E7 | Am | Am"
+        }
+      ]
     },
     {
       "id": "recompose-dark-full-orchestra-b",
@@ -3683,12 +3779,44 @@
       "ensemble": "Full orchestra",
       "mood": "Dark",
       "option": 1,
-      "name": "Full orchestra B",
+      "name": "Hollow Pedal in C Minor",
       "bars": 32,
       "sourceBars": 24,
       "freedom": 2,
-      "status": "unavailable",
-      "reason": "Capture stopped"
+      "status": "complete",
+      "xml": "/demo/sample-sketch/outcomes/recompose-dark-full-orchestra-b/score.musicxml",
+      "midi": "/demo/sample-sketch/outcomes/recompose-dark-full-orchestra-b/all-parts.mid",
+      "zip": "/demo/sample-sketch/outcomes/recompose-dark-full-orchestra-b/arrangement.zip",
+      "run": "/demo/sample-sketch/outcomes/recompose-dark-full-orchestra-b/run.json",
+      "xmlSha256": "9c1ff0a79aa46ae82c97791955d5783ce8a0d0d9f27726da5e532985736adfef",
+      "midiSha256": "62eeb2c4e794862520c60592fe8e2ee334f79b462e4730a79ada676be2aaf1dc",
+      "planHarmony": [
+        {
+          "from": "1",
+          "to": "2",
+          "chords": "Cm | Db G7"
+        },
+        {
+          "from": "3",
+          "to": "10",
+          "chords": "Cm | Ab | Cm | Fm | Bb | Eb | Fm | G7"
+        },
+        {
+          "from": "11",
+          "to": "18",
+          "chords": "Cm | Db | Cm | Fm | Gm | Fm | Eb | Ab G7"
+        },
+        {
+          "from": "19",
+          "to": "26",
+          "chords": "Cm | Db | Ab | Fm | Gb | Ab | Cm | Cm"
+        },
+        {
+          "from": "27",
+          "to": "32",
+          "chords": "Fm | Db G7 | Cm | Ab Bb | Fm Cm | Cm"
+        }
+      ]
     },
     {
       "id": "recompose-neutral-woodwind-quintet-a",

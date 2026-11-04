@@ -1,0 +1,15 @@
+Upper Wind Pulse: Upper Wind Pulse
+
+Tune in winds over harp pulse with pedal and mediant shifts, brighter lift to final tonic.
+
+Bars 1 to 2. Harp ostinato, Viola Cello pedal, Bassoon holds roots. Harp pattern fixes pulse before tune enters. Chords: Em | Cadd9 Level: pp steady
+Bars 3 to 10. Flute 1 tune, Oboe 1 counter, Clarinet pulse, Horns sustain. Pedal bass reframes tune as modal colour. Chords: Em | Bb | Em | Bbmaj7 | G | C | Bb G | C Level: mp growing to mf
+Bars 11 to 18. Clarinet 1 tune, Flute 2 echo, Viola ostinato, Cello bass. Mediant moves keep pulse yet change light. Chords: Cmaj7 | Dm | Em | Dm7 | Em7 | F | G | Am Level: mf steady then swelling
+Bars 19 to 26. Oboe 1 Flute 1 tune high, Harp runs, Timpani pedal, strings pulse. Brighter harmony lifts high tune to peak. Chords: C | Bb | Fmaj7 | Dm | Em | F | C | C Level: f rising to ff
+Bars 27 to 32. Trumpets horns arrival, Glockenspiel sparkle, strings sustain, Timpani hits. Broken tail extends dominant wait for close. Chords: Am | Em | F | G | Am G | C Level: ff easing to pp
+
+525 new notes. The code checked each one against what's sounding and the range of its instrument.
+24 long notes sit a semitone from something else sounding. That can be a good suspension or a slip, so check by ear: Flute 1 B4 in bar 5, Oboe 1 C5 in bar 5, Horn 1 A3 in bar 6, Clarinet 1 B4 in bar 11 and 20 more.
+
+Muse Spark wrote the new notes for you to check and change. New parts are at concert pitch.
+Your own notes are as you wrote them.
