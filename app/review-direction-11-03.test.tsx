@@ -4,7 +4,7 @@ import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, expect, it, vi } from "vitest";
 import { parseScore } from "../score";
-import { ArrangePanel } from "./ArrangePanel";
+import { ArrangePanel, type InitialSetup } from "./ArrangePanel";
 import { Workspace } from "./Workspace";
 import { Studio } from "./Studio";
 import { setTransport } from "./spark";
@@ -16,7 +16,7 @@ const xmlText = `<score-partwise><part-list><score-part id="P1"><part-name>Flute
 const score = parseScore(xmlText), loaded = { fileName: "local.musicxml", xmlText, score };
 let root: Root | null = null;
 afterEach(() => { act(() => root?.unmount()); root = null; document.body.replaceChildren(); setTransport(null); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
-async function setup(workspace = false, demo = false) {
+async function setup(workspace = false, demo = false, initialSetup?: InitialSetup) {
   const calls: { shape: string; input: any }[] = [], frames: FrameRequestCallback[] = [];
   vi.stubGlobal("requestAnimationFrame", (callback: FrameRequestCallback) => frames.push(callback));
   vi.stubGlobal("cancelAnimationFrame", () => {});
@@ -36,7 +36,7 @@ async function setup(workspace = false, demo = false) {
   let now!: Arranged;
   function Host() {
     now = useArrange(loaded, score.parts[0]!, { from: 0, to: 11 }, null);
-    return workspace ? <Workspace arranged={now} loaded={loaded} busy={false} demo={demo} prepared={[]} sourceNote={null} onStage={() => {}}/> : <ArrangePanel arranged={now} busy={false} demo={demo}/>;
+    return workspace ? <Workspace arranged={now} loaded={loaded} busy={false} demo={demo} prepared={[]} sourceNote={null} onStage={() => {}}/> : <ArrangePanel arranged={now} busy={false} demo={demo} initialSetup={initialSetup}/>;
   }
   const host = document.body.appendChild(document.createElement("div")); root = createRoot(host);
   await act(async () => root!.render(<Host/>));
@@ -112,6 +112,33 @@ it("keeps Expand neutral and preserves all source tracks when changing ensemble"
   expect(screen.calls.find((call) => call.shape === "distribute")?.input).toMatchObject({ intent: "expand" });
   expect(screen.calls.find((call) => call.shape === "distribute")?.input.tuneOnly).not.toBe(true);
   expect(screen.calls.find((call) => call.shape === "plan_options")?.input).toMatchObject({ intent: "expand", moreBars: 16, where: "both", ask: null });
+});
+
+it("offers only longer Expand paths and restores a positive extension from legacy setup values", async () => {
+  const screen = await setup(false, false, { intent: 'expand', where: 'inside', moreBars: 0 });
+  await press(screen.host, 'Next: Setup');
+  expect([...screen.host.querySelectorAll('[aria-label="What to write"] button')].map(button => button.textContent)).toEqual(['Continue after the ending', 'Develop the piece and continue']);
+  expect(screen.host.textContent).not.toContain('Develop within existing bars');
+  const added = [...screen.host.querySelectorAll('input')].find(input => input.parentElement?.textContent?.includes('Added bars'))!;
+  expect(added.value).toBe('16');
+  await press(screen.host, 'Continue after the ending');
+  await press(screen.host, 'Create');
+  expect(screen.calls.find(call => call.shape === 'plan_options')?.input).toMatchObject({ intent: 'expand', where: 'after', moreBars: 16 });
+});
+
+it.each([['Themes', 3], ['Motif', 4], ['Seed', 5]] as const)("keeps %s under Advanced and sends its selected freedom", async (name, freedom) => {
+  const screen = await setup();
+  await press(screen.host, 'Next: Setup'); await press(screen.host, 'Recompose');
+  const group = screen.host.querySelector('[aria-label="How far from your tune"]')!;
+  expect([...group.querySelectorAll(':scope > .freedom-stops button')].map(button => button.textContent)).toEqual(['Close', 'Reshaped']);
+  const advanced = group.querySelector('details')!;
+  expect(advanced.open).toBe(false);
+  expect(advanced.querySelector('summary')?.textContent).toBe('Advanced melodic freedom');
+  act(() => { advanced.open = true; });
+  await press(screen.host, name);
+  expect(group.textContent).toContain(`${name}.`);
+  await press(screen.host, 'Create');
+  expect(screen.calls.find(call => call.shape === 'plan_recompose')?.input).toMatchObject({ freedom });
 });
 
 it("defaults Recompose to a recognisable Reshaped tune and never carries its mood into Expand", async () => {
