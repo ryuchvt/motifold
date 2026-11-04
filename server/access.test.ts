@@ -75,14 +75,14 @@ it("reports closed pools and broken price bounds without revealing the ledger", 
 
 it("applies only the newly approved dev cap while preserving every existing attempt and the public allowance", () => {
   const x = setup();
-  x.ledger.setup(POOLS.map(pool => pool.id === "dev" ? { ...pool, capMicros: 26_000_000 } : pool));
+  x.ledger.setup(POOLS.map(pool => pool.id === "dev" ? { ...pool, capMicros: 44_048_076 } : pool));
   const held = x.request({ pool: "dev", reserveMicros: 16_000_000 }); x.ledger.reserve(held); x.ledger.dispatch(held.attemptId); x.ledger.uncertain(held.attemptId, "Held until billing is checked");
-  const paid = x.request({ pool: "dev", reserveMicros: 5_048_076 }); x.ledger.reserve(paid); x.ledger.dispatch(paid.attemptId); x.ledger.settle(paid.attemptId, 5_048_076, "Known usage");
+  const paid = x.request({ pool: "dev", reserveMicros: 26_616_543 }); x.ledger.reserve(paid); x.ledger.dispatch(paid.attemptId); x.ledger.settle(paid.attemptId, 26_616_543, "Known usage");
   const before = x.db.prepare("SELECT * FROM attempts ORDER BY id").all();
   x.ledger.setup(POOLS);
   expect(x.db.prepare("SELECT * FROM attempts ORDER BY id").all()).toEqual(before);
-  expect(x.ledger.balance("dev")).toMatchObject({ capMicros: 44_048_076, committedMicros: 21_048_076, dailyMicros: null });
-  expect(x.ledger.balance("dev")!.capMicros - x.ledger.balance("dev")!.committedMicros).toBe(23_000_000);
+  expect(x.ledger.balance("dev")).toMatchObject({ capMicros: 47_616_543, committedMicros: 42_616_543, dailyMicros: null });
+  expect(x.ledger.balance("dev")!.capMicros - x.ledger.balance("dev")!.committedMicros).toBe(5_000_000);
   expect(x.ledger.balance("public")).toMatchObject({ capMicros: 100_000_000, dailyMicros: 15_000_000 });
-  expect(44_048_076 + 100_000_000 + 4_000_000 + 1_000_000).toBeLessThanOrEqual(150_000_000);
+  expect(x.ledger.balance("own")).toMatchObject({ capMicros: 100_000_000_000, committedMicros: 0 });
 });

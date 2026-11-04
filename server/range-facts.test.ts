@@ -101,7 +101,7 @@ it.each([
     expect(posts).toBe(1);
     expect(shape.maxOutputTokens).toBe(40_000); expect(shape.deadlineMs).toBe(deadline);
     expect(ledger.attempt(`${next}-first`)).toMatchObject({ state: "settled", reserved_micros: reservationMicros(40_000), charged_micros: 6 });
-    expect(ledger.balance("dev")).toMatchObject({ capMicros: 44_048_076, committedMicros: 6 });
+    expect(ledger.balance("dev")).toMatchObject({ capMicros: 47_616_543, committedMicros: 6 });
     expect(ledger.balance("public")).toMatchObject({ capMicros: 100_000_000, committedMicros: 0 });
   } finally { db.close(); }
 });

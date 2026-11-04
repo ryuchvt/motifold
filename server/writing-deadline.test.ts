@@ -85,7 +85,7 @@ async function exercise(shape: AnyShape, input: unknown, version: string, answer
       expect(attempt).toMatchObject({ state: "uncertain", reserved_micros: 1_480_720, charged_micros: null });
       expect(JSON.parse(String(attempt.detail))).toMatchObject({ reason: "timeout", ms: 600_000 });
       expect(answers.get(hash)).toBeNull();
-      expect(ledger.balance("dev")).toMatchObject({ capMicros: 44_048_076, committedMicros: 1_480_720 });
+      expect(ledger.balance("dev")).toMatchObject({ capMicros: 47_616_543, committedMicros: 1_480_720 });
     } else {
       await vi.advanceTimersByTimeAsync(119_999);
       expect(await pending).toMatchObject({ status: "ok", cached: false, answer });
@@ -93,7 +93,7 @@ async function exercise(shape: AnyShape, input: unknown, version: string, answer
       expect(attempt).toMatchObject({ state: "settled", reserved_micros: 1_480_720, charged_micros: 78 });
       expect(JSON.parse(String(attempt.detail))).toMatchObject({ ms: 360_000, overBound: false });
       expect(answers.get(hash)).not.toBeNull();
-      expect(ledger.balance("dev")).toMatchObject({ capMicros: 44_048_076, committedMicros: 78 });
+      expect(ledger.balance("dev")).toMatchObject({ capMicros: 47_616_543, committedMicros: 78 });
     }
     await vi.advanceTimersByTimeAsync(700_000);
     expect(posts).toHaveLength(1); expect(reservations).toHaveLength(1);

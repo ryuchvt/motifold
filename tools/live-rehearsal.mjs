@@ -10,6 +10,7 @@ import { createConnection } from 'node:net';
 export const RECORDING_PROFILES = Object.freeze({
   rehearsal: Object.freeze({ run: 'sample-sketch-faithful-2026-11-04', ceilingMicros: 5_000_000, poolCapMicros: 26_000_000, recordName: 'live-rehearsal-approved-run.json' }),
   'night-204': Object.freeze({ run: 'motifold-night-204-2026-11-04', ceilingMicros: 23_000_000, poolCapMicros: 44_048_076, recordName: 'live-night-204-approved-run.json' }),
+  'focused-cute-test': Object.freeze({ run: 'motifold-cute-test-2026-11-04', ceilingMicros: 5_000_000, poolCapMicros: 47_616_543, initialCommittedMicros: 42_616_543, priorPoolCapMicros: 44_048_076, recordName: 'live-cute-test-approved-run.json' }),
 });
 
 export function recordingProfile(name = 'rehearsal') {
@@ -17,6 +18,62 @@ export function recordingProfile(name = 'rehearsal') {
   const profile = RECORDING_PROFILES[name];
   if (!profile) throw Error('Unknown approved recording profile');
   return profile;
+}
+
+/** The focused allowance is a new approval, never a renamed or reset old recording run. */
+function cuteBaseline(saved, profile) {
+  if (profile !== RECORDING_PROFILES['focused-cute-test']) return;
+  if (saved.initialBalance?.committedMicros !== profile.initialCommittedMicros || saved.initialBalance?.capMicros !== profile.priorPoolCapMicros || saved.initialBalance?.dailyMicros !== null) throw Error('The focused test baseline changed; preserve the approved starting exposure');
+}
+
+/** Readonly startup proof, before an approval is created or rewritten or a Worker starts. */
+export function validateFocusedCuteStart(snapshot, saved = null) {
+  const profile = RECORDING_PROFILES['focused-cute-test'];
+  if (!(snapshot?.attempts instanceof Map) || !Array.isArray(snapshot.pendingAttempts) || snapshot.pendingAttempts.length) throw Error('The focused test requires a drained readonly ledger snapshot');
+  const balance = snapshot.balance;
+  if (![balance?.capMicros, balance?.committedMicros].every(n => Number.isSafeInteger(n) && n >= 0) || balance.dailyMicros !== null) throw Error('Invalid focused test balance');
+  if (!saved) {
+    cuteBaseline({ initialBalance: balance }, profile);
+    return;
+  }
+  if (saved.version !== 1 || saved.run !== profile.run || saved.ceilingMicros !== profile.ceilingMicros || !Array.isArray(saved.attempts)) throw Error('The focused test approval changed');
+  cuteBaseline(saved, profile);
+  const owned = new Map(saved.attempts);
+  if (owned.size !== saved.attempts.length) throw Error('Duplicate focused test ownership');
+  let exposure = 0;
+  for (const [id, entry] of owned) {
+    if (typeof id !== 'string' || !Number.isSafeInteger(entry?.reservation) || entry.reservation < 0 || typeof entry.noCharge !== 'boolean') throw Error('Invalid focused test ownership');
+    const row = snapshot.attempts.get(id);
+    if (!row) {
+      if (!entry.noCharge) throw Error('A provisional focused test attempt prevents restart');
+      continue;
+    }
+    if (row.id !== id || row.pool !== 'dev' || !['settled', 'released'].includes(row.state)) throw Error('An unknown or unfinished focused test attempt prevents restart');
+    const charge = attemptExposure(row);
+    if (!Number.isSafeInteger(charge) || charge < 0 || charge > entry.reservation) throw Error('Invalid focused test settlement');
+    exposure += charge;
+  }
+  if (exposure > profile.ceilingMicros || balance.committedMicros !== profile.initialCommittedMicros + exposure) throw Error('The focused test cumulative baseline changed');
+  if (balance.capMicros !== profile.poolCapMicros && !(owned.size === 0 && balance.capMicros === profile.priorPoolCapMicros)) throw Error('The focused test dev cap changed');
+}
+
+/** These exact operator tags authorize only the two requested jobs, never matrix or repair work. */
+export function focusedCuteRequest(entry) {
+  if (!['cute-arrange', 'cute-sad-recompose'].includes(entry.captureCase) || !entry.input || entry.input.fix != null) return false;
+  if (['read_bars', 'read_piece', 'study_score'].includes(entry.shape)) return true;
+  const input = entry.input;
+  if (entry.captureCase === 'cute-arrange') {
+    if (input.intent !== 'arrange' || input.tuneOnly || input.seed) return false;
+    if (entry.shape === 'distribute') return true;
+    return ['plan_options', 'arrange'].includes(entry.shape) && input.moreBars === 0 && input.where === 'inside';
+  }
+  if (input.ask !== 'The mood I want: sad.' || input.freedom !== 2 || input.intent === 'expand') return false;
+  if (['plan_recompose', 'write_theme'].includes(entry.shape)) return input.where === 'after' && Number.isInteger(input.moreBars) && input.moreBars > 0;
+  return entry.shape === 'arrange' && input.where === 'inside' && input.moreBars === 0 && !!input.seed;
+}
+
+export function validateFocusedCuteMode({ startWorker, isolate, waveWidth }) {
+  if (!startWorker || !isolate || waveWidth !== 1) throw Error('focused-cute-test requires serial --start-worker --isolate-settled');
 }
 
 export function localOrigin(value) {
@@ -59,6 +116,7 @@ export function recordedCall(entry) {
 export function approvedRun(file, balance, profile = RECORDING_PROFILES.rehearsal) {
   const saved = existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : { version: 1, run: profile.run, ceilingMicros: profile.ceilingMicros, started: new Date().toISOString(), initialBalance: balance, attempts: [] };
   if (saved.version !== 1 || saved.run !== profile.run || saved.ceilingMicros !== profile.ceilingMicros || !Array.isArray(saved.attempts)) throw Error('The approved rehearsal record changed; review before running');
+  cuteBaseline(saved, profile);
   const owned = new Map(saved.attempts);
   for (const [id, entry] of owned) if (typeof id !== 'string' || !Number.isSafeInteger(entry.reservation) || entry.reservation < 0 || typeof entry.noCharge !== 'boolean') throw Error('Invalid retained rehearsal attempt');
   const persist = () => { saved.attempts = [...owned]; writeFileSync(`${file}.tmp`, JSON.stringify(saved, null, 2), { mode: 0o600 }); renameSync(`${file}.tmp`, file); };
@@ -100,7 +158,7 @@ export function reviewRetainedNightHolds(run, ledger, audit = null) {
 }
 
 /** Every admission accounts for actual settlements and all retained or provisional reservations. */
-export function createGuard({ upstream, ledger, shapes, reserve, ceilingMicros = 5_000_000, armed = false, record = () => {}, owned = new Map(), persist = () => {}, afterSettled, continueSettledFailures = false, requireCaptureCase = false, waveWidth = 1 }) {
+export function createGuard({ upstream, ledger, shapes, reserve, ceilingMicros = 5_000_000, armed = false, record = () => {}, owned = new Map(), persist = () => {}, afterSettled, continueSettledFailures = false, requireCaptureCase = false, allowRequest, waveWidth = 1 }) {
   upstream = localOrigin(upstream);
   if (![1, 2, 4].includes(waveWidth)) throw Error('Wave width must be 1, 2 or 4');
   const concurrent = waveWidth > 1;
@@ -317,6 +375,7 @@ export function createGuard({ upstream, ledger, shapes, reserve, ceilingMicros =
       if (requireCaptureCase && !entry.captureCase) return block(response, entry, 'recording-case-required');
       if (request.headers['x-motifold-key'] !== undefined) return block(response, entry, 'own-key-outside-dev-budget');
       if (request.method !== 'POST' || !/^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/.test(entry.attemptId ?? '') || !shapes[entry.shape]) return block(response, entry, 'bad-input');
+      if (allowRequest && !allowRequest(entry)) return block(response, entry, 'recording-scope');
       if (owned.has(entry.attemptId) || ledger.attempt(entry.attemptId)) return block(response, entry, 'reused-attempt-id');
       const reservation = reserve(shapes[entry.shape].maxOutputTokens);
       const reason = concurrent ? waveBudget(reservation) : budgetDecision(ledger.balance(), exposure(), reservation, ceilingMicros);
@@ -410,7 +469,7 @@ export function ownedWorker({ launch, ready, isDown, onUnexpectedExit, exitTimeo
 async function main() {
   const args = process.argv.slice(2);
   if (args.includes('--help')) {
-    console.log('After a fresh production build:\nnode tools/live-rehearsal.mjs --repo <repo> --start-worker --armed --isolate-settled [--profile rehearsal|night-204] [--wave-width 1|2|4] [--out <receipts directory>]\nProfiles are explicit approvals, not fresh allowances on restart. rehearsal retains its $5 ceiling. night-204 retains the separately approved $23 batch ceiling and $44.048076 cumulative dev cap. Existing holds, the $100 public pool and the $1 personal reserve are preserved.\nThe night profile may proceed after a charged, settled rejection; it never retries a request. Unknown charges stop the guard.\nWave width defaults to 1. Widths 2 and 4 are optional for night-204 with owned isolation: more pages may join until capacity or the first terminal result. All released calls must finish before a single restart. This is a local capture option, not a production network fix.\nWithout --armed, all model requests are refused.');
+    console.log('After a fresh production build:\nnode tools/live-rehearsal.mjs --repo <repo> --start-worker --armed --isolate-settled [--profile rehearsal|night-204|focused-cute-test] [--wave-width 1|2|4] [--out <receipts directory>]\nProfiles are explicit approvals, not fresh allowances on restart. rehearsal retains its $5 ceiling. night-204 retains its $23 batch ceiling. focused-cute-test is the separately approved $5 above $42.616543 committed, for a $47.616543 cumulative dev cap. It requires serial owned isolation and exact cute-arrange/cute-sad-recompose tags. Existing holds, the $100 public pool and the $1 personal reserve are preserved.\nThe night profile may proceed after a charged, settled rejection; it never retries a request. Unknown charges stop the guard.\nWave width defaults to 1. Widths 2 and 4 are optional for night-204 with owned isolation: more pages may join until capacity or the first terminal result. All released calls must finish before a single restart. This is a local capture option, not a production network fix.\nWithout --armed, all model requests are refused.');
     console.log('A night-204 restart refuses retained owned uncertain holds by default. Only an explicit --review-uncertain <local operator audit.json> can validate the exact retained run and UUID/reservation set after active and owned unfinished work has drained. This does not release holds, grant an allowance, retry requests or acknowledge a later unknown charge.');
     return;
   }
@@ -425,6 +484,8 @@ async function main() {
   const isolate = args.includes('--isolate-settled');
   if (isolate && !args.includes('--start-worker')) throw Error('--isolate-settled requires the guard-owned --start-worker');
   const waveWidth = Number(value('--wave-width', '1'));
+  const focusedCute = profileName === 'focused-cute-test';
+  if (focusedCute) validateFocusedCuteMode({ startWorker: args.includes('--start-worker'), isolate, waveWidth });
   if (![1, 2, 4].includes(waveWidth) || (waveWidth > 1 && (!isolate || profileName !== 'night-204'))) throw Error('--wave-width 2 or 4 requires the approved night-204 profile and --start-worker --isolate-settled');
   const port = Number(value('--port', '8788'));
   if (!Number.isInteger(port) || port < 1024 || port > 65535 || port === Number(new URL(upstream).port)) throw Error('Invalid guard port');
@@ -443,20 +504,24 @@ async function main() {
   if (POOLS.find((pool) => pool.id === 'dev')?.capMicros !== profile.poolCapMicros) throw Error('The configured dev cap does not match this approved recording profile');
   await modules.close();
   mkdirSync(output, { recursive: true });
-  const baseline = ledger.balance();
-  if (![26_000_000, profile.poolCapMicros].includes(baseline.capMicros)) throw Error('The existing approved dev cap changed; review before running');
+  const approvalFile = join(shared, profile.recordName);
+  const saved = focusedCute && existsSync(approvalFile) ? JSON.parse(readFileSync(approvalFile, 'utf8')) : null;
+  const startup = focusedCute ? ledger.snapshot(saved?.attempts?.map(([id]) => id) ?? []) : null;
+  const baseline = startup?.balance ?? ledger.balance();
+  if (focusedCute) validateFocusedCuteStart(startup, saved);
+  else if (![26_000_000, profile.poolCapMicros].includes(baseline.capMicros)) throw Error('The existing approved dev cap changed; review before running');
   const lockPath = join(shared, 'live-rehearsal.lock');
   const lock = openSync(lockPath, 'wx', 0o600);
   writeFileSync(lock, JSON.stringify({ pid: process.pid, started: new Date().toISOString(), output }));
   let worker;
   process.once('exit', () => { worker?.kill(); closeSync(lock); unlinkSync(lockPath); });
-  const run = approvedRun(join(shared, profile.recordName), baseline, profile);
+  const run = approvedRun(approvalFile, baseline, profile);
   const retainedHoldReview = profileName === 'night-204' ? reviewRetainedNightHolds(run, ledger, reviewPath === null ? null : JSON.parse(readFileSync(resolve(reviewPath), 'utf8'))) : null;
   if (retainedHoldReview) appendFileSync(join(output, 'receipts.jsonl'), JSON.stringify({ kind: 'retained-hold-review', at: new Date().toISOString(), review: retainedHoldReview }) + '\n');
   const baselineFile = join(output, 'baseline.json');
   if (!existsSync(baselineFile)) writeFileSync(baselineFile, JSON.stringify({ at: new Date().toISOString(), repo, upstream, port, profile: profileName, waveWidth, ceilingMicros: profile.ceilingMicros, armed: args.includes('--armed'), balance: baseline, approvedRun: run.snapshot() }, null, 2));
   const calls = [];
-  const guard = createGuard({ upstream, ledger, shapes: SHAPES, reserve: reservationMicros, ceilingMicros: profile.ceilingMicros, waveWidth, owned: run.owned, persist: run.persist, armed: args.includes('--armed'), continueSettledFailures: profileName === 'night-204', requireCaptureCase: profileName === 'night-204', afterSettled: isolate ? () => worker.restart() : undefined, record(entry) {
+  const guard = createGuard({ upstream, ledger, shapes: SHAPES, reserve: reservationMicros, ceilingMicros: profile.ceilingMicros, waveWidth, owned: run.owned, persist: run.persist, armed: args.includes('--armed'), continueSettledFailures: profileName === 'night-204', requireCaptureCase: profileName === 'night-204' || focusedCute, allowRequest: focusedCute ? focusedCuteRequest : undefined, afterSettled: isolate ? () => worker.restart() : undefined, record(entry) {
     appendFileSync(join(output, 'receipts.jsonl'), JSON.stringify(entry) + '\n');
     const call = recordedCall(entry);
     if (call) {

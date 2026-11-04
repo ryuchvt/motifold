@@ -30,7 +30,7 @@ it("admits four local dev calls while retaining old money holds, public's three 
     ledger.setup(POOLS);
     expect(ledger.attempt(old.attemptId)).toEqual(held);
     expect(SLOTS).toEqual({ dev: 4, public: 3, own: 50 });
-    expect(ledger.balance("dev")).toMatchObject({ capMicros: 44_048_076, dailyMicros: null });
+    expect(ledger.balance("dev")).toMatchObject({ capMicros: 47_616_543, dailyMicros: null });
     expect(ledger.balance("public")).toMatchObject({ capMicros: 100_000_000, dailyMicros: 15_000_000 });
     expect(ledger.balance("own")!.capMicros).toBe(100_000_000_000);
   } finally { db.close(); }

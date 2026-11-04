@@ -2,9 +2,9 @@
 import type { Pool } from "./ledger";
 
 export const POOLS: Pool[] = [
-  // The local recording server. 2026-11-04: Ryu approved $23 of new exposure above the existing
-  // $21.048076 committed, including all uncertain holds. The public $100 and personal $1 stay separate.
-  { id: "dev", capMicros: 44_048_076, dailyMicros: null, opensAt: null, closesAt: null, perVisitor: {} },
+  // 2026-11-04: Ryu approved a separate $5 focused test above $42.616543 committed,
+  // including every earlier hold. The old recording approvals, public $100 and personal $1 stay separate.
+  { id: "dev", capMicros: 47_616_543, dailyMicros: null, opensAt: null, closesAt: null, perVisitor: {} },
   // Everyone on the hosted site, judges included, because there's no private way to give them a link. The $100 Ryu kept for this on 2026-11-02, a limit a day so it lasts
   // past judging, and a limit for each visitor. When it's gone the site still has the free replay and a visitor's own key. Each visitor gets about a dollar a day (Ryu,
   // 11-03): one whole arrangement and one recomposition, at 11-03's costs of about 8 cents a section and 60 cents an arrangement.

@@ -56,7 +56,7 @@ it("sends medium theme reasoning once under a new cache version while retaining 
     expect(posts).toBe(1);
     expect(ledger.attempt("medium-theme")).toMatchObject({ state: "settled", reserved_micros: reserveMicros, charged_micros: 78 });
     expect(ledger.attempt("earlier-unknown")).toEqual(retained);
-    expect(ledger.balance("dev")).toMatchObject({ capMicros: 44_048_076, committedMicros: reserveMicros + 78 });
+    expect(ledger.balance("dev")).toMatchObject({ capMicros: 47_616_543, committedMicros: reserveMicros + 78 });
     expect(ledger.balance("public")).toMatchObject({ capMicros: 100_000_000, committedMicros: 0 });
     expect(writeTheme.deadlineMs).toBe(600_000);
   } finally { db.close(); }
