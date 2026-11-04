@@ -1319,7 +1319,8 @@ export function scoreXml(about: { title: string | null; movementTitle: string | 
 
 /** These parts over the bars of the score they came from. */
 export function scoreOfParts(score: Score, input: StudyScoreInput, parts: PlacedPart[]): string {
-  const lead = (wholeScoreParts(score) ?? score.parts)[0]!;
+  // The score clock stays on its first part, even when that instrument rests.
+  const lead = score.parts[0]!;
   const bars = input.written.map((w, k): BarHead => {
     const m = lead.measures[w.measure ?? k]!;
     // Every tempo in its place, because a DAW's automation doesn't wait for the barline.
