@@ -5,7 +5,7 @@ import { parseScore } from '../score';
 import { scoreTracks, type PlacedCheck } from '../app/arrange';
 import { placementRangeWords } from '../app/placementRepair';
 import { fixCurrent } from '../app/fixContext';
-import { assertNewNoteRangeRepair, newNoteRangeRepairs, type NoteRangeRepair } from './new-note-range-repair';
+import { assertNewNoteRangeRepair, newNoteRangeRepairs, repairReviewJson, reviewedNoteRepairPhases, type NoteRangeRepair } from './new-note-range-repair';
 import { useArrange, type Arranged } from '../app/useArrange';
 import { setOwnKey, setTransport } from '../app/spark';
 import { NIGHT_RECIPES, NIGHT_SOURCE, type NightRecipe } from './night-capture-matrix';
@@ -18,14 +18,15 @@ export interface NightIO {
   phase(caseId: string, phase: string): void;
   observations?(): Promise<NightRequest[]>;
   stopped?(): boolean;
+  allowReviewedRepairPhases?(phases: readonly string[]): void;
 }
 const bytes = (value: unknown) => new TextEncoder().encode(JSON.stringify(value, null, 2));
 export interface NightRequest { shape: string; status: string; reason?: string; attemptId?: string; caseId?: string; input?: unknown; cached?: boolean; model?: string; version?: string }
 function fail(condition: unknown, message: string): asserts condition { if (!condition) throw Error(message); }
 
 /** Defend each register-repair phase against repeated physical dispatch. */
-export function claimRegisterRepair(context: string, shape: string, claimed: Set<string>): void {
-  const layout = context.endsWith('-layout-range-repair'), notes = /-[ab]-note-range-repair-[12]$/.test(context);
+export function claimRegisterRepair(context: string, shape: string, claimed: Set<string>, reviewedPhases: ReadonlySet<string> = new Set()): void {
+  const layout = context.endsWith('-layout-range-repair'), notes = /-[ab]-note-range-repair-[12]$/.test(context) || /-a-note-range-repair-[34]$/.test(context) && reviewedPhases.has(context);
   fail(!context.includes('-note-range-repair-') || notes, 'New-note repair phase exceeds the bounded allowance');
   if (!layout && !notes) return;
   fail(shape === (layout ? 'distribute' : 'arrange'), 'Repair phase does not permit this request');
@@ -74,15 +75,22 @@ export async function runNightRecipe(recipe: NightRecipe, current: () => Arrange
     fail(current().trying?.kind === 'option' && current().trying?.index === index, 'Export selection does not own this outcome');
     const repairs: NoteRangeRepair[] = [];
     if (held.check.outOfRange.length) {
-      const proposed = newNoteRangeRepairs(held.check);
-      fail(proposed, 'New-note range failure is not eligible for bounded repair');
       const input = options(current()).input, plan = options(current()).plans[index];
+      const hashJson = (value: unknown) => digest(new TextEncoder().encode(repairReviewJson(value)));
+      const identity = { sourceSha256: NIGHT_SOURCE.sha256, recipeSha256: await hashJson(recipe), planSha256: await hashJson(plan), rawAddsSha256: await hashJson(held.adds), label: label.toUpperCase() };
+      const proposed = newNoteRangeRepairs(held.check, identity);
+      fail(proposed, 'New-note range failure is not eligible for bounded repair');
+      const reviewedPhases = reviewedNoteRepairPhases(identity, held.check, caseId);
+      if (reviewedPhases.length) io.allowReviewedRepairPhases?.(reviewedPhases);
       const proof: unknown[] = [];
       for (const [ordinal, repair] of proposed.entries()) {
         const before = structuredClone(held.adds);
         fail(fixCurrent(before, [repair.bar]).length < 8000, 'Range-repair bar context would be truncated');
         await save(`${label}-note-range-repair.json`, { status: 'asking', repairs: proof, repair, before });
-        await step(`${label}-note-range-repair-${ordinal + 1}`, () => current().askFix(index, repair.bar, repair.bar, repair.ask));
+        await step(`${label}-note-range-repair-${ordinal + 1}`, () => {
+          fail(options(current()).input === input && options(current()).plans[index] === plan, 'Range repair changed selected plan ownership');
+          return current().askFix(index, repair.bar, repair.bar, repair.ask);
+        });
         const after = notes(current(), index, true, true);
         await save(`${label}-note-range-repair.json`, { status: current().fixing, repairs: proof, repair, before, after: after.adds });
         fail(current().fixing === 'none' && !current().fixingReason, 'New-note range repair unavailable');
@@ -193,6 +201,7 @@ async function boot() {
   const nativeFetch = window.fetch.bind(window);
   let context = 'idle', stopped = false, active = false, status: unknown = { status: 'loading-source' };
   const repairClaims = new Set<string>();
+  const reviewedRepairPhases = new Set<string>();
   const observations: Promise<NightRequest>[] = [];
   window.fetch = async (input, init) => {
     const url = new URL(typeof input === 'string' ? input : input instanceof URL ? input.href : input.url, location.href);
@@ -200,7 +209,7 @@ async function boot() {
     if (!url.pathname.startsWith('/api/')) return nativeFetch(input, init);
     fail(active && /^\/api\/spark\/(?:read_piece|study_score|distribute|plan_options|plan_recompose|write_theme|arrange)$/.test(url.pathname), 'Unexpected API call');
     if (stopped) return Response.json({ status: 'fallback', reason: 'capture-stopped' });
-    claimRegisterRepair(context, url.pathname.split('/').at(-1)!, repairClaims);
+    claimRegisterRepair(context, url.pathname.split('/').at(-1)!, repairClaims, reviewedRepairPhases);
     const headers = new Headers(init?.headers); headers.delete('x-motifold-key'); headers.set('x-motifold-record-case', context);
     const caseId = context;
     const request = JSON.parse(String(init?.body)) as { attemptId: string; input: unknown };
@@ -233,9 +242,11 @@ async function boot() {
       fail(!active, 'Another capture is active');
       const recipe = NIGHT_RECIPES.find(item => item.id === id); fail(recipe, 'Unknown recipe ID');
       active = true; stopped = false; observations.length = 0;
+      reviewedRepairPhases.clear();
       try {
         const result = await runNightRecipe(recipe, () => current, {
           settle, invoke: async action => { await action(); }, stopped: () => stopped,
+          allowReviewedRepairPhases: phases => { for (const phase of phases) reviewedRepairPhases.add(phase); },
           observations: () => Promise.all(observations), capture: captureHookDownload,
           phase: (caseId, phase) => { context = `${caseId}-${phase}`; status = { status: 'running', caseId, recipe: recipe.id, phase }; show(); },
           save: async (caseId, name, data) => { const saved = await nativeFetch(`/__night/artifacts/${caseId}/${name}`, { method: 'POST', body: data as BodyInit }); fail(saved.ok, 'Local artifact save failed'); },

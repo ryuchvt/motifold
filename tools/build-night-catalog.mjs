@@ -33,7 +33,7 @@ function plannedHarmony(plan) {
   return spans.length && spans.length <= 40 ? spans : undefined;
 }
 const PHASES = { 'read-study': ['read_piece', 'study_score'], layout: ['distribute'], 'layout-range-repair': ['distribute'], plan: ['plan_options', 'plan_recompose'], 'a-preview': ['arrange'], 'b-preview': ['arrange'], 'a-full': ['arrange', 'write_theme'], 'b-full': ['arrange', 'write_theme'] };
-for (const label of ['a', 'b']) for (const ordinal of [1, 2]) PHASES[`${label}-note-range-repair-${ordinal}`] = ['arrange'];
+for (const label of ['a', 'b']) for (const ordinal of [1, 2, ...(label === 'a' ? [3, 4] : [])]) PHASES[`${label}-note-range-repair-${ordinal}`] = ['arrange'];
 
 export function expectedRecipes(templates) {
   const recipe = (intent, ensemble, mood = 'Neutral') => ({ id: `${intent}-${slug(mood)}-${slug(ensemble.name)}`, intent, ensemble: ensemble.name, instruments: [...ensemble.instruments], mood, bars: intent === 'arrange' ? 24 : intent === 'expand' ? 40 : 32, moreBars: intent === 'expand' ? 16 : intent === 'recompose' ? 32 : 0, where: intent === 'expand' ? 'both' : intent === 'recompose' ? 'after' : 'inside', tuneOnly: false, freedom: 2 });
@@ -106,7 +106,8 @@ export function validateOutcome(summary, archive, { recipe, readers, receipts, s
   const stemNotes = stems.flatMap(([, bytes]) => { const part = readers.readMidi(bytes); demand(part.ppq === all.ppq, 'Part MIDI timing grid mismatch'); return midiNotes(part); }).sort((a, b) => stable(a).localeCompare(stable(b)));
   demand(equal(stemNotes, midiNotes(all)), 'Part MIDI notes disagree with complete MIDI');
   const label = summary.label.toLowerCase();
-  const selectedPhase = call => summary.caseId === null ? equal(call.input?.chosen, summary.plan) : [`${summary.caseId}-${label}-preview`, `${summary.caseId}-${label}-full`, `${summary.caseId}-${label}-note-range-repair-1`, `${summary.caseId}-${label}-note-range-repair-2`].includes(call.caseId);
+  demand(!summary.requests?.some(call => call.shape === 'arrange' && call.caseId?.startsWith(`${summary.caseId}-${label}-note-range-repair-`) && ![1, 2, 3, 4].some(ordinal => call.caseId === `${summary.caseId}-${label}-note-range-repair-${ordinal}`)), 'Captured repair ordinal exceeds the bounded allowance');
+  const selectedPhase = call => summary.caseId === null ? equal(call.input?.chosen, summary.plan) : [`${summary.caseId}-${label}-preview`, `${summary.caseId}-${label}-full`, ...[1, 2, 3, 4].map(ordinal => `${summary.caseId}-${label}-note-range-repair-${ordinal}`)].includes(call.caseId);
   const requests = summary.requests?.filter(call => !['arrange', 'write_theme'].includes(call.shape) || selectedPhase(call));
   demand(requests?.filter(call => ['arrange', 'write_theme'].includes(call.shape)).every(call => equal(call.input?.chosen, summary.plan)), 'Selected outcome phase uses another plan');
   const calls = canonicalCalls(requests, receipts, summary.caseId);
@@ -187,7 +188,9 @@ export function validateOutcome(summary, archive, { recipe, readers, receipts, s
   let check = readers.checkOption({ ...summary.plan, adds }, base, input);
   const fixRequests = requests.filter(call => call.shape === 'arrange' && equal(call.input?.chosen, summary.plan) && call.input?.fix);
   if (fixes.length || fixRequests.length || summary.noteRangeRepairs?.length) {
-    const proposed = readers.newNoteRangeRepairs(check);
+    // Derive the allowance afresh from authenticated original writing, never captured cap metadata.
+    const review = { sourceSha256: SOURCE_SHA, recipeSha256: sha(readers.repairReviewJson(recipe)), planSha256: sha(readers.repairReviewJson(summary.plan)), rawAddsSha256: sha(readers.repairReviewJson(adds)), label: summary.label };
+    const proposed = readers.newNoteRangeRepairs(check, review);
     demand(proposed && fixes.length === proposed.length && fixRequests.length === fixes.length, 'Invalid bounded new-note repair count');
     demand(equal(summary.noteRangeRepairs, proposed), 'Range-repair metadata differs from the authentic failure');
     for (const [ordinal, repair] of proposed.entries()) {

@@ -11,10 +11,10 @@ import * as timing from '../app/timing.ts';
 import { newBarNumbers } from '../server/shapes.ts';
 import { TEMPLATES } from '../app/orchestra.ts';
 import { fixCurrent } from '../app/fixContext.ts';
-import { assertNewNoteRangeRepair, newNoteRangeRepairs } from './new-note-range-repair.ts';
+import { assertNewNoteRangeRepair, newNoteRangeRepairs, repairReviewJson } from './new-note-range-repair.ts';
 import { buildCatalog, canonicalCalls, expectedRecipes, exposureReport, validateOutcome } from './build-night-catalog.mjs';
 
-const readers = { parseScore, ...arrange, ...timing, readMidi, newBarNumbers, fixCurrent, assertNewNoteRangeRepair, newNoteRangeRepairs };
+const readers = { parseScore, ...arrange, ...timing, readMidi, newBarNumbers, fixCurrent, assertNewNoteRangeRepair, newNoteRangeRepairs, repairReviewJson };
 const sourceXml = readFileSync('public/demo/sample-sketch/sample-sketch.musicxml', 'utf8');
 const source = parseScore(sourceXml), recipe = expectedRecipes(TEMPLATES)[0];
 const publicCalls = [...JSON.parse(readFileSync('public/demo/sample-sketch/shared.json', 'utf8')), ...JSON.parse(readFileSync('public/demo/sample-sketch/arrange-neutral.json', 'utf8'))];
@@ -143,6 +143,16 @@ it('authenticates omitted/empty art without rewriting either raw reply, and stil
   repaired.art = 'pizz';
   expect(() => validateOutcome(x.summary, x.rebuild(), { recipe, readers, receipts: x.receipts, sourceXml })).toThrow('Range repair changed');
 });
+it('derives repair review identity from authenticated original notes rather than summary-provided allowances', () => {
+  const x = repairedFixture(), observed = [];
+  x.summary.repairLimit = 4; x.summary.repairReview = { label: 'A', rawAddsSha256: 'copied-untrusted-claim' };
+  const checkingReaders = { ...readers, newNoteRangeRepairs(check, identity) { observed.push(identity); return newNoteRangeRepairs(check, identity); } };
+  validateOutcome(x.summary, x.rebuild(), { recipe, readers: checkingReaders, receipts: x.receipts, sourceXml });
+  expect(observed).toEqual([{ sourceSha256: hash(sourceXml), recipeSha256: hash(repairReviewJson(recipe)), planSha256: hash(repairReviewJson(x.summary.plan)), rawAddsSha256: hash(repairReviewJson(x.before)), label: 'A' }]);
+  const bytes = x.rebuild();
+  x.summary.requests.push({ ...x.summary.requests.find(call => call.input.fix), caseId: `${x.caseId}-a-note-range-repair-5` });
+  expect(() => validateOutcome(x.summary, bytes, { recipe, readers, receipts: x.receipts, sourceXml })).toThrow('repair ordinal exceeds');
+});
 
 it.each(['dropped', 'added', 'pitch-class', 'raw-rhythm', 'dyn', 'role', 'art', 'context', 'seed', 'wrong-plan', 'wrong-phase', 'retry', 'unsettled'] )('rejects an authenticated but invalid new-note repair: %s', fault => {
   const x = repairedFixture(), add = x.fix.reply.answer.adds.find(add => add.part === 'Viola');
@@ -163,7 +173,7 @@ it.each(['dropped', 'added', 'pitch-class', 'raw-rhythm', 'dyn', 'role', 'art', 
   expect(() => validateOutcome(x.summary, bytes, { recipe, readers, receipts: x.receipts, sourceXml })).toThrow();
 });
 
-function recomposeRepairPair(repairB, identicalPlans = false) {
+function recomposeRepairPair(repairB, identicalPlans = false, badBars = ['10']) {
   const x = fixture(), target = expectedRecipes(TEMPLATES).find(item => item.intent === 'recompose' && item.ensemble === 'String orchestra' && item.mood === 'Neutral');
   const receipts = x.receipts.slice(0, 2), outcomes = [];
   const plans = ['A', 'B'].map(name => ({ name: `Local repaired ${name}`, idea: 'A local fixture', fifths: 0, time: '3/4', qpm: 90, motif: { from: '1', to: '2', what: 'Opening rise' }, why: [{ from: '1', to: '32', what: 'Complete', principle: 'Develop' }] }));
@@ -180,17 +190,21 @@ function recomposeRepairPair(repairB, identicalPlans = false) {
     receipts.push(make('write_theme', { ...asked, chosen: plan }, { lines }, `${label}-full`));
     let adds = [];
     for (let from = 1; from <= 32; from += 8) {
-      const these = bars.slice(from - 1, from + 7), written = these.map(bar => ({ part: 'Violin I', bar, events: repair && bar === '10' ? 'F3@0+3' : `${pitch}@0+3`, dyn: 'p<mf', role: 'melody', art: 'pizz' }));
+      const these = bars.slice(from - 1, from + 7), written = these.map(bar => ({ part: 'Violin I', bar, events: repair && badBars.includes(bar) ? 'F3@0+3' : `${pitch}@0+3`, dyn: 'p<mf', role: 'melody', art: 'pizz' }));
       const theme = lines.filter(line => these.includes(line.bar)).map(line => `Bar ${line.bar} ${line.role}: ${line.events}`).join(' / ');
       receipts.push(make('arrange', { ...input, chosen: plan, window: { from: String(from), to: String(from + 7) }, seed: { ...originalSeed, theme } }, { adds: written, doubles: [] }, `${label}-full`));
       adds.push(...written);
     }
     let fix, repairs;
     if (repair) {
-      repairs = newNoteRangeRepairs(arrange.checkOption({ ...plan, adds }, base, input));
-      const replacement = [{ ...adds.find(add => add.bar === '10'), events: 'F4@0+3' }];
-      fix = make('arrange', { ...input, chosen: plan, window: { from: '10', to: '10' }, fix: { ask: repairs[0].ask, current: fixCurrent(adds, ['10']) }, seed: { ...originalSeed, theme: `Bar 10 tune: ${pitch}@0+3` } }, { adds: replacement, doubles: [] }, `${label}-note-range-repair-1`);
-      receipts.push(fix); adds = [...adds.filter(add => add.bar !== '10'), ...replacement];
+      const before = arrange.checkOption({ ...plan, adds }, base, input);
+      // Local fakes may model unauthorised extra receipts so the publisher must reject them.
+      repairs = badBars.flatMap(bar => newNoteRangeRepairs({ ...before, outOfRange: before.outOfRange.filter(note => note.bar === bar) }));
+      for (const [ordinal, candidate] of repairs.entries()) {
+        const bar = candidate.bar, replacement = [{ ...adds.find(add => add.bar === bar), events: 'F4@0+3' }];
+        fix = make('arrange', { ...input, chosen: plan, window: { from: bar, to: bar }, fix: { ask: candidate.ask, current: fixCurrent(adds, [bar]) }, seed: { ...originalSeed, theme: `Bar ${bar} tune: ${pitch}@0+3` } }, { adds: replacement, doubles: [] }, `${label}-note-range-repair-${ordinal + 1}`);
+        receipts.push(fix); adds = [...adds.filter(add => add.bar !== bar), ...replacement];
+      }
     }
     const check = arrange.checkOption({ ...plan, adds }, base, input), bytes = arrange.packageFiles(arrange.withOption(baseXml, base, check), check, 'Local pair with exact bar repair');
     const summary = { ...x.summary, recipe: target, label: label.toUpperCase(), chosen: index, selected: 0, plan, bars: 32, notes: 32, check, sourceLayout: null, theme: { plan, tuneBars: 32, bars: 32 }, ...(repairs ? { noteRangeRepairs: repairs } : {}), requests: receipts.map(row => ({ shape: row.shape, input: row.input, caseId: row.captureCase, attemptId: row.attemptId, status: 'ok' })), zip: { sha256: hash(bytes) } };
@@ -198,6 +212,14 @@ function recomposeRepairPair(repairB, identicalPlans = false) {
   }
   return { recipe: target, receipts, outcomes };
 }
+it('rejects an unreviewed four-bar outcome despite a forged summary allowance and four settled repair receipts', () => {
+  const x = recomposeRepairPair(false, false, ['5', '7', '8', '9']), outcome = x.outcomes[0];
+  outcome.summary.repairLimit = 4;
+  outcome.summary.repairReview = { label: 'A', sourceSha256: hash(sourceXml), rawAddsSha256: 'c5c9a1b9aa4ff67ba526062c81fd1bf0c0b69cb00e61e4a691fc2342e97becb6' };
+  expect(outcome.summary.check.outOfRange).toEqual([]);
+  expect(outcome.summary.requests.filter(call => call.input.fix)).toHaveLength(4);
+  expect(() => validateOutcome(outcome.summary, outcome.bytes, { recipe: x.recipe, readers, receipts: x.receipts, sourceXml })).toThrow('Invalid bounded new-note repair count');
+});
 
 it.each([[false, false], [true, false], [true, true]])('keeps A repair history separate from B when B repair=%s and identical plans=%s', (repairB, identicalPlans) => {
   const x = recomposeRepairPair(repairB, identicalPlans);

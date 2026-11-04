@@ -7,15 +7,34 @@ const keyOf = (part: string, bar: string) => JSON.stringify([part, bar]);
 const sorted = (items: string[]) => items.sort();
 const stable = (value: unknown) => JSON.stringify(value, (_key, item) => item && typeof item === 'object' && !Array.isArray(item) ? Object.fromEntries(Object.entries(item).sort(([a], [b]) => a.localeCompare(b))) : item);
 const same = (a: unknown, b: unknown) => stable(a) === stable(b);
+export const repairReviewJson = stable;
+export interface NoteRepairReviewIdentity { sourceSha256: string; recipeSha256: string; planSha256: string; rawAddsSha256: string; label: string }
+const PULSE_A_REVIEW: NoteRepairReviewIdentity = {
+  sourceSha256: 'a8b4ee04a41ee125b8e7e042fe6c5dd3baf82fe65fd588eac6823770a9b8304f',
+  recipeSha256: '00afdc980fc24914c41bfcec7e845c9b87a5e2eaf55915e8480232a605d74200',
+  planSha256: 'd21f14f98c9ff1d6cfaab0096431ce8759d86282ad66ba684f938b27274a7101',
+  rawAddsSha256: 'c5c9a1b9aa4ff67ba526062c81fd1bf0c0b69cb00e61e4a691fc2342e97becb6',
+  label: 'A',
+};
+/** One operator-reviewed original outcome. Digests are computed from live state or authenticated writes, never a summary allowance. */
+export function reviewedNoteRepair(identity: NoteRepairReviewIdentity | undefined, check: OptionCheck): boolean {
+  const flags = check.outOfRange.map(note => [note.part, note.bar, note.name].join('/')).sort();
+  return same(identity, PULSE_A_REVIEW) && check.notes === 635 && !check.overBars && !check.unreadable && !check.pastBarEnd && same(flags, [
+    'Violin II/5/E3', 'Violin II/7/D3', 'Violin II/7/E3', 'Violin II/8/D3', 'Violin II/8/F3', 'Violin II/9/E3',
+  ]);
+}
+export function reviewedNoteRepairPhases(identity: NoteRepairReviewIdentity, check: OptionCheck, caseId: string): string[] {
+  return reviewedNoteRepair(identity, check) ? [3, 4].map(ordinal => `${caseId}-a-note-range-repair-${ordinal}`) : [];
+}
 // The exporter gives omitted and exactly empty articulation the same meaning. Keep raw replies intact.
 const artKey = (art: string | undefined) => art === '' ? null : art ?? null;
 function requireThat(ok: unknown, why: string): asserts ok { if (!ok) throw Error(why); }
 
-/** At most two complete bars, with no other hard failure. No correction is invented here. */
-export function newNoteRangeRepairs(check: OptionCheck): NoteRangeRepair[] | null {
+/** Two bars by default; only the fingerprinted Pulse A review permits its four original bars. */
+export function newNoteRangeRepairs(check: OptionCheck, review?: NoteRepairReviewIdentity): NoteRangeRepair[] | null {
   if (check.overBars || check.unreadable || check.pastBarEnd || !check.outOfRange.length) return null;
   const bars = [...new Set(check.outOfRange.map(note => note.bar))];
-  if (bars.length > 2) return null;
+  if (bars.length > (reviewedNoteRepair(review, check) ? 4 : 2)) return null;
   const repairs: NoteRangeRepair[] = [];
   for (const bar of bars) {
     const parts = [...new Set(check.outOfRange.filter(note => note.bar === bar).map(note => note.part))];

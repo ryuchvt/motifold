@@ -188,7 +188,30 @@ it('claims each physical new-note repair phase once and rejects an extra ordinal
   expect(() => claimRegisterRepair(phase, 'distribute', claimed)).toThrow(); expect(claimed.size).toBe(0);
   claimRegisterRepair(phase, 'arrange', claimed);
   expect(() => claimRegisterRepair(phase, 'arrange', claimed)).toThrow('already attempted');
-  expect(() => claimRegisterRepair('local-a-note-range-repair-3', 'arrange', claimed)).toThrow('bounded allowance');
+  for (const label of ['a', 'b']) for (const ordinal of [3, 4]) expect(() => claimRegisterRepair(`local-${label}-note-range-repair-${ordinal}`, 'arrange', claimed)).toThrow('bounded allowance');
+});
+it('requires a same-run reviewed phase grant for A repairs three and four without extending other cases or options', () => {
+  const claimed = new Set<string>(), reviewed = new Set(['recovery-a-note-range-repair-3', 'recovery-a-note-range-repair-4']);
+  for (const ordinal of [1, 2, 3, 4]) claimRegisterRepair(`recovery-a-note-range-repair-${ordinal}`, 'arrange', claimed, reviewed);
+  expect(claimed.size).toBe(4);
+  for (const phase of ['recovery-a-note-range-repair-3', 'recovery-a-note-range-repair-4']) expect(() => claimRegisterRepair(phase, 'arrange', claimed, reviewed)).toThrow('already attempted');
+  for (const phase of ['other-a-note-range-repair-3', 'other-a-note-range-repair-4', 'recovery-b-note-range-repair-3', 'recovery-b-note-range-repair-4', 'recovery-a-note-range-repair-5']) expect(() => claimRegisterRepair(phase, 'arrange', claimed, reviewed)).toThrow('bounded allowance');
+  expect(() => claimRegisterRepair('recovery-a-note-range-repair-3', 'write_theme', new Set(), reviewed)).toThrow('does not permit');
+});
+it('checks selected plan ownership after saving repair progress and before invoking askFix', async () => {
+  const { current, io, files, requests } = await setup('new-fixed');
+  const save = io.save; let changed = false;
+  io.save = async (caseId, file, data) => {
+    await save(caseId, file, data);
+    if (!changed && file === 'progress.json' && JSON.parse(strFromU8(data)).phase === 'a-note-range-repair-1') {
+      changed = true;
+      await act(async () => current().setChords(0, 0, 'F'));
+    }
+  };
+  const recipe = NIGHT_RECIPES.find(item => item.intent === 'recompose' && item.ensemble === 'Full orchestra' && item.mood === 'Neutral')!;
+  const result = await runNightRecipe(recipe, current, io, 'stale-repair-owner');
+  expect(changed).toBe(true); expect(result.status).toBe('failed'); expect(result.error).toBe('Range repair changed selected plan ownership');
+  expect(requests.filter(call => call.input.fix)).toHaveLength(0); expect(files.has('a.zip')).toBe(false); expect(fetch).not.toHaveBeenCalled();
 });
 
 it.each(['new-repeat', 'new-fallback', 'new-drop', 'new-add', 'new-rhythm', 'new-dyn', 'new-role', 'new-art', 'new-unrelated', 'new-three-bars'] as const)('rejects %s without another repair, B theme or export', async failure => {
