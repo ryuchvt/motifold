@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import {act} from 'react';
 import {createRoot,type Root} from 'react-dom/client';
-import {afterEach,expect,it,vi} from 'vitest';
+import {afterEach,beforeEach,expect,it,vi} from 'vitest';
 import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {TutorialCoach,tutorialTransition,TUTORIAL_STEPS,type TutorialGuide} from './Tutorial';
@@ -13,7 +13,8 @@ type State=Parameters<typeof tutorialTransition>[0];
 const initial=():State=>({piece,run:4,step:0,events:{}});
 const mark=(state:State,event:Parameters<TutorialGuide['mark']>[0],user=true)=>tutorialTransition(state,{kind:'event',run:4,event,complete:true,user});
 let root:Root|null=null;
-afterEach(()=>{act(()=>root?.unmount());root=null;document.body.replaceChildren();vi.restoreAllMocks();vi.unstubAllGlobals()});
+beforeEach(()=>vi.useFakeTimers());
+afterEach(()=>{act(()=>root?.unmount());root=null;document.body.replaceChildren();vi.restoreAllMocks();vi.unstubAllGlobals();vi.useRealTimers()});
 it('requires real actions for each stage, supports Back, and ignores a previous run',()=>{
  let state=initial();
  expect(tutorialTransition(state,{kind:'continue'})).toBe(state);
@@ -50,6 +51,7 @@ it('discovers a required control after async mounting, cleans old highlights, an
  const guide={piece,recipe:piece.recipe,run:4,step:0,stepId:'raw',stage:null,events:{'raw-played':true},completeOptions:[0],mark:()=>{}} satisfies TutorialGuide;
  const props={onBack:()=>{},onContinue:()=>{},onSkip:()=>{},onExit:()=>{}};
  await act(async()=>root!.render(<TutorialCoach guide={guide} {...props}/>));
+ await act(async()=>vi.advanceTimersByTimeAsync(1000));
  const button=document.createElement('button');button.dataset.tutorial='accept-bars';button.getBoundingClientRect=()=>({top:400,bottom:430}as DOMRect);
  await act(async()=>{pane.appendChild(button)});
  expect(button.classList.contains('tutorial-target')).toBe(true);expect(scroll).not.toHaveBeenCalled();
@@ -75,7 +77,7 @@ it('explicitly reveals an offscreen raw control through all ancestors when the n
  const coach=host.appendChild(document.createElement('div'));root=createRoot(coach);
  const guide={piece,recipe:piece.recipe,run:4,step:0,stepId:'raw',stage:null,events:{},completeOptions:[0],mark:()=>{}} satisfies TutorialGuide;
  await act(async()=>root!.render(<TutorialCoach guide={guide} onBack={()=>{}} onContinue={()=>{}} onSkip={()=>{}} onExit={()=>{}}/>));
- expect(button.classList.contains('tutorial-target')).toBe(true);expect(reveal).not.toHaveBeenCalled();
+ expect(button.classList.contains('tutorial-target')).toBe(false);expect(reveal).not.toHaveBeenCalled();
  act(()=>[...coach.querySelectorAll('button')].find(button=>button.textContent==='Show control')!.click());
  // Native scrollIntoView's default is all scroll ancestors, including the viewport.
  expect(reveal).toHaveBeenCalledExactlyOnceWith({behavior:'smooth',block:'center',inline:'nearest'});

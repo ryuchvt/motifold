@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import {act,createRef} from 'react';
 import {createRoot,type Root} from 'react-dom/client';
-import {afterEach,expect,it,vi} from 'vitest';
+import {afterEach,beforeEach,expect,it,vi} from 'vitest';
 import {readFileSync} from 'node:fs';
 import {TutorialCoach,tutorialCue,type TutorialGuide} from './Tutorial';
 import {spotlightHint,TutorialSpotlight} from './TutorialSpotlight';
@@ -10,7 +10,8 @@ import type {DemoPiece} from './demo';
 const piece=JSON.parse(readFileSync('public/demo/index.json','utf8')).pieces[0] as DemoPiece;
 const guide=(step:number,events:TutorialGuide['events']={}):TutorialGuide=>({piece,recipe:piece.recipe,run:9,step,stepId:'test',stage:null,events,completeOptions:[0,1],mark:vi.fn()});
 let root:Root|null=null;
-afterEach(()=>{act(()=>root?.unmount());root=null;document.body.replaceChildren();vi.restoreAllMocks();vi.unstubAllGlobals()});
+beforeEach(()=>vi.useFakeTimers());
+afterEach(()=>{act(()=>root?.unmount());root=null;document.body.replaceChildren();vi.restoreAllMocks();vi.unstubAllGlobals();vi.useRealTimers()});
 const rect=(left:number,top:number,width:number,height:number)=>({left,top,right:left+width,bottom:top+height,width,height,x:left,y:top,toJSON:()=>({})})as DOMRect;
 
 it('targets the next real action and waits instead of inventing an actionable control',()=>{
@@ -42,6 +43,7 @@ it('updates for late controls and sub-actions without marking an action or steal
  const state=guide(4,{'previews-ready':true}),back=vi.fn(),skip=vi.fn();
  const props={onBack:back,onSkip:skip,onContinue:vi.fn(),onExit:vi.fn()};
  await act(async()=>root!.render(<TutorialCoach guide={state} {...props}/>));
+ await act(async()=>vi.advanceTimersByTimeAsync(1000));
  const a=document.createElement('button'),b=document.createElement('button');
  a.setAttribute('aria-label','Audition plan A');b.setAttribute('aria-label','Audition plan B');
  const reveal=vi.fn();b.scrollIntoView=reveal;
@@ -93,6 +95,7 @@ it('retargets retained controls when their own or ancestor visibility changes an
  later.hidden=true;
  const mount=host.appendChild(document.createElement('div'));root=createRoot(mount);
  await act(async()=>root!.render(<TutorialCoach guide={guide(6)} onBack={()=>{}} onContinue={()=>{}} onSkip={()=>{}} onExit={()=>{}}/>));
+ await act(async()=>vi.advanceTimersByTimeAsync(1000));
  expect(exportButton.classList.contains('tutorial-target')).toBe(true);
  await act(async()=>{later.hidden=false;earlier.setAttribute('aria-hidden','true')});
  expect(download.classList.contains('tutorial-target')).toBe(true);expect(exportButton.hasAttribute('aria-describedby')).toBe(false);

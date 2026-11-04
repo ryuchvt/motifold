@@ -74,9 +74,19 @@ export function TutorialCoach({guide,onBack,onContinue,onSkip,onExit}:{guide:Tut
   const step=TUTORIAL_STEPS[guide.step];
   const done=step?.requires.every(event=>guide.events[event]);
   const cue=tutorialCue(guide),owner=`${guide.run}:${guide.step}:${cue.selectors.join('|')}`;
-  const [selected,setSelected]=useState<{owner:string;target:HTMLElement}|null>(null);
+  const [selected,setSelected]=useState<{owner:string;target:HTMLElement;identity:string}|null>(null);
+  const [introducedRun,setIntroducedRun]=useState<number|null>(null);
+  const introduced=introducedRun===guide.run;
+  const interacted=useRef(false);
   const target=selected?.owner===owner?selected.target:null;
   const coach=useRef<HTMLElement>(null);
+  useEffect(()=>{
+    interacted.current=false;
+    const remember=()=>{interacted.current=true};
+    const timer=setTimeout(()=>setIntroducedRun(guide.run),900);
+    for(const event of ['pointerdown','wheel','touchstart','keydown'])document.addEventListener(event,remember,true);
+    return()=>{clearTimeout(timer);for(const event of ['pointerdown','wheel','touchstart','keydown'])document.removeEventListener(event,remember,true)};
+  },[guide.run]);
   const showControl=useCallback((target:HTMLElement|null,explicit=false,focus=explicit)=>{
     if(!target)return;
     const behavior=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches?'instant':'smooth';
@@ -89,7 +99,7 @@ export function TutorialCoach({guide,onBack,onContinue,onSkip,onExit}:{guide:Tut
   },[]);
   useEffect(()=>{
     if(!step)return;
-    let live=true,target:HTMLElement|null=null;
+    let live=true,target:HTMLElement|null=null,identity='';
     const scope=document.querySelector('.studio')??document.body;
     const discover=()=>{
       if(!live)return;
@@ -98,21 +108,24 @@ export function TutorialCoach({guide,onBack,onContinue,onSkip,onExit}:{guide:Tut
         for(let at:HTMLElement|null=element;at;at=at.parentElement){const style=getComputedStyle(at);if(style.display==='none'||style.visibility==='hidden')return false}
         return true;
       })??null;
-      if(next===target)return;
-      target?.classList.remove('tutorial-target');target=next;target?.classList.add('tutorial-target');
-      setSelected(target?{owner,target}:null);
+      const nextIdentity=`${owner}:${next?.dataset.tutorial??next?.getAttribute('aria-label')??''}`;
+      if(next===target&&nextIdentity===identity)return;
+      target?.classList.remove('tutorial-target');target=next;identity=nextIdentity;
+      if(introduced)target?.classList.add('tutorial-target');
+      setSelected(target?{owner,target,identity}:null);
+      if(!introduced)return;
       if(step.id!=='raw')showControl(target);
-      else if(target&&guide.events['raw-played']){
+      else if(target&&(guide.events['raw-played']||!interacted.current)){
         const box=target.getBoundingClientRect(),top=coach.current?.getBoundingClientRect().bottom??0;
         const dock=document.querySelector<HTMLElement>('[aria-label="What Muse Spark is doing"]')?.getBoundingClientRect().top??innerHeight;
-        if(box.top<top+10||box.bottom>Math.min(innerHeight,dock)-10)showControl(target,true,false);
+        if(box.width>0&&box.height>0&&(box.top<top+10||box.bottom>Math.min(innerHeight,dock)-10))showControl(target,true,false);
       }
     };
     discover();
-    const observer=new MutationObserver(discover);observer.observe(scope,{childList:true,subtree:true,attributes:true,attributeFilter:['hidden','aria-hidden','class','style']});
+    const observer=new MutationObserver(discover);observer.observe(scope,{childList:true,subtree:true,attributes:true,attributeFilter:['hidden','aria-hidden','class','style','data-tutorial','aria-label']});
     return()=>{live=false;observer.disconnect();target?.classList.remove('tutorial-target')};
-  },[owner,showControl]);
+  },[owner,introduced,showControl]);
   if(!step)return null;
   const instruction=target?.dataset.tutorial==='download'?'Download this complete arrangement as MIDI and notation.':cue.instruction;
-  return <><aside ref={coach} className="tutorial-coach" aria-label="Hands-on tutorial"><div><span className="tutorial-count">{guide.step+1} of {TUTORIAL_STEPS.length}</span><strong>{step.title}</strong><p aria-live="polite">{instruction}</p><details><summary>About this step</summary><p>{step.words}</p></details></div><div className="tutorial-coach-actions"><button onClick={onBack} disabled={guide.step===0}>Back</button>{done&&<button onClick={onContinue}>Continue</button>}<button disabled={!target} onClick={()=>showControl(target,true)}>Show control</button><button onClick={onSkip}>Skip guide</button><button onClick={onExit}>Exit tutorial</button></div></aside><TutorialSpotlight key={owner} target={target} controls={coach} instruction={instruction}/></>;
+  return <><aside ref={coach} className="tutorial-coach" aria-label="Hands-on tutorial"><div><span className="tutorial-count">{guide.step+1} of {TUTORIAL_STEPS.length}</span><strong>{step.title}</strong><p aria-live="polite">{instruction}</p><details><summary>About this step</summary><p>{step.words}</p></details></div><div className="tutorial-coach-actions"><button onClick={onBack} disabled={guide.step===0}>Back</button>{done&&<button onClick={onContinue}>Continue</button>}<button disabled={!target} onClick={()=>{interacted.current=true;setIntroducedRun(guide.run);showControl(target,true)}}>Show control</button><button onClick={onSkip}>Skip guide</button><button onClick={onExit}>Exit tutorial</button></div></aside><TutorialSpotlight key={guide.run} active={introduced} identity={selected?.identity} target={target} controls={coach} instruction={instruction}/></>;
 }

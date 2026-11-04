@@ -35,11 +35,24 @@ function visibleBox(element:HTMLElement,viewport:Box):Box|null{
   return box.right>box.left&&box.bottom>box.top?box:null;
 }
 const path=(box:Box,padding=0)=>`M${box.left-padding},${box.top-padding}H${box.right+padding}V${box.bottom+padding}H${box.left-padding}Z`;
+const sameBox=(a:Box|null,b:Box)=>!!a&&a.left===b.left&&a.top===b.top&&a.right===b.right&&a.bottom===b.bottom;
+const ringStyle=(box:Box)=>({left:`${box.left-5}px`,top:`${box.top-5}px`,width:`${box.right-box.left+10}px`,height:`${box.bottom-box.top+10}px`});
+function useReducedMotion(){
+  const[reduced,setReduced]=useState(()=>window.matchMedia?.('(prefers-reduced-motion: reduce)').matches??false);
+  useEffect(()=>{const media=window.matchMedia?.('(prefers-reduced-motion: reduce)');if(!media)return;const update=()=>setReduced(media.matches);update();media.addEventListener?.('change',update);return()=>media.removeEventListener?.('change',update)},[]);
+  return reduced;
+}
+interface Travel {target:HTMLElement|null;identity:string;active:boolean;pending:boolean;arrived:boolean;from:Box|null;destination:Box|null;timer:ReturnType<typeof setTimeout>|null;animation:Animation|null;generation:number}
 
 /** Purely visual: all real controls, normal keyboard order and scrolling remain in the page. */
-export function TutorialSpotlight({target,controls,instruction}:{target:HTMLElement|null;controls:RefObject<HTMLElement|null>;instruction:string}){
-  const id=useId(),hint=useRef<HTMLDivElement>(null);
+export function TutorialSpotlight({target,controls,instruction,identity='',active=true}:{target:HTMLElement|null;controls:RefObject<HTMLElement|null>;instruction:string;identity?:string;active?:boolean}){
+  const id=useId(),hint=useRef<HTMLDivElement>(null),ring=useRef<HTMLDivElement>(null),lastBox=useRef<Box|null>(null);
+  const reduced=useReducedMotion();
   const [geometry,setGeometry]=useState<{viewport:Box;target:Box;holes:Box[];hint:Box|null}|null>(null);
+  const[light,setLight]=useState<Box|null>(null),[phase,setPhase]=useState<'waiting'|'settling'|'gliding'|'arrived'>('waiting'),[arrival,setArrival]=useState(0);
+  const travel=useRef<Travel>({target:null,identity:'',active:false,pending:false,arrived:false,from:null,destination:null,timer:null,animation:null,generation:0});
+  const cancelTravel=()=>{const now=travel.current;if(now.timer!==null)clearTimeout(now.timer);now.timer=null;if(now.animation){now.animation.onfinish=null;now.animation.cancel();now.animation=null}};
+  useEffect(()=>()=>{travel.current.generation++;cancelTravel()},[]);
   useEffect(()=>{
     if(!target)return;
     const previous=target.getAttribute('aria-describedby');
@@ -47,19 +60,58 @@ export function TutorialSpotlight({target,controls,instruction}:{target:HTMLElem
     return()=>{const remaining=target.getAttribute('aria-describedby')?.split(/\s+/).filter(value=>value!==id).join(' ');if(remaining)target.setAttribute('aria-describedby',remaining);else target.removeAttribute('aria-describedby')};
   },[target,id]);
   useLayoutEffect(()=>{
-    if(!target){setGeometry(null);return}
+    const state=travel.current;
+    const changed=state.target!==target||state.identity!==identity||state.active!==active;
+    if(changed){
+      const previous=ring.current?.getBoundingClientRect();
+      if(previous&&previous.width>10&&previous.height>10)lastBox.current={left:previous.left+5,top:previous.top+5,right:previous.right-5,bottom:previous.bottom-5};
+      cancelTravel();state.generation++;state.target=target;state.identity=identity;state.active=active;state.pending=!!target&&active;state.arrived=false;state.from=lastBox.current;state.destination=null;
+    }
+    if(!target||!active){setGeometry(null);setLight(null);setPhase('waiting');return}
     let frame=0;
+    const generation=state.generation;
+    const arrive=()=>{
+      if(travel.current.generation!==generation||!state.destination)return;
+      state.pending=false;lastBox.current=state.destination;setLight(state.destination);setPhase('arrived');
+      if(!state.arrived){state.arrived=true;setArrival(value=>value+1)}
+    };
+    const beginTravel=()=>{
+      state.timer=null;
+      if(travel.current.generation!==generation||!state.destination||!target.isConnected)return;
+      const from=state.from,to=state.destination,element=ring.current;
+      state.pending=false;setLight(to);
+      if(reduced||!from||!element?.animate){arrive();return}
+      setPhase('gliding');
+      // The real control's mask hole stays at its current position throughout the visual handoff.
+      const animation=element.animate([ringStyle(from),ringStyle(to)],{duration:460,easing:'cubic-bezier(.2,.75,.25,1)',fill:'both'});
+      state.animation=animation;
+      animation.onfinish=()=>{if(travel.current.generation!==generation)return;animation.onfinish=null;animation.cancel();state.animation=null;arrive()};
+    };
     const measure=()=>{
       frame=0;
       const visual=window.visualViewport;
       const viewport={left:visual?.offsetLeft??0,top:visual?.offsetTop??0,right:(visual?.offsetLeft??0)+(visual?.width??innerWidth),bottom:(visual?.offsetTop??0)+(visual?.height??innerHeight)};
       const box=visibleBox(target,viewport);
-      if(!box){setGeometry(null);return}
+      if(!box){cancelTravel();setGeometry(null);setLight(null);setPhase('waiting');return}
       const focused=document.activeElement instanceof HTMLElement&&document.activeElement.matches('button,input,select,textarea,a[href],summary,[tabindex]')?document.activeElement:null;
       const protectedElements=[controls.current,focused,document.querySelector<HTMLElement>('[aria-label="What Muse Spark is doing"]')].filter((element):element is HTMLElement=>!!element);
       const holes=protectedElements.map(element=>visibleBox(element,viewport)).filter((box):box is Box=>!!box);
       const hintBox=hint.current?.getBoundingClientRect();
       setGeometry({viewport,target:box,holes,hint:spotlightHint(box,hintBox?.width??260,hintBox?.height??70,viewport,[box,...holes])});
+      const moved=!sameBox(state.destination,box);state.destination=box;
+      if(state.pending){
+        if(reduced||typeof HTMLElement.prototype.animate!=='function'){arrive();return}
+        if(!state.from||!overlaps(state.from,viewport)){
+          const guide=controls.current?.getBoundingClientRect(),left=clamp((guide?.left??box.left)+24,viewport.left+8,viewport.right-16),top=clamp(guide?guide.bottom-16:box.top-40,viewport.top+8,viewport.bottom-16);
+          state.from={left,top,right:left+8,bottom:top+8};
+        }
+        setLight(state.from);setPhase('settling');
+        // Let a gentle automatic reveal finish before the light travels to its final visible position.
+        if(state.timer!==null)clearTimeout(state.timer);state.timer=setTimeout(beginTravel,120);
+      }else if(state.animation&&moved){
+        // User scrolling or a dock/viewport resize must track the real control immediately.
+        cancelTravel();arrive();
+      }else if(!state.animation){if(!state.arrived)arrive();else{setLight(box);lastBox.current=box;setPhase('arrived')}}
     };
     const schedule=()=>{if(!frame)frame=requestAnimationFrame(measure)};
     measure();
@@ -70,14 +122,14 @@ export function TutorialSpotlight({target,controls,instruction}:{target:HTMLElem
     window.addEventListener('resize',schedule);window.addEventListener('scroll',schedule,true);
     document.addEventListener('focusin',schedule);document.addEventListener('focusout',schedule);
     window.visualViewport?.addEventListener('resize',schedule);window.visualViewport?.addEventListener('scroll',schedule);
-    return()=>{cancelAnimationFrame(frame);observer?.disconnect();window.removeEventListener('resize',schedule);window.removeEventListener('scroll',schedule,true);document.removeEventListener('focusin',schedule);document.removeEventListener('focusout',schedule);window.visualViewport?.removeEventListener('resize',schedule);window.visualViewport?.removeEventListener('scroll',schedule)};
-  },[target,controls,instruction]);
+    return()=>{cancelAnimationFrame(frame);cancelTravel();observer?.disconnect();window.removeEventListener('resize',schedule);window.removeEventListener('scroll',schedule,true);document.removeEventListener('focusin',schedule);document.removeEventListener('focusout',schedule);window.visualViewport?.removeEventListener('resize',schedule);window.visualViewport?.removeEventListener('scroll',schedule)};
+  },[target,controls,identity,active,reduced]);
   if(!target)return null;
-  const box=geometry?.target,at=geometry?.hint;
-  return createPortal(<div className="tutorial-spotlight" aria-hidden="true">
-    {geometry&&<svg className="tutorial-scrim" width="100%" height="100%"><defs><mask id={`${id}-mask`}><rect width="100%" height="100%" fill="white"/>{[geometry.target,...geometry.holes].map((hole,index)=><path key={index} d={path(hole,5)} fill="black"/>)}</mask></defs><rect width="100%" height="100%" fill="#02060c" fillOpacity=".62" mask={`url(#${id}-mask)`}/></svg>}
-    {box&&<div className="tutorial-spotlight-ring" style={{left:box.left-5,top:box.top-5,width:box.right-box.left+10,height:box.bottom-box.top+10}}/>}
-    <div ref={hint} className="tutorial-spotlight-hint" style={{left:at?.left??8,top:at?.top??0,visibility:at?'visible':'hidden'}}>{instruction}</div>
+  const box=active?geometry?.target:null,at=geometry?.hint;
+  return createPortal(<div className="tutorial-spotlight" data-motion={active?phase:'intro'} aria-hidden="true">
+    {box&&geometry&&<svg className="tutorial-scrim" width="100%" height="100%"><defs><mask id={`${id}-mask`}><rect width="100%" height="100%" fill="white"/>{[geometry.target,...geometry.holes].map((hole,index)=><path key={index} d={path(hole,5)} fill="black"/>)}</mask></defs><rect width="100%" height="100%" fill="#02060c" fillOpacity=".62" mask={`url(#${id}-mask)`}/></svg>}
+    {box&&light&&<div ref={ring} className="tutorial-spotlight-ring" style={ringStyle(light)}><span key={arrival} className={arrival>0?'tutorial-arrival-shine':undefined}/></div>}
+    <div ref={hint} className="tutorial-spotlight-hint" style={{left:at?.left??8,top:at?.top??0,visibility:box&&at&&phase==='arrived'?'visible':'hidden'}}>{instruction}</div>
     {/* A stable description exists even when there is no safe visual hint position. */}
     <span id={id} className="tutorial-accessible-cue">{instruction}</span>
   </div>,document.body);

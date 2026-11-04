@@ -6,12 +6,15 @@
 .tutorial-coach-actions button:focus-visible { outline:2px solid #e1ebfa; outline-offset:3px; }.tutorial-coach-actions button:disabled { opacity:.4; }
 .tutorial-spotlight { position:fixed; inset:0; z-index:70; pointer-events:none; font:500 13px/1.5 var(--sans); color:#edf3fc; }
 .tutorial-spotlight * { pointer-events:none!important; }
-.tutorial-scrim { position:absolute; inset:0; }
-.tutorial-spotlight-ring { position:absolute; box-sizing:border-box; border:2px solid #b4cbea; border-radius:9px; box-shadow:0 0 0 3px #7ba7e224; animation:tutorial-spotlight-pulse 1.4s ease-out 3; }
+.tutorial-scrim { position:absolute; inset:0; animation:tutorial-scrim-in .32s ease-out both; }
+.tutorial-spotlight-ring { position:absolute; box-sizing:border-box; border:2px solid #b4cbea; border-radius:9px; box-shadow:0 0 0 3px #7ba7e224; }
+.tutorial-spotlight[data-motion="gliding"] .tutorial-spotlight-ring { border-color:#e7f2ff; box-shadow:0 0 0 3px #a5caff40,0 0 22px #a5caff80; }
+.tutorial-arrival-shine { position:absolute; inset:-3px; border:2px solid #e7f2ff; border-radius:inherit; opacity:0; animation:tutorial-arrival .85s ease-out; }
 .tutorial-spotlight-hint { position:absolute; box-sizing:border-box; width:min(270px,calc(100vw - 24px)); padding:10px 13px; border:1px solid #91accb70; border-radius:8px; background:#192637; box-shadow:0 5px 18px #0005; }
 .tutorial-accessible-cue { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
-@keyframes tutorial-spotlight-pulse { 0%,100% { box-shadow:0 0 0 3px #7ba7e224; } 45% { box-shadow:0 0 0 8px #7ba7e250; } }
-@media(prefers-reduced-motion:reduce) { .tutorial-spotlight-ring { animation:none; } }
+@keyframes tutorial-scrim-in { from { opacity:0; } to { opacity:1; } }
+@keyframes tutorial-arrival { 0% { opacity:0; box-shadow:0 0 0 0 #a5caff70; } 25% { opacity:1; box-shadow:0 0 0 5px #a5caff55,0 0 20px #a5caff90; } 100% { opacity:0; box-shadow:0 0 0 13px #a5caff00; } }
+@media(prefers-reduced-motion:reduce) { .tutorial-scrim,.tutorial-arrival-shine { animation:none; }.tutorial-scrim { opacity:1; } }
 .tutorial-sketch { flex:1; min-height:0; overflow:auto; padding:24px clamp(16px,3vw,44px); }.tutorial-sketch h1 { font:500 clamp(24px,3vw,34px)/1.15 var(--sans); margin:0 0 13px; letter-spacing:-.8px; }.tutorial-sketch p { max-width:850px; font-size:14px; line-height:1.6; color:#b6c5d8; }
 .tutorial-source-facts { display:flex; flex-wrap:wrap; gap:9px; margin:20px 0; }.tutorial-source-facts>span { border:1px solid var(--line2); border-radius:6px; padding:9px 12px; color:#c9d6e7; font-size:12px; }
 .tutorial-raw-chart { padding:18px; margin:20px 0; border:1px solid var(--line); border-radius:9px; background:#0e141c; }.tutorial-raw-chart svg { display:block; width:100%; height:auto; min-height:150px; }.tutorial-raw-chart rect { fill:var(--source); }.tutorial-raw-chart line { stroke:#ffffff12; stroke-width:1; }.tutorial-raw-chart text { fill:#9baec8; font:11px var(--sans); }.tutorial-raw-chart .raw-playhead { stroke:#dde8f9; stroke-width:1.5; }

@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import {act,useState} from 'react';
 import {createRoot,type Root} from 'react-dom/client';
-import {afterEach,expect,it,vi} from 'vitest';
+import {afterEach,beforeEach,expect,it,vi} from 'vitest';
 import {readFileSync} from 'node:fs';
 import {RawSketch} from './TutorialSketch';
 import {TutorialCoach,TutorialProvider,type TutorialEvent,type TutorialGuide} from './Tutorial';
@@ -12,7 +12,8 @@ vi.mock('./audio/preview',async original=>({...await original<typeof import('./a
 (globalThis as any).IS_REACT_ACT_ENVIRONMENT=true;
 const piece=JSON.parse(readFileSync('public/demo/index.json','utf8')).pieces[0] as DemoPiece;
 let root:Root|null=null;
-afterEach(()=>{act(()=>root?.unmount());root=null;document.body.replaceChildren();vi.restoreAllMocks();vi.unstubAllGlobals()});
+beforeEach(()=>vi.useFakeTimers());
+afterEach(()=>{act(()=>root?.unmount());root=null;document.body.replaceChildren();vi.restoreAllMocks();vi.unstubAllGlobals();vi.useRealTimers()});
 async function mount(){
  vi.stubGlobal('fetch',async(url:string)=>{expect(url).toBe(piece.midi);return new Response(readFileSync(`public${piece.midi}`))});
  const mark=vi.fn(),accept=vi.fn();
@@ -23,6 +24,7 @@ async function mount(){
  }
  const host=document.body.appendChild(document.createElement('div'));host.className='studio';root=createRoot(host);
  await act(async()=>root!.render(<Harness/>));
+ await act(async()=>vi.advanceTimersByTimeAsync(1000));
  return {host,mark,accept};
 }
 it('spotlights the actual Play control first, then accepted bars only after user-started playback',async()=>{
