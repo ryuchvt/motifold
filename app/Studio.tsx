@@ -61,6 +61,17 @@ function Clock() {
 export interface LoadedSketch { fileName: string; xmlText: string; score: Score }
 interface StudioProps { initialScore?: LoadedSketch | null; sample?: boolean; initialSetup?: InitialSetup; sampleMessage?: string }
 
+function ImportGuidance() {
+  return <div className="import-guidance" id="import-file-guidance">
+    <p>MIDI (.mid, .midi) or MusicXML (.musicxml, .xml, .mxl).</p>
+    <p><strong>Audio import is experimental.</strong> Use one sung, hummed or played melody without chords or accompaniment. Detected notes and timing may be inaccurate. Check the result before arranging.</p>
+    <details><summary>Audio formats and other notation apps</summary>
+      <p>WAV, MP3, M4A, AAC, FLAC, AIFF (.aif, .aiff), Ogg, Opus and WebM, when supported by your browser.</p>
+      <p>For Sibelius or MuseScore files, export MusicXML from that app first.</p>
+    </details>
+  </div>;
+}
+
 /** The whole site: choose how to try it, bring a piece, see it read, say where it should go, and take the score away. */
 export function Studio({ initialScore = null, sample = false, initialSetup, sampleMessage }: StudioProps) {
   const [access, setAccess] = useState<Access | null>(initialScore ? "live" : null);
@@ -303,8 +314,9 @@ export function Studio({ initialScore = null, sample = false, initialSetup, samp
           </h1>
           <p className="door-sub">Bring a sketch, played or written. Muse Spark reads it, asks what it can't tell, and writes the orchestral score as notes you can read, change and take into your DAW. Keep your melody and build around it, or give it up as a motif and let a new piece grow from it.</p>
           <p className="door-author">Made by Chawanvit Vuthikornudomkit</p>
-          <div className="start-sample"><div><strong>Learn Motifold with my piano sketch</strong><p>Start with the raw MIDI, inspect the accepted bars and tempo, then choose, hear and export a recorded arrangement. Free and no key.</p></div><span className="tutorial-start-actions"><button className="button primary" disabled={!demo} onClick={()=>demo&&startTutorial(demo.pieces[0]!)}>Start hands-on tutorial</button><button className="button" disabled={!demo} onClick={()=>showExplorer(demo?.pieces[0])}>Explore recorded outcomes</button></span></div>
+          <div className="start-sample"><div><strong>Learn Motifold with my piano sketch</strong><p>Start with the raw MIDI, inspect the accepted bars and tempo, then choose, hear and export a recorded arrangement. Free and no key.</p>{demo?.pieces[0]?.mappedMidi&&<div className="sample-download"><a href={demo.pieces[0].mappedMidi} download="Motifold-piano-sketch.mid">Download piano sketch MIDI</a><span>Played timing with a tempo map. DAW lead-in removed.</span></div>}</div><span className="tutorial-start-actions"><button className="button primary" disabled={!demo} onClick={()=>demo&&startTutorial(demo.pieces[0]!)}>Start hands-on tutorial</button><button className="button" disabled={!demo} onClick={()=>showExplorer(demo?.pieces[0])}>Explore recorded outcomes</button></span></div>
           {error && <p className="error" role="alert">{error}</p>}
+          <section className="own-piece-intro" aria-labelledby="own-piece-title"><h2 id="own-piece-title">Use your own piece</h2><ImportGuidance /></section>
           <div className="doors">
             <div className="door-card">
               <strong>Use your own Meta key</strong>
@@ -372,6 +384,7 @@ export function Studio({ initialScore = null, sample = false, initialSetup, samp
               {access !== "demo" && (
                 <button
                   className="drop"
+                  aria-describedby="import-file-guidance"
                   onClick={() => input.current?.click()}
                   onDragOver={(e) => e.preventDefault()}
                   onDrop={(e) => {
@@ -384,8 +397,9 @@ export function Studio({ initialScore = null, sample = false, initialSetup, samp
                   <span className="drop-sub">A MIDI or MusicXML file, or a recording of one line, sung, hummed or played. Drop it here, or tap to choose one.</span>
                 </button>
               )}
+              {access !== "demo" && <ImportGuidance />}
               {access !== "demo" && (
-                <button className="door-link" onClick={() => void record()}>
+                <button className="door-link" aria-describedby="import-file-guidance" onClick={() => void record()}>
                   Or sing, hum or play it in now
                 </button>
               )}
