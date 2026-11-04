@@ -8,6 +8,8 @@ I write to picture, so I often play an idea in with no click. A file like that h
 
 ## Try it
 
+The recorded tutorial is free and needs no key at [motifold.chawanvit-vut.workers.dev](https://motifold.chawanvit-vut.workers.dev).
+
 Give it your own Meta Model API key to try your own piece. The key stays in that browser tab and goes with each call. The server does not store it. The hosted site also lets anyone try one piece on my credit, with a limit per visitor and a limit a day, until that runs out.
 
 The free **Start hands-on tutorial** path begins with my original piano performance, then shows its saved interpreted bars and tempo map. It guides actual Study, Setup, A/B comparison, writing and export controls. Both guided string options are complete. The model answers are real recorded replies. The activity panel shows their original duration while replay shortens the wait. No credit is used.
@@ -48,18 +50,26 @@ Calls on my shared credit go through a ledger that reserves the worst case first
 
 ## Run it
 
-You need Node 22 or later.
+Use Node.js 24 or 26 with npm. Node 22.13 or later within the 22.x release is also supported. Run these commands from the root of your clone.
 
-```
-npm install
+```sh
+npm ci
 npm run server
 ```
 
-Open the address it prints. For live calls, copy `.dev.vars.example` to `.dev.vars` and put your key in it. Or paste your key on the first page.
+Open http://127.0.0.1:8788. This starts the app and Worker locally. Local replay needs no Cloudflare account, API key, deployment or environment file. The first install downloads the npm dependencies.
 
-To explore the interface with no model calls, run `npm run dev:ui` and open http://127.0.0.1:5199. It opens my `Sample_sketch.mid` piano performance with its saved bar reading and two separately saved Hopeful and Dark arrangements. Every screen labels it as a sample. The preview server refuses API calls, and the sample answers are excluded from the production build. This sample is for checking the interface, not for filming a live demonstration.
+For the no-key judge walkthrough, choose **Start hands-on tutorial**. Play my piano sketch, open its saved accepted bars, and follow Study, Confirm tracks, Setup, Create, compare A and B, choose either plan, write its recorded continuation and Export. Use Arrange and String orchestra, keep all source notes, skip the unanswered questions and leave the direction blank. Both plans finish. After export, the three featured examples show the arrangement, expansion and Cute to Sad recomposition with their DAW audio and downloads. **Explore recorded outcomes** opens the other prepared scores directly.
 
-`npm test` runs the tests.
+These paths use the genuine saved model replies bundled in this repo. They do not make live Meta calls or use credit. Changed choices without a recorded reply say they are not prepared. The guided workflow and its evidence are described in [DEMO.md](DEMO.md) and [the recording provenance](public/demo/README.md).
+
+To make new live calls on your own music, paste your Meta Model API key into **Use your own Meta key** on the first page. Alternatively, stop the local server, run `cp .dev.vars.example .dev.vars`, replace the placeholder in `.dev.vars` with your key, and restart `npm run server`. This project uses Wrangler's `.dev.vars` convention for local secrets, so the template is [.dev.vars.example](.dev.vars.example). The real `.dev.vars` is ignored by Git. New live calls use your Meta account credit and can take several minutes. No key is needed for the recorded walkthrough above.
+
+The [video walkthrough](https://www.youtube.com/watch?v=Z1bjtmefSEs) shows saved replies from real Muse Spark calls. It does not claim that a fresh provider call is running during replay. The bundled evidence includes [the exact guided requests and replies](public/demo/sample-sketch/guided-neutral-strings.json), [source fingerprints](public/demo/sample-sketch/source/manifest.json), [outcome exports and validation manifests](public/demo/sample-sketch/outcomes), and [DAW audio provenance](public/demo/audio-provenance.json). Each complete outcome also includes its recorded calls in `run.json`. Timing, model and prompt versions are retained, with thinking summaries and usage where available.
+
+For a separate developer interface preview, run `npm run dev:ui` and open http://127.0.0.1:5199. It opens my `Sample_sketch.mid` piano performance with its saved bar reading and two separately saved Hopeful and Dark arrangements. Every screen labels it as a sample. The preview server refuses API calls, and the sample answers are excluded from the production build. Use the normal local server and recorded tutorial above to reproduce the submitted workflow.
+
+`npm test` runs the tests without paid calls. `npm run typecheck` checks app and Worker types. `npm run build` produces the app in `dist/`.
 
 ## What it can't do yet
 
@@ -67,13 +77,15 @@ It writes notes, dynamics and plucked string parts, but not a general set of art
 
 ## Made before the event
 
-I wrote all the code in this repo during the building period, from October 27 to November 4. This repo starts from a snapshot of my private working repo, so its first commit holds the work up to that day and the commits after it show the rest. My private repo also holds an earlier practice tool that isn't part of this.
+I wrote the application code during the building period, from October 27 to November 4. This repo begins with my November 2 snapshot of the event-built application. The commits after it show the incremental development, including experiments and fixtures that were later removed. Pre-event application code and its history are not included.
 
-These things are older. I wrote early design documents before October 27. The piano theme and the recordings in `public/demo/` are my own composition and my own playing, and they're input data. The musical principles are established knowledge. The app's code and musical guidance were written during the event.
+My piano theme and early design documents predate the event. The MIDI and audio inputs in `public/demo/` are my own composition and playing. The musical principles are established knowledge. The application and musical guidance were written during the event. I do not claim that every recording predates it.
 
 ## Sounds and data
 
 The instrument sounds in `public/samples/` are from Versilian Studios' [VSCO 2 Community Edition](https://versilian-studios.com/vsco-community/), which is CC0. `scripts/build-samples.py` builds them. No model makes any sound. The selected example and video input is my own piano performance, `test-fixtures/Sample_sketch.mid`.
+
+The public-domain MusicXML fixture in `test-fixtures/fur-elise.musicxml` is used only in score tests. Its source and public-domain notice are included in the file. It is not part of the recorded demonstration.
 
 ## Libraries
 
@@ -93,3 +105,5 @@ The instrument sounds in `public/samples/` are from Versilian Studios' [VSCO 2 C
 ## Licence
 
 Copyright 2026 Chawanvit Vuthikornudomkit. All rights reserved. The source is available to view under the [Motifold Source-Available License](LICENSE), and no other use is granted.
+
+Third-party components and assets keep their own licences. [Third-party notices](THIRD_PARTY_NOTICES.md) include the licence for a retired experiment retained in this repo's history.

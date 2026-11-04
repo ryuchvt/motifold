@@ -7,10 +7,10 @@
   "scripts": {
     "dev": "vite",
     "server": "vite build && wrangler dev --var MODE:dev --ip 127.0.0.1 --port 8788",
-    "build": "tsc -p . && vite build",
+    "build": "npm run types --silent && tsc -p . && vite build",
     "test": "vitest run",
     "types": "wrangler types server/worker-configuration.d.ts --include-env=false",
-    "typecheck": "tsc -p . && npm run types --silent && tsc -p server",
+    "typecheck": "npm run types --silent && tsc -p . && tsc -p server",
     "dev:ui": "vite --mode ui --host 127.0.0.1 --port 5199 --strictPort"
   },
   "dependencies": {

@@ -36,15 +36,15 @@ The catalog reports the number actually prepared. The target is not a claim that
 
 ## Audio and DAW rendering
 
-Current playback uses browser instruments. Muse Spark writes notes rather than audio. Real DAW bounces have not been added yet.
+Muse Spark writes notes rather than audio. The raw tutorial performance plays my original piano recording. The three featured examples have DAW-rendered full mixes and matching instrument stems. They demonstrate an arrangement, an expansion and a sad recomposition of my second theme. Other prepared outcomes use browser instruments unless a matching DAW render is attached.
 
-For each prepared outcome, the render pack has the actual combined MIDI, individual MIDI parts, MusicXML, generation metadata and a render checklist. I will render the exported MIDI with my own licensed instruments without editing the generated MIDI. A DAW render is attached only to the exact exported score hash it came from. Soloing a part uses browser playback rather than playing an unrelated full mix.
+For each prepared outcome, the render pack has the actual combined MIDI, individual MIDI parts, MusicXML, generation metadata and a render checklist. I rendered the featured exported MIDI with my own licensed instruments without editing its notes. A DAW render is attached only to the exact exported score hash it came from. Solo playback uses matching DAW stems where available and browser instruments otherwise.
 
-The interface identifies prepared model replies, generated MIDI and any later DAW audio as prerecorded. It does not present them as a new live call.
+The interface identifies prepared model replies, generated MIDI and DAW audio as prerecorded. It does not present them as a new live call.
 
 ## Capture and verification
 
-The saved calls retain their actual requests, replies, thinking summaries, model, prompt version, elapsed time and reported usage. Successful stages can be assembled after local cold Worker restarts. I do not claim an uninterrupted live session or a production transport fix. Replay may shorten the wait while showing the original recorded duration.
+The saved calls retain their actual requests, replies, thinking summaries, model, prompt version and elapsed time, with reported usage where available. Successful stages can be assembled after local cold Worker restarts. I do not claim an uninterrupted live session or a production transport fix. Replay may shorten the wait while showing the original recorded duration.
 
 The accepted bar analysis is saved data. No new bar-reading call or invented bar-reading reasoning is shown. The guided A/B run is self-contained so it cannot mix an earlier reading with a later answer for the same request.
 
