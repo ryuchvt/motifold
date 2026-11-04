@@ -1,6 +1,8 @@
 /* Activity takes its own space below the workspace. It never covers notation or the inspector action. */
 .studio > .thinking.muse-dock { position:relative; inset:auto; flex:none; width:auto; max-width:none; max-height:none; margin:0; border:0; border-top:1px solid var(--line); border-radius:0; box-shadow:none; background:#111923; overflow:hidden; z-index:auto; padding:0; }
 .muse-dock > header { display:flex; align-items:center; gap:10px; min-height:37px; padding:8px 18px; }
+.muse-dock .thinking-summary { display:flex; align-items:center; gap:10px; flex:1; min-width:0; align-self:stretch; padding:0; border:0; border-radius:0; background:transparent; color:inherit; text-align:left; }
+.muse-dock .thinking-summary:focus-visible { outline:2px solid var(--ink); outline-offset:3px; }
 .muse-dock > header strong { flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .muse-dock .thinking-hide { position:static; flex:none; width:28px; min-height:26px; padding:0; border:1px solid var(--line2); border-radius:5px; background:transparent; color:var(--ink); }
 .muse-dock .thinking-clock { flex:none; color:#b9c8dc; font:11px var(--mono); }

@@ -88,8 +88,9 @@ it("labels the local UI sample activity without claiming a live model call", asy
   await act(async () => { jobs.get("Local sample")!.finish(reply); await pending; });
 });
 
-it("starts visible, keeps its minimized dock across later calls, and restores the current reasoning", async () => {
+it("opens for new activity, respects manual minimize during that call, and reopens for the next call", async () => {
   const { host, jobs } = setup();
+  expect(host.querySelector(".muse-dock.is-minimized")).not.toBeNull();
   let first!: Promise<SparkReply>, second!: Promise<SparkReply>;
   act(() => { first = askSpark("read_piece", { chosen: { name: "Reading" } }); });
   act(() => jobs.get("Reading")!.think("Reading the supplied notes."));
@@ -99,12 +100,81 @@ it("starts visible, keeps its minimized dock across later calls, and restores th
   act(() => host.querySelector<HTMLButtonElement>(".thinking-hide")!.click());
   expect(host.querySelector(".muse-dock.is-minimized")).not.toBeNull();
   expect(host.querySelector(".thinking-lines")).toBeNull();
+  act(() => jobs.get("Reading")!.think("Later words do not override a manual minimize."));
+  advance(5000);
+  expect(host.querySelector(".muse-dock.is-minimized")).not.toBeNull();
   act(() => { second = askSpark("study_score", { chosen: { name: "Study" } }); });
   act(() => jobs.get("Study")!.think("Finding the written harmony."));
-  expect(host.querySelector(".muse-dock.is-minimized")).not.toBeNull();
-  openActivity(host);
+  expect(host.querySelector(".muse-dock.is-minimized")).toBeNull();
   expect(host.querySelector(".thinking-lines")?.textContent).toContain("Finding the written harmony.");
   await act(async () => { jobs.get("Reading")!.finish(reply); jobs.get("Study")!.finish(reply); await Promise.all([first, second]); });
+});
+
+it("briefly shows the final completion then compacts, and the compact bar reopens saved details", async () => {
+  const { host, jobs } = setup();
+  let work!: Promise<SparkReply>;
+  act(() => { work = askSpark("arrange", { chosen: { name: "Completed option" } }); jobs.get("Completed option")!.think("Its genuine saved reasoning."); });
+  await act(async () => { jobs.get("Completed option")!.finish(reply); await work; });
+  expect(host.querySelector(".thinking header strong")?.textContent).toContain("Finished");
+  expect(host.querySelector(".muse-dock-content")).not.toBeNull();
+  advance(2499); expect(host.querySelector(".muse-dock.is-minimized")).toBeNull();
+  advance(1); expect(host.querySelector(".muse-dock.is-minimized")).not.toBeNull();
+  act(() => host.querySelector<HTMLButtonElement>(".thinking-summary")!.click());
+  expect(host.querySelector(".thinking-done")?.textContent).toContain("Its genuine saved reasoning.");
+  advance(10000); expect(host.querySelector(".muse-dock.is-minimized")).toBeNull();
+  expect(jobs.size).toBe(1);
+});
+
+it("cancels an old completion timeout when new work starts, and waits for every parallel call", async () => {
+  const { host, jobs } = setup();
+  let first!: Promise<SparkReply>, second!: Promise<SparkReply>, third!: Promise<SparkReply>;
+  act(() => { first = askSpark("read_piece", { chosen: { name: "First" } }); });
+  await act(async () => { jobs.get("First")!.finish(reply); await first; });
+  advance(2000);
+  act(() => { second = askSpark("study_score", { chosen: { name: "Second" } }); third = askSpark("arrange", { chosen: { name: "Third" } }); });
+  advance(1000); expect(host.querySelector(".muse-dock.is-minimized")).toBeNull();
+  await act(async () => { jobs.get("Second")!.finish(reply); await second; });
+  advance(10000); expect(host.querySelector(".muse-dock.is-minimized")).toBeNull();
+  expect(host.querySelector(".thinking header strong")?.textContent).toContain("Third");
+  await act(async () => { jobs.get("Third")!.finish(reply); await third; });
+  advance(2500); expect(host.querySelector(".muse-dock.is-minimized")).not.toBeNull();
+});
+
+it("opens for a failure and retains it until dismissal even if later successful history rolls over", async () => {
+  const { host, jobs } = setup();
+  let failed!: Promise<SparkReply>;
+  act(() => { failed = askSpark("arrange", { chosen: { name: "Needs attention" } }); });
+  act(() => host.querySelector<HTMLButtonElement>(".thinking-hide")!.click());
+  await act(async () => { jobs.get("Needs attention")!.finish({ status: "fallback", reason: "quota" }); await failed; });
+  advance(30000); expect(host.querySelector(".muse-dock.is-minimized")).toBeNull();
+  expect(host.querySelector(".thinking header strong")?.textContent).toContain("Didn't finish");
+  for (let index = 0; index < 9; index++) {
+    let later!: Promise<SparkReply>; const name = `Later ${index}`;
+    act(() => { later = askSpark("study_score", { chosen: { name } }); });
+    await act(async () => { jobs.get(name)!.finish(reply); await later; });
+  }
+  advance(10000);
+  expect(host.querySelector(".muse-dock.is-minimized")).toBeNull();
+  expect(host.querySelector(".thinking-done .failed")?.textContent).toContain("Needs attention");
+  act(() => host.querySelector<HTMLButtonElement>(".thinking-hide")!.click());
+  expect(host.querySelector(".muse-dock.is-minimized")).not.toBeNull();
+  let fresh!: Promise<SparkReply>;
+  act(() => { fresh = askSpark("study_score", { chosen: { name: "After dismissal" } }); });
+  await act(async () => { jobs.get("After dismissal")!.finish(reply); await fresh; });
+  advance(2500); expect(host.querySelector(".muse-dock.is-minimized")).not.toBeNull();
+});
+
+it("clears the old completion timer on reset without compacting new activity", async () => {
+  const { host, jobs } = setup();
+  let old!: Promise<SparkReply>, next!: Promise<SparkReply>;
+  act(() => { old = askSpark("read_piece", { chosen: { name: "Before reset" } }); });
+  await act(async () => { jobs.get("Before reset")!.finish(reply); await old; });
+  advance(2000);
+  act(() => { resetMuseActivity(); next = askSpark("study_score", { chosen: { name: "After reset" } }); });
+  advance(10000); expect(host.querySelector(".muse-dock.is-minimized")).toBeNull();
+  expect(host.querySelector(".thinking header strong")?.textContent).toContain("After reset");
+  expect(host.textContent).not.toContain("Before reset");
+  await act(async () => { jobs.get("After reset")!.finish(reply); await next; });
 });
 
 it("identifies a recorded-only session while its local files load and after an unprepared request", async () => {

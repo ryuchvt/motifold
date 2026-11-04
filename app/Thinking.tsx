@@ -63,6 +63,7 @@ function watch() {
       const bars = window ? (window.from === window.to ? `bar ${window.from}` : `bars ${window.from} to ${window.to}`) : null;
       const now = Date.now();
       running = [...running, { callId: event.callId, shape: event.shape, label: [stage?.what ?? "Thinking", plan, bars].filter(Boolean).join(" · "), bars, started: now, updated: now, lines: [] }];
+      setPanel(true);
     } else if (event.kind === "recorded") {
       if (!running.some((r) => r.callId === event.callId)) return;
       running = running.map((r) => r.callId === event.callId ? { ...r, timing: event.timing } : r);
@@ -74,8 +75,10 @@ function watch() {
       const at = running.findIndex((r) => r.callId === event.callId);
       if (at < 0) return;
       const ended = running[at]!;
-      finished = [...finished.slice(-7), { callId: ended.callId, label: ended.label, ok: event.ok, ms: Date.now() - ended.started, timing: ended.timing, lines: ended.lines }];
+      const result = { callId: ended.callId, label: ended.label, ok: event.ok, ms: Date.now() - ended.started, timing: ended.timing, lines: ended.lines };
+      finished = [...finished.slice(-7), result];
       running = running.filter((_, k) => k !== at);
+      finishPanel(result);
     }
     changed();
   });
@@ -101,10 +104,26 @@ function useNow(on: boolean) {
 
 /** The panel's open or shut, shared by the chip and the panel. */
 const panelListeners = new Set<() => void>();
-let panel = { opened: true };
-const setPanel = (opened: boolean) => {
-  panel = { opened };
+let panel = { opened: false, attention: null as Finished | null };
+let completionTimer: ReturnType<typeof setTimeout> | null = null;
+const cancelCompact = () => { if (completionTimer !== null) clearTimeout(completionTimer); completionTimer = null; };
+const publishPanel = (opened: boolean, attention = panel.attention) => {
+  panel = { opened, attention };
   for (const l of panelListeners) l();
+};
+/** A manual close dismisses the error; a manual reopen leaves history open to read. */
+const setPanel = (opened: boolean) => {
+  cancelCompact();
+  publishPanel(opened, opened ? panel.attention : null);
+};
+const finishPanel = (result: Finished) => {
+  cancelCompact();
+  if (!result.ok) { publishPanel(true, result); return; }
+  if (running.length || panel.attention || !panel.opened) return;
+  completionTimer = setTimeout(() => {
+    completionTimer = null;
+    if (!running.length && !panel.attention) publishPanel(false);
+  }, 2500);
 };
 const subscribePanel = (listener: () => void) => {
   panelListeners.add(listener);
@@ -117,7 +136,7 @@ export function resetMuseActivity() {
   running = [];
   finished = [];
   changed();
-  setPanel(true);
+  setPanel(false);
 }
 function usePanel() {
   return useSyncExternalStore(subscribePanel, getPanel, getPanel);
@@ -150,18 +169,22 @@ export function Thinking({ sample = false }: { sample?: boolean }) {
   const clockNow = useNow(now.length > 0);
   const list = useRef<HTMLOListElement>(null);
   const current = now[now.length - 1] ?? null;
+  const latest = state.attention ?? done[done.length - 1];
+  const history = state.attention && !done.some(result => result.callId === state.attention!.callId) ? [state.attention, ...done] : done;
   useEffect(() => {
     list.current?.scrollTo({ top: list.current.scrollHeight });
-  }, [current?.callId, current?.lines.length]);
+  }, [current?.callId, current?.lines.length, state.opened]);
   const stage = current ? STAGES[current.shape] : null;
   const recorded = replay.active || ("enabled" in replay && replay.enabled === true);
   const elapsed = (ms: number, timing?: RecordedTiming) => timing ? `Replay ${clock(ms)} / recorded live ${clock(timing.realMs)}` : `${sample ? "Sample" : recorded ? "Replay" : "Live"} ${clock(ms)}`;
   return (
     <aside className={`thinking muse-dock${state.opened ? "" : " is-minimized"}`} aria-label="What Muse Spark is doing">
       <header role={current ? "status" : undefined}>
-        <span className={`signal${current ? " on" : ""}`} aria-hidden />
-        <strong>{current ? current.label : "Muse Spark is ready"}</strong>
-        {current && <span className="thinking-clock">{elapsed(clockNow - current.started, current.timing)}</span>}
+        <button type="button" className="thinking-summary" aria-label={state.opened ? "Hide activity details" : "Show activity details"} aria-expanded={state.opened} onClick={() => setPanel(!state.opened)}>
+          <span className={`signal${current ? " on" : ""}`} aria-hidden />
+          <strong>{current ? current.label : latest ? `${latest.ok ? "Finished" : "Didn't finish"} · ${latest.label}` : "Muse Spark is ready"}</strong>
+          {current && <span className="thinking-clock">{elapsed(clockNow - current.started, current.timing)}</span>}
+        </button>
         <button className="thinking-hide" aria-label={state.opened ? "Minimize activity" : "Expand activity"} aria-expanded={state.opened} onClick={() => setPanel(!state.opened)}>
           {state.opened ? "−" : "+"}
         </button>
@@ -176,9 +199,9 @@ export function Thinking({ sample = false }: { sample?: boolean }) {
           ))}
         </ol>
       )}
-      {done.length > 0 && (
+      {history.length > 0 && (
         <ol className="thinking-done">
-          {done.map((d) => (
+          {history.map((d) => (
             <li key={d.callId} className={d.ok ? undefined : "failed"}>
               {d.label} · {elapsed(d.ms, d.timing)}
               {d.ok ? "" : " · didn't come back"}
