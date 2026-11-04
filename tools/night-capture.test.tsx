@@ -34,7 +34,7 @@ it('enumerates102 unique recipes and204 outcomes in the approved priority order'
 });
 
 type NewRepair = 'new-fixed' | 'new-repeat' | 'new-fallback' | 'new-drop' | 'new-add' | 'new-rhythm' | 'new-dyn' | 'new-role' | 'new-art' | 'new-unrelated' | 'new-three-bars';
-async function setup(failure?: 'notes' | 'theme' | 'zero-adds' | 'grouped-theme' | 'range-fixed' | 'range-repeat' | 'range-fallback' | 'range-other-flags' | 'layout-fallback' | 'b-empty-theme' | 'b-invalid-theme' | NewRepair) {
+async function setup(failure?: 'notes' | 'theme' | 'zero-adds' | 'grouped-theme' | 'range-fixed' | 'range-repeat' | 'range-fallback' | 'range-other-flags' | 'layout-fallback' | 'b-empty-theme' | 'b-invalid-theme' | 'wonder-empty-art' | NewRepair) {
   vi.stubGlobal('crypto', webcrypto);
   vi.stubGlobal('fetch', vi.fn(() => { throw Error('No real network is allowed'); }));
   const requests: { shape: string; input: any }[] = [];
@@ -63,6 +63,18 @@ async function setup(failure?: 'notes' | 'theme' | 'zero-adds' | 'grouped-theme'
       if (failure === 'notes') return { status: 'fallback', reason: 'budget' };
       if (failure === 'zero-adds') return { status: 'ok', cached: false, answer: { adds: [], doubles: [] } };
       const from = Number(asked.window?.from ?? '1'), to = Number(asked.window?.to ?? '24');
+      if (failure === 'wonder-empty-art' && asked.seed) {
+        const adds = Array.from({ length: to - from + 1 }, (_, index) => {
+          const bar = String(from + index);
+          if (asked.chosen.name === 'Synthetic B' && bar === '28') return [
+            { part: 'Violin I', bar, events: 'C5@0+2 E4@2.5+0.5', dyn: 'mp', role: 'melody', art: '' },
+            ...(asked.fix ? [{ part: 'Trumpet 1', bar, events: 'C4@0+2 E4@2.5+0.5', dyn: 'mp', role: 'melody', art: '' }] : []),
+          ];
+          return [{ part: 'Violin I', bar, events: `${asked.chosen.name === 'Synthetic B' ? 'D5' : 'C5'}@0+3`, dyn: 'mp', role: 'melody' }];
+        }).flat();
+        const doubles = asked.chosen.name === 'Synthetic B' && from <= 28 && to >= 28 && !asked.fix ? [{ from: '28', to: '28', of: 'Violin I', part: 'Trumpet 1', octave: -1 }] : [];
+        return { status: 'ok', cached: false, answer: { adds, doubles } };
+      }
       if (failure?.startsWith('new-') && asked.seed) {
         if (asked.fix && failure === 'new-fallback') return { status: 'fallback', reason: 'unknown-charge' };
         const adds = Array.from({ length: to - from + 1 }, (_, index) => {
@@ -144,6 +156,30 @@ it('repairs at most two bad new-note bars through real askFix, preserves both id
     expect(parsed.parts).toHaveLength(recipe.instruments.length); expect(parsed.parts.every(part => part.measures.length === 32)).toBe(true);
   }
   expect(files.get('a-score.musicxml')).not.toEqual(files.get('b-score.musicxml'));
+  expect(fetch).not.toHaveBeenCalled();
+});
+
+it('exports the real-hook Trumpet28 octave repair when only absent/empty art differs, retaining both raw forms', async () => {
+  const { current, io, files, phases, requests } = await setup('wonder-empty-art');
+  const recipe = NIGHT_RECIPES.find(item => item.intent === 'recompose' && item.ensemble === 'Full orchestra' && item.mood === 'Wonder')!;
+  const result = await runNightRecipe(recipe, current, io, 'empty-art-local');
+  expect(result.status, result.error).toBe('complete'); expect(result.outcomes).toHaveLength(2);
+  const fixes = requests.filter(call => call.input.fix);
+  expect(fixes).toHaveLength(1);
+  expect(fixes[0]!.input).toMatchObject({ chosen: { name: 'Synthetic B' }, window: { from: '28', to: '28' } });
+  expect(fixes[0]!.input.fix.current).toContain('C4@0+2 E3@2.5+0.5');
+  expect(fixes[0]!.input.fix.current).toContain(JSON.stringify({ dyn: 'mp', role: 'melody', art: null }));
+  expect(phases.filter(phase => phase.includes('note-range-repair'))).toEqual(['b-note-range-repair-1']);
+  const proof = JSON.parse(strFromU8(files.get('b-note-range-repair.json')!));
+  const original = proof.repairs[0].before.find((add: any) => add.part === 'Trumpet 1' && add.bar === '28');
+  const repaired = proof.repairs[0].after.find((add: any) => add.part === 'Trumpet 1' && add.bar === '28');
+  expect(original).toEqual({ part: 'Trumpet 1', bar: '28', events: 'C4@0+2 E3@2.5+0.5', dyn: 'mp', role: 'melody' });
+  expect(repaired).toEqual({ ...original, events: 'C4@0+2 E4@2.5+0.5', art: '' });
+  for (const label of ['a', 'b']) {
+    const summary = JSON.parse(strFromU8(files.get(`${label}-summary.json`)!));
+    expect(summary).toMatchObject({ status: 'complete', label: label.toUpperCase(), chosen: label === 'a' ? 0 : 1, check: { outOfRange: [] } });
+    expect(parseScore(strFromU8(unzipSync(files.get(`${label}.zip`)!)['score.musicxml']!)).parts.every(part => part.measures.length === 32)).toBe(true);
+  }
   expect(fetch).not.toHaveBeenCalled();
 });
 

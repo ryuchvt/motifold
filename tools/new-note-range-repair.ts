@@ -7,6 +7,8 @@ const keyOf = (part: string, bar: string) => JSON.stringify([part, bar]);
 const sorted = (items: string[]) => items.sort();
 const stable = (value: unknown) => JSON.stringify(value, (_key, item) => item && typeof item === 'object' && !Array.isArray(item) ? Object.fromEntries(Object.entries(item).sort(([a], [b]) => a.localeCompare(b))) : item);
 const same = (a: unknown, b: unknown) => stable(a) === stable(b);
+// The exporter gives omitted and exactly empty articulation the same meaning. Keep raw replies intact.
+const artKey = (art: string | undefined) => art === '' ? null : art ?? null;
 function requireThat(ok: unknown, why: string): asserts ok { if (!ok) throw Error(why); }
 
 /** At most two complete bars, with no other hard failure. No correction is invented here. */
@@ -46,7 +48,7 @@ export function assertNewNoteRangeRepair(before: WriteAnswer['adds'], after: Wri
       const key = keyOf(add.part, add.bar), entry = entries.get(key) ?? 0;
       entries.set(key, entry + 1);
       // Keep grouping and expression order too, including empty expression entries.
-      notes.push(JSON.stringify([add.part, add.bar, entry, 'entry', add.dyn ?? null, add.role ?? null, add.art ?? null]));
+      notes.push(JSON.stringify([add.part, add.bar, entry, 'entry', add.dyn ?? null, add.role ?? null, artKey(add.art)]));
       for (const token of add.events.trim().split(/\s+/).filter(Boolean)) {
         const match = /^([^@]+)@([0-9.]+)\+([0-9.]+)$/.exec(token)!;
         for (const name of match[1]!.split(',')) {
@@ -54,7 +56,7 @@ export function assertNewNoteRangeRepair(before: WriteAnswer['adds'], after: Wri
           requireThat(height !== null, 'Range repair has an invalid pitch');
           const range = rangeOf(add.part)!;
           requireThat(!final || (height >= range[1] && height <= range[2]), 'Range repair remains outside the sounding range');
-          notes.push(JSON.stringify([add.part, add.bar, entry, pitch.replace(/-?\d+$/, ''), ((height % 12) + 12) % 12, Number(match[2]), Number(match[3]), held, add.dyn ?? null, add.role ?? null, add.art ?? null]));
+          notes.push(JSON.stringify([add.part, add.bar, entry, pitch.replace(/-?\d+$/, ''), ((height % 12) + 12) % 12, Number(match[2]), Number(match[3]), held, add.dyn ?? null, add.role ?? null, artKey(add.art)]));
         }
       }
     }

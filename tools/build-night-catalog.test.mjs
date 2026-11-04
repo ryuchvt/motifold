@@ -128,6 +128,22 @@ it('authenticates a genuine new-note fix as complete bar replacement while retai
   expect(x.summary.check.outOfRange).toEqual([]);
 });
 
+it('authenticates omitted/empty art without rewriting either raw reply, and still rejects a nonempty articulation change', () => {
+  const x = repairedFixture(), original = x.before.find(add => add.part === 'Viola' && add.bar === '9');
+  delete original.art;
+  const repaired = x.fix.reply.answer.adds.find(add => add.part === 'Viola');
+  repaired.art = '';
+  x.fix.input.fix.current = fixCurrent(x.before, ['9']);
+  const bytes = x.rebuild(), raw = JSON.stringify(x.receipts);
+  const result = validateOutcome(x.summary, bytes, { recipe, readers, receipts: x.receipts, sourceXml });
+  expect(result.inspection).toMatchObject({ notes: 211, scoreAndMidiAgree: true });
+  expect(result.placement.acceptedSourceNotes).toBe(114);
+  expect(result.calls.find(call => call.input.fix).reply.answer.adds.find(add => add.part === 'Viola').art).toBe('');
+  expect(original).not.toHaveProperty('art'); expect(JSON.stringify(x.receipts)).toBe(raw);
+  repaired.art = 'pizz';
+  expect(() => validateOutcome(x.summary, x.rebuild(), { recipe, readers, receipts: x.receipts, sourceXml })).toThrow('Range repair changed');
+});
+
 it.each(['dropped', 'added', 'pitch-class', 'raw-rhythm', 'dyn', 'role', 'art', 'context', 'seed', 'wrong-plan', 'wrong-phase', 'retry', 'unsettled'] )('rejects an authenticated but invalid new-note repair: %s', fault => {
   const x = repairedFixture(), add = x.fix.reply.answer.adds.find(add => add.part === 'Viola');
   if (fault === 'dropped') x.fix.reply.answer.adds = x.fix.reply.answer.adds.filter(item => item !== add);
