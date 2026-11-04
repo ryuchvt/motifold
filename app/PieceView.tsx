@@ -4,6 +4,7 @@ import { ROLES, type PieceReading } from "../server/shapes";
 import type { RoleFocus } from "./arrange";
 import { createPreview, beatClock } from "./audio/preview";
 import { loadManifest } from "./audio/samples";
+import { createRenderedPlayback } from './audio/rendered';
 import { timeWords, type PlacedCue } from "./cues";
 import { familyOf, notesToHear, type NoteKind, type PieceData, type PieceRow } from "./pieceData";
 import { playhead } from "./playhead";
@@ -72,7 +73,7 @@ export function PieceView(props: {
   instrumentOf: (label: string) => string;
   hasNew: boolean;
   /** A bounce of this version to play instead of the browser's instruments. */
-  render?: string;
+  render?: string | string[];
   /** The beat actually sounding, or null when playback lets go. */
   onBeat?: (beat: number | null) => void;
   /** A real tempo-map interaction, for the optional hands-on guide. */
@@ -154,7 +155,9 @@ export function PieceView(props: {
   const [playing, setPlaying] = useState(false);
   const [from, setFrom] = useState(0);
   const sound = useRef<ReturnType<typeof createPreview> | null>(null);
-  const bounce = useRef<HTMLAudioElement | null>(null);
+  const bounce = useRef<ReturnType<typeof createRenderedPlayback> | null>(null);
+  const [audioError, setAudioError] = useState<string>();
+  const renderKey = JSON.stringify(render);
   const heard = useRef(0);
   const active = useRef(false);
   const tempoFrame = useRef<number | null>(null);
@@ -183,47 +186,41 @@ export function PieceView(props: {
     if (tempoFrame.current !== null) cancelAnimationFrame(tempoFrame.current);
     active.current = false;
     sound.current?.stop();
-    bounce.current?.pause();
+    bounce.current?.stop();
     onBeatNow.current?.(null);
     playhead.set({ playing: false });
   }, []);
   useEffect(() => { if (tempoFrame.current !== null) cancelAnimationFrame(tempoFrame.current); }, [data]);
-  useEffect(() => {
-    if (bounce.current) {
-      active.current = false;
-      bounce.current.pause();
-      onBeatNow.current?.(null);
-    }
-    bounce.current = null;
-  }, [render]);
   // So the first press of play can already use real instruments.
   useEffect(() => void loadManifest(), []);
   // What's heard follows what's in view, so changing it carries on from where the line is.
   useEffect(() => {
     if (playing) start(heard.current);
-  }, [focus, solo, data]);
+  }, [focus, solo, data, renderKey]);
 
   const start = (beat: number) => {
+    bounce.current?.stop();
+    sound.current?.stop();
+    setAudioError(undefined);
     active.current = true;
     if (render) {
-      const audio = (bounce.current ??= new Audio(render));
-      audio.currentTime = clock.seconds(beat);
+      bounce.current ??= createRenderedPlayback();
       heard.current = beat;
       setPlaying(true);
-      void audio.play();
-      const follow = () => {
-        if (audio.paused) return;
-        heard.current = clock.beat(audio.currentTime);
+      bounce.current.play(typeof render === 'string' ? [render] : render, clock.seconds(beat), seconds => {
+        heard.current = Math.min(totalBeats, clock.beat(seconds));
         moveHead(heard.current);
-        requestAnimationFrame(follow);
-      };
-      requestAnimationFrame(follow);
-      audio.onended = () => {
+      }, () => {
         active.current = false;
         onBeatNow.current?.(null);
         setPlaying(false);
         setFrom(0);
-      };
+      }, () => {
+        active.current = false;
+        onBeatNow.current?.(null);
+        setPlaying(false);
+        setAudioError('The DAW audio could not play. Try Play again, or download the MIDI to hear it in your DAW.');
+      });
       return;
     }
     sound.current ??= createPreview();
@@ -251,7 +248,7 @@ export function PieceView(props: {
   /** Pause carries on from the bar it stopped in. Stop goes back to the start. */
   const stop = (back = false) => {
     active.current = false;
-    bounce.current?.pause();
+    bounce.current?.stop();
     sound.current?.stop();
     onBeatNow.current?.(null);
     setPlaying(false);
@@ -308,6 +305,7 @@ export function PieceView(props: {
 
   return (
     <section className="stage" aria-label="The whole piece" ref={stageBox}>
+      {audioError && <p className="error" role="alert">{audioError}</p>}
       <div className="stage-bar">
         <span className="stage-readout" ref={readout} />
         {(present.length > 0 || hasNew) && (

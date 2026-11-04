@@ -26,7 +26,11 @@ Each complete `sample-sketch/outcomes/<id>/` folder contains the matching MusicX
 
 ## Playback and rendering
 
-Current playback uses browser instruments. Muse Spark writes notes rather than audio. No DAW bounce is included in this package. A later DAW render must come from the matching exported MIDI and be bound to that exact score hash before the app uses it. Soloing changes browser playback and keeps the complete downloads intact.
+Muse Spark writes notes rather than audio. I rendered three saved results in my DAW using sample instruments. These are the piano sketch's Arrange A and Expand A for string orchestra, and Cute's Sad Full orchestra A. The original piano and Cute recordings are also included for comparison. No audio model was used.
+
+The three result mixes and their 23 stems are bound to the exact exported score hashes. A full mix loads only on Play. Soloing loads only the selected instrument stems and leaves the complete downloads intact. The tutorial uses the Arrange A mix only after its complete score matches that export. Opening previews, option B, edits and unmatched scores use browser instruments with a visible label.
+
+`audio-provenance.json` records the supplied WAV and web MP3 fingerprints. WAV masters remain outside the repository. Mixes use 256 kbps MP3 and stems use 128 kbps MP3, without normalisation or timing edits. Other saved results continue to use browser instruments.
 
 Sound and library credits are in the [project README](../../README.md#sounds-and-data). Keep the bundled font and icon licence notices with their assets.
 

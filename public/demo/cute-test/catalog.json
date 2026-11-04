@@ -42,6 +42,63 @@
           "to": "26",
           "chords": "Dm E7 | Am"
         }
+      ],
+      "render": "/demo/cute-test/outcomes/recompose-sad-full-a/audio/full-mix.mp3",
+      "renderXmlSha256": "635ea44c9490cdd856430b6200f9018dfd889807dc762dc04a0fc3624b55c985",
+      "renderCredit": "I rendered the saved MIDI in my DAW using sample instruments. No audio model was used.",
+      "renderStems": [
+        {
+          "label": "Flute 1",
+          "url": "/demo/cute-test/outcomes/recompose-sad-full-a/audio/01-flute-1.mp3"
+        },
+        {
+          "label": "Oboe 1",
+          "url": "/demo/cute-test/outcomes/recompose-sad-full-a/audio/02-oboe-1.mp3"
+        },
+        {
+          "label": "Bassoon 1",
+          "url": "/demo/cute-test/outcomes/recompose-sad-full-a/audio/03-bassoon-1.mp3"
+        },
+        {
+          "label": "Bassoon 2",
+          "url": "/demo/cute-test/outcomes/recompose-sad-full-a/audio/04-bassoon-2.mp3"
+        },
+        {
+          "label": "Horn 1",
+          "url": "/demo/cute-test/outcomes/recompose-sad-full-a/audio/05-horn-1.mp3"
+        },
+        {
+          "label": "Horn 2",
+          "url": "/demo/cute-test/outcomes/recompose-sad-full-a/audio/06-horn-2.mp3"
+        },
+        {
+          "label": "Horn 3",
+          "url": "/demo/cute-test/outcomes/recompose-sad-full-a/audio/07-horn-3.mp3"
+        },
+        {
+          "label": "Horn 4",
+          "url": "/demo/cute-test/outcomes/recompose-sad-full-a/audio/08-horn-4.mp3"
+        },
+        {
+          "label": "Timpani",
+          "url": "/demo/cute-test/outcomes/recompose-sad-full-a/audio/09-timpani.mp3"
+        },
+        {
+          "label": "Harp",
+          "url": "/demo/cute-test/outcomes/recompose-sad-full-a/audio/10-harp.mp3"
+        },
+        {
+          "label": "Violin I",
+          "url": "/demo/cute-test/outcomes/recompose-sad-full-a/audio/11-violin-i.mp3"
+        },
+        {
+          "label": "Viola",
+          "url": "/demo/cute-test/outcomes/recompose-sad-full-a/audio/12-viola.mp3"
+        },
+        {
+          "label": "Cello",
+          "url": "/demo/cute-test/outcomes/recompose-sad-full-a/audio/13-cello.mp3"
+        }
       ]
     }
   ]

@@ -1,0 +1,277 @@
+{
+  "version": 1,
+  "recorded": "2026-11-04",
+  "description": "I rendered the saved Muse Spark MIDI in my DAW using sample instruments. No audio model was used. WAV masters stay outside the repository. Web copies preserve the supplied timing and levels without normalisation.",
+  "outcomes": [
+    {
+      "pieceId": "sample-sketch",
+      "outcomeId": "arrange-neutral-string-orchestra-a",
+      "xmlSha256": "e66eef5be13a43326da14d763a8d0e247d66be45bc946f341aded65e7514dd54",
+      "midiSha256": "421481752c73f6367613bfb2aad68bd97edc35af9a37841ddf232ec46bab3e3d",
+      "seconds": 72.599625,
+      "files": [
+        {
+          "label": "Full mix",
+          "sourceFile": "arrange-neutral-string-orchestra-a/FULLMIX.wav",
+          "sourceWavSha256": "a09b7c5cda40b811e0157e132cb9441dd75b68f5754073c61638a7d8aec9a83d",
+          "url": "/demo/sample-sketch/outcomes/arrange-neutral-string-orchestra-a/audio/full-mix.mp3",
+          "kbps": 256,
+          "mp3Sha256": "f5ce5e1b00159e8a3fa5dce9115e11f926b3000ffaf9833702166097d5501d8b",
+          "bytes": 2324780
+        },
+        {
+          "label": "Violin I",
+          "sourceFile": "arrange-neutral-string-orchestra-a/Violin1.wav",
+          "sourceWavSha256": "52ead2a6006ed527ce767fca484b71c30a68869e37db68cc4c378614d22c1688",
+          "url": "/demo/sample-sketch/outcomes/arrange-neutral-string-orchestra-a/audio/01-violin-i.mp3",
+          "kbps": 128,
+          "mp3Sha256": "4999d83bbfcf6f9531d753339ef2788e8b5f3d5a076212053820b8c23843f876",
+          "bytes": 1162412
+        },
+        {
+          "label": "Violin II",
+          "sourceFile": "arrange-neutral-string-orchestra-a/Violin2.wav",
+          "sourceWavSha256": "80a88418cd52d4322a4e874a5b29a2ff006673ac26fda7e31d64f6f80abe0a78",
+          "url": "/demo/sample-sketch/outcomes/arrange-neutral-string-orchestra-a/audio/02-violin-ii.mp3",
+          "kbps": 128,
+          "mp3Sha256": "c5240f0c76e55169113c5eed9fdc4f57941a475d79e239e54a383323ecbf1f41",
+          "bytes": 1162412
+        },
+        {
+          "label": "Viola",
+          "sourceFile": "arrange-neutral-string-orchestra-a/viola.wav",
+          "sourceWavSha256": "5db0635c5147684e0be9712e67f652afcb646c833eb497938aac3dd93a965632",
+          "url": "/demo/sample-sketch/outcomes/arrange-neutral-string-orchestra-a/audio/03-viola.mp3",
+          "kbps": 128,
+          "mp3Sha256": "50158125968202590b704263cd6f65e95acfe812dd9c03ae4219c5a013f1950c",
+          "bytes": 1162412
+        },
+        {
+          "label": "Cello",
+          "sourceFile": "arrange-neutral-string-orchestra-a/cello.wav",
+          "sourceWavSha256": "bec149b6e638d1570e14222858b7fdb4e86417baefd42277138b56316bad2bc5",
+          "url": "/demo/sample-sketch/outcomes/arrange-neutral-string-orchestra-a/audio/04-cello.mp3",
+          "kbps": 128,
+          "mp3Sha256": "40346f606e8d0bebd9964ccc0159c169a9165515afa1766d182016cadb735a00",
+          "bytes": 1162412
+        },
+        {
+          "label": "Double Bass",
+          "sourceFile": "arrange-neutral-string-orchestra-a/Double_bass.wav",
+          "sourceWavSha256": "1427ad984f308dae49bedded96d62918ced832acb7d904171a46b188e7c3236c",
+          "url": "/demo/sample-sketch/outcomes/arrange-neutral-string-orchestra-a/audio/05-double-bass.mp3",
+          "kbps": 128,
+          "mp3Sha256": "e6ad427b2ef81c41f631d35da797a73a0c886b6e170411969630a9da68b2cc71",
+          "bytes": 1162412
+        }
+      ]
+    },
+    {
+      "pieceId": "sample-sketch",
+      "outcomeId": "expand-neutral-string-orchestra-a",
+      "xmlSha256": "b27787f15d623e3d34a35bdaa4317cb1aa594f046b6e86bc0bd848ac4e92b473",
+      "midiSha256": "83937d6e5f456886eb1e62ba23e559c26adf6db94d62e5664da9fb0a3b1f7213",
+      "seconds": 130.89958333333334,
+      "files": [
+        {
+          "label": "Full mix",
+          "sourceFile": "expand-neutral-string-orchestra-a/FULLMIX.wav",
+          "sourceWavSha256": "b361e095bd8c79e60f28c825d046b2e385c362fea01efe9d07e82d64a5cbfd59",
+          "url": "/demo/sample-sketch/outcomes/expand-neutral-string-orchestra-a/audio/full-mix.mp3",
+          "kbps": 256,
+          "mp3Sha256": "e1d7a875baeb03d3c1fd76fe7598d4dfb17e64ffcb64845c7a7136f850b91c31",
+          "bytes": 4191020
+        },
+        {
+          "label": "Violin I",
+          "sourceFile": "expand-neutral-string-orchestra-a/violin1.wav",
+          "sourceWavSha256": "7d10b72a33f26d6e9894617e6b8e692a75281c93ee2e4da0a1fa9ac71e9d52ff",
+          "url": "/demo/sample-sketch/outcomes/expand-neutral-string-orchestra-a/audio/01-violin-i.mp3",
+          "kbps": 128,
+          "mp3Sha256": "289c5e39d963c8dfe93e1e47e814d27146b9677a79988745bbec18c57d8a8bef",
+          "bytes": 2095532
+        },
+        {
+          "label": "Violin II",
+          "sourceFile": "expand-neutral-string-orchestra-a/violin2.wav",
+          "sourceWavSha256": "45d22a218e4d60bed25846c69b014a0d66b4fdd056ce1affc486bddab4cd0575",
+          "url": "/demo/sample-sketch/outcomes/expand-neutral-string-orchestra-a/audio/02-violin-ii.mp3",
+          "kbps": 128,
+          "mp3Sha256": "b8cde1189c446a5bc911f172fab1b236ffe92397802ba709b52b134bb77742df",
+          "bytes": 2095532
+        },
+        {
+          "label": "Viola",
+          "sourceFile": "expand-neutral-string-orchestra-a/viola.wav",
+          "sourceWavSha256": "b0318e731fd91e6328ea92f5518496919e74c1fe156b2ee5987a5c2f3173d80a",
+          "url": "/demo/sample-sketch/outcomes/expand-neutral-string-orchestra-a/audio/03-viola.mp3",
+          "kbps": 128,
+          "mp3Sha256": "587fee501e84583d9533271547dbf8454f93afa0a2533f5209aa2f7d3b2b13e7",
+          "bytes": 2095532
+        },
+        {
+          "label": "Cello",
+          "sourceFile": "expand-neutral-string-orchestra-a/Cello.wav",
+          "sourceWavSha256": "71ded7f95377a58e751065cfc74c9bfa1c28af3b34c3d10b1d0339ddf79d4f3c",
+          "url": "/demo/sample-sketch/outcomes/expand-neutral-string-orchestra-a/audio/04-cello.mp3",
+          "kbps": 128,
+          "mp3Sha256": "bb4562335039dcef47e62e3a40330dbafcedd78181a8bab07a1de5ce68e48fc6",
+          "bytes": 2095532
+        },
+        {
+          "label": "Double Bass",
+          "sourceFile": "expand-neutral-string-orchestra-a/DB.wav",
+          "sourceWavSha256": "9de044a04ad99a9a1dc1649007fc8fb61eae50afe6ac1c37fd527814ad309589",
+          "url": "/demo/sample-sketch/outcomes/expand-neutral-string-orchestra-a/audio/05-double-bass.mp3",
+          "kbps": 128,
+          "mp3Sha256": "68f7b2d309fa1b3c27261a54d3fadf4eb3fafe5c9fa7aa772c3b0d822e7bbc34",
+          "bytes": 2095532
+        }
+      ]
+    },
+    {
+      "pieceId": "cute-test",
+      "outcomeId": "recompose-sad-full-a",
+      "xmlSha256": "635ea44c9490cdd856430b6200f9018dfd889807dc762dc04a0fc3624b55c985",
+      "midiSha256": "f3141b9d4bdac6a5c7793790191e25456ecf25e27d44458d1ed161162da529dc",
+      "seconds": 67.5,
+      "files": [
+        {
+          "label": "Full mix",
+          "sourceFile": "recompose-sad-full-a/FULLMIX.wav",
+          "sourceWavSha256": "b8e264c7d323e7692aae22eb382e91167a3f65916914a0c5ec0387f485e23a43",
+          "url": "/demo/cute-test/outcomes/recompose-sad-full-a/audio/full-mix.mp3",
+          "kbps": 256,
+          "mp3Sha256": "69ac34fa6b356d3e29189064eb657e17d01162c58d8d972e172dd9bb79c77a7c",
+          "bytes": 2161964
+        },
+        {
+          "label": "Flute 1",
+          "sourceFile": "recompose-sad-full-a/flute.wav",
+          "sourceWavSha256": "953758e655d633ef9a8d3f2d1a95183810d371a5f967dfc873b39e59bd86fea9",
+          "url": "/demo/cute-test/outcomes/recompose-sad-full-a/audio/01-flute-1.mp3",
+          "kbps": 128,
+          "mp3Sha256": "64c0894bfb2e14d16083e69b10c9a59a70e272fc182fb4a1f7b3c294988d4d55",
+          "bytes": 1081004
+        },
+        {
+          "label": "Oboe 1",
+          "sourceFile": "recompose-sad-full-a/Oboe.wav",
+          "sourceWavSha256": "8bb5b8df3bb1ecac48799788e423650a8ad1a8a0d8a42a9db2d9510ac502f243",
+          "url": "/demo/cute-test/outcomes/recompose-sad-full-a/audio/02-oboe-1.mp3",
+          "kbps": 128,
+          "mp3Sha256": "8dc75ecbcaaf50a1d3eb9c6eff3ac36f736789d521bd6e8e44f89644551a3068",
+          "bytes": 1081004
+        },
+        {
+          "label": "Bassoon 1",
+          "sourceFile": "recompose-sad-full-a/Bassoon1.wav",
+          "sourceWavSha256": "3b9f51d8fc8a537d70eb7715c2287f13a3d83dfe2ff0257be12ce4282fa24473",
+          "url": "/demo/cute-test/outcomes/recompose-sad-full-a/audio/03-bassoon-1.mp3",
+          "kbps": 128,
+          "mp3Sha256": "69ec07c87c5fb905945b526f2410dbfdce469c1aee8fbcc12bfa8905f623e6ce",
+          "bytes": 1081004
+        },
+        {
+          "label": "Bassoon 2",
+          "sourceFile": "recompose-sad-full-a/Bassoon2.wav",
+          "sourceWavSha256": "0eebf0d09df64e1c8db6e42873dfc7007165d648069e16906b0c7856dab216c9",
+          "url": "/demo/cute-test/outcomes/recompose-sad-full-a/audio/04-bassoon-2.mp3",
+          "kbps": 128,
+          "mp3Sha256": "d75de300c1f74226271ef76e864adcab589e4eb950147c91a421dccc87f976ea",
+          "bytes": 1081004
+        },
+        {
+          "label": "Horn 1",
+          "sourceFile": "recompose-sad-full-a/Horn1.wav",
+          "sourceWavSha256": "ec0acccb0009b2c461f9f3d9fbceb29510a34d4011df3db78644348e303991f8",
+          "url": "/demo/cute-test/outcomes/recompose-sad-full-a/audio/05-horn-1.mp3",
+          "kbps": 128,
+          "mp3Sha256": "65b56b39c4e45d47b0ae40f8f6d7ff05cd780fbda7e734fc0de1195846428c97",
+          "bytes": 1081004
+        },
+        {
+          "label": "Horn 2",
+          "sourceFile": "recompose-sad-full-a/Horn2.wav",
+          "sourceWavSha256": "27832398b9887eb7041c9f1648be7bdffe42369ddbacbf4d276101e299e132ac",
+          "url": "/demo/cute-test/outcomes/recompose-sad-full-a/audio/06-horn-2.mp3",
+          "kbps": 128,
+          "mp3Sha256": "87aa9a5caec9c836c90b00312411ba47c738caf4308e26fd5d4834f528525c8a",
+          "bytes": 1081004
+        },
+        {
+          "label": "Horn 3",
+          "sourceFile": "recompose-sad-full-a/Horn3.wav",
+          "sourceWavSha256": "fb6dcf5f13101da0e85d864a9e83932b1329d6c124c4ea8ba37195db9e94527d",
+          "url": "/demo/cute-test/outcomes/recompose-sad-full-a/audio/07-horn-3.mp3",
+          "kbps": 128,
+          "mp3Sha256": "ca920a28459ae622425ebefdffcac75871ce423826e49d0de5b03bc105ac997b",
+          "bytes": 1081004
+        },
+        {
+          "label": "Horn 4",
+          "sourceFile": "recompose-sad-full-a/Horn4.wav",
+          "sourceWavSha256": "06ceb94edc073c672adbfa5c1fda3b4248c95495765843911c45354fc7d02417",
+          "url": "/demo/cute-test/outcomes/recompose-sad-full-a/audio/08-horn-4.mp3",
+          "kbps": 128,
+          "mp3Sha256": "8bd3985e305367d452b462191905604beb4e2e467d6b83928dcf7f4c6245f729",
+          "bytes": 1081004
+        },
+        {
+          "label": "Timpani",
+          "sourceFile": "recompose-sad-full-a/Timpani.wav",
+          "sourceWavSha256": "1e438a2772fbf0c1096dbd74b307f0988679637b155ac7b83704f8c41159a507",
+          "url": "/demo/cute-test/outcomes/recompose-sad-full-a/audio/09-timpani.mp3",
+          "kbps": 128,
+          "mp3Sha256": "1b5c23e8fbafc4e278a958b058ec26b5ef32935ba5a46d71af43ae9482137a4e",
+          "bytes": 1081004
+        },
+        {
+          "label": "Harp",
+          "sourceFile": "recompose-sad-full-a/Harp.wav",
+          "sourceWavSha256": "57569eb3cd712110f2ec8dec1c321bb63485c8f98df9e5b561c62dc4ec38f8dc",
+          "url": "/demo/cute-test/outcomes/recompose-sad-full-a/audio/10-harp.mp3",
+          "kbps": 128,
+          "mp3Sha256": "cac3ef3c7e2771a1d2d74bdba29ff9671e857927643a86e1bedec35dba996098",
+          "bytes": 1081004
+        },
+        {
+          "label": "Violin I",
+          "sourceFile": "recompose-sad-full-a/Violin1.wav",
+          "sourceWavSha256": "2458af96d05426d89f47794eed4b6fea7ff108aca50f8ef3f0bd5c3f00663e4e",
+          "url": "/demo/cute-test/outcomes/recompose-sad-full-a/audio/11-violin-i.mp3",
+          "kbps": 128,
+          "mp3Sha256": "fe16e763160adba2992665bc2ad80e00d26517fc391f00b29f6644235bbd3b80",
+          "bytes": 1081004
+        },
+        {
+          "label": "Viola",
+          "sourceFile": "recompose-sad-full-a/Viola.wav",
+          "sourceWavSha256": "b3d0380d94b5589372d533cf77aed69cb1219fb5c4d88ce86fa4e3c49b774375",
+          "url": "/demo/cute-test/outcomes/recompose-sad-full-a/audio/12-viola.mp3",
+          "kbps": 128,
+          "mp3Sha256": "86d2fc52e2bfb8e4656e9f3ee7487e360f2fd672c38771840f826ffed6d47510",
+          "bytes": 1081004
+        },
+        {
+          "label": "Cello",
+          "sourceFile": "recompose-sad-full-a/Cello.wav",
+          "sourceWavSha256": "8e3a62b142d4d6456bb82c3840bfd89d10695872f0c2f089f308386e578f177e",
+          "url": "/demo/cute-test/outcomes/recompose-sad-full-a/audio/13-cello.mp3",
+          "kbps": 128,
+          "mp3Sha256": "5a298853296951d511f62b8265c72e4962134e5fa6ca71e4f7225ec18a934be3",
+          "bytes": 1081004
+        }
+      ]
+    }
+  ],
+  "originalPiano": {
+    "sourceFile": "Sample_sketch.wav",
+    "sourceWavSha256": "699fe4f1965eba60f44b9e277eba100f50527f5cc40c7a52c800b57cee11e584",
+    "url": "/demo/sample-sketch/source/original.mp3",
+    "midiSha256": "782c244e9d31572a3c3225c6af170a75ea94224b7e92ea1e1a6d6183ddb70d54",
+    "kbps": 256,
+    "mp3Sha256": "2bcd1936f795a4b7f2b019b836579ab25122277dd141937d9840d99824dc3e3f",
+    "bytes": 2401580
+  }
+}

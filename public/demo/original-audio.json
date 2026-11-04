@@ -2,5 +2,9 @@
   "cute-test": {
     "url": "/demo/cute-test/source/original.mp3",
     "midiSha256": "6ab1470387dcae84910a3198b175e470acfc2a7949ab46c64f977b610a8a7926"
+  },
+  "sample-sketch": {
+    "url": "/demo/sample-sketch/source/original.mp3",
+    "midiSha256": "782c244e9d31572a3c3225c6af170a75ea94224b7e92ea1e1a6d6183ddb70d54"
   }
 }

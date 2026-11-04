@@ -59,8 +59,10 @@
   },
   "advisoryClashes": [],
   "audio": {
-    "status": "not-rendered",
-    "expectedFile": "audio/render.wav"
+    "status": "rendered",
+    "webMix": "audio/full-mix.mp3",
+    "renderXmlSha256": "e66eef5be13a43326da14d763a8d0e247d66be45bc946f341aded65e7514dd54",
+    "stems": 5
   },
   "provenance": "Actual successful Meta calls. The recorded stages may include cold retries. No uninterrupted live session is claimed."
 }

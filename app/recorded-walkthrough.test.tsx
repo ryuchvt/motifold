@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 // The published recording through Studio, Create, A selection and direct Export. No API request is allowed.
 import { readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -41,6 +42,8 @@ it('reproduces the complete real A export through the actual recorded Create wor
   vi.stubGlobal('cancelAnimationFrame',(id:number)=>frames.delete(id));
   const flush=()=>act(()=>{const pending=[...frames.values()];frames.clear();pending.forEach(callback=>callback(0))});
   vi.stubGlobal('matchMedia', () => ({ matches: false }));
+  vi.spyOn(HTMLMediaElement.prototype, 'play').mockResolvedValue();
+  vi.spyOn(HTMLMediaElement.prototype, 'pause').mockImplementation(() => {});
   Element.prototype.scrollTo = vi.fn(); Element.prototype.scrollIntoView = vi.fn();
   const fetched: string[] = [];
   vi.stubGlobal('fetch', async (url: string) => {
@@ -64,6 +67,7 @@ it('reproduces the complete real A export through the actual recorded Create wor
     expect(check()).toBe(true);
   }
   await press('Start hands-on tutorial');
+  await settle(() => !!host.textContent?.includes('117 original note attacks'));
   expect(host.textContent).toContain('117 original note attacks');
   await press('Open the saved accepted bars');
   const tempo=host.querySelector<HTMLInputElement>('[aria-label="Inspect the tempo map"]')!;
@@ -94,6 +98,8 @@ it('reproduces the complete real A export through the actual recorded Create wor
   if (final.status !== 'ready' || final.notes[0]?.status !== 'ready') throw Error('No full A');
   expect(final.notes[0].check).toMatchObject({ notes: index.pieces[0].verifiedExport.newNotes, overBars: 0, unreadable: 0, pastBarEnd: 0, outOfRange: [] });
   expect(now().trying).toEqual({ kind: 'option', index: 0 });
+  expect(createHash('sha256').update(now().playbackXml!).digest('hex')).toBe(JSON.parse(readFileSync('public/demo/sample-sketch/catalog.json','utf8')).outcomes.find((item:any)=>item.id==='arrange-neutral-string-orchestra-a').renderXmlSha256);
+  await settle(() => !!host.textContent?.includes('DAW render of this recorded score.'));
   expect(final.notes[1]).toMatchObject({ preview: true });
   await press('Export');
   const blobs: Blob[] = []; const URLNow = URL;

@@ -3,19 +3,23 @@ import {act,useState} from 'react';
 import {createRoot,type Root} from 'react-dom/client';
 import {afterEach,beforeEach,expect,it,vi} from 'vitest';
 import {readFileSync} from 'node:fs';
+import {webcrypto} from 'node:crypto';
 import {RawSketch} from './TutorialSketch';
 import {TutorialCoach,TutorialProvider,type TutorialEvent,type TutorialGuide} from './Tutorial';
 import {createPreview} from './audio/preview';
+import {createRenderedPlayback} from './audio/rendered';
 import type {DemoPiece} from './demo';
 vi.mock('./audio/samples',()=>({loadManifest:async()=>null}));
 vi.mock('./audio/preview',async original=>({...await original<typeof import('./audio/preview')>(),createPreview:vi.fn()}));
+vi.mock('./audio/rendered',()=>({createRenderedPlayback:vi.fn()}));
 (globalThis as any).IS_REACT_ACT_ENVIRONMENT=true;
 const piece=JSON.parse(readFileSync('public/demo/index.json','utf8')).pieces[0] as DemoPiece;
 let root:Root|null=null;
 beforeEach(()=>vi.useFakeTimers());
 afterEach(()=>{act(()=>root?.unmount());root=null;document.body.replaceChildren();vi.restoreAllMocks();vi.unstubAllGlobals();vi.useRealTimers()});
-async function mount(){
- vi.stubGlobal('fetch',async(url:string)=>{expect(url).toBe(piece.midi);return new Response(readFileSync(`public${piece.midi}`))});
+async function mount(recorded=false){
+ if(recorded)vi.stubGlobal('crypto',webcrypto);
+ vi.stubGlobal('fetch',async(url:string)=>{if(url==='/demo/original-audio.json')return Response.json(recorded?JSON.parse(readFileSync(`public${url}`,'utf8')):{});expect(url).toBe(piece.midi);return new Response(readFileSync(`public${piece.midi}`))});
  const mark=vi.fn(),accept=vi.fn();
  function Harness(){
   const[played,setPlayed]=useState(false);
@@ -47,6 +51,19 @@ it('spotlights the actual Play control first, then accepted bars only after user
  await act(async()=>host.querySelector<HTMLButtonElement>('[data-tutorial="raw-play"]')!.click());
  expect(mark).toHaveBeenCalledOnce();expect(sound.stop).toHaveBeenCalledOnce();
  await act(async()=>host.querySelector<HTMLButtonElement>('[data-tutorial="accept-bars"]')!.click());expect(accept).toHaveBeenCalledOnce();
+});
+it('uses the original DAW recording without autoplay and advances the guide only when its clock moves',async()=>{
+ const sound={play:vi.fn(),stop:vi.fn()};vi.mocked(createRenderedPlayback).mockReturnValue(sound);
+ const {host,mark}=await mount(true);
+ await vi.waitFor(()=>expect(host.querySelector('[data-tutorial="raw-play"]')?.textContent).toBe('Play original recording'));
+ expect(sound.play).not.toHaveBeenCalled();
+ await act(async()=>host.querySelector<HTMLButtonElement>('[data-tutorial="raw-play"]')!.click());
+ expect(sound.play.mock.calls[0]![0]).toEqual(['/demo/sample-sketch/source/original.mp3']);
+ expect(mark).not.toHaveBeenCalled();
+ const move=sound.play.mock.calls[0]![2] as(at:number)=>void;
+ act(()=>move(.25));expect(mark).toHaveBeenCalledExactlyOnceWith('raw-played',true,true);
+ await act(async()=>host.querySelector<HTMLButtonElement>('[data-tutorial="raw-play"]')!.click());
+ act(()=>move(.5));expect(mark).toHaveBeenCalledOnce();expect(sound.stop).toHaveBeenCalledOnce();
 });
 it('keeps Play highlighted while audio is not advancing and ignores a late callback after pause',async()=>{
  const sound={play:vi.fn(),stop:vi.fn()};vi.mocked(createPreview).mockReturnValue(sound as ReturnType<typeof createPreview>);

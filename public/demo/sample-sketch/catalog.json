@@ -51,6 +51,31 @@
           "to": "24",
           "chords": "C | C"
         }
+      ],
+      "render": "/demo/sample-sketch/outcomes/arrange-neutral-string-orchestra-a/audio/full-mix.mp3",
+      "renderXmlSha256": "e66eef5be13a43326da14d763a8d0e247d66be45bc946f341aded65e7514dd54",
+      "renderCredit": "I rendered the saved MIDI in my DAW using sample instruments. No audio model was used.",
+      "renderStems": [
+        {
+          "label": "Violin I",
+          "url": "/demo/sample-sketch/outcomes/arrange-neutral-string-orchestra-a/audio/01-violin-i.mp3"
+        },
+        {
+          "label": "Violin II",
+          "url": "/demo/sample-sketch/outcomes/arrange-neutral-string-orchestra-a/audio/02-violin-ii.mp3"
+        },
+        {
+          "label": "Viola",
+          "url": "/demo/sample-sketch/outcomes/arrange-neutral-string-orchestra-a/audio/03-viola.mp3"
+        },
+        {
+          "label": "Cello",
+          "url": "/demo/sample-sketch/outcomes/arrange-neutral-string-orchestra-a/audio/04-cello.mp3"
+        },
+        {
+          "label": "Double Bass",
+          "url": "/demo/sample-sketch/outcomes/arrange-neutral-string-orchestra-a/audio/05-double-bass.mp3"
+        }
       ]
     },
     {
@@ -685,6 +710,31 @@
           "from": "37",
           "to": "40",
           "chords": "F|G|C|C"
+        }
+      ],
+      "render": "/demo/sample-sketch/outcomes/expand-neutral-string-orchestra-a/audio/full-mix.mp3",
+      "renderXmlSha256": "b27787f15d623e3d34a35bdaa4317cb1aa594f046b6e86bc0bd848ac4e92b473",
+      "renderCredit": "I rendered the saved MIDI in my DAW using sample instruments. No audio model was used.",
+      "renderStems": [
+        {
+          "label": "Violin I",
+          "url": "/demo/sample-sketch/outcomes/expand-neutral-string-orchestra-a/audio/01-violin-i.mp3"
+        },
+        {
+          "label": "Violin II",
+          "url": "/demo/sample-sketch/outcomes/expand-neutral-string-orchestra-a/audio/02-violin-ii.mp3"
+        },
+        {
+          "label": "Viola",
+          "url": "/demo/sample-sketch/outcomes/expand-neutral-string-orchestra-a/audio/03-viola.mp3"
+        },
+        {
+          "label": "Cello",
+          "url": "/demo/sample-sketch/outcomes/expand-neutral-string-orchestra-a/audio/04-cello.mp3"
+        },
+        {
+          "label": "Double Bass",
+          "url": "/demo/sample-sketch/outcomes/expand-neutral-string-orchestra-a/audio/05-double-bass.mp3"
         }
       ]
     },

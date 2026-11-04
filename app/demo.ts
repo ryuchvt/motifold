@@ -38,6 +38,8 @@ export interface DemoOutcome {
   /** The exact exported score used for this DAW render, not merely a similarly named plan. */
   renderXmlSha256?: string;
   renderCredit?: string;
+  /** Bar-1-aligned DAW stems for the same exact exported score. */
+  renderStems?: { label: string; url: string }[];
   /** Authenticated chosen-plan spans. Keep the full text and range without allocating individual chords to bars. */
   planHarmony?: DemoPlanHarmony[];
 }
@@ -86,6 +88,7 @@ export function recordedDemoCatalog(value: unknown, pieceId: string): DemoCatalo
     if (item.status === "complete" && (!localAsset(item.xml) || !localAsset(item.midi) || !localAsset(item.zip))) return null;
     if (item.status === "preview" && !localAsset(item.xml)) return null;
     if (item.planHarmony !== undefined && (item.status !== "complete" || typeof item.xmlSha256 !== "string" || !planHarmony(item.planHarmony))) return null;
+    if (item.renderStems !== undefined && (!Array.isArray(item.renderStems) || !item.render || !item.renderXmlSha256 || item.status !== 'complete' || item.renderStems.length > 64 || !item.renderStems.every(stem => object(stem) && text(stem.label) && localAsset(stem.url)) || new Set(item.renderStems.map(stem => stem.label)).size !== item.renderStems.length)) return null;
     ids.add(item.id);
   }
   return value as unknown as DemoCatalog;

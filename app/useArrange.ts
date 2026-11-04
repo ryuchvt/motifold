@@ -717,6 +717,9 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     // `tried` only reads these.
   }, [base, trying, off, offBars, structures, options, kept, split, gone, handOrder]);
 
+  /** The exact current export, without display colours or the visible-page crop. */
+  const playbackXml = useMemo(() => tried() ?? base?.xmlText ?? null, [base, trying, off, offBars, structures, options, handOrder]);
+
   /** The bars of the structure being tried, in playing order, by the numbers the composer knows them by. */
   const orderedBars = useMemo(() => {
     if (!base || trying?.kind !== "structure") return null;
@@ -978,6 +981,7 @@ export function useArrange(loaded: (Page & { fileName: string }) | null, part: P
     fittingReason,
     askFit,
     shown,
+    playbackXml,
     page,
     overview,
     sections,

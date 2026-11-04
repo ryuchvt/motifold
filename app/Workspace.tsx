@@ -13,6 +13,7 @@ import { playhead } from './playhead';
 import { scoreCursor } from './scoreCursor';
 import type { BarHighlight } from '../render/barOverlay';
 import { useTutorialGuide } from './Tutorial';
+import { outcomeAudio, useRecordedOutcome } from './recordedAudio';
 
 const NO_MARKS: never[] = [];
 
@@ -57,7 +58,7 @@ function SectionRail({ arranged, onTrial }: { arranged: Arranged; onTrial: () =>
   </div>;
 }
 
-export function Workspace({ arranged, loaded, busy, demo, prepared, render, sourceNote, onStage, initialSetup, onExplore }: { arranged: Arranged; loaded: LoadedSketch; busy: boolean; demo: boolean; prepared: DemoPiece['runs']; render?: string; sourceNote: string | null; onStage: (stage: string) => void; initialSetup?: InitialSetup; onExplore?: () => void }) {
+export function Workspace({ arranged, loaded, busy, demo, prepared, render, recordedPiece, sourceNote, onStage, initialSetup, onExplore }: { arranged: Arranged; loaded: LoadedSketch; busy: boolean; demo: boolean; prepared: DemoPiece['runs']; render?: string; recordedPiece?: DemoPiece; sourceNote: string | null; onStage: (stage: string) => void; initialSetup?: InitialSetup; onExplore?: () => void }) {
   const guide=useTutorialGuide();
   const [picked, setPicked] = useState<Selection | null>(null);
   const [mode, setMode] = useState<'arrange' | 'expand' | 'recompose'>('arrange');
@@ -87,6 +88,8 @@ export function Workspace({ arranged, loaded, busy, demo, prepared, render, sour
   const auditionFrame = useRef<number | null>(null);
   const waitingChoice = useRef<{ index: number; generation: object | null } | null>(null);
   const data = arranged.overview;
+  const recorded = useRecordedOutcome(recordedPiece, arranged.playbackXml);
+  const playbackRender = arranged.focus ? undefined : outcomeAudio(recorded, arranged.solo) ?? render;
   const page = arranged.page ?? loaded;
   const cursor = useMemo(() => scoreCursor(page.score, data?.bars ?? []), [page.score, data]);
   const attention = useMemo(() => attentionOf(arranged), [arranged.piece, arranged.answered, arranged.options, arranged.trying, arranged.tracks, arranged.tracksConfirmed]);
@@ -181,7 +184,8 @@ export function Workspace({ arranged, loaded, busy, demo, prepared, render, sour
       <main className="music-space">
         <div className="overview-shell">
           <div className="overview-title"><span>Whole piece <span className="music-meta">{numbers.length} bars / {data?.rows.length ?? 0} tracks</span></span><div>{stage === "Study" && <button className="text-control" aria-expanded={reordering} onClick={() => setReordering(!reordering)}>Reorder sections</button>}<button className="text-control" aria-expanded={expanded} onClick={() => setExpanded(!expanded)}>{expanded ? 'Compact overview' : 'Expand overview'}</button><button className="icon-control" aria-label={inspectorOpen ? 'Hide controls' : 'Show controls'} onClick={() => setInspectorOpen(!inspectorOpen)}>{inspectorOpen ? <PanelRightClose size={16}/> : <PanelRightOpen size={16}/>}</button></div></div>
-          <div className="overview-scroll">{data && arranged.view && <PieceView data={data} sections={arranged.sections} moments={arranged.moments} selected={arranged.view} focus={arranged.focus} solo={arranged.solo} instrumentOf={arranged.instrumentOf} hasNew={arranged.trying?.kind === 'option'} render={render} onSelect={(bar) => { clearAudition(); arranged.select(bar); }} onSelectRange={selectRange} onFocus={arranged.setFocus} onSolo={arranged.toggleSolo} onBeat={(beat) => scoreView.current?.showPlaying(cursor(beat))} onTempoInspect={()=>guide?.mark('tempo-inspected',true,true)} attention={shownAttention} forms={arranged.study.status === 'ready' ? arranged.study.answer.sections : []} progress={progress} picked={picked} onPick={pick}/>}</div>
+          <div className="overview-scroll">{data && arranged.view && <PieceView data={data} sections={arranged.sections} moments={arranged.moments} selected={arranged.view} focus={arranged.focus} solo={arranged.solo} instrumentOf={arranged.instrumentOf} hasNew={arranged.trying?.kind === 'option'} render={playbackRender} onSelect={(bar) => { clearAudition(); arranged.select(bar); }} onSelectRange={selectRange} onFocus={arranged.setFocus} onSolo={arranged.toggleSolo} onBeat={(beat) => scoreView.current?.showPlaying(cursor(beat))} onTempoInspect={()=>guide?.mark('tempo-inspected',true,true)} attention={shownAttention} forms={arranged.study.status === 'ready' ? arranged.study.answer.sections : []} progress={progress} picked={picked} onPick={pick}/>}</div>
+          {recorded && <p className="tutorial-provenance">{playbackRender ? arranged.solo.length ? 'DAW stems for the selected instruments.' : 'DAW render of this recorded score.' : 'Browser instruments for the selected musical role.'} {recorded.renderCredit}</p>}
           {stage === 'Study' && reordering && <SectionRail arranged={arranged} onTrial={() => { clearAudition(); setPicked(null); }}/>}
         </div>
         {data && <Compare data={data} sections={arranged.sections} orders={[]} ordered={arranged.trying?.kind === 'structure' ? arranged.trying.index : null} onOrder={(index) => { clearAudition(); setPicked(null); arranged.setTrying(index === null ? null : { kind: 'structure', index }); }} onKeepOrder={() => { clearAudition(); setPicked(null); arranged.keep(); }} plans={stage === 'Pick' ? plans : null} recompose={mode === 'recompose'} chosen={chosen} onChoose={(index) => choose(index)} onAudition={(index) => choose(index, true)} compact written={written} previewed={previewed} onPreview={demo ? undefined : (index) => void arranged.askPreview(index)} busy={busy} onShowBars={selectRange}/>}

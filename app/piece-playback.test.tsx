@@ -69,14 +69,14 @@ it("reports actual audio beats to the latest callback and clears it on pause, st
   expect(playhead.ready).toBe(false);
 });
 
-it("reports a saved bounce's clock through the latest callback and clears it at its end", () => {
+it("reports a saved bounce's clock through the latest callback and clears it at its end", async () => {
   const frames: FrameRequestCallback[] = [];
   vi.stubGlobal("requestAnimationFrame", (callback: FrameRequestCallback) => frames.push(callback));
-  const bounce = { currentTime: 0, paused: true, onended: null as (() => void) | null, play() { this.paused = false; return Promise.resolve(); }, pause() { this.paused = true; } };
+  const bounce = { currentTime: 0, paused: true, ended: false, onended: null as (() => void) | null, play() { this.paused = false; return Promise.resolve(); }, pause() { this.paused = true; } };
   vi.stubGlobal("Audio", class { constructor() { return bounce; } });
   const first = vi.fn(), latest = vi.fn();
   const update = mount(first, "/local-bounce.wav");
-  act(() => playhead.play());
+  await act(async () => playhead.play());
   bounce.currentTime = 1.25;
   act(() => frames.shift()!(0));
   expect(first.mock.calls).toEqual([[2.5]]);
@@ -84,9 +84,9 @@ it("reports a saved bounce's clock through the latest callback and clears it at 
   bounce.currentTime = 2;
   act(() => frames.shift()!(0));
   expect(latest.mock.calls).toEqual([[4]]);
-  act(() => { bounce.paused = true; bounce.onended!(); });
+  act(() => { bounce.paused = true; bounce.ended = true; bounce.onended!(); });
   expect(latest.mock.calls).toEqual([[4], [null]]);
-  act(() => frames.shift()!(0));
+  act(() => frames.shift()?.(0));
   expect(latest.mock.calls).toEqual([[4], [null]]);
 });
 

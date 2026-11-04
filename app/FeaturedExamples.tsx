@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { DemoPiece } from './demo';
-import { localDemoAsset } from './demo';
+import { loadOriginalAudio } from './recordedAudio';
+export { originalAudioFor } from './recordedAudio';
 import { OutcomeExplorer } from './OutcomeExplorer';
 import { createPreview } from './audio/preview';
 import { loadManifest } from './audio/samples';
@@ -17,15 +18,6 @@ export function featuredExamples(piano:DemoPiece):Example[] {
   ];
 }
 
-/** Reference audio is used only when its manifest names the actual source MIDI. */
-export function originalAudioFor(value:unknown,pieceId:string,midiHash:string):string|undefined {
-  if(!value||typeof value!=='object')return;
-  const item=(value as Record<string,unknown>)[pieceId];
-  if(!item||typeof item!=='object')return;
-  const row=item as Record<string,unknown>;
-  return row.midiSha256===midiHash&&localDemoAsset(row.url)?row.url:undefined;
-}
-
 function OriginalPreview({example}:{example:Example}) {
   const[data,setData]=useState<ReturnType<typeof rawSketchData>|null>(null),[reference,setReference]=useState<string>(),[playing,setPlaying]=useState(false),[error,setError]=useState<string>();
   const sound=useRef<ReturnType<typeof createPreview>|null>(null),audio=useRef<HTMLAudioElement>(null),at=useRef(0),generation=useRef(0);
@@ -37,11 +29,9 @@ function OriginalPreview({example}:{example:Example}) {
       try{
         const response=await fetch(example.originalMidi,{signal:controller.signal});if(!response.ok)throw Error('The original MIDI could not be opened.');
         const bytes=new Uint8Array(await response.arrayBuffer());const parsed=rawSketchData(bytes);
-        const hash=[...new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))].map(n=>n.toString(16).padStart(2,'0')).join('');
-        let manifest:unknown=null;
-        try{const r=await fetch('/demo/original-audio.json',{signal:controller.signal});if(r.ok)manifest=await r.json()}catch{ /* The original MIDI remains playable. */ }
+        const reference=await loadOriginalAudio(example.piece.id,bytes,controller.signal);
         if(controller.signal.aborted)return;
-        setReference(originalAudioFor(manifest,example.piece.id,hash));setData(parsed);
+        setReference(reference);setData(parsed);
       }catch(failure){if(!controller.signal.aborted)setError(failure instanceof Error?failure.message:'Original playback is unavailable.')}
     })();
     return()=>{controller.abort();generation.current++;sound.current?.stop();audio.current?.pause()};

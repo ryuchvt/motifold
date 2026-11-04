@@ -24,6 +24,9 @@ it('rejects external/traversing files, duplicate outcomes, missing exports and m
   expect(recordedDemoCatalog(catalog([complete,{...complete}]),piece.id)).toBeNull();
   expect(recordedDemoCatalog(catalog([{...complete,midi:undefined}]),piece.id)).toBeNull();
   expect(recordedDemoCatalog(catalog([{...complete,renderXmlSha256:'not-a-hash'}]),piece.id)).toBeNull();
+  const rendered={...complete,render:'/demo/sample-sketch/mix.mp3',renderXmlSha256:complete.xmlSha256};
+  expect(recordedDemoCatalog(catalog([{...rendered,renderStems:[{label:'Violin',url:'https://outside.invalid/stem.mp3'}]}]),piece.id)).toBeNull();
+  expect(recordedDemoCatalog(catalog([{...rendered,renderStems:[{label:'Violin',url:'/demo/sample-sketch/one.mp3'},{label:'Violin',url:'/demo/sample-sketch/two.mp3'}]}]),piece.id)).toBeNull();
   expect(recordedDemoCatalog(catalog([{...complete,mood:'Sad'}]),piece.id)).toBeNull();
   expect(recordedDemoCatalog(catalog([complete]),'another-piece')).toBeNull();
 });
